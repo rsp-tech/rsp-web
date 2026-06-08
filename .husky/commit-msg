@@ -1,0 +1,55 @@
+#!/bin/sh
+
+MAX_BODY_LINE_LENGTH=100
+COMMIT_MSG_FILE="$1"
+
+# -------------------------
+# Gitmoji auto-inject
+# -------------------------
+
+HEADER="$(sed -n '1p' "$COMMIT_MSG_FILE")"
+
+# Skip if header already contains a gitmoji-style emoji
+if ! echo "$HEADER" | grep -q ":[a-z_]\+:"; then
+  TYPE="$(printf "%s" "$HEADER" | sed -n 's/^\([a-z]\+\).*/\1/p')"
+
+  case "$TYPE" in
+    feat)     EMOJI=":sparkles:" ;;
+    fix)      EMOJI=":bug:" ;;
+    docs)     EMOJI=":memo:" ;;
+    style)    EMOJI=":art:" ;;
+    refactor) EMOJI=":recycle:" ;;
+    perf)     EMOJI=":zap:" ;;
+    test)     EMOJI=":white_check_mark:" ;;
+    build)    EMOJI=":package:" ;;
+    ci)       EMOJI=":construction_worker:" ;;
+    chore)    EMOJI=":wrench:" ;;
+    revert)   EMOJI=":rewind:" ;;
+    *)        EMOJI="" ;;
+  esac
+
+  if [ -n "$EMOJI" ]; then
+    # Inject after ":" (handles scope and non-scope)
+    HEADER="$(printf "%s" "$HEADER" | sed "s/:/: $EMOJI/")"
+
+    {
+      printf "%s\n" "$HEADER"
+      sed '1d' "$COMMIT_MSG_FILE"
+    } > "$COMMIT_MSG_FILE"
+  fi
+fi
+
+# -------------------------
+# Body wrapping
+# -------------------------
+
+BODY="$(sed '1d' "$COMMIT_MSG_FILE")"
+
+if [ -n "$BODY" ]; then
+  WRAPPED_BODY="$(printf "%s\n" "$BODY" | fold -s -w "$MAX_BODY_LINE_LENGTH")"
+
+  {
+    sed -n '1p' "$COMMIT_MSG_FILE"
+    printf "%s\n" "$WRAPPED_BODY"
+  } > "$COMMIT_MSG_FILE"
+fi
