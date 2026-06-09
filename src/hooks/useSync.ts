@@ -1,12 +1,16 @@
 "use client";
 
+import {
+  type QueryClient,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useSession } from "@/components/providers";
 import {
   SUPABASE_PUBLISHABLE_KEY,
   SUPABASE_URL,
   SYNC_INTERVAL,
 } from "@/lib/constants";
-import { QueryClient, useQuery, useQueryClient } from "@tanstack/react-query";
 
 interface WorkerConfig {
   supabaseUrl: string;
