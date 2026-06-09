@@ -19,8 +19,8 @@ interface WorkerConfig {
   queryClient: QueryClient;
 }
 
-function runSync({ queryClient, ...config }: WorkerConfig): Promise<void> {
-  return new Promise((resolve, reject) => {
+const runSync = ({ queryClient, ...config }: WorkerConfig): Promise<void> =>
+  new Promise((resolve, reject) => {
     const worker = new Worker(new URL("@/workers/sync.ts", import.meta.url));
     worker.postMessage({ type: "START_SYNC", ...config });
     worker.onmessage = (e: MessageEvent) => {
@@ -47,9 +47,8 @@ function runSync({ queryClient, ...config }: WorkerConfig): Promise<void> {
       reject(e);
     };
   });
-}
 
-export function useSync() {
+export const useSync = () => {
   const { session, isLoading } = useSession();
   const queryClient = useQueryClient();
   const workerConfig = {
@@ -65,4 +64,4 @@ export function useSync() {
     refetchInterval: SYNC_INTERVAL,
     enabled: !isLoading,
   });
-}
+};
