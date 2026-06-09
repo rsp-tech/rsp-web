@@ -7,6 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "biome check",
+    "db-types:prune": "node --experimental-strip-types scripts/prune-supabase-types.ts",
+    "db-types": "dotenv -- bash -c 'pnpm supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema prod > src/database.types.ts && pnpm db-types:prune '",
     "format": "biome format --write"
   },
   "dependencies": {
@@ -33,9 +35,11 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "babel-plugin-react-compiler": "1.0.0",
+    "dotenv-cli": "^11.0.0",
     "husky": "^9.1.7",
     "supabase": "^2.105.0",
     "tailwindcss": "^4",
+    "ts-morph": "^28.0.0",
     "typescript": "^5",
     "vitest": "^4.1.8"
   }
