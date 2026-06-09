@@ -1,4 +1,5 @@
-import {
+import { type IDBPDatabase, openDB } from "idb";
+import type {
   Category,
   ContentType,
   Event,
@@ -14,7 +15,6 @@ import {
   Speaker,
   Venue,
 } from "@/types";
-import { type IDBPDatabase, openDB } from "idb";
 
 export interface RSPDatabase {
   categories: {
@@ -26,17 +26,17 @@ export interface RSPDatabase {
     };
   };
   recordings: {
-    key: string;
+    key: number;
     value: Recording;
     indexes: {
-      "by-category_id": string;
+      "by-category_id": number;
     };
   };
   materials: {
-    key: string;
+    key: number;
     value: Material;
     indexes: {
-      "by-recording_id": string;
+      "by-recording_id": number;
     };
   };
   speakers: {

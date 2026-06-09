@@ -1,41 +1,43 @@
-import { createClient, SupabaseClient } from "@supabase/supabase-js";
-import { getDB } from "@/lib/idb";
+import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 import type { IDBPDatabase } from "idb";
 import type { RSPDatabase } from "@/lib/idb";
+import { getDB } from "@/lib/idb";
 import { createLimiter } from "@/lib/utils";
 
 const PAGE_SIZE = 1000;
 
 type SyncTable = keyof Omit<RSPDatabase, "metadata">;
 
-function strip(item: Record<string, unknown>): Record<string, unknown> {
+const strip = (item: Record<string, unknown>): Record<string, unknown> => {
+  // biome-ignore lint/correctness/noUnusedVariables: stripping out
   const { created_at, metadata, ...rest } = item;
-  void created_at;
-  void metadata;
   return rest;
-}
+};
 
-async function fetchPage(
+const fetchPage = async (
   supabase: SupabaseClient,
   table: string,
   offset: number,
   since?: string,
-) {
+) => {
   let query = supabase
     .schema("prod")
     .from(table)
     .select("*")
     .order("id", { ascending: true });
 
-  if (since) query = query.gt("updated_at", since);
+  if (since) {
+    query = query.gt("updated_at", since);
+  }
   return query.range(offset, offset + PAGE_SIZE - 1);
-}
+};
 
-async function syncTable(
+const syncTable = async (
   supabase: SupabaseClient,
   db: IDBPDatabase<RSPDatabase>,
   table: SyncTable,
-) {
+  changedCategoryPaths: Set<string>,
+) => {
   const metaKey = `last_sync_${table}`;
   const localLastSync = (await db.get("metadata", metaKey)) as
     | string
@@ -54,55 +56,39 @@ async function syncTable(
   const globalMax: string = latest[0].updated_at;
   if (localLastSync && new Date(localLastSync) >= new Date(globalMax)) return;
 
-  if (!localLastSync) {
-    // Full paginated sync
-    let offset = 0;
-    // let total = 0;
-    while (true) {
-      const { data, error } = await fetchPage(supabase, table, offset);
-      if (error) throw new Error(`${table}: ${error.message}`);
-      if (!data?.length) break;
+  let offset = 0;
+  while (true) {
+    const { data, error } = await fetchPage(
+      supabase,
+      table,
+      offset,
+      localLastSync,
+    );
+    if (error) throw new Error(`${table}: ${error.message}`);
+    if (!data?.length) break;
 
-      const tx = db.transaction(table, "readwrite");
-      for (const item of data) {
-        tx.store.put(strip(item));
-      }
-      await tx.done;
+    const tx = db.transaction(table, "readwrite");
 
-      // total += data.length;
-      postMessage({ type: "PROGRESS", message: "Syncing Data..." });
-      offset += PAGE_SIZE;
-      if (data.length < PAGE_SIZE) break;
+    // Relying on SQL trigger: Child updates bubble up to categories table automatically.
+    // We only need to catch direct updates/inserts landing on the categories table.
+    const isCategories = table === "categories";
+    for (const item of data) {
+      if (isCategories) changedCategoryPaths.add(item.url_path as string);
+      tx.store.put(strip(item));
     }
-  } else {
-    // Delta sync — paginated for worst case
-    let offset = 0;
-    while (true) {
-      const { data, error } = await fetchPage(
-        supabase,
-        table,
-        offset,
-        localLastSync,
-      );
-      if (error) throw new Error(`${table}: ${error.message}`);
-      if (!data?.length) break;
+    await tx.done;
 
-      const tx = db.transaction(table, "readwrite");
-      for (const item of data) {
-        tx.store.put(strip(item));
-      }
-      await tx.done;
+    postMessage({ type: "PROGRESS", message: `Syncing ${table}...` });
 
-      offset += PAGE_SIZE;
-      if (data.length < PAGE_SIZE) break;
-    }
+    offset += PAGE_SIZE;
+    if (data.length < PAGE_SIZE) break;
   }
 
   await db.put("metadata", globalMax, metaKey);
   if (table === "categories") {
     await db.put("metadata", globalMax, "categories_last_updated");
   }
-}
+};
 
 const ALL_TABLES: SyncTable[] = [
   "recordings",
@@ -139,11 +125,18 @@ self.onmessage = async (event: MessageEvent) => {
     postMessage({ type: "PROGRESS", message: "Syncing..." });
 
     const limit = createLimiter(4);
+    const changedCategoryPaths = new Set<string>();
+
     await Promise.all(
-      ALL_TABLES.map((t) => limit(() => syncTable(supabase, db, t))),
+      ALL_TABLES.map((t) =>
+        limit(() => syncTable(supabase, db, t, changedCategoryPaths)),
+      ),
     );
 
-    postMessage({ type: "SUCCESS" });
+    postMessage({
+      type: "SUCCESS",
+      changedCategoryPaths,
+    });
   } catch (err) {
     postMessage({
       type: "ERROR",
