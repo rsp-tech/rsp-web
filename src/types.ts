@@ -50,6 +50,8 @@ export interface RecordingMaterialMetadata {
 
 export type FaqCategory = Tables<"faq_categories">;
 export type Faq = Tables<"faqs">;
+export type FeaturedSection = Tables<"featured_sections">;
+export type FeaturedItem = Tables<"featured_items">;
 export type UserQuery = Tables<"user_queries">;
 
 export type UserQueryWithUser = UserQuery & {
