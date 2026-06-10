@@ -31,7 +31,7 @@ import type {
 } from "@/types";
 
 const recordingsSchema = {
-  id: "number",
+  id: "string",
   name: "string",
   speaker_names: "string",
   venue_name: "string",
@@ -43,13 +43,13 @@ const recordingsSchema = {
 } as const;
 
 const categoriesSchema = {
-  id: "number",
+  id: "string",
   name: "string",
   url_path: "string",
 } as const;
 
 const materialsSchema = {
-  id: "number",
+  id: "string",
   name: "string",
   recording_id: "number",
 } as const;
@@ -72,32 +72,25 @@ interface SearchEngine {
 
 type WorkerMessage =
   | { type: typeof WORKER_MSG.BUILD_INDEX }
-  | {
-      type: typeof WORKER_MSG.UPDATE_DOCS;
-      table: SearchableTable;
-      ids: number[];
-    }
+  | { type: typeof WORKER_MSG.UPDATE_DOCS; table: SearchableTable; ids: number[] }
   | { type: typeof WORKER_MSG.SEARCH_ALL; payload: SearchPayload };
 
 let engine: SearchEngine | null = null;
 let buildPromise: Promise<SearchEngine> | null = null;
 
+// --- MAPPERS ---
 const compactNumbers = (value: number[] | null): number[] =>
-  Array.isArray(value) ? value.filter((item) => Number.isFinite(item)) : [];
+  Array.isArray(value) ? value.filter(Number.isFinite) : [];
 
-const mapRecording = (
-  recording: Recording,
-  maps: LookupMaps,
-): RecordingSearchDocument => {
+const mapRecording = (recording: Recording, maps: LookupMaps): RecordingSearchDocument => {
   const speakerIds = compactNumbers(recording.speaker_ids);
   const venueId = recording.venues_id ?? 0;
-
   return {
-    id: recording.id,
+    id: String(recording.id),
     name: recording.name,
     speaker_names: speakerIds
       .map((id) => maps.speakers.get(id))
-      .filter((name): name is string => Boolean(name))
+      .filter(Boolean)
       .join(", "),
     venue_name: maps.venues.get(venueId) ?? "",
     date: recording.recorded_at ?? "",
@@ -109,17 +102,18 @@ const mapRecording = (
 };
 
 const mapCategory = (category: Category): CategorySearchDocument => ({
-  id: category.id,
+  id: String(category.id),
   name: category.name,
   url_path: category.url_path,
 });
 
 const mapMaterial = (material: Material): MaterialSearchDocument => ({
-  id: material.id,
+  id: String(material.id),
   name: material.name,
   recording_id: material.recording_id,
 });
 
+// --- ENGINE LIFECYCLE ---
 const loadLookupMaps = async (): Promise<LookupMaps> => {
   const db = await getDB();
   if (!db) throw new Error("IndexedDB unavailable");
@@ -130,10 +124,8 @@ const loadLookupMaps = async (): Promise<LookupMaps> => {
   ]);
 
   return {
-    speakers: new Map(
-      speakers.map((speaker: Speaker) => [speaker.id, speaker.name]),
-    ),
-    venues: new Map(venues.map((venue: Venue) => [venue.id, venue.name])),
+    speakers: new Map(speakers.map((s: Speaker) => [s.id, s.name])),
+    venues: new Map(venues.map((v: Venue) => [v.id, v.name])),
   };
 };
 
@@ -154,22 +146,14 @@ const createSearchEngine = async (): Promise<SearchEngine> => {
     loadLookupMaps(),
   ]);
 
-  const recordingDocs = recordings.map((recording) =>
-    mapRecording(recording, lookupMaps),
-  );
+  const recordingDocs = recordings.map((r) => mapRecording(r, lookupMaps));
   const categoryDocs = categories.map(mapCategory);
   const materialDocs = materials.map(mapMaterial);
 
   await Promise.all([
-    recordingDocs.length > 0
-      ? insertMultiple(recordingsDb, recordingDocs)
-      : Promise.resolve(),
-    categoryDocs.length > 0
-      ? insertMultiple(categoriesDb, categoryDocs)
-      : Promise.resolve(),
-    materialDocs.length > 0
-      ? insertMultiple(materialsDb, materialDocs)
-      : Promise.resolve(),
+    recordingDocs.length && insertMultiple(recordingsDb, recordingDocs),
+    categoryDocs.length && insertMultiple(categoriesDb, categoryDocs),
+    materialDocs.length && insertMultiple(materialsDb, materialDocs),
   ]);
 
   postMessage({ type: WORKER_MSG.INDEX_READY, count: recordingDocs.length });
@@ -192,22 +176,16 @@ const getSearchEngine = async (): Promise<SearchEngine> => {
   return rebuildSearchEngine();
 };
 
-const removeMatchingDocs = async (
-  db: RecordingsDb | CategoriesDb | MaterialsDb,
-  targetId: number,
-): Promise<void> => {
-  const result = await search(db, {
-    where: { id: { eq: targetId } },
-    limit: 1000,
-  });
-
-  await Promise.all(result.hits.map((hit) => remove(db, hit.id)));
+// --- DATA SYNC ---
+const safeRemove = async (db: any, id: string) => {
+  try {
+    await remove(db, id);
+  } catch {
+    // Orama throws if document doesn't exist. Safely ignore during delta syncs.
+  }
 };
 
-const updateDocs = async (
-  table: SearchableTable,
-  ids: number[],
-): Promise<void> => {
+const updateDocs = async (table: SearchableTable, ids: number[]): Promise<void> => {
   const currentEngine = await getSearchEngine();
   const db = await getDB();
   if (!db) throw new Error("IndexedDB unavailable");
@@ -215,64 +193,45 @@ const updateDocs = async (
   const lookupMaps =
     table === STORE.RECORDINGS
       ? await loadLookupMaps()
-      : {
-          speakers: new Map<number, string>(),
-          venues: new Map<number, string>(),
-        };
+      : { speakers: new Map(), venues: new Map() };
 
   for (const id of new Set(ids)) {
+    const stringId = String(id);
     const doc = await db.get(table, id);
 
     if (table === STORE.RECORDINGS) {
-      await removeMatchingDocs(currentEngine.recordingsDb, id);
-      if (doc) {
-        await insert(currentEngine.recordingsDb, mapRecording(doc, lookupMaps));
-      }
-      continue;
-    }
-
-    if (table === STORE.CATEGORIES) {
-      await removeMatchingDocs(currentEngine.categoriesDb, id);
-      if (doc) {
-        await insert(currentEngine.categoriesDb, mapCategory(doc));
-      }
-      continue;
-    }
-
-    await removeMatchingDocs(currentEngine.materialsDb, id);
-    if (doc) {
-      await insert(currentEngine.materialsDb, mapMaterial(doc));
+      await safeRemove(currentEngine.recordingsDb, stringId);
+      if (doc) await insert(currentEngine.recordingsDb, mapRecording(doc, lookupMaps));
+    } else if (table === STORE.CATEGORIES) {
+      await safeRemove(currentEngine.categoriesDb, stringId);
+      if (doc) await insert(currentEngine.categoriesDb, mapCategory(doc));
+    } else if (table === STORE.MATERIALS) {
+      await safeRemove(currentEngine.materialsDb, stringId);
+      if (doc) await insert(currentEngine.materialsDb, mapMaterial(doc));
     }
   }
 };
 
-const toRecordingWhere = (
-  filters: SearchPayload["filters"],
-): RecordingWhere | undefined => {
+// --- SEARCH LOGIC ---
+const toRecordingWhere = (filters: SearchPayload["filters"]): RecordingWhere | undefined => {
   if (!filters) return undefined;
-
   const clauses: RecordingWhere[] = [];
+  
+  if (filters.category_id !== undefined) clauses.push({ category_id: { eq: filters.category_id } });
+  if (filters.venues_id !== undefined) clauses.push({ venues_id: { eq: filters.venues_id } });
 
-  if (filters.category_id !== undefined) {
-    clauses.push({ category_id: { eq: filters.category_id } });
-  }
-  if (filters.venues_id !== undefined) {
-    clauses.push({ venues_id: { eq: filters.venues_id } });
-  }
-
-  if (clauses.length === 0) return undefined;
+  if (!clauses.length) return undefined;
   return clauses.length === 1 ? clauses[0] : { and: clauses };
 };
 
 const includesEvery = (values: number[], required?: number[]): boolean =>
-  !required?.length || required.every((value) => values.includes(value));
+  !required?.length || required.every((v) => values.includes(v));
 
 const matchesRecordingFilters = (
   document: RecordingSearchDocument,
   filters: SearchPayload["filters"],
 ): boolean => {
   if (!filters) return true;
-
   return (
     includesEvery(document.speaker_ids, filters.speaker_ids) &&
     includesEvery(document.lang_ids, filters.lang_ids)
@@ -280,15 +239,16 @@ const matchesRecordingFilters = (
 };
 
 const runSearchAll = async (payload: SearchPayload): Promise<void> => {
-  const currentEngine = await getSearchEngine();
   const { term, targets, reqId, filters } = payload;
-  const recordingWhere = toRecordingWhere(filters);
-  const recordingLimit =
-    filters?.speaker_ids?.length || filters?.lang_ids?.length
+  
+  try {
+    const currentEngine = await getSearchEngine();
+    const recordingWhere = toRecordingWhere(filters);
+    // Inflate limit if doing client-side array intersections
+    const recordingLimit = (filters?.speaker_ids?.length || filters?.lang_ids?.length)
       ? SEARCH_LIMIT * 20
       : SEARCH_LIMIT;
 
-  try {
     const results = await Promise.all(
       targets.map(async (target): Promise<SearchResult> => {
         if (target === STORE.RECORDINGS) {
@@ -297,24 +257,19 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
             {
               term,
               properties: ["name", "speaker_names", "venue_name", "date"],
-              boost: {
-                name: SEARCH_BOOST_NAME,
-                speaker_names: SEARCH_BOOST_SPEAKER,
-              },
+              boost: { name: SEARCH_BOOST_NAME, speaker_names: SEARCH_BOOST_SPEAKER },
               where: recordingWhere,
               limit: recordingLimit,
               tolerance: SEARCH_TOLERANCE,
             },
           );
 
-          const hits = result.hits
-            .map((hit) => hit.document)
-            .filter((document) => matchesRecordingFilters(document, filters))
-            .slice(0, SEARCH_LIMIT);
-
           return {
             target,
-            hits,
+            hits: result.hits
+              .map((hit) => hit.document)
+              .filter((doc) => matchesRecordingFilters(doc, filters))
+              .slice(0, SEARCH_LIMIT),
           };
         }
 
@@ -329,11 +284,7 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
               tolerance: SEARCH_TOLERANCE,
             },
           );
-
-          return {
-            target,
-            hits: result.hits.map((hit) => hit.document),
-          };
+          return { target, hits: result.hits.map((hit) => hit.document) };
         }
 
         const result = await search<MaterialsDb, MaterialSearchDocument>(
@@ -345,20 +296,17 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
             tolerance: SEARCH_TOLERANCE,
           },
         );
-
-        return {
-          target,
-          hits: result.hits.map((hit) => hit.document),
-        };
+        return { target, hits: result.hits.map((hit) => hit.document) };
       }),
     );
 
     postMessage({
       type: WORKER_MSG.SEARCH_RESULT,
       reqId,
-      results: results.filter((result) => result.hits.length > 0),
+      results: results.filter((r) => r.hits.length > 0),
     });
   } catch (err) {
+    // Crucial: Catch inner errors to ensure the reqId is resolved on the main thread
     postMessage({
       type: WORKER_MSG.SEARCH_RESULT,
       reqId,
@@ -368,29 +316,16 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
   }
 };
 
+// --- WORKER ENTRY ---
 self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
   const message = event.data;
-
   try {
-    if (message.type === WORKER_MSG.BUILD_INDEX) {
-      await rebuildSearchEngine();
-      return;
-    }
-
-    if (message.type === WORKER_MSG.UPDATE_DOCS) {
-      await updateDocs(message.table, message.ids);
-      return;
-    }
-
-    if (message.type === WORKER_MSG.SEARCH_ALL) {
-      await runSearchAll(message.payload);
-    }
+    if (message.type === WORKER_MSG.BUILD_INDEX) await rebuildSearchEngine();
+    else if (message.type === WORKER_MSG.UPDATE_DOCS) await updateDocs(message.table, message.ids);
+    else if (message.type === WORKER_MSG.SEARCH_ALL) await runSearchAll(message.payload);
   } catch (err) {
     postMessage({
-      type:
-        message.type === WORKER_MSG.BUILD_INDEX
-          ? WORKER_MSG.INDEX_ERROR
-          : WORKER_MSG.ERROR,
+      type: message.type === WORKER_MSG.BUILD_INDEX ? WORKER_MSG.INDEX_ERROR : WORKER_MSG.ERROR,
       message: err instanceof Error ? err.message : String(err),
     });
   }

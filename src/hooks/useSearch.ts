@@ -1,8 +1,10 @@
-"use client";
-
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback } from "react";
 import { STORE, WORKER_MSG } from "@/constants";
-import type { SearchableTable, SearchResult } from "@/types";
+import type { 
+  SearchableTable, 
+  SearchResult, 
+  RecordingSearchFilters 
+} from "@/types";
 
 type PendingRequest = {
   resolve: (results: SearchResult[]) => void;
@@ -14,27 +16,20 @@ type ReadyWaiter = {
   reject: (err: Error) => void;
 };
 
-// Singleton storage to outlive React component lifecycles
+// Module-level singletons outlive unmounts
 let workerInstance: Worker | null = null;
 let workerReady = false;
 const pendingRequests = new Map<string, PendingRequest>();
 const readyWaiters: ReadyWaiter[] = [];
 
 const rejectPendingWork = (error: Error) => {
-  for (const pending of pendingRequests.values()) {
-    pending.reject(error);
-  }
+  for (const pending of pendingRequests.values()) pending.reject(error);
   pendingRequests.clear();
-
-  while (readyWaiters.length > 0) {
-    readyWaiters.shift()?.reject(error);
-  }
+  while (readyWaiters.length > 0) readyWaiters.shift()?.reject(error);
 };
 
 const resolveReadyWaiters = () => {
-  while (readyWaiters.length > 0) {
-    readyWaiters.shift()?.resolve();
-  }
+  while (readyWaiters.length > 0) readyWaiters.shift()?.resolve();
 };
 
 export const getWorker = (): Worker => {
@@ -74,14 +69,13 @@ export const getWorker = (): Worker => {
   return workerInstance;
 };
 
-// Essential cleanup hook called on session logout/role updates
 export const terminateSearchWorker = () => {
   if (workerInstance) {
     workerInstance.terminate();
     workerInstance = null;
   }
   workerReady = false;
-  rejectPendingWork(new Error("Search worker terminated"));
+  rejectPendingWork(new Error("Search worker terminated explicitly (e.g., Auth Change)"));
 };
 
 export const notifySearchWorker = (table: SearchableTable, ids: number[]) => {
@@ -90,18 +84,12 @@ export const notifySearchWorker = (table: SearchableTable, ids: number[]) => {
 };
 
 export const useSearch = () => {
-  const workerRef = useRef<Worker | null>(null);
-
-  useEffect(() => {
-    workerRef.current = getWorker();
-  }, []);
-
   const searchAll = useCallback(
-    async (term: string): Promise<SearchResult[]> => {
+    async (term: string, filters?: RecordingSearchFilters): Promise<SearchResult[]> => {
       const trimmedTerm = term.trim();
       if (!trimmedTerm) return [];
 
-      const worker = workerRef.current ?? getWorker();
+      const worker = getWorker();
 
       const waitForReady = (): Promise<void> =>
         workerReady
@@ -114,7 +102,6 @@ export const useSearch = () => {
 
       return new Promise<SearchResult[]>((resolve, reject) => {
         const reqId = `${crypto.randomUUID()}-${Date.now()}`;
-
         pendingRequests.set(reqId, { resolve, reject });
 
         worker.postMessage({
@@ -123,6 +110,7 @@ export const useSearch = () => {
             term: trimmedTerm,
             targets: [STORE.RECORDINGS, STORE.CATEGORIES, STORE.MATERIALS],
             reqId,
+            filters,
           },
         });
       });
