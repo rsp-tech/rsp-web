@@ -10,10 +10,18 @@ import {
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import { Button } from "@/components/ui/button";
 import { INDEX, STORE } from "@/constants";
 import { useSearch } from "@/hooks/useSearch";
 import { getDB } from "@/lib/idb";
-import type { Category, Material, Recording } from "@/types";
+import type {
+  Category,
+  CategorySearchDocument,
+  Material,
+  MaterialSearchDocument,
+  Recording,
+  RecordingSearchDocument,
+} from "@/types";
 
 export type SearchScope = "full" | "current" | "sub";
 
@@ -43,40 +51,36 @@ export function SearchBar() {
 
   // Close dropdown on outside click
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    const handleClickOutside = (event: MouseEvent) => {
       if (
         containerRef.current &&
         !containerRef.current.contains(event.target as Node)
       ) {
         setShowDropdown(false);
       }
-    }
+    };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   // Determine current category from URL pathname
   useEffect(() => {
-    async function loadCurrentCategory() {
+    const loadCurrentCategory = async () => {
       const slug = pathname.split("/").filter(Boolean);
       if (slug.length === 0) {
         setCurrentCategory(null);
-        setScope("full"); // Reset to full on home page
+        setScope("full");
         return;
       }
-
       const db = await getDB();
       if (!db) return;
-
-      const urlPath = slug.join(".");
       const cat = await db.getFromIndex(
         STORE.CATEGORIES,
         INDEX.BY_URL,
-        urlPath,
+        slug.join("."),
       );
-      setCurrentCategory(cat || null);
-    }
-
+      setCurrentCategory(cat ?? null);
+    };
     loadCurrentCategory();
   }, [pathname]);
 
@@ -92,73 +96,82 @@ export function SearchBar() {
       try {
         const rawResults = await searchAll(term);
         const db = await getDB();
+        if (!db) return;
 
-        if (!db) {
-          setSearching(false);
-          return;
-        }
-
-        // Initialize lists
-        let recHits: any[] = [];
-        let catHits: any[] = [];
-        let matHits: any[] = [];
+        let recHits: RecordingSearchDocument[] = [];
+        let catHits: CategorySearchDocument[] = [];
+        let matHits: MaterialSearchDocument[] = [];
 
         for (const res of rawResults) {
-          if (res.target === STORE.RECORDINGS) recHits = res.hits;
-          if (res.target === STORE.CATEGORIES) catHits = res.hits;
-          if (res.target === STORE.MATERIALS) matHits = res.hits;
+          if (res.target === STORE.RECORDINGS)
+            recHits = res.hits as RecordingSearchDocument[];
+          if (res.target === STORE.CATEGORIES)
+            catHits = res.hits as CategorySearchDocument[];
+          if (res.target === STORE.MATERIALS)
+            matHits = res.hits as MaterialSearchDocument[];
         }
 
-        // Fetch full categories and recordings to enable hierarchy checks
         const allCategories = await db.getAll(STORE.CATEGORIES);
 
-        // Pre-fetch recordings for materials
         const materialRecordings = new Map<number, Recording>();
         await Promise.all(
           matHits.map(async (m) => {
             const r = await db.get(STORE.RECORDINGS, m.recording_id);
-            if (r) materialRecordings.set(m.id, r);
+            if (r) materialRecordings.set(Number(m.id), r);
           }),
         );
 
-        // Filter categories according to scope
         let filteredCats = catHits
-          .map((h) => allCategories.find((c) => c.id === h.id))
-          .filter(Boolean) as Category[];
-        let filteredRecs = recHits as any as Recording[];
-        let filteredMats = matHits.map((h) => ({
-          ...h,
-          recordingName: materialRecordings.get(h.id)?.name,
-        })) as any[];
+          .map((h) => allCategories.find((c) => c.id === Number(h.id)))
+          .filter((c): c is Category => c !== undefined);
+
+        const filteredRecs = recHits
+          .map((h) => allCategories.find((c) => c.id === h.category_id))
+          .filter(Boolean) as Category[]; // narrowing to get category_ids; actual recordings fetched below
+
+        // Re-fetch actual Recording objects by id
+        const recIds = recHits.map((h) => Number(h.id));
+        const fullRecs = (
+          await Promise.all(recIds.map((id) => db.get(STORE.RECORDINGS, id)))
+        ).filter((r): r is Recording => r !== undefined);
+
+        let filteredRecordings = fullRecs;
+
+        const matWithName = matHits.map((h) => {
+          const rec = materialRecordings.get(Number(h.id));
+          return {
+            id: Number(h.id),
+            name: h.name,
+            recording_id: h.recording_id,
+            recordingName: rec?.name,
+          } as Material & { recordingName?: string };
+        });
+        let filteredMats = matWithName;
+
+        // suppress unused variable warning — filteredRecs was intermediate
+        void filteredRecs;
 
         if (currentCategory) {
           const currentUrl = currentCategory.url_path;
 
           if (scope === "current") {
-            // Subcategories directly under current page (path starts with current category and has exactly one dot more)
             filteredCats = filteredCats.filter((cat) => {
               if (!cat.url_path.startsWith(`${currentUrl}.`)) return false;
-              const subPart = cat.url_path.substring(currentUrl.length + 1);
-              return !subPart.includes(".");
+              return !cat.url_path
+                .substring(currentUrl.length + 1)
+                .includes(".");
             });
-
-            // Recordings exactly in current category
-            filteredRecs = filteredRecs.filter(
+            filteredRecordings = filteredRecordings.filter(
               (rec) => rec.category_id === currentCategory.id,
             );
-
-            // Materials belonging to recordings in current category
             filteredMats = filteredMats.filter((mat) => {
               const rec = materialRecordings.get(mat.id);
-              return rec && rec.category_id === currentCategory.id;
+              return rec?.category_id === currentCategory.id;
             });
           } else if (scope === "sub") {
-            // All descendant subcategories
             filteredCats = filteredCats.filter((cat) =>
               cat.url_path.startsWith(`${currentUrl}.`),
             );
-
-            // Recordings in current or any descendant subcategories
             const subCatIds = new Set(
               allCategories
                 .filter(
@@ -168,11 +181,9 @@ export function SearchBar() {
                 )
                 .map((c) => c.id),
             );
-
-            filteredRecs = filteredRecs.filter((rec) =>
+            filteredRecordings = filteredRecordings.filter((rec) =>
               subCatIds.has(rec.category_id),
             );
-
             filteredMats = filteredMats.filter((mat) => {
               const rec = materialRecordings.get(mat.id);
               return rec && subCatIds.has(rec.category_id);
@@ -182,7 +193,7 @@ export function SearchBar() {
 
         setResults({
           categories: filteredCats,
-          recordings: filteredRecs,
+          recordings: filteredRecordings,
           materials: filteredMats,
         });
       } catch (err) {
@@ -196,8 +207,17 @@ export function SearchBar() {
   }, [term, scope, currentCategory, searchAll]);
 
   const handleSelectCategory = (cat: Category) => {
-    const slugPath = cat.url_path.split(".").join("/");
-    router.push(`/${slugPath}`);
+    router.push(`/${cat.url_path.split(".").join("/")}`);
+    setTerm("");
+    setShowDropdown(false);
+  };
+
+  const handleSelectRecording = async (rec: Recording) => {
+    const db = await getDB();
+    if (db) {
+      const cat = await db.get(STORE.CATEGORIES, rec.category_id);
+      if (cat) router.push(`/${cat.url_path.split(".").join("/")}`);
+    }
     setTerm("");
     setShowDropdown(false);
   };
@@ -209,7 +229,7 @@ export function SearchBar() {
 
   return (
     <div ref={containerRef} className="relative w-full max-w-lg flex flex-col">
-      {/* Search Input Bar */}
+      {/* Search Input */}
       <div className="relative flex items-center bg-muted border border-border rounded-xl px-3 py-1.5 focus-within:ring-1 focus-within:ring-primary focus-within:border-primary transition-all">
         <Search className="w-4 h-4 text-muted-foreground mr-2 shrink-0" />
         <input
@@ -228,61 +248,56 @@ export function SearchBar() {
         )}
       </div>
 
-      {/* Dropdown Results Overlay */}
+      {/* Dropdown */}
       {showDropdown && (term.trim() !== "" || currentCategory) && (
         <div className="absolute top-full left-0 right-0 mt-2 bg-card border border-border shadow-xl rounded-xl overflow-hidden z-50 flex flex-col max-h-[420px]">
-          {/* Search Scopes Toggle (only visible on subcategory pages) */}
+          {/* Scope Tabs */}
           {currentCategory && (
             <div className="flex border-b border-border bg-muted/40 p-1 gap-1 text-xs">
-              <button
+              <Button
+                type="button"
+                variant={scope === "full" ? "secondary" : "ghost"}
+                size="xs"
                 onClick={() => setScope("full")}
-                className={`flex-1 py-1.5 px-2 rounded-md font-medium transition-colors flex items-center justify-center gap-1 ${
-                  scope === "full"
-                    ? "bg-card text-foreground shadow-xs"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                className="flex-1"
               >
                 <Globe className="w-3.5 h-3.5" /> Full Search
-              </button>
-              <button
+              </Button>
+              <Button
+                type="button"
+                variant={scope === "current" ? "secondary" : "ghost"}
+                size="xs"
                 onClick={() => setScope("current")}
-                className={`flex-grow py-1.5 px-2 rounded-md font-medium transition-colors flex items-center justify-center gap-1 ${
-                  scope === "current"
-                    ? "bg-card text-foreground shadow-xs"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                className="flex-grow"
                 title={`Search directly under ${currentCategory.name}`}
               >
                 <Folder className="w-3.5 h-3.5" /> Current Page
-              </button>
-              <button
+              </Button>
+              <Button
+                type="button"
+                variant={scope === "sub" ? "secondary" : "ghost"}
+                size="xs"
                 onClick={() => setScope("sub")}
-                className={`flex-grow py-1.5 px-2 rounded-md font-medium transition-colors flex items-center justify-center gap-1 ${
-                  scope === "sub"
-                    ? "bg-card text-foreground shadow-xs"
-                    : "text-muted-foreground hover:text-foreground"
-                }`}
+                className="flex-grow"
                 title={`Search under ${currentCategory.name} and its sub-categories`}
               >
                 <CornerDownRight className="w-3.5 h-3.5" /> Sub-categories
-              </button>
+              </Button>
             </div>
           )}
 
-          {/* Results Lists */}
           <div className="overflow-y-auto flex-1 p-2 flex flex-col gap-3">
             {term.trim() === "" ? (
-              <div className="py-4 text-center text-xs text-muted-foreground">
+              <p className="py-4 text-center text-xs text-muted-foreground">
                 Type something to search{" "}
-                {currentCategory ? `within selected scope` : ""}
-              </div>
+                {currentCategory ? "within selected scope" : ""}
+              </p>
             ) : !hasResults ? (
-              <div className="py-6 text-center text-sm text-muted-foreground">
+              <p className="py-6 text-center text-sm text-muted-foreground">
                 No matching results found
-              </div>
+              </p>
             ) : (
               <>
-                {/* Categories */}
                 {results.categories.length > 0 && (
                   <div>
                     <h4 className="px-2 pb-1 text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80">
@@ -290,20 +305,22 @@ export function SearchBar() {
                     </h4>
                     <div className="flex flex-col gap-0.5">
                       {results.categories.slice(0, 4).map((cat) => (
-                        <button
+                        <Button
                           key={cat.id}
+                          type="button"
+                          variant="ghost"
+                          size="sm"
                           onClick={() => handleSelectCategory(cat)}
-                          className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-muted text-sm text-foreground flex items-center gap-2 transition-colors cursor-pointer"
+                          className="w-full justify-start gap-2"
                         >
                           <Folder className="w-4 h-4 text-primary shrink-0" />
                           <span className="truncate">{cat.name}</span>
-                        </button>
+                        </Button>
                       ))}
                     </div>
                   </div>
                 )}
 
-                {/* Recordings */}
                 {results.recordings.length > 0 && (
                   <div>
                     <h4 className="px-2 pb-1 text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80">
@@ -311,33 +328,13 @@ export function SearchBar() {
                     </h4>
                     <div className="flex flex-col gap-0.5">
                       {results.recordings.slice(0, 6).map((rec) => (
-                        <button
+                        <Button
                           key={rec.id}
-                          onClick={() => {
-                            // Find the category path to route to it or scroll to it
-                            router.push(
-                              `/category-redirect-placeholder-${rec.category_id}`,
-                            );
-                            // Wait, category-redirect is a placeholder. Let's resolve the path of the recording's category
-                            const loadCatAndRoute = async () => {
-                              const db = await getDB();
-                              if (db) {
-                                const cat = await db.get(
-                                  STORE.CATEGORIES,
-                                  rec.category_id,
-                                );
-                                if (cat) {
-                                  router.push(
-                                    `/${cat.url_path.split(".").join("/")}`,
-                                  );
-                                }
-                              }
-                            };
-                            loadCatAndRoute();
-                            setTerm("");
-                            setShowDropdown(false);
-                          }}
-                          className="w-full text-left px-2.5 py-1.5 rounded-lg hover:bg-muted text-sm text-foreground flex flex-col gap-0.5 transition-colors cursor-pointer"
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleSelectRecording(rec)}
+                          className="w-full justify-start flex-col items-start h-auto py-1.5 gap-0.5"
                         >
                           <span className="font-medium truncate">
                             {rec.name}
@@ -347,13 +344,12 @@ export function SearchBar() {
                               {new Date(rec.recorded_at).toLocaleDateString()}
                             </span>
                           )}
-                        </button>
+                        </Button>
                       ))}
                     </div>
                   </div>
                 )}
 
-                {/* Materials */}
                 {results.materials.length > 0 && (
                   <div>
                     <h4 className="px-2 pb-1 text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80">
@@ -363,7 +359,7 @@ export function SearchBar() {
                       {results.materials.slice(0, 4).map((mat) => (
                         <div
                           key={mat.id}
-                          className="px-2.5 py-1.5 rounded-lg hover:bg-muted text-sm text-foreground flex flex-col gap-0.5 transition-colors"
+                          className="px-2.5 py-1.5 rounded-lg text-sm text-foreground flex flex-col gap-0.5"
                         >
                           <div className="flex items-center gap-2">
                             <FileText className="w-4 h-4 text-amber-500 shrink-0" />

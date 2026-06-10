@@ -1,13 +1,25 @@
 "use client";
 
-import { getSupabaseClient } from "@/lib/supabase-browser";
-import { Eye, EyeOff, Lock, Mail, Shield, X } from "lucide-react";
+import { Eye, EyeOff, Lock, Mail, Shield } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { getSupabaseClient } from "@/lib/supabase-browser";
 
 interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
+
+const getErrorMessage = (err: unknown): string => {
+  if (err instanceof Error) return err.message;
+  return "An unexpected error occurred.";
+};
 
 export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -18,22 +30,15 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
 
-  if (!isOpen) return null;
-
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg("");
     setSuccessMsg("");
     setLoading(true);
-
     const supabase = getSupabaseClient();
-
     try {
       if (isSignUp) {
-        const { error } = await supabase.auth.signUp({
-          email,
-          password,
-        });
+        const { error } = await supabase.auth.signUp({ email, password });
         if (error) throw error;
         setSuccessMsg("Check your email for the confirmation link!");
       } else {
@@ -44,8 +49,8 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         if (error) throw error;
         onClose();
       }
-    } catch (err: any) {
-      setErrorMsg(err.message || "An authentication error occurred.");
+    } catch (err) {
+      setErrorMsg(getErrorMessage(err));
     } finally {
       setLoading(false);
     }
@@ -58,57 +63,41 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",
-        options: {
-          redirectTo: window.location.origin,
-        },
+        options: { redirectTo: window.location.origin },
       });
       if (error) throw error;
-    } catch (err: any) {
-      setErrorMsg(err.message || "Could not log in with Google.");
+    } catch (err) {
+      setErrorMsg(getErrorMessage(err));
       setLoading(false);
     }
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fade-in">
-      {/* Backdrop Close Trigger (button instead of div for a11y) */}
-      <button
-        type="button"
-        className="absolute inset-0 cursor-default bg-transparent border-0 outline-none"
-        onClick={onClose}
-        aria-label="Close modal"
-      />
-
-      <div
-        className="relative w-full max-w-md bg-card border border-border rounded-2xl shadow-xl overflow-hidden p-6 flex flex-col gap-6 animate-zoom-in"
-        onClick={(e) => e.stopPropagation()}
+    <Dialog open={isOpen} onOpenChange={(open) => !open && onClose()}>
+      <DialogContent
+        className="max-w-md p-6 flex flex-col gap-6"
+        showCloseButton
       >
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
+        <DialogHeader>
+          <DialogTitle className="flex items-center gap-2 text-xl font-bold font-heading">
             <Shield className="w-5 h-5 text-primary" />
-            <h2 className="text-xl font-bold font-heading">
-              {isSignUp ? "Create Account" : "Welcome Back"}
-            </h2>
-          </div>
-          <button
-            type="button"
-            onClick={onClose}
-            className="p-1.5 rounded-full hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+            {isSignUp ? "Create Account" : "Welcome Back"}
+          </DialogTitle>
+        </DialogHeader>
 
-        {/* Auth Forms */}
+        {/* Auth Form */}
         <form onSubmit={handleEmailAuth} className="flex flex-col gap-4">
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-muted-foreground">
+            <label
+              htmlFor="auth-email"
+              className="text-xs font-semibold text-muted-foreground"
+            >
               Email Address
             </label>
             <div className="relative">
               <Mail className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
               <input
+                id="auth-email"
                 type="email"
                 required
                 value={email}
@@ -120,12 +109,16 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
           </div>
 
           <div className="flex flex-col gap-1.5">
-            <label className="text-xs font-semibold text-muted-foreground">
+            <label
+              htmlFor="auth-password"
+              className="text-xs font-semibold text-muted-foreground"
+            >
               Password
             </label>
             <div className="relative">
               <Lock className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
               <input
+                id="auth-password"
                 type={showPassword ? "text" : "password"}
                 required
                 value={password}
@@ -133,17 +126,19 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 placeholder="••••••••"
                 className="w-full pl-9 pr-10 py-2 border border-border rounded-lg bg-background text-foreground placeholder-muted-foreground focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none text-sm transition-all"
               />
-              <button
+              <Button
                 type="button"
+                variant="ghost"
+                size="icon-sm"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-3 top-2.5 text-muted-foreground hover:text-foreground transition-colors"
+                className="absolute right-1 top-1 text-muted-foreground hover:text-foreground"
               >
                 {showPassword ? (
                   <EyeOff className="w-4 h-4" />
                 ) : (
                   <Eye className="w-4 h-4" />
                 )}
-              </button>
+              </Button>
             </div>
           </div>
 
@@ -154,37 +149,40 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
           )}
 
           {successMsg && (
-            <div className="p-3 text-xs bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 border border-emerald-500/20 rounded-lg">
+            <div className="p-3 text-xs bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 rounded-lg">
               {successMsg}
             </div>
           )}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-2 bg-primary text-primary-foreground font-semibold rounded-lg hover:opacity-90 disabled:opacity-50 transition-opacity text-sm mt-2 cursor-pointer"
-          >
+          <Button type="submit" disabled={loading} className="w-full mt-2">
             {loading ? "Processing..." : isSignUp ? "Sign Up" : "Log In"}
-          </button>
+          </Button>
         </form>
 
         {/* Divider */}
         <div className="relative flex py-1 items-center">
-          <div className="flex-grow border-t border-border"></div>
+          <div className="flex-grow border-t border-border" />
           <span className="flex-shrink mx-4 text-xs text-muted-foreground font-medium">
             or continue with
           </span>
-          <div className="flex-grow border-t border-border"></div>
+          <div className="flex-grow border-t border-border" />
         </div>
 
-        {/* Third Party Auth */}
-        <button
+        {/* Google */}
+        <Button
           type="button"
+          variant="outline"
           onClick={handleGoogleLogin}
           disabled={loading}
-          className="w-full py-2 flex items-center justify-center gap-2 border border-border rounded-lg bg-background hover:bg-muted font-medium text-sm transition-colors cursor-pointer"
+          className="w-full"
         >
-          <svg className="w-4 h-4" viewBox="0 0 24 24">
+          <svg
+            className="w-4 h-4"
+            viewBox="0 0 24 24"
+            role="img"
+            aria-label="Google"
+          >
+            <title>Google</title>
             <path
               fill="#4285F4"
               d="M23.745 12.27c0-.7-.06-1.4-.19-2.07H12v3.92h6.69a5.74 5.74 0 0 1-2.48 3.77v3.13h4v-3.13a11.53 11.53 0 0 0 3.53-8.62z"
@@ -203,20 +201,22 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
             />
           </svg>
           Google
-        </button>
+        </Button>
 
-        {/* Toggle Sign Up / Log In */}
+        {/* Toggle */}
         <div className="text-center text-xs text-muted-foreground font-medium">
           {isSignUp ? "Already have an account?" : "New to the platform?"}{" "}
-          <button
+          <Button
             type="button"
+            variant="link"
+            size="xs"
             onClick={() => setIsSignUp(!isSignUp)}
-            className="text-primary hover:underline font-bold"
+            className="font-bold px-0"
           >
             {isSignUp ? "Log In" : "Sign Up"}
-          </button>
+          </Button>
         </div>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
