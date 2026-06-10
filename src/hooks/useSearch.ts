@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 import { STORE, WORKER_MSG } from "@/constants";
 import type {
+  RecordingSearchFilters,
   SearchableTable,
   SearchResult,
-  RecordingSearchFilters,
 } from "@/types";
 
 type PendingRequest = {

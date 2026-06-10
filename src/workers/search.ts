@@ -184,7 +184,10 @@ const getSearchEngine = async (): Promise<SearchEngine> => {
 };
 
 // --- DATA SYNC ---
-const safeRemove = async (db: any, id: string) => {
+const safeRemove = async (
+  db: RecordingsDb | CategoriesDb | MaterialsDb,
+  id: string,
+) => {
   try {
     await remove(db, id);
   } catch {
