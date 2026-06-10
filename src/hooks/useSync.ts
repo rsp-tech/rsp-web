@@ -7,10 +7,15 @@ import {
 } from "@tanstack/react-query";
 import { useSession } from "@/components/providers";
 import {
+  INVALIDATE_ALL_THRESHOLD,
+  QUERY_KEY,
   SUPABASE_PUBLISHABLE_KEY,
   SUPABASE_URL,
   SYNC_INTERVAL,
-} from "@/lib/constants";
+  WORKER_MSG,
+} from "@/constants";
+import { getWorker, notifySearchWorker, useSearch } from "@/hooks/useSearch";
+import type { SearchableTable, SyncResult } from "@/types";
 
 interface WorkerConfig {
   supabaseUrl: string;
@@ -19,25 +24,48 @@ interface WorkerConfig {
   queryClient: QueryClient;
 }
 
+type SyncWorkerMessage =
+  | (SyncResult & { type: typeof WORKER_MSG.SUCCESS })
+  | { type: typeof WORKER_MSG.ERROR; message: string }
+  | { type: typeof WORKER_MSG.PROGRESS; message: string };
+
 const runSync = ({ queryClient, ...config }: WorkerConfig): Promise<void> =>
   new Promise((resolve, reject) => {
     const worker = new Worker(new URL("@/workers/sync.ts", import.meta.url));
-    worker.postMessage({ type: "START_SYNC", ...config });
-    worker.onmessage = (e: MessageEvent) => {
-      if (e.data.type === "SUCCESS") {
+    worker.postMessage({ type: WORKER_MSG.START_SYNC, ...config });
+    worker.onmessage = (e: MessageEvent<SyncWorkerMessage>) => {
+      if (e.data.type === WORKER_MSG.SUCCESS) {
         worker.terminate();
-        const changedCategoryPaths = e.data.changedCategoryPaths;
-        if (changedCategoryPaths.length > 100) {
-          queryClient.invalidateQueries({ queryKey: ["category-page"] });
+        const result = e.data;
+        const { changedCategoryPaths } = result;
+
+        if (changedCategoryPaths.length > INVALIDATE_ALL_THRESHOLD) {
+          queryClient.invalidateQueries({
+            queryKey: [QUERY_KEY.CATEGORY_PAGE],
+          });
         } else {
           for (const path of changedCategoryPaths) {
             queryClient.invalidateQueries({
-              queryKey: ["category-page", path],
+              queryKey: [QUERY_KEY.CATEGORY_PAGE, path],
             });
           }
         }
+
+        if (result.rebuildSearchIndex) {
+          getWorker().postMessage({ type: WORKER_MSG.BUILD_INDEX });
+        } else {
+          for (const table of [
+            "recordings",
+            "categories",
+            "materials",
+          ] satisfies SearchableTable[]) {
+            const ids = result.changedIds[table];
+            if (ids?.length) notifySearchWorker(table, ids);
+          }
+        }
+
         resolve();
-      } else if (e.data.type === "ERROR") {
+      } else if (e.data.type === WORKER_MSG.ERROR) {
         worker.terminate();
         reject(new Error(e.data.message));
       }
@@ -51,6 +79,8 @@ const runSync = ({ queryClient, ...config }: WorkerConfig): Promise<void> =>
 export const useSync = () => {
   const { session, isLoading } = useSession();
   const queryClient = useQueryClient();
+  useSearch(); // ensure search worker is initialized alongside sync
+
   const workerConfig = {
     supabaseUrl: SUPABASE_URL,
     supabaseKey: SUPABASE_PUBLISHABLE_KEY,
@@ -58,7 +88,7 @@ export const useSync = () => {
     queryClient,
   };
   return useQuery({
-    queryKey: ["sync"],
+    queryKey: [QUERY_KEY.SYNC],
     queryFn: () => runSync(workerConfig),
     staleTime: SYNC_INTERVAL,
     refetchInterval: SYNC_INTERVAL,

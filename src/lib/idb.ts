@@ -1,4 +1,5 @@
 import { type IDBPDatabase, openDB } from "idb";
+import { DB_NAME, DB_VERSION, INDEX, STORE } from "@/constants";
 import type {
   Category,
   ContentType,
@@ -91,9 +92,6 @@ export interface RSPDatabase {
   };
 }
 
-const DB_NAME = "rsp.com";
-const DB_VERSION = 2;
-
 let dbPromise: Promise<IDBPDatabase<RSPDatabase>> | null = null;
 
 export const getDB = () => {
@@ -103,79 +101,79 @@ export const getDB = () => {
 
   dbPromise = openDB<RSPDatabase>(DB_NAME, DB_VERSION, {
     upgrade(db, _oldVersion, _newVersion, transaction) {
-      if (!db.objectStoreNames.contains("categories")) {
-        const store = db.createObjectStore("categories", { keyPath: "id" });
-        store.createIndex("by-path", "path");
-        store.createIndex("by-url", "url_path");
+      if (!db.objectStoreNames.contains(STORE.CATEGORIES)) {
+        const store = db.createObjectStore(STORE.CATEGORIES, { keyPath: "id" });
+        store.createIndex(INDEX.BY_PATH, "path");
+        store.createIndex(INDEX.BY_URL, "url_path");
       } else {
-        const store = transaction.objectStore(
-          "categories",
-        ) as unknown as IDBObjectStore;
-        if (!store.indexNames.contains("by-url")) {
-          store.createIndex("by-url", "url_path");
+        const store = transaction.objectStore(STORE.CATEGORIES);
+        if (!store.indexNames.contains(INDEX.BY_URL)) {
+          store.createIndex(INDEX.BY_URL, "url_path");
         }
-        if (!store.indexNames.contains("by-path")) {
-          store.createIndex("by-path", "path");
+        if (!store.indexNames.contains(INDEX.BY_PATH)) {
+          store.createIndex(INDEX.BY_PATH, "path");
         }
       }
 
-      if (!db.objectStoreNames.contains("recordings")) {
-        const store = db.createObjectStore("recordings", { keyPath: "id" });
-        store.createIndex("by-category_id", "category_id");
+      if (!db.objectStoreNames.contains(STORE.RECORDINGS)) {
+        const store = db.createObjectStore(STORE.RECORDINGS, { keyPath: "id" });
+        store.createIndex(INDEX.BY_CATEGORY_ID, "category_id");
       } else {
-        const store = transaction.objectStore("recordings");
-        if (!store.indexNames.contains("by-category_id")) {
-          store.createIndex("by-category_id", "category_id");
+        const store = transaction.objectStore(STORE.RECORDINGS);
+        if (!store.indexNames.contains(INDEX.BY_CATEGORY_ID)) {
+          store.createIndex(INDEX.BY_CATEGORY_ID, "category_id");
         }
       }
 
-      if (!db.objectStoreNames.contains("materials")) {
-        const store = db.createObjectStore("materials", { keyPath: "id" });
-        store.createIndex("by-recording_id", "recording_id");
+      if (!db.objectStoreNames.contains(STORE.MATERIALS)) {
+        const store = db.createObjectStore(STORE.MATERIALS, { keyPath: "id" });
+        store.createIndex(INDEX.BY_RECORDING_ID, "recording_id");
       } else {
-        const store = transaction.objectStore("materials");
-        if (!store.indexNames.contains("by-recording_id")) {
-          store.createIndex("by-recording_id", "recording_id");
+        const store = transaction.objectStore(STORE.MATERIALS);
+        if (!store.indexNames.contains(INDEX.BY_RECORDING_ID)) {
+          store.createIndex(INDEX.BY_RECORDING_ID, "recording_id");
         }
       }
 
-      if (!db.objectStoreNames.contains("speakers")) {
-        db.createObjectStore("speakers", { keyPath: "id" });
+      if (!db.objectStoreNames.contains(STORE.SPEAKERS)) {
+        db.createObjectStore(STORE.SPEAKERS, { keyPath: "id" });
       }
-      if (!db.objectStoreNames.contains("languages")) {
-        db.createObjectStore("languages", { keyPath: "id" });
+      if (!db.objectStoreNames.contains(STORE.LANGUAGES)) {
+        db.createObjectStore(STORE.LANGUAGES, { keyPath: "id" });
       }
-      if (!db.objectStoreNames.contains("content_types")) {
-        db.createObjectStore("content_types", { keyPath: "id" });
+      if (!db.objectStoreNames.contains(STORE.CONTENT_TYPES)) {
+        db.createObjectStore(STORE.CONTENT_TYPES, { keyPath: "id" });
       }
-      if (!db.objectStoreNames.contains("venues")) {
-        db.createObjectStore("venues", { keyPath: "id" });
+      if (!db.objectStoreNames.contains(STORE.VENUES)) {
+        db.createObjectStore(STORE.VENUES, { keyPath: "id" });
       }
-      if (!db.objectStoreNames.contains("services")) {
-        db.createObjectStore("services", { keyPath: "id" });
+      if (!db.objectStoreNames.contains(STORE.SERVICES)) {
+        db.createObjectStore(STORE.SERVICES, { keyPath: "id" });
       }
-      if (!db.objectStoreNames.contains("redirects")) {
-        db.createObjectStore("redirects", { keyPath: "id" });
+      if (!db.objectStoreNames.contains(STORE.REDIRECTS)) {
+        db.createObjectStore(STORE.REDIRECTS, { keyPath: "id" });
       }
-      if (!db.objectStoreNames.contains("events")) {
-        db.createObjectStore("events", { keyPath: "id" });
+      if (!db.objectStoreNames.contains(STORE.EVENTS)) {
+        db.createObjectStore(STORE.EVENTS, { keyPath: "id" });
       }
-      if (!db.objectStoreNames.contains("faq_categories")) {
-        db.createObjectStore("faq_categories", { keyPath: "id" });
+      if (!db.objectStoreNames.contains(STORE.FAQ_CATEGORIES)) {
+        db.createObjectStore(STORE.FAQ_CATEGORIES, { keyPath: "id" });
       }
-      if (!db.objectStoreNames.contains("faqs")) {
-        const store = db.createObjectStore("faqs", { keyPath: "id" });
-        store.createIndex("by-category_id", "category_id");
+      if (!db.objectStoreNames.contains(STORE.FAQS)) {
+        const store = db.createObjectStore(STORE.FAQS, { keyPath: "id" });
+        store.createIndex(INDEX.BY_CATEGORY_ID, "category_id");
       }
-      if (!db.objectStoreNames.contains("featured_sections")) {
-        db.createObjectStore("featured_sections", { keyPath: "id" });
+      if (!db.objectStoreNames.contains(STORE.FEATURED_SECTIONS)) {
+        db.createObjectStore(STORE.FEATURED_SECTIONS, { keyPath: "id" });
       }
-      if (!db.objectStoreNames.contains("featured_items")) {
-        const store = db.createObjectStore("featured_items", { keyPath: "id" });
-        store.createIndex("by-section_id", "section_id");
+      if (!db.objectStoreNames.contains(STORE.FEATURED_ITEMS)) {
+        const store = db.createObjectStore(STORE.FEATURED_ITEMS, {
+          keyPath: "id",
+        });
+        store.createIndex(INDEX.BY_SECTION_ID, "section_id");
       }
-      if (!db.objectStoreNames.contains("metadata")) {
-        db.createObjectStore("metadata");
+      if (!db.objectStoreNames.contains(STORE.METADATA)) {
+        db.createObjectStore(STORE.METADATA);
       }
     },
   });

@@ -1,10 +1,15 @@
 import type { IDBPDatabase } from "idb";
+import { META_KEY, STORE, WORKER_MSG } from "@/constants";
 import type { RSPDatabase } from "@/lib/idb";
 import { getDB } from "@/lib/idb";
 
 type CleanupTable = "categories" | "recordings" | "materials";
 
-const TABLES: CleanupTable[] = ["categories", "recordings", "materials"];
+const TABLES: CleanupTable[] = [
+  STORE.CATEGORIES,
+  STORE.RECORDINGS,
+  STORE.MATERIALS,
+];
 
 const isAllowed = (
   allowedRoles: number[],
@@ -21,47 +26,54 @@ const cleanupTable = async (
   const tx = db.transaction(table, "readwrite");
   let cursor = await tx.store.openCursor();
   while (cursor) {
-    const allowed = (cursor.value as { allowed_roles: number[] }).allowed_roles;
-    if (!isAllowed(allowed, roleId)) await cursor.delete();
+    if (!isAllowed(cursor.value.allowed_roles, roleId)) await cursor.delete();
     cursor = await cursor.continue();
   }
   await tx.done;
 };
 
-const ROLE_META_KEY = "cleanup_role";
+type WorkerMessage = {
+  type: typeof WORKER_MSG.START_CLEANUP;
+  role: number | undefined;
+};
 
-self.onmessage = async (event: MessageEvent) => {
+self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
   const { type, role } = event.data;
-  if (type !== "START_CLEANUP") return;
+  if (type !== WORKER_MSG.START_CLEANUP) return;
 
   try {
     const db = await getDB();
     if (!db) {
-      postMessage({ type: "ERROR", message: "IndexedDB not available" });
+      postMessage({
+        type: WORKER_MSG.ERROR,
+        message: "IndexedDB not available",
+      });
       return;
     }
 
-    const storedRole = await db.get("metadata", ROLE_META_KEY);
+    const nextRole = role ?? null;
+    const hasStoredRole =
+      (await db.getKey(STORE.METADATA, META_KEY.CLEANUP_ROLE)) !== undefined;
+    const storedRole = await db.get(STORE.METADATA, META_KEY.CLEANUP_ROLE);
 
-    if (!storedRole) {
-      await db.put("metadata", role ?? null, ROLE_META_KEY);
-      postMessage({ type: "SKIPPED", reason: "No previous role" });
+    if (!hasStoredRole) {
+      await db.put(STORE.METADATA, nextRole, META_KEY.CLEANUP_ROLE);
+      postMessage({ type: WORKER_MSG.SKIPPED, reason: "No previous role" });
       return;
     }
 
-    if (storedRole === (role ?? null)) {
-      postMessage({ type: "SKIPPED", reason: "Roles are same" });
+    if (storedRole === nextRole) {
+      postMessage({ type: WORKER_MSG.SKIPPED, reason: "Roles are same" });
       return;
     }
-
-    await db.put("metadata", role ?? null, ROLE_META_KEY);
 
     await Promise.all(TABLES.map((t) => cleanupTable(db, t, role)));
+    await db.put(STORE.METADATA, nextRole, META_KEY.CLEANUP_ROLE);
 
-    postMessage({ type: "SUCCESS" });
+    postMessage({ type: WORKER_MSG.SUCCESS });
   } catch (err) {
     postMessage({
-      type: "ERROR",
+      type: WORKER_MSG.ERROR,
       message: err instanceof Error ? err.message : String(err),
     });
   }

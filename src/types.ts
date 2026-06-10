@@ -5,7 +5,12 @@ export type Tables<T extends keyof Database["prod"]["Tables"]> =
 export type Enums<T extends keyof Database["prod"]["Enums"]> =
   Database["prod"]["Enums"][T];
 
-export type Category = Tables<"categories">;
+type DatabaseCategory = Tables<"categories">;
+
+export type Category = Omit<DatabaseCategory, "path" | "url_path"> & {
+  path: string;
+  url_path: string;
+};
 export type Recording = Tables<"recordings">;
 export type Speaker = Tables<"speakers">;
 export type Language = Tables<"languages">;
@@ -57,3 +62,71 @@ export type UserQuery = Tables<"user_queries">;
 export type UserQueryWithUser = UserQuery & {
   users: { name: string | null; email: string } | null;
 };
+
+export interface EnrichedRecording extends Recording {
+  speakers: Speaker[];
+  venue: Venue | null;
+  event: Event | null;
+  languages: Language[];
+  content_type: ContentType | null;
+  materials: Material[];
+}
+
+export type SearchableTable = "recordings" | "categories" | "materials";
+export type SearchTarget = SearchableTable;
+
+export interface RecordingSearchDocument {
+  id: number;
+  name: string;
+  speaker_names: string;
+  venue_name: string;
+  date: string;
+  speaker_ids: number[];
+  category_id: number;
+  lang_ids: number[];
+  venues_id: number;
+}
+
+export interface CategorySearchDocument {
+  id: number;
+  name: string;
+  url_path: string;
+}
+
+export interface MaterialSearchDocument {
+  id: number;
+  name: string;
+  recording_id: number;
+}
+
+export type SearchDocument =
+  | RecordingSearchDocument
+  | CategorySearchDocument
+  | MaterialSearchDocument;
+
+export interface RecordingSearchFilters {
+  category_id?: number;
+  speaker_ids?: number[];
+  lang_ids?: number[];
+  venues_id?: number;
+}
+
+export interface SearchPayload {
+  term: string;
+  targets: SearchTarget[];
+  reqId: string;
+  filters?: RecordingSearchFilters;
+}
+
+export interface SearchResult {
+  target: SearchTarget;
+  hits: SearchDocument[];
+}
+
+export type SyncChangedIds = Partial<Record<SearchableTable, number[]>>;
+
+export interface SyncResult {
+  changedCategoryPaths: string[];
+  changedIds: SyncChangedIds;
+  rebuildSearchIndex: boolean;
+}
