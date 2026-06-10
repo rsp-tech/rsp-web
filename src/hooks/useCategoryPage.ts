@@ -29,13 +29,15 @@ const loadCategoryPage = async (
     INDEX.BY_URL,
     urlPath,
   );
+
   if (!category) return null;
 
-  const expectedPrefix = `${category.path}.${category.id}`;
+  const expectedPath = `${category.path}.${category.id}`.replace(/^\./, '');
+
   const subcategories = await db.getAllFromIndex(
     STORE.CATEGORIES,
     INDEX.BY_PATH,
-    expectedPrefix,
+    expectedPath,
   );
 
   const recordings: Recording[] = await db.getAllFromIndex(

@@ -5,6 +5,7 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { useSession } from "@/components/providers";
 import {
   INVALIDATE_ALL_THRESHOLD,
@@ -29,7 +30,7 @@ type SyncWorkerMessage =
   | { type: typeof WORKER_MSG.ERROR; message: string }
   | { type: typeof WORKER_MSG.PROGRESS; message: string };
 
-const runSync = ({ queryClient, ...config }: WorkerConfig): Promise<void> =>
+const runSync = ({ queryClient, ...config }: WorkerConfig): Promise<number> =>
   new Promise((resolve, reject) => {
     const worker = new Worker(new URL("@/workers/sync.ts", import.meta.url));
     worker.postMessage({ type: WORKER_MSG.START_SYNC, ...config });
@@ -38,6 +39,10 @@ const runSync = ({ queryClient, ...config }: WorkerConfig): Promise<void> =>
         worker.terminate();
         const result = e.data;
         const { changedCategoryPaths } = result;
+
+        toast.success("Sync complete! Database updated.", {
+          id: "sync-status",
+        });
 
         if (changedCategoryPaths.length > INVALIDATE_ALL_THRESHOLD) {
           queryClient.invalidateQueries({
@@ -64,14 +69,18 @@ const runSync = ({ queryClient, ...config }: WorkerConfig): Promise<void> =>
           }
         }
 
-        resolve();
+        resolve(1);
+      } else if (e.data.type === WORKER_MSG.PROGRESS) {
+        toast.loading(e.data.message, { id: "sync-status" });
       } else if (e.data.type === WORKER_MSG.ERROR) {
         worker.terminate();
+        toast.error(`Sync error: ${e.data.message}`, { id: "sync-status" });
         reject(new Error(e.data.message));
       }
     };
     worker.onerror = (e) => {
       worker.terminate();
+      toast.error("Critical sync worker error occurred", { id: "sync-status" });
       reject(e);
     };
   });
