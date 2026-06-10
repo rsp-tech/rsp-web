@@ -1,9 +1,9 @@
 import { useCallback } from "react";
 import { STORE, WORKER_MSG } from "@/constants";
-import type { 
-  SearchableTable, 
-  SearchResult, 
-  RecordingSearchFilters 
+import type {
+  SearchableTable,
+  SearchResult,
+  RecordingSearchFilters,
 } from "@/types";
 
 type PendingRequest = {
@@ -75,7 +75,9 @@ export const terminateSearchWorker = () => {
     workerInstance = null;
   }
   workerReady = false;
-  rejectPendingWork(new Error("Search worker terminated explicitly (e.g., Auth Change)"));
+  rejectPendingWork(
+    new Error("Search worker terminated explicitly (e.g., Auth Change)"),
+  );
 };
 
 export const notifySearchWorker = (table: SearchableTable, ids: number[]) => {
@@ -85,7 +87,10 @@ export const notifySearchWorker = (table: SearchableTable, ids: number[]) => {
 
 export const useSearch = () => {
   const searchAll = useCallback(
-    async (term: string, filters?: RecordingSearchFilters): Promise<SearchResult[]> => {
+    async (
+      term: string,
+      filters?: RecordingSearchFilters,
+    ): Promise<SearchResult[]> => {
       const trimmedTerm = term.trim();
       if (!trimmedTerm) return [];
 

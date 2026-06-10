@@ -72,7 +72,11 @@ interface SearchEngine {
 
 type WorkerMessage =
   | { type: typeof WORKER_MSG.BUILD_INDEX }
-  | { type: typeof WORKER_MSG.UPDATE_DOCS; table: SearchableTable; ids: number[] }
+  | {
+      type: typeof WORKER_MSG.UPDATE_DOCS;
+      table: SearchableTable;
+      ids: number[];
+    }
   | { type: typeof WORKER_MSG.SEARCH_ALL; payload: SearchPayload };
 
 let engine: SearchEngine | null = null;
@@ -82,7 +86,10 @@ let buildPromise: Promise<SearchEngine> | null = null;
 const compactNumbers = (value: number[] | null): number[] =>
   Array.isArray(value) ? value.filter(Number.isFinite) : [];
 
-const mapRecording = (recording: Recording, maps: LookupMaps): RecordingSearchDocument => {
+const mapRecording = (
+  recording: Recording,
+  maps: LookupMaps,
+): RecordingSearchDocument => {
   const speakerIds = compactNumbers(recording.speaker_ids);
   const venueId = recording.venues_id ?? 0;
   return {
@@ -185,7 +192,10 @@ const safeRemove = async (db: any, id: string) => {
   }
 };
 
-const updateDocs = async (table: SearchableTable, ids: number[]): Promise<void> => {
+const updateDocs = async (
+  table: SearchableTable,
+  ids: number[],
+): Promise<void> => {
   const currentEngine = await getSearchEngine();
   const db = await getDB();
   if (!db) throw new Error("IndexedDB unavailable");
@@ -201,7 +211,8 @@ const updateDocs = async (table: SearchableTable, ids: number[]): Promise<void> 
 
     if (table === STORE.RECORDINGS) {
       await safeRemove(currentEngine.recordingsDb, stringId);
-      if (doc) await insert(currentEngine.recordingsDb, mapRecording(doc, lookupMaps));
+      if (doc)
+        await insert(currentEngine.recordingsDb, mapRecording(doc, lookupMaps));
     } else if (table === STORE.CATEGORIES) {
       await safeRemove(currentEngine.categoriesDb, stringId);
       if (doc) await insert(currentEngine.categoriesDb, mapCategory(doc));
@@ -213,12 +224,16 @@ const updateDocs = async (table: SearchableTable, ids: number[]): Promise<void> 
 };
 
 // --- SEARCH LOGIC ---
-const toRecordingWhere = (filters: SearchPayload["filters"]): RecordingWhere | undefined => {
+const toRecordingWhere = (
+  filters: SearchPayload["filters"],
+): RecordingWhere | undefined => {
   if (!filters) return undefined;
   const clauses: RecordingWhere[] = [];
-  
-  if (filters.category_id !== undefined) clauses.push({ category_id: { eq: filters.category_id } });
-  if (filters.venues_id !== undefined) clauses.push({ venues_id: { eq: filters.venues_id } });
+
+  if (filters.category_id !== undefined)
+    clauses.push({ category_id: { eq: filters.category_id } });
+  if (filters.venues_id !== undefined)
+    clauses.push({ venues_id: { eq: filters.venues_id } });
 
   if (!clauses.length) return undefined;
   return clauses.length === 1 ? clauses[0] : { and: clauses };
@@ -240,14 +255,15 @@ const matchesRecordingFilters = (
 
 const runSearchAll = async (payload: SearchPayload): Promise<void> => {
   const { term, targets, reqId, filters } = payload;
-  
+
   try {
     const currentEngine = await getSearchEngine();
     const recordingWhere = toRecordingWhere(filters);
     // Inflate limit if doing client-side array intersections
-    const recordingLimit = (filters?.speaker_ids?.length || filters?.lang_ids?.length)
-      ? SEARCH_LIMIT * 20
-      : SEARCH_LIMIT;
+    const recordingLimit =
+      filters?.speaker_ids?.length || filters?.lang_ids?.length
+        ? SEARCH_LIMIT * 20
+        : SEARCH_LIMIT;
 
     const results = await Promise.all(
       targets.map(async (target): Promise<SearchResult> => {
@@ -257,7 +273,10 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
             {
               term,
               properties: ["name", "speaker_names", "venue_name", "date"],
-              boost: { name: SEARCH_BOOST_NAME, speaker_names: SEARCH_BOOST_SPEAKER },
+              boost: {
+                name: SEARCH_BOOST_NAME,
+                speaker_names: SEARCH_BOOST_SPEAKER,
+              },
               where: recordingWhere,
               limit: recordingLimit,
               tolerance: SEARCH_TOLERANCE,
@@ -321,11 +340,16 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
   const message = event.data;
   try {
     if (message.type === WORKER_MSG.BUILD_INDEX) await rebuildSearchEngine();
-    else if (message.type === WORKER_MSG.UPDATE_DOCS) await updateDocs(message.table, message.ids);
-    else if (message.type === WORKER_MSG.SEARCH_ALL) await runSearchAll(message.payload);
+    else if (message.type === WORKER_MSG.UPDATE_DOCS)
+      await updateDocs(message.table, message.ids);
+    else if (message.type === WORKER_MSG.SEARCH_ALL)
+      await runSearchAll(message.payload);
   } catch (err) {
     postMessage({
-      type: message.type === WORKER_MSG.BUILD_INDEX ? WORKER_MSG.INDEX_ERROR : WORKER_MSG.ERROR,
+      type:
+        message.type === WORKER_MSG.BUILD_INDEX
+          ? WORKER_MSG.INDEX_ERROR
+          : WORKER_MSG.ERROR,
       message: err instanceof Error ? err.message : String(err),
     });
   }

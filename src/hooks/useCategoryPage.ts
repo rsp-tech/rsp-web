@@ -32,7 +32,7 @@ const loadCategoryPage = async (
 
   if (!category) return null;
 
-  const expectedPath = `${category.path}.${category.id}`.replace(/^\./, '');
+  const expectedPath = `${category.path}.${category.id}`.replace(/^\./, "");
 
   const subcategories = await db.getAllFromIndex(
     STORE.CATEGORIES,

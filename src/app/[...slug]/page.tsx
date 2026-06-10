@@ -98,10 +98,11 @@ export default function CategoryPage({
             <ChevronRight className="w-3 h-3 text-muted-foreground/50 shrink-0" />
             <Link
               href={crumb.href}
-              className={`hover:text-foreground transition-colors ${idx === breadcrumbs.length - 1
+              className={`hover:text-foreground transition-colors ${
+                idx === breadcrumbs.length - 1
                   ? "text-foreground font-bold"
                   : ""
-                }`}
+              }`}
             >
               {crumb.label}
             </Link>
