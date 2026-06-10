@@ -15,7 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "HG Radheshyamdas Spiritual Discourses",
   description:
-    "Rebuild of radheshyamdas.com featuring spiritual lectures, materials, and categories",
+    "Spiritual lectures, commentaries, and wisdom by HG Radheshyamdas",
+  manifest: "/manifest.json",
+  icons: { icon: "/favicon.ico", apple: "/icon-192x192.png" },
 };
 
 export default function RootLayout({
