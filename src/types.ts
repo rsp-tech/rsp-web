@@ -76,7 +76,7 @@ export type SearchableTable = "recordings" | "categories" | "materials";
 export type SearchTarget = SearchableTable;
 
 export interface RecordingSearchDocument {
-  id: number;
+  id: string;
   name: string;
   speaker_names: string;
   venue_name: string;
@@ -88,13 +88,13 @@ export interface RecordingSearchDocument {
 }
 
 export interface CategorySearchDocument {
-  id: number;
+  id: string;
   name: string;
   url_path: string;
 }
 
 export interface MaterialSearchDocument {
-  id: number;
+  id: string;
   name: string;
   recording_id: number;
 }
