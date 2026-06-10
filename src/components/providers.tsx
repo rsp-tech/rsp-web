@@ -2,6 +2,7 @@
 
 import type { Session } from "@supabase/supabase-js";
 import { QueryClientProvider } from "@tanstack/react-query";
+import { ThemeProvider } from "next-themes";
 import { createContext, useContext, useEffect, useState } from "react";
 import { getQueryClient } from "@/lib/query-client";
 import { getSupabaseClient } from "@/lib/supabase-browser";
@@ -41,10 +42,17 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <SessionContext value={{ session, isLoading }}>
-      <QueryClientProvider client={getQueryClient()}>
-        {children}
-      </QueryClientProvider>
-    </SessionContext>
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="monk"
+      themes={["clean", "monk", "dark"]}
+      disableTransitionOnChange
+    >
+      <SessionContext value={{ session, isLoading }}>
+        <QueryClientProvider client={getQueryClient()}>
+          {children}
+        </QueryClientProvider>
+      </SessionContext>
+    </ThemeProvider>
   );
 }
