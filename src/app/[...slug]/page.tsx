@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { use } from "react";
-import { useCategoryPage } from "@/hooks/useCategoryPage";
+import { useCategoryPage } from "@/hooks/use-category-page";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import type { Category } from "@/types";
 

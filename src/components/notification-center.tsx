@@ -3,7 +3,7 @@
 import { Bell, BellRing, Check, CircleAlert, Inbox, X } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { useNotifications } from "@/hooks/useNotifications";
+import { useNotifications } from "@/hooks/use-notifications";
 
 export function NotificationCenter() {
   const [isOpen, setIsOpen] = useState(false);

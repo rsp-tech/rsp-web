@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getSupabaseClient } from "@/lib/supabase-browser";
-import { AuthModal } from "./AuthModal";
+import { AuthModal } from "./auth-modal";
 import { useSession } from "./providers";
 
 export function UserNav() {

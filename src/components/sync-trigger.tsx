@@ -1,7 +1,7 @@
 "use client";
 
-import { useCleanup } from "@/hooks/useCleanup";
-import { useSync } from "@/hooks/useSync";
+import { useCleanup } from "@/hooks/use-cleanup";
+import { useSync } from "@/hooks/use-sync";
 
 export function SyncTrigger() {
   useSync();

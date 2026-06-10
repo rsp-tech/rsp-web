@@ -15,7 +15,7 @@ import {
   SYNC_INTERVAL,
   WORKER_MSG,
 } from "@/constants";
-import { getWorker, notifySearchWorker, useSearch } from "@/hooks/useSearch";
+import { getWorker, notifySearchWorker, useSearch } from "@/hooks/use-search";
 import type { SearchableTable, SyncResult } from "@/types";
 
 interface WorkerConfig {

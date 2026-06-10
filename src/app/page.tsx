@@ -2,7 +2,7 @@
 
 import { BookOpen, Compass, FolderOpen, Loader2 } from "lucide-react";
 import Link from "next/link";
-import { useRootCategories } from "@/hooks/useRootCategories";
+import { useRootCategories } from "@/hooks/use-root-categories";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import type { Category } from "@/types";
 

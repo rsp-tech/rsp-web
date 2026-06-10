@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useSession } from "@/components/providers";
 import { WORKER_MSG } from "@/constants";
-import { terminateSearchWorker } from "@/hooks/useSearch";
+import { terminateSearchWorker } from "@/hooks/use-search";
 
 const toRoleId = (value: unknown): number | undefined =>
   typeof value === "number" && Number.isInteger(value) ? value : undefined;

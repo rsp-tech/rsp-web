@@ -2,9 +2,9 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { NotificationCenter } from "./NotificationCenter";
-import { SearchBar } from "./SearchBar";
-import { ThemeSelector } from "./ThemeSelector";
+import { NotificationCenter } from "./notification-center";
+import { SearchBar } from "./search-bar";
+import { ThemeSelector } from "./theme-selector";
 import { UserNav } from "./user-nav";
 
 export function Header() {

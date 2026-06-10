@@ -15,6 +15,7 @@ This version has breaking changes — APIs, conventions, and file structure may 
 ## 2. Coding Standards & Component Design
 
 - **Style**: Functional TypeScript using arrow functions (`() => {}`). Write clean, maintainable, testable code with `vitest` unit tests. Avoid `process.exit`.
+- **File Naming**: **CRITICAL:** All files must use `dash-case` (kebab-case). No PascalCase or camelCase filenames. Examples: `auth-modal.tsx`, `use-search.ts`, `notification-center.tsx`.
 - **Structure**: Keep components small and single-responsibility. Use `.map()` for lists.
 - **Colocation**: Place route-specific components/hooks inside that route's directory (e.g., `_components/`, `_hooks/`). Place shared assets in `src/components/`, `src/hooks/`, or `src/components/ui/` for Shadcn.
 - **Database Types**: Do not manually edit `src/database.types.ts`. Cast `ltree` fields (`path`, `url_path`) from `unknown` to `string` (already done, see types.ts).

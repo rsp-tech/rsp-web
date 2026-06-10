@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { Toaster } from "sonner";
-import { Header } from "@/components/Header";
+import { Header } from "@/components/header";
 import { Providers } from "@/components/providers";
-import { SyncTrigger } from "@/components/SyncTrigger";
+import { SyncTrigger } from "@/components/sync-trigger";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
