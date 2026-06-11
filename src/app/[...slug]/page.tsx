@@ -15,8 +15,7 @@ import {
 import Link from "next/link";
 import { use } from "react";
 import { useCategoryPage } from "@/hooks/use-category-page";
-import { getSupabaseClient } from "@/lib/supabase-browser";
-import type { Category } from "@/types";
+import { getAudioUrl, getCategoryImageUrl, getMaterialUrl } from "@/lib/storage";
 
 export default function CategoryPage({
   params,
@@ -25,30 +24,6 @@ export default function CategoryPage({
 }) {
   const { slug } = use(params);
   const { data, isPending, error } = useCategoryPage(slug);
-
-  const getCategoryImageUrl = (cat: Category) => {
-    if (!cat.img_id) return null;
-    const supabase = getSupabaseClient();
-    const fileName = `${cat.img_id.toString(36)}.webp`;
-    const { data } = supabase.storage.from("images").getPublicUrl(fileName);
-    return data.publicUrl;
-  };
-
-  const getAudioDownloadUrl = (audioId: string) => {
-    if (audioId.startsWith("http")) return audioId;
-    const supabase = getSupabaseClient();
-    const { data } = supabase.storage.from("audio").getPublicUrl(audioId);
-    return data.publicUrl;
-  };
-
-  const getMaterialDownloadUrl = (storageKey: string) => {
-    if (storageKey.startsWith("http")) return storageKey;
-    const supabase = getSupabaseClient();
-    const { data } = supabase.storage
-      .from("materials")
-      .getPublicUrl(storageKey);
-    return data.publicUrl;
-  };
 
   if (isPending) {
     return (
@@ -216,7 +191,7 @@ export default function CategoryPage({
                         {rec.materials.map((mat) => (
                           <a
                             key={mat.id}
-                            href={getMaterialDownloadUrl(mat.storage_key)}
+                            href={getMaterialUrl(mat.storage_key)}
                             download
                             className="inline-flex items-center gap-1 bg-muted hover:bg-primary/10 hover:text-primary px-2.5 py-1 rounded-md text-xs font-semibold text-foreground transition-colors border border-border"
                           >
@@ -236,7 +211,7 @@ export default function CategoryPage({
                 <div className="flex items-center gap-2 self-stretch md:self-auto justify-end border-t md:border-none border-border pt-3 md:pt-0 shrink-0">
                   {rec.audio_id && (
                     <a
-                      href={getAudioDownloadUrl(rec.audio_id)}
+                      href={getAudioUrl(rec.audio_id)}
                       download
                       className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground text-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition-all border border-border cursor-pointer"
                       title="Download Audio"

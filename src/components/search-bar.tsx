@@ -216,7 +216,7 @@ export function SearchBar() {
     const db = await getDB();
     if (db) {
       const cat = await db.get(STORE.CATEGORIES, rec.category_id);
-      if (cat) router.push(`/${cat.url_path.split(".").join("/")}`);
+      if (cat) router.push(`/${cat.url_path.replace(/\./g, "/")}?q=${rec.id}`);
     }
     setTerm("");
     setShowDropdown(false);

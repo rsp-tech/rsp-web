@@ -3,19 +3,10 @@
 import { BookOpen, Compass, FolderOpen, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useRootCategories } from "@/hooks/use-root-categories";
-import { getSupabaseClient } from "@/lib/supabase-browser";
-import type { Category } from "@/types";
+import { getCategoryImageUrl } from "@/lib/storage";
 
 export default function Home() {
   const { data: categories, isLoading, error } = useRootCategories();
-
-  const getCategoryImageUrl = (cat: Category) => {
-    if (!cat.img_id) return null;
-    const supabase = getSupabaseClient();
-    const fileName = `${cat.img_id.toString(36)}.webp`;
-    const { data } = supabase.storage.from("images").getPublicUrl(fileName);
-    return data.publicUrl;
-  };
 
   return (
     <div className="flex flex-col gap-10 py-4">

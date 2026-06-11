@@ -22,22 +22,22 @@ export interface RSPDatabase {
     key: number;
     value: Category;
     indexes: {
-      "by-url": string;
-      "by-path": string;
+      [INDEX.BY_URL]: string;
+      [INDEX.BY_PATH]: string;
     };
   };
   recordings: {
     key: number;
     value: Recording;
     indexes: {
-      "by-category_id": number;
+      [INDEX.BY_CATEGORY_ID]: number;
     };
   };
   materials: {
     key: number;
     value: Material;
     indexes: {
-      "by-recording_id": number;
+      [INDEX.BY_RECORDING_ID]: number;
     };
   };
   speakers: {
@@ -75,7 +75,7 @@ export interface RSPDatabase {
   faqs: {
     key: number;
     value: Faq;
-    indexes: { "by-category_id": number };
+    indexes: { [INDEX.BY_CATEGORY_ID]: number };
   };
   featured_sections: {
     key: number;
@@ -84,7 +84,7 @@ export interface RSPDatabase {
   featured_items: {
     key: number;
     value: FeaturedItem;
-    indexes: { "by-section_id": number };
+    indexes: { [INDEX.BY_SECTION_ID]: number };
   };
   metadata: {
     key: string;
