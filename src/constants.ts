@@ -10,6 +10,10 @@ export const SUPABASE_SCHEMA = "prod";
 export const SYNC_PAGE_SIZE = 1000;
 export const SYNC_CONCURRENCY = 4;
 
+export const ASSET_BAE_URL = process.env.NEXT_PUBLIC_ASSET_BASE_URL as string;
+export const ASSET_DOWNLOAD_BASE_URL = process.env
+  .NEXT_PUBLIC_ASSET_DOWNLOAD_BASE_URL as string;
+
 // IndexedDB
 export const DB_NAME = "rsp.com";
 export const DB_VERSION = 2;
@@ -72,6 +76,8 @@ export const WORKER_MSG = {
 // Query keys
 export const QUERY_KEY = {
   CATEGORY_PAGE: "category-page",
+  ROOT_CATEGORIES: "root-categories",
+  NOTIFICATIONS: "notifications",
   SYNC: "sync",
 } as const;
 

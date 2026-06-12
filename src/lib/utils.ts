@@ -1,11 +1,26 @@
+import type { User } from "@supabase/supabase-js";
 import { type ClassValue, clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}
+export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export function createLimiter(concurrency: number) {
+export const categoryPath = (urlPath: string) => urlPath.replaceAll(".", "/");
+
+export const slugToLabel = (slug: string) =>
+  slug
+    .split("_")
+    .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
+    .join(" ");
+
+export const errorMessage = (err: unknown) =>
+  err instanceof Error ? err.message : String(err);
+
+export const getUserDisplayName = (user: User, fallback = "User") =>
+  (user.user_metadata.full_name as string | undefined) ??
+  user.email?.split("@")[0] ??
+  fallback;
+
+export const createLimiter = (concurrency: number) => {
   let active = 0;
   const queue: (() => void)[] = [];
   return function limit<T>(fn: () => Promise<T>): Promise<T> {
@@ -22,4 +37,4 @@ export function createLimiter(concurrency: number) {
       active < concurrency ? run() : queue.push(run);
     });
   };
-}
+};
