@@ -33,6 +33,8 @@ type WorkerMessage = {
   supabaseUrl: string;
   supabaseKey: string;
   accessToken: string;
+  roleId?: number;
+  isPublic?: boolean;
 };
 
 const ALL_TABLES: SyncTable[] = [
@@ -53,6 +55,11 @@ const ALL_TABLES: SyncTable[] = [
 ];
 
 const SEARCH_LOOKUP_TABLES = new Set<SyncTable>([STORE.SPEAKERS, STORE.VENUES]);
+const ROLE_SYNCED_TABLES: SyncTable[] = [
+  STORE.CATEGORIES,
+  STORE.RECORDINGS,
+  STORE.MATERIALS,
+];
 
 const isSearchableTable = (table: SyncTable): table is SearchableTable =>
   table === STORE.RECORDINGS ||
@@ -74,7 +81,6 @@ const getLastSync = async (
     STORE.METADATA,
     `${META_KEY.LAST_SYNC_PREFIX}${table}`,
   );
-
   return typeof value === "string" ? value : undefined;
 };
 
@@ -90,40 +96,10 @@ const fetchTableWatermark = async (
     .order("updated_at", { ascending: false })
     .limit(1);
 
-  if (error) throw new Error(`${table}: ${error.message}`);
-
-  const updatedAt = data?.[0]?.updated_at;
-  return typeof updatedAt === "string" ? updatedAt : null;
-};
-
-const fetchChangedPage = async (
-  supabase: SupabaseClient,
-  table: SyncTable,
-  highWatermark: string,
-  since?: string,
-  cursor?: SyncCursor,
-) => {
-  let query = supabase
-    .schema(SUPABASE_SCHEMA)
-    .from(table)
-    .select("*")
-    .not("updated_at", "is", null)
-    .lte("updated_at", highWatermark)
-    .order("updated_at", { ascending: true })
-    .order("id", { ascending: true })
-    .limit(SYNC_PAGE_SIZE);
-
-  if (since) {
-    query = query.gt("updated_at", since);
+  if (error) {
+    throw new Error(`${table} watermark tracking failed: ${error.message}`);
   }
-
-  if (cursor) {
-    query = query.or(
-      `updated_at.gt.${cursor.updatedAt},and(updated_at.eq.${cursor.updatedAt},id.gt.${cursor.id})`,
-    );
-  }
-
-  return query;
+  return typeof data?.[0]?.updated_at === "string" ? data[0].updated_at : null;
 };
 
 const appendChangedId = (
@@ -132,7 +108,6 @@ const appendChangedId = (
   id: number | string,
 ) => {
   if (!isSearchableTable(table) || typeof id !== "number") return;
-
   changedIds[table] ??= [];
   changedIds[table].push(id);
 };
@@ -142,11 +117,11 @@ const toSyncResult = (
   changedIds: SyncChangedIds,
   rebuildSearchIndex: boolean,
 ): SyncResult => ({
-  changedCategoryPaths: [...changedCategoryPaths],
+  changedCategoryPaths: Array.from(changedCategoryPaths),
   changedIds: {
-    recordings: [...new Set(changedIds.recordings ?? [])],
-    categories: [...new Set(changedIds.categories ?? [])],
-    materials: [...new Set(changedIds.materials ?? [])],
+    recordings: Array.from(new Set(changedIds.recordings ?? [])),
+    categories: Array.from(new Set(changedIds.categories ?? [])),
+    materials: Array.from(new Set(changedIds.materials ?? [])),
   },
   rebuildSearchIndex,
 });
@@ -162,7 +137,6 @@ const syncTable = async (
   const highWatermark = await fetchTableWatermark(supabase, table);
 
   if (!highWatermark) return false;
-
   if (
     localLastSync &&
     new Date(localLastSync).getTime() >= new Date(highWatermark).getTime()
@@ -174,15 +148,25 @@ const syncTable = async (
   let changedRows = 0;
 
   while (true) {
-    const { data, error } = await fetchChangedPage(
-      supabase,
-      table,
-      highWatermark,
-      localLastSync,
-      cursor,
-    );
+    let query = supabase
+      .schema(SUPABASE_SCHEMA)
+      .from(table)
+      .select("*")
+      .not("updated_at", "is", null)
+      .lte("updated_at", highWatermark)
+      .order("updated_at", { ascending: true })
+      .order("id", { ascending: true })
+      .limit(SYNC_PAGE_SIZE);
 
-    if (error) throw new Error(`${table}: ${error.message}`);
+    if (localLastSync) query = query.gt("updated_at", localLastSync);
+    if (cursor) {
+      query = query.or(
+        `updated_at.gt.${cursor.updatedAt},and(updated_at.eq.${cursor.updatedAt},id.gt.${cursor.id})`,
+      );
+    }
+
+    const { data, error } = await query;
+    if (error) throw new Error(`${table} page fetch failed: ${error.message}`);
     if (!data?.length) break;
 
     const rows = data as SyncRow[];
@@ -190,11 +174,6 @@ const syncTable = async (
 
     for (const row of rows) {
       tx.store.put(stripCacheMetadata(row));
-    }
-
-    await tx.done;
-
-    for (const row of rows) {
       changedRows++;
       appendChangedId(changedIds, table, row.id);
 
@@ -202,15 +181,13 @@ const syncTable = async (
         changedCategoryPaths.add(row.url_path);
       }
     }
+    await tx.done;
 
     const lastRow = rows[rows.length - 1];
-    if (!lastRow.updated_at) {
-      throw new Error(`${table}: received row without updated_at`);
-    }
+    if (!lastRow.updated_at)
+      throw new Error(`${table}: missing field updated_at`);
 
     cursor = { id: lastRow.id, updatedAt: lastRow.updated_at };
-    postMessage({ type: WORKER_MSG.PROGRESS, message: `Syncing ${table}...` });
-
     if (rows.length < SYNC_PAGE_SIZE) break;
   }
 
@@ -219,7 +196,6 @@ const syncTable = async (
     highWatermark,
     `${META_KEY.LAST_SYNC_PREFIX}${table}`,
   );
-
   if (table === STORE.CATEGORIES) {
     await db.put(
       STORE.METADATA,
@@ -228,11 +204,75 @@ const syncTable = async (
     );
   }
 
+  postMessage({
+    type: WORKER_MSG.PROGRESS,
+    message: `Completed sync: ${table}`,
+  });
   return changedRows > 0 && SEARCH_LOOKUP_TABLES.has(table);
 };
 
+const syncTableForRole = async (
+  supabase: SupabaseClient,
+  db: IDBPDatabase<RSPDatabase>,
+  table: SyncTable,
+  roleId: number,
+  changedCategoryPaths: Set<string>,
+  changedIds: SyncChangedIds,
+): Promise<void> => {
+  const highWatermark = await fetchTableWatermark(supabase, table);
+  if (!highWatermark) return;
+
+  let cursor: SyncCursor | undefined;
+
+  while (true) {
+    let query = supabase
+      .schema(SUPABASE_SCHEMA)
+      .from(table)
+      .select("*")
+      .contains("allowed_roles", [roleId])
+      .lte("updated_at", highWatermark)
+      .order("updated_at", { ascending: true })
+      .order("id", { ascending: true })
+      .limit(SYNC_PAGE_SIZE);
+
+    if (cursor) {
+      query = query.or(
+        `updated_at.gt.${cursor.updatedAt},and(updated_at.eq.${cursor.updatedAt},id.gt.${cursor.id})`,
+      );
+    }
+
+    const { data, error } = await query;
+    if (error) throw new Error(`${table} role-sync failed: ${error.message}`);
+    if (!data?.length) break;
+
+    const rows = data as SyncRow[];
+    const tx = db.transaction(table, "readwrite");
+
+    for (const row of rows) {
+      tx.store.put(stripCacheMetadata(row));
+      appendChangedId(changedIds, table, row.id);
+      if (table === STORE.CATEGORIES && row.url_path) {
+        changedCategoryPaths.add(row.url_path);
+      }
+    }
+    await tx.done;
+
+    const lastRow = rows[rows.length - 1];
+    if (!lastRow.updated_at)
+      throw new Error(`${table}: missing field updated_at`);
+    cursor = { id: lastRow.id, updatedAt: lastRow.updated_at };
+
+    if (rows.length < SYNC_PAGE_SIZE) break;
+  }
+  postMessage({
+    type: WORKER_MSG.PROGRESS,
+    message: `Completed role sync: ${table}`,
+  });
+};
+
 self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
-  const { type, supabaseUrl, supabaseKey, accessToken } = event.data;
+  const { type, supabaseUrl, supabaseKey, accessToken, roleId, isPublic } =
+    event.data;
   if (type !== WORKER_MSG.START_SYNC) return;
 
   try {
@@ -251,11 +291,45 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
         : undefined,
     });
 
-    postMessage({ type: WORKER_MSG.PROGRESS, message: "Syncing..." });
+    postMessage({
+      type: WORKER_MSG.PROGRESS,
+      message: "Sync execution started",
+    });
 
     const limit = createLimiter(SYNC_CONCURRENCY);
     const changedCategoryPaths = new Set<string>();
     const changedIds: SyncChangedIds = {};
+
+    const nextRole = roleId ?? null;
+    const hasStoredRole =
+      (await db.getKey(STORE.METADATA, META_KEY.SYNC_ROLE)) !== undefined;
+    const storedRole = await db.get(STORE.METADATA, META_KEY.SYNC_ROLE);
+
+    if (!hasStoredRole) {
+      await db.put(STORE.METADATA, nextRole, META_KEY.SYNC_ROLE);
+    }
+
+    if (
+      (!hasStoredRole || storedRole !== nextRole) &&
+      !isPublic &&
+      roleId !== undefined
+    ) {
+      await Promise.all(
+        ROLE_SYNCED_TABLES.map((table) =>
+          limit(() =>
+            syncTableForRole(
+              supabase,
+              db,
+              table,
+              roleId,
+              changedCategoryPaths,
+              changedIds,
+            ),
+          ),
+        ),
+      );
+      await db.put(STORE.METADATA, nextRole, META_KEY.SYNC_ROLE);
+    }
 
     const lookupTableChanges = await Promise.all(
       ALL_TABLES.map((table) =>
@@ -274,9 +348,6 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       ),
     });
   } catch (err) {
-    postMessage({
-      type: WORKER_MSG.ERROR,
-      message: errorMessage(err),
-    });
+    postMessage({ type: WORKER_MSG.ERROR, message: errorMessage(err) });
   }
 };

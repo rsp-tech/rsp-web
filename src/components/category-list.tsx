@@ -40,6 +40,12 @@ export const CategoryList = ({
     );
   }
 
+  categories.sort((a, b) =>
+    a.order_ind !== null && b.order_ind !== null
+      ? a.order_ind - b.order_ind
+      : 0,
+  );
+
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {categories.map((cat) => (

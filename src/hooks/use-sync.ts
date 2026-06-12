@@ -22,6 +22,8 @@ interface WorkerConfig {
   supabaseUrl: string;
   supabaseKey: string;
   accessToken: string;
+  roleId?: number;
+  isPublic?: boolean;
   queryClient: QueryClient;
 }
 
@@ -79,6 +81,7 @@ const runSync = ({ queryClient, ...config }: WorkerConfig): Promise<number> =>
       } else if (e.data.type === WORKER_MSG.ERROR) {
         worker.terminate();
         toast.error(`Sync error: ${e.data.message}`, { id: "sync-status" });
+        console.error(e.data.message);
         reject(new Error(e.data.message));
       }
     };
@@ -89,19 +92,27 @@ const runSync = ({ queryClient, ...config }: WorkerConfig): Promise<number> =>
     };
   });
 
+const toRoleId = (value: unknown): number | undefined =>
+  typeof value === "number" && Number.isInteger(value) ? value : undefined;
+
 export const useSync = () => {
   const { session, isLoading } = useSession();
   const queryClient = useQueryClient();
   useSearch(); // ensure search worker is initialized alongside sync
 
+  const roleId = toRoleId(session?.user.app_metadata.role_id);
+  const isPublic = session?.user.app_metadata.is_public as boolean | undefined;
+
   const workerConfig = {
     supabaseUrl: SUPABASE_URL,
     supabaseKey: SUPABASE_PUBLISHABLE_KEY,
     accessToken: session?.access_token ?? "",
+    roleId,
+    isPublic,
     queryClient,
   };
   return useQuery({
-    queryKey: [QUERY_KEY.SYNC],
+    queryKey: [QUERY_KEY.SYNC, roleId],
     queryFn: () => runSync(workerConfig),
     staleTime: SYNC_INTERVAL,
     refetchInterval: SYNC_INTERVAL,

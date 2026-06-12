@@ -51,6 +51,7 @@ export const META_KEY = {
   LAST_SYNC_PREFIX: "last_sync_",
   CATEGORIES_LAST_UPDATED: "categories_last_updated",
   CLEANUP_ROLE: "cleanup_role",
+  SYNC_ROLE: "sync_role",
 } as const;
 
 // Worker message types

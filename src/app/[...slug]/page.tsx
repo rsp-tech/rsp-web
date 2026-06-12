@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { use } from "react";
+import { SiYoutube } from "react-icons/si"
 import { CategoryList } from "@/components/category-list";
 import { useCategoryPage } from "@/hooks/use-category-page";
 import { getAssetUrl } from "@/lib/storage";
@@ -69,11 +70,10 @@ export default function CategoryPage({
             <ChevronRight className="w-3 h-3 text-muted-foreground/50 shrink-0" />
             <Link
               href={crumb.href}
-              className={`hover:text-foreground transition-colors ${
-                idx === breadcrumbs.length - 1
-                  ? "text-foreground font-bold"
-                  : ""
-              }`}
+              className={`hover:text-foreground transition-colors ${idx === breadcrumbs.length - 1
+                ? "text-foreground font-bold"
+                : ""
+                }`}
             >
               {crumb.label}
             </Link>
@@ -195,7 +195,7 @@ export default function CategoryPage({
                       className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer"
                       title="Watch on YouTube"
                     >
-                      {/* <Youtube className="w-4 h-4" /> */}
+                      <SiYoutube className="w-4 h-4" />
                       <span>YouTube</span>
                     </a>
                   )}
