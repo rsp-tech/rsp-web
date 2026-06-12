@@ -3,9 +3,18 @@
 import { Paintbrush } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
+import { cn } from "@/lib/utils";
 
 export type Theme = "clean" | "monk" | "dark";
 const COLOR_THEMES: Theme[] = ["clean", "monk", "dark"];
+
+const themeButtonCn = (active: boolean) =>
+  cn(
+    "px-2.5 py-1 text-xs font-medium rounded-md transition-all capitalize",
+    active
+      ? "bg-primary text-primary-foreground shadow-sm"
+      : "text-muted-foreground hover:bg-muted hover:text-foreground",
+  );
 
 export function ThemeSelector() {
   const { theme, setTheme } = useTheme();
@@ -34,11 +43,7 @@ export function ThemeSelector() {
             key={t}
             type="button"
             onClick={() => setTheme(t)}
-            className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all capitalize ${
-              theme === t
-                ? "bg-primary text-primary-foreground shadow-sm"
-                : "text-muted-foreground hover:bg-muted hover:text-foreground"
-            }`}
+            className={themeButtonCn(theme === t)}
           >
             {t}
           </button>
@@ -46,11 +51,7 @@ export function ThemeSelector() {
         <button
           type="button"
           onClick={toggleCompact}
-          className={`px-2.5 py-1 text-xs font-medium rounded-md transition-all ${
-            compact
-              ? "bg-primary text-primary-foreground shadow-sm"
-              : "text-muted-foreground hover:bg-muted hover:text-foreground"
-          }`}
+          className={themeButtonCn(compact)}
         >
           compact
         </button>

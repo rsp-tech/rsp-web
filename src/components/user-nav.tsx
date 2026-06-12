@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getSupabaseClient } from "@/lib/supabase-browser";
+import { getUserDisplayName } from "@/lib/utils";
 import { AuthModal } from "./auth-modal";
 import { useSession } from "./providers";
 
@@ -45,11 +46,6 @@ export function UserNav() {
     );
   }
 
-  const name =
-    session.user.user_metadata.full_name ??
-    session.user.email?.split("@")[0] ??
-    "User";
-
   const handleLogout = async () => {
     const supabase = getSupabaseClient();
     await supabase.auth.signOut();
@@ -66,7 +62,9 @@ export function UserNav() {
       <DropdownMenuContent className="w-56" align="end" forceMount>
         <DropdownMenuLabel className="font-normal">
           <div className="flex flex-col gap-0.5">
-            <p className="text-sm font-medium leading-none">{name}</p>
+            <p className="text-sm font-medium leading-none">
+              {getUserDisplayName(session.user)}
+            </p>
             {session.user.email && (
               <p className="text-xs text-muted-foreground truncate">
                 {session.user.email}

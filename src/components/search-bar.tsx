@@ -14,6 +14,7 @@ import { Button } from "@/components/ui/button";
 import { INDEX, STORE } from "@/constants";
 import { useSearch } from "@/hooks/use-search";
 import { getDB } from "@/lib/idb";
+import { categoryPath } from "@/lib/utils";
 import type {
   Category,
   CategorySearchDocument,
@@ -30,6 +31,21 @@ interface FilteredHits {
   recordings: Recording[];
   materials: (Material & { recordingName?: string })[];
 }
+
+const SearchSection = ({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) => (
+  <div>
+    <h4 className="px-2 pb-1 text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80">
+      {label}
+    </h4>
+    <div className="flex flex-col gap-0.5">{children}</div>
+  </div>
+);
 
 export function SearchBar() {
   const router = useRouter();
@@ -125,11 +141,6 @@ export function SearchBar() {
           .map((h) => allCategories.find((c) => c.id === Number(h.id)))
           .filter((c): c is Category => c !== undefined);
 
-        const filteredRecs = recHits
-          .map((h) => allCategories.find((c) => c.id === h.category_id))
-          .filter(Boolean) as Category[]; // narrowing to get category_ids; actual recordings fetched below
-
-        // Re-fetch actual Recording objects by id
         const recIds = recHits.map((h) => Number(h.id));
         const fullRecs = (
           await Promise.all(recIds.map((id) => db.get(STORE.RECORDINGS, id)))
@@ -147,9 +158,6 @@ export function SearchBar() {
           } as Material & { recordingName?: string };
         });
         let filteredMats = matWithName;
-
-        // suppress unused variable warning — filteredRecs was intermediate
-        void filteredRecs;
 
         if (currentCategory) {
           const currentUrl = currentCategory.url_path;
@@ -207,7 +215,7 @@ export function SearchBar() {
   }, [term, scope, currentCategory, searchAll]);
 
   const handleSelectCategory = (cat: Category) => {
-    router.push(`/${cat.url_path.split(".").join("/")}`);
+    router.push(`/${categoryPath(cat.url_path)}`);
     setTerm("");
     setShowDropdown(false);
   };
@@ -216,7 +224,7 @@ export function SearchBar() {
     const db = await getDB();
     if (db) {
       const cat = await db.get(STORE.CATEGORIES, rec.category_id);
-      if (cat) router.push(`/${cat.url_path.replace(/\./g, "/")}?q=${rec.id}`);
+      if (cat) router.push(`/${categoryPath(cat.url_path)}`);
     }
     setTerm("");
     setShowDropdown(false);
@@ -299,83 +307,66 @@ export function SearchBar() {
             ) : (
               <>
                 {results.categories.length > 0 && (
-                  <div>
-                    <h4 className="px-2 pb-1 text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80">
-                      Categories
-                    </h4>
-                    <div className="flex flex-col gap-0.5">
-                      {results.categories.slice(0, 4).map((cat) => (
-                        <Button
-                          key={cat.id}
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleSelectCategory(cat)}
-                          className="w-full justify-start gap-2"
-                        >
-                          <Folder className="w-4 h-4 text-primary shrink-0" />
-                          <span className="truncate">{cat.name}</span>
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
+                  <SearchSection label="Categories">
+                    {results.categories.slice(0, 4).map((cat) => (
+                      <Button
+                        key={cat.id}
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleSelectCategory(cat)}
+                        className="w-full justify-start gap-2"
+                      >
+                        <Folder className="w-4 h-4 text-primary shrink-0" />
+                        <span className="truncate">{cat.name}</span>
+                      </Button>
+                    ))}
+                  </SearchSection>
                 )}
 
                 {results.recordings.length > 0 && (
-                  <div>
-                    <h4 className="px-2 pb-1 text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80">
-                      Recordings
-                    </h4>
-                    <div className="flex flex-col gap-0.5">
-                      {results.recordings.slice(0, 6).map((rec) => (
-                        <Button
-                          key={rec.id}
-                          type="button"
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleSelectRecording(rec)}
-                          className="w-full justify-start flex-col items-start h-auto py-1.5 gap-0.5"
-                        >
-                          <span className="font-medium truncate">
-                            {rec.name}
+                  <SearchSection label="Recordings">
+                    {results.recordings.slice(0, 6).map((rec) => (
+                      <Button
+                        key={rec.id}
+                        type="button"
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleSelectRecording(rec)}
+                        className="w-full justify-start flex-col items-start h-auto py-1.5 gap-0.5"
+                      >
+                        <span className="font-medium truncate">{rec.name}</span>
+                        {rec.recorded_at && (
+                          <span className="text-[10px] text-muted-foreground">
+                            {new Date(rec.recorded_at).toLocaleDateString()}
                           </span>
-                          {rec.recorded_at && (
-                            <span className="text-[10px] text-muted-foreground">
-                              {new Date(rec.recorded_at).toLocaleDateString()}
-                            </span>
-                          )}
-                        </Button>
-                      ))}
-                    </div>
-                  </div>
+                        )}
+                      </Button>
+                    ))}
+                  </SearchSection>
                 )}
 
                 {results.materials.length > 0 && (
-                  <div>
-                    <h4 className="px-2 pb-1 text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80">
-                      Materials
-                    </h4>
-                    <div className="flex flex-col gap-0.5">
-                      {results.materials.slice(0, 4).map((mat) => (
-                        <div
-                          key={mat.id}
-                          className="px-2.5 py-1.5 rounded-lg text-sm text-foreground flex flex-col gap-0.5"
-                        >
-                          <div className="flex items-center gap-2">
-                            <FileText className="w-4 h-4 text-amber-500 shrink-0" />
-                            <span className="font-medium truncate">
-                              {mat.name}
-                            </span>
-                          </div>
-                          {mat.recordingName && (
-                            <span className="text-[10px] text-muted-foreground pl-6 truncate">
-                              Record: {mat.recordingName}
-                            </span>
-                          )}
+                  <SearchSection label="Materials">
+                    {results.materials.slice(0, 4).map((mat) => (
+                      <div
+                        key={mat.id}
+                        className="px-2.5 py-1.5 rounded-lg text-sm text-foreground flex flex-col gap-0.5"
+                      >
+                        <div className="flex items-center gap-2">
+                          <FileText className="w-4 h-4 text-amber-500 shrink-0" />
+                          <span className="font-medium truncate">
+                            {mat.name}
+                          </span>
                         </div>
-                      ))}
-                    </div>
-                  </div>
+                        {mat.recordingName && (
+                          <span className="text-[10px] text-muted-foreground pl-6 truncate">
+                            Record: {mat.recordingName}
+                          </span>
+                        )}
+                      </div>
+                    ))}
+                  </SearchSection>
                 )}
               </>
             )}

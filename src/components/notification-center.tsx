@@ -1,85 +1,68 @@
 "use client";
 
-import { Bell, BellRing, Check, CircleAlert, Inbox, X } from "lucide-react";
-import { useState } from "react";
+import {
+  Bell,
+  BellRing,
+  Check,
+  CircleAlert,
+  Inbox,
+  Loader2,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { useNotifications } from "@/hooks/use-notifications";
 
 export function NotificationCenter() {
-  const [isOpen, setIsOpen] = useState(false);
   const { notifications, isLoading, markAsRead } = useNotifications();
-
   const unreadCount = notifications.filter((n) => !n.read).length;
 
   return (
-    <div className="relative">
-      {/* Bell trigger */}
-      <Button
-        type="button"
-        variant="ghost"
-        size="icon"
-        onClick={() => setIsOpen(!isOpen)}
-        aria-label="Toggle notifications"
-        className="relative"
-      >
-        {unreadCount > 0 ? (
-          <>
-            <BellRing className="w-5 h-5 text-primary animate-bounce" />
-            <span className="absolute top-1 right-1 flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
-            </span>
-          </>
-        ) : (
-          <Bell className="w-5 h-5" />
-        )}
-      </Button>
-
-      {/* Overlay */}
-      {isOpen && (
-        <button
+    <Sheet>
+      <SheetTrigger asChild>
+        <Button
           type="button"
-          className="fixed inset-0 z-40 bg-black/30 backdrop-blur-xs cursor-default outline-none border-0 w-full h-full"
-          onClick={() => setIsOpen(false)}
-          aria-label="Close notifications"
-        />
-      )}
+          variant="ghost"
+          size="icon"
+          aria-label="Toggle notifications"
+          className="relative"
+        >
+          {unreadCount > 0 ? (
+            <>
+              <BellRing className="w-5 h-5 text-primary animate-bounce" />
+              <span className="absolute top-1 right-1 flex h-2 w-2">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
+              </span>
+            </>
+          ) : (
+            <Bell className="w-5 h-5" />
+          )}
+        </Button>
+      </SheetTrigger>
 
-      {/* Drawer */}
-      <div
-        className={`fixed top-0 right-0 z-50 h-full w-full max-w-sm bg-card border-l border-border shadow-2xl flex flex-col transition-transform duration-300 transform ${
-          isOpen ? "translate-x-0" : "translate-x-full"
-        }`}
-      >
-        {/* Header */}
-        <div className="p-4 border-b border-border flex items-center justify-between">
-          <div className="flex items-center gap-2">
+      <SheetContent side="right">
+        <SheetHeader className="border-b border-border pb-4">
+          <SheetTitle className="flex items-center gap-2 text-lg font-bold">
             <Bell className="w-5 h-5 text-primary" />
-            <h3 className="font-bold font-heading text-lg text-foreground">
-              Notifications
-            </h3>
+            Notifications
             {unreadCount > 0 && (
               <span className="px-2 py-0.5 text-xs font-semibold bg-primary text-primary-foreground rounded-full">
                 {unreadCount} new
               </span>
             )}
-          </div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="icon-sm"
-            onClick={() => setIsOpen(false)}
-            aria-label="Close panel"
-          >
-            <X className="w-5 h-5" />
-          </Button>
-        </div>
+          </SheetTitle>
+        </SheetHeader>
 
-        {/* Body */}
         <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
           {isLoading ? (
             <div className="flex flex-col items-center justify-center py-12 gap-2 text-muted-foreground">
-              <div className="w-6 h-6 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              <Loader2 className="w-6 h-6 text-primary animate-spin" />
               <p className="text-xs font-medium">Loading notifications...</p>
             </div>
           ) : notifications.length === 0 ? (
@@ -137,7 +120,7 @@ export function NotificationCenter() {
             ))
           )}
         </div>
-      </div>
-    </div>
+      </SheetContent>
+    </Sheet>
   );
 }
