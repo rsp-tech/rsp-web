@@ -14,8 +14,10 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { use } from "react";
+import { CategoryList } from "@/components/category-list";
 import { useCategoryPage } from "@/hooks/use-category-page";
-import { getAudioUrl, getCategoryImageUrl, getMaterialUrl } from "@/lib/storage";
+import { getAssetUrl } from "@/lib/storage";
+import { slugToLabel } from "@/lib/utils";
 
 export default function CategoryPage({
   params,
@@ -46,15 +48,9 @@ export default function CategoryPage({
 
   const { category, subcategories, recordings } = data;
 
-  // Breadcrumbs parsing
   const breadcrumbs = slug.map((slugPart, index) => {
     const path = slug.slice(0, index + 1).join("/");
-    // Simple formatting: capitalize and replace underscore with space
-    const label = slugPart
-      .split("_")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join(" ");
-    return { label, href: `/${path}` };
+    return { label: slugToLabel(slugPart), href: `/${path}` };
   });
 
   return (
@@ -102,37 +98,7 @@ export default function CategoryPage({
             <FolderOpen className="w-5 h-5 text-primary" />
             Subcategories
           </h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {subcategories.map((sub) => {
-              const imgUrl = getCategoryImageUrl(sub);
-              const subPath = sub.url_path.split(".").join("/");
-
-              return (
-                <Link
-                  key={sub.id}
-                  href={`/${subPath}`}
-                  className="group relative flex flex-col h-36 rounded-xl overflow-hidden border border-border bg-card shadow-xs hover:shadow-sm transition-all duration-300 hover:-translate-y-0.5 cursor-pointer"
-                >
-                  {imgUrl ? (
-                    <img
-                      src={imgUrl}
-                      alt={sub.name}
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-linear-to-tr from-primary/10 via-primary/5 to-transparent" />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
-
-                  <div className="relative mt-auto p-4 flex flex-col">
-                    <h3 className="text-sm font-bold font-heading text-white group-hover:text-primary-foreground transition-colors line-clamp-2">
-                      {sub.name}
-                    </h3>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
+          <CategoryList categories={subcategories} isLoading={false} />
         </section>
       )}
 
@@ -191,7 +157,7 @@ export default function CategoryPage({
                         {rec.materials.map((mat) => (
                           <a
                             key={mat.id}
-                            href={getMaterialUrl(mat.storage_key)}
+                            href={getAssetUrl(mat.storage_key)}
                             download
                             className="inline-flex items-center gap-1 bg-muted hover:bg-primary/10 hover:text-primary px-2.5 py-1 rounded-md text-xs font-semibold text-foreground transition-colors border border-border"
                           >
@@ -211,7 +177,7 @@ export default function CategoryPage({
                 <div className="flex items-center gap-2 self-stretch md:self-auto justify-end border-t md:border-none border-border pt-3 md:pt-0 shrink-0">
                   {rec.audio_id && (
                     <a
-                      href={getAudioUrl(rec.audio_id)}
+                      href={getAssetUrl(rec.audio_id)}
                       download
                       className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground text-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition-all border border-border cursor-pointer"
                       title="Download Audio"

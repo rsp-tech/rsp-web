@@ -1,9 +1,8 @@
 "use client";
 
-import { BookOpen, Compass, FolderOpen, Loader2 } from "lucide-react";
-import Link from "next/link";
+import { BookOpen, Compass, FolderOpen } from "lucide-react";
+import { CategoryList } from "@/components/category-list";
 import { useRootCategories } from "@/hooks/use-root-categories";
-import { getCategoryImageUrl } from "@/lib/storage";
 
 export default function Home() {
   const { data: categories, isLoading, error } = useRootCategories();
@@ -38,59 +37,11 @@ export default function Home() {
           </h2>
         </div>
 
-        {isLoading ? (
-          <div className="flex flex-col items-center justify-center py-20 gap-3">
-            <Loader2 className="w-8 h-8 text-primary animate-spin" />
-            <p className="text-sm font-semibold text-muted-foreground">
-              Loading spiritual categories...
-            </p>
-          </div>
-        ) : error ? (
-          <div className="p-4 bg-destructive/10 text-destructive border border-destructive/20 rounded-xl text-sm font-medium">
-            Could not load categories. Please try refreshing.
-          </div>
-        ) : !categories || categories.length === 0 ? (
-          <div className="p-8 text-center text-muted-foreground border border-dashed border-border rounded-2xl">
-            No categories available. Background sync may be running.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            {categories.map((cat) => {
-              const imgUrl = getCategoryImageUrl(cat);
-              const slugPath = cat.url_path.split(".").join("/");
-
-              return (
-                <Link
-                  key={cat.id}
-                  href={`/${slugPath}`}
-                  className="group relative flex flex-col h-48 rounded-2xl overflow-hidden border border-border bg-card shadow-sm hover:shadow-md transition-all duration-300 hover:-translate-y-1 cursor-pointer"
-                >
-                  {/* Category Image background with dark overlay */}
-                  {imgUrl ? (
-                    <img
-                      src={imgUrl}
-                      alt={cat.name}
-                      className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="absolute inset-0 bg-linear-to-tr from-primary/20 via-primary/5 to-transparent" />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-
-                  {/* Category Content */}
-                  <div className="relative mt-auto p-5 flex flex-col gap-1">
-                    <span className="text-xs font-bold text-primary-foreground/70 tracking-wider uppercase">
-                      Category
-                    </span>
-                    <h3 className="text-lg font-bold font-heading text-white group-hover:text-primary-foreground transition-colors line-clamp-2">
-                      {cat.name}
-                    </h3>
-                  </div>
-                </Link>
-              );
-            })}
-          </div>
-        )}
+        <CategoryList
+          categories={categories}
+          isLoading={isLoading}
+          error={error}
+        />
       </section>
     </div>
   );
