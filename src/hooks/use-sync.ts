@@ -44,6 +44,10 @@ const runSync = ({ queryClient, ...config }: WorkerConfig): Promise<number> =>
           id: "sync-status",
         });
 
+        queryClient.invalidateQueries({
+          queryKey: [QUERY_KEY.ROOT_CATEGORIES],
+        });
+
         if (changedCategoryPaths.length > INVALIDATE_ALL_THRESHOLD) {
           queryClient.invalidateQueries({
             queryKey: [QUERY_KEY.CATEGORY_PAGE],

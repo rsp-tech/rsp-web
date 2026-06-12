@@ -3,6 +3,7 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useSession } from "@/components/providers";
+import { QUERY_KEY } from "@/constants";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 
 export interface AppNotification {
@@ -13,128 +14,134 @@ export interface AppNotification {
   created_at: string;
 }
 
-export function useNotifications() {
-  const { session, isLoading: sessionLoading } = useSession();
-  const queryClient = useQueryClient();
+const READ_IDS_KEY = "read-notif-ids";
 
-  const fetchNotifications = async (): Promise<AppNotification[]> => {
-    const supabase = getSupabaseClient();
-    if (sessionLoading) return [];
+const getReadIds = (): string[] => {
+  try {
+    return JSON.parse(localStorage.getItem(READ_IDS_KEY) || "[]");
+  } catch {
+    return [];
+  }
+};
 
-    let list: AppNotification[] = [];
+const addReadId = (id: string) => {
+  const ids = getReadIds();
+  if (!ids.includes(id)) {
+    localStorage.setItem(READ_IDS_KEY, JSON.stringify([...ids, id]));
+  }
+};
 
-    // 1. Fetch public notifications
-    const { data: publicNotifs, error: pubErr } = await supabase
+const toAppNotification = (
+  row: {
+    id: string;
+    title: string;
+    message: string;
+    created_at: string | null;
+  },
+  read = false,
+): AppNotification => ({
+  id: row.id,
+  title: row.title,
+  message: row.message,
+  read,
+  created_at: row.created_at ?? new Date().toISOString(),
+});
+
+const fetchNotifications = async (
+  sessionUserId: string | undefined,
+): Promise<AppNotification[]> => {
+  const supabase = getSupabaseClient();
+  let list: AppNotification[] = [];
+
+  const { data: publicNotifs, error: pubErr } = await supabase
+    .schema("prod")
+    .from("notifications")
+    .select("*")
+    .eq("target_type", "all")
+    .order("created_at", { ascending: false });
+
+  if (!pubErr && publicNotifs) {
+    list = publicNotifs.map((n) => toAppNotification(n));
+  }
+
+  if (sessionUserId) {
+    const { data: userNotifs, error: userErr } = await supabase
       .schema("prod")
-      .from("notifications")
+      .from("user_notifications")
       .select("*")
-      .eq("target_type", "all")
+      .eq("user_id", sessionUserId)
       .order("created_at", { ascending: false });
 
-    if (!pubErr && publicNotifs) {
-      list = publicNotifs.map((n) => ({
-        id: n.id,
-        title: n.title,
-        message: n.message,
-        read: false, // Local state or read-check via localStorage for public notifications
-        created_at: n.created_at || new Date().toISOString(),
-      }));
+    if (!userErr && userNotifs) {
+      list = [
+        ...userNotifs.map((un) => toAppNotification(un, un.read ?? false)),
+        ...list,
+      ];
     }
+  }
 
-    // 2. Fetch personalized notifications if logged in
-    if (session?.user) {
-      const { data: userNotifs, error: userErr } = await supabase
-        .schema("prod")
-        .from("user_notifications")
-        .select("*")
-        .eq("user_id", session.user.id)
-        .order("created_at", { ascending: false });
+  list.sort(
+    (a, b) =>
+      new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
+  );
 
-      if (!userErr && userNotifs) {
-        const mappedUserNotifs: AppNotification[] = userNotifs.map((un) => ({
-          id: un.id,
-          title: un.title,
-          message: un.message,
-          read: un.read ?? false,
-          created_at: un.created_at || new Date().toISOString(),
-        }));
-        list = [...mappedUserNotifs, ...list];
-      }
-    }
+  const readIds = getReadIds();
+  return list.map((item) =>
+    readIds.includes(item.id) ? { ...item, read: true } : item,
+  );
+};
 
-    // Sort by created_at descending
-    list.sort(
-      (a, b) =>
-        new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
-    );
-
-    // Apply local storage read marks for public notifications
-    const readIds = JSON.parse(localStorage.getItem("read-notif-ids") || "[]");
-    return list.map((item) => {
-      if (readIds.includes(item.id)) {
-        return { ...item, read: true };
-      }
-      return item;
-    });
-  };
+export const useNotifications = () => {
+  const { session, isLoading: sessionLoading } = useSession();
+  const queryClient = useQueryClient();
+  const userId = session?.user?.id;
 
   const query = useQuery({
-    queryKey: ["notifications", session?.user?.id],
-    queryFn: fetchNotifications,
+    queryKey: [QUERY_KEY.NOTIFICATIONS, userId],
+    queryFn: () => fetchNotifications(userId),
     enabled: !sessionLoading,
   });
 
-  // Real-time listener for inserting new notifications
   useEffect(() => {
     if (sessionLoading) return;
     const supabase = getSupabaseClient();
 
-    const channel = supabase.channel("realtime-notifications").on(
-      "postgres_changes",
-      {
-        event: "INSERT",
-        schema: "prod",
-        table: "notifications",
-      },
-      () => {
-        queryClient.invalidateQueries({
-          queryKey: ["notifications", session?.user?.id],
-        });
-      },
-    );
+    const notifQueryKey = [QUERY_KEY.NOTIFICATIONS, userId];
+    const invalidate = () =>
+      queryClient.invalidateQueries({ queryKey: notifQueryKey });
 
-    if (session?.user) {
+    const channel = supabase
+      .channel("realtime-notifications")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "prod", table: "notifications" },
+        invalidate,
+      );
+
+    if (userId) {
       channel.on(
         "postgres_changes",
         {
           event: "INSERT",
           schema: "prod",
           table: "user_notifications",
-          filter: `user_id=eq.${session.user.id}`,
+          filter: `user_id=eq.${userId}`,
         },
-        () => {
-          queryClient.invalidateQueries({
-            queryKey: ["notifications", session?.user?.id],
-          });
-        },
+        invalidate,
       );
     }
 
     channel.subscribe();
-
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [session?.user?.id, sessionLoading, queryClient, session?.user]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId, sessionLoading, queryClient]);
 
-  // Mark as read mutation
   const markAsRead = useMutation({
     mutationFn: async (id: string) => {
-      const supabase = getSupabaseClient();
-
-      // If it's a user notification (personal), update DB
-      if (session?.user) {
-        const { data } = await supabase
+      if (userId) {
+        const { data } = await getSupabaseClient()
           .schema("prod")
           .from("user_notifications")
           .select("id")
@@ -142,33 +149,24 @@ export function useNotifications() {
           .single();
 
         if (data) {
-          await supabase
+          await getSupabaseClient()
             .schema("prod")
             .from("user_notifications")
             .update({ read: true })
             .eq("id", id);
         }
       }
-
-      // Mark locally too (useful for public notifications or fallback)
-      const readIds = JSON.parse(
-        localStorage.getItem("read-notif-ids") || "[]",
-      );
-      if (!readIds.includes(id)) {
-        readIds.push(id);
-        localStorage.setItem("read-notif-ids", JSON.stringify(readIds));
-      }
+      addReadId(id);
     },
-    onSuccess: () => {
+    onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: ["notifications", session?.user?.id],
-      });
-    },
+        queryKey: [QUERY_KEY.NOTIFICATIONS, userId],
+      }),
   });
 
   return {
-    notifications: query.data || [],
+    notifications: query.data ?? [],
     isLoading: query.isLoading,
     markAsRead: markAsRead.mutate,
   };
-}
+};

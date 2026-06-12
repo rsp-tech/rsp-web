@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { STORE } from "@/constants";
+import { INDEX, QUERY_KEY, STORE } from "@/constants";
 import { getDB } from "@/lib/idb";
 import type { Category } from "@/types";
 
@@ -9,11 +9,10 @@ const fetchRootCategories = async (): Promise<Category[]> => {
   const db = await getDB();
   if (!db) return [];
 
-  const allCategories = await db.getAll(STORE.CATEGORIES);
-
-  // Root categories have an empty or null path, or path equal to ""
-  const rootCats = allCategories.filter(
-    (cat) => !cat.path || cat.path === "" || cat.path === "root",
+  const rootCats = await db.getAllFromIndex(
+    STORE.CATEGORIES,
+    INDEX.BY_PATH,
+    "",
   );
 
   // Sort by order index if available, otherwise by name
@@ -27,7 +26,7 @@ const fetchRootCategories = async (): Promise<Category[]> => {
 
 export function useRootCategories() {
   return useQuery({
-    queryKey: ["root-categories"],
+    queryKey: [QUERY_KEY.ROOT_CATEGORIES],
     queryFn: fetchRootCategories,
   });
 }
