@@ -16,6 +16,7 @@ import {
   WORKER_MSG,
 } from "@/constants";
 import { getDB } from "@/lib/idb";
+import { errorMessage } from "@/lib/utils";
 import type {
   Category,
   CategorySearchDocument,
@@ -353,7 +354,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
         message.type === WORKER_MSG.BUILD_INDEX
           ? WORKER_MSG.INDEX_ERROR
           : WORKER_MSG.ERROR,
-      message: err instanceof Error ? err.message : String(err),
+      message: errorMessage(err),
     });
   }
 };

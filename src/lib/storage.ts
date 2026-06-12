@@ -1,3 +1,4 @@
+import { ASSET_BAE_URL, ASSET_DOWNLOAD_BASE_URL } from "@/constants";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import type { Category } from "@/types";
 
@@ -9,8 +10,8 @@ export const getCategoryImageUrl = (cat: Category): string | null => {
   return getPublicUrl("images", `${cat.img_id.toString(36)}.webp`);
 };
 
-export const getAudioUrl = (audioId: string): string =>
-  audioId.startsWith("http") ? audioId : getPublicUrl("audio", audioId);
+export const getAssetUrl = (id: string): string =>
+  id.startsWith("http") ? id : `${ASSET_BAE_URL}${id}`;
 
-export const getMaterialUrl = (storageKey: string): string =>
-  storageKey.startsWith("http") ? storageKey : getPublicUrl("materials", storageKey);
+export const getAssetDownloadUrl = (id: string): string =>
+  id.startsWith("http") ? id : `${ASSET_DOWNLOAD_BASE_URL}${id}`;

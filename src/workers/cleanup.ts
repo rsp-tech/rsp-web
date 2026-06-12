@@ -2,6 +2,7 @@ import type { IDBPDatabase } from "idb";
 import { META_KEY, STORE, WORKER_MSG } from "@/constants";
 import type { RSPDatabase } from "@/lib/idb";
 import { getDB } from "@/lib/idb";
+import { errorMessage } from "@/lib/utils";
 
 type CleanupTable = "categories" | "recordings" | "materials";
 
@@ -74,7 +75,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
   } catch (err) {
     postMessage({
       type: WORKER_MSG.ERROR,
-      message: err instanceof Error ? err.message : String(err),
+      message: errorMessage(err),
     });
   }
 };

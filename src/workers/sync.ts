@@ -11,7 +11,7 @@ import {
 import type { Json } from "@/database.types";
 import type { RSPDatabase } from "@/lib/idb";
 import { getDB } from "@/lib/idb";
-import { createLimiter } from "@/lib/utils";
+import { createLimiter, errorMessage } from "@/lib/utils";
 import type { SearchableTable, SyncChangedIds, SyncResult } from "@/types";
 
 type SyncTable = keyof Omit<RSPDatabase, "metadata">;
@@ -276,7 +276,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
   } catch (err) {
     postMessage({
       type: WORKER_MSG.ERROR,
-      message: err instanceof Error ? err.message : String(err),
+      message: errorMessage(err),
     });
   }
 };
