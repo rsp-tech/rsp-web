@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import { Toaster } from "sonner";
+import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { Providers } from "@/components/providers";
 import { SyncTrigger } from "@/components/sync-trigger";
+import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
 const geistSans = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
@@ -36,6 +37,7 @@ export default function RootLayout({
           <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-6 flex flex-col">
             {children}
           </main>
+          <Footer />
         </Providers>
       </body>
     </html>
