@@ -1,9 +1,6 @@
 # Release Requirements
 
-- About page
-
 # Feature Parity
-
 
 # Future (May be)
 

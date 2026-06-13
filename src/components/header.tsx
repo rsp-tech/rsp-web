@@ -9,7 +9,7 @@ import { UserNav } from "./user-nav";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-30 w-full border-b border-border bg-background/80 backdrop-blur-md px-4 py-3 flex items-center justify-between gap-4">
+    <header className="sticky top-0 z-30 w-full border-b border-border bg-background/60 backdrop-blur-md px-4 py-3 flex items-center justify-between gap-4">
       {/* Brand */}
       <Link
         href="/"
