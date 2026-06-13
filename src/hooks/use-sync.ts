@@ -47,7 +47,7 @@ const runSync = ({ queryClient, ...config }: WorkerConfig): Promise<number> =>
         });
 
         queryClient.invalidateQueries({
-          queryKey: [QUERY_KEY.ROOT_CATEGORIES],
+          queryKey: [QUERY_KEY.CATEGORY_PAGE, "~"],
         });
 
         if (changedCategoryPaths.length > INVALIDATE_ALL_THRESHOLD) {

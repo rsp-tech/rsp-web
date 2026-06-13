@@ -1,7 +1,9 @@
 import type { Database } from "@/database.types";
 
-export type Tables<T extends keyof Database["prod"]["Tables"]> =
-  Database["prod"]["Tables"][T]["Row"];
+export type Tables<
+  T extends keyof Database["prod"]["Tables"],
+  U extends keyof Database["prod"]["Tables"][T] = "Row",
+> = Database["prod"]["Tables"][T][U];
 export type Enums<T extends keyof Database["prod"]["Enums"]> =
   Database["prod"]["Enums"][T];
 
@@ -20,6 +22,7 @@ export type Material = Tables<"materials">;
 export type Event = Tables<"events">;
 export type Redirect = Tables<"redirects">;
 export type Service = Tables<"services">;
+export type UserServiceInterest = Tables<"user_service_interests", "Insert">;
 
 export type Notification = {
   id: string;

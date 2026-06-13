@@ -54,7 +54,6 @@ const fetchNotifications = async (
   let list: AppNotification[] = [];
 
   const { data: publicNotifs, error: pubErr } = await supabase
-    .schema("prod")
     .from("notifications")
     .select("*")
     .eq("target_type", "all")
@@ -66,7 +65,6 @@ const fetchNotifications = async (
 
   if (sessionUserId) {
     const { data: userNotifs, error: userErr } = await supabase
-      .schema("prod")
       .from("user_notifications")
       .select("*")
       .eq("user_id", sessionUserId)
@@ -142,7 +140,6 @@ export const useNotifications = () => {
     mutationFn: async (id: string) => {
       if (userId) {
         const { data } = await getSupabaseClient()
-          .schema("prod")
           .from("user_notifications")
           .select("id")
           .eq("id", id)
@@ -150,7 +147,6 @@ export const useNotifications = () => {
 
         if (data) {
           await getSupabaseClient()
-            .schema("prod")
             .from("user_notifications")
             .update({ read: true })
             .eq("id", id);

@@ -3,12 +3,11 @@ import type { IDBPDatabase } from "idb";
 import {
   META_KEY,
   STORE,
-  SUPABASE_SCHEMA,
   SYNC_CONCURRENCY,
   SYNC_PAGE_SIZE,
   WORKER_MSG,
 } from "@/constants";
-import type { Json } from "@/database.types";
+import type { Database, Json } from "@/database.types";
 import type { RSPDatabase } from "@/lib/idb";
 import { getDB } from "@/lib/idb";
 import { createLimiter, errorMessage } from "@/lib/utils";
@@ -36,6 +35,8 @@ type WorkerMessage = {
   roleId?: number;
   isPublic?: boolean;
 };
+
+type SupabaseProdClient = SupabaseClient<Database, "prod", "prod">;
 
 const ALL_TABLES: SyncTable[] = [
   STORE.RECORDINGS,
@@ -68,8 +69,8 @@ const isSearchableTable = (table: SyncTable): table is SearchableTable =>
 
 const stripCacheMetadata = <T extends SyncRow>(
   item: T,
-): Omit<T, "created_at" | "metadata"> => {
-  const { created_at: _createdAt, metadata: _metadata, ...cacheRow } = item;
+): Omit<T, "created_at" | "metadata" | "updated_at"> => {
+  const { created_at, metadata, updated_at, ...cacheRow } = item;
   return cacheRow;
 };
 
@@ -85,11 +86,10 @@ const getLastSync = async (
 };
 
 const fetchTableWatermark = async (
-  supabase: SupabaseClient,
+  supabase: SupabaseProdClient,
   table: SyncTable,
 ): Promise<string | null> => {
   const { data, error } = await supabase
-    .schema(SUPABASE_SCHEMA)
     .from(table)
     .select("updated_at")
     .not("updated_at", "is", null)
@@ -127,7 +127,7 @@ const toSyncResult = (
 });
 
 const syncTable = async (
-  supabase: SupabaseClient,
+  supabase: SupabaseProdClient,
   db: IDBPDatabase<RSPDatabase>,
   table: SyncTable,
   changedCategoryPaths: Set<string>,
@@ -149,7 +149,6 @@ const syncTable = async (
 
   while (true) {
     let query = supabase
-      .schema(SUPABASE_SCHEMA)
       .from(table)
       .select("*")
       .not("updated_at", "is", null)
@@ -212,7 +211,7 @@ const syncTable = async (
 };
 
 const syncTableForRole = async (
-  supabase: SupabaseClient,
+  supabase: SupabaseProdClient,
   db: IDBPDatabase<RSPDatabase>,
   table: SyncTable,
   roleId: number,
@@ -226,7 +225,6 @@ const syncTableForRole = async (
 
   while (true) {
     let query = supabase
-      .schema(SUPABASE_SCHEMA)
       .from(table)
       .select("*")
       .contains("allowed_roles", [roleId])
@@ -285,10 +283,13 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       return;
     }
 
-    const supabase = createClient(supabaseUrl, supabaseKey, {
+    const supabase = createClient<Database, "prod">(supabaseUrl, supabaseKey, {
       global: accessToken
         ? { headers: { Authorization: `Bearer ${accessToken}` } }
         : undefined,
+      db: {
+        schema: "prod",
+      },
     });
 
     postMessage({

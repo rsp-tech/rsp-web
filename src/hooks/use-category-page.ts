@@ -6,9 +6,10 @@ import { getDB, type RSPDatabase } from "@/lib/idb";
 import type { Category, EnrichedRecording, Material, Recording } from "@/types";
 
 export interface CategoryPageData {
-  category: Category;
+  category?: Category;
   subcategories: Category[];
   recordings: EnrichedRecording[];
+  redirectTo?: string;
 }
 
 type NumberKeyStore = {
@@ -22,6 +23,26 @@ const loadCategoryPage = async (
 ): Promise<CategoryPageData | null> => {
   const db = await getDB();
   if (!db) return null;
+
+  if (!slug.length) {
+    return {
+      subcategories: await db.getAllFromIndex(
+        STORE.CATEGORIES,
+        INDEX.BY_PATH,
+        "",
+      ),
+      recordings: [],
+    };
+  }
+
+  const redirectTo = await db.get(STORE.REDIRECTS, slug.join("/"));
+  if (redirectTo) {
+    return {
+      subcategories: [],
+      recordings: [],
+      redirectTo: redirectTo.to_path,
+    };
+  }
 
   const urlPath = slug.join(".");
   const category = await db.getFromIndex(
@@ -133,8 +154,7 @@ const loadCategoryPage = async (
 
 export const useCategoryPage = (slug: string[]) => {
   return useQuery({
-    queryKey: [QUERY_KEY.CATEGORY_PAGE, slug.join(".")],
+    queryKey: [QUERY_KEY.CATEGORY_PAGE, slug.join(".") || "~"],
     queryFn: () => loadCategoryPage(slug),
-    enabled: slug.length > 0,
   });
 };

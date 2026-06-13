@@ -6,7 +6,6 @@ export const SYNC_INTERVAL = Number.parseInt(
   process.env.NEXT_PUBLIC_SYNC_INTERVAL || "300000",
   10,
 ); // 5 min default
-export const SUPABASE_SCHEMA = "prod";
 export const SYNC_PAGE_SIZE = 1000;
 export const SYNC_CONCURRENCY = 4;
 
@@ -77,7 +76,6 @@ export const WORKER_MSG = {
 // Query keys
 export const QUERY_KEY = {
   CATEGORY_PAGE: "category-page",
-  ROOT_CATEGORIES: "root-categories",
   NOTIFICATIONS: "notifications",
   SYNC: "sync",
 } as const;

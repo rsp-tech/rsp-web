@@ -29,13 +29,13 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const [errorMsg, setErrorMsg] = useState("");
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState("");
+  const supabase = getSupabaseClient();
 
   const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setErrorMsg("");
     setSuccessMsg("");
     setLoading(true);
-    const supabase = getSupabaseClient();
     try {
       if (isSignUp) {
         const { error } = await supabase.auth.signUp({ email, password });
@@ -59,7 +59,6 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const handleGoogleLogin = async () => {
     setErrorMsg("");
     setLoading(true);
-    const supabase = getSupabaseClient();
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: "google",

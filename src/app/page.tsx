@@ -2,10 +2,10 @@
 
 import { BookOpen, Compass, FolderOpen } from "lucide-react";
 import { CategoryList } from "@/components/category-list";
-import { useRootCategories } from "@/hooks/use-root-categories";
+import { useCategoryPage } from "@/hooks/use-category-page";
 
 export default function Home() {
-  const { data: categories, isLoading, error } = useRootCategories();
+  const { data, isLoading, error } = useCategoryPage([]);
 
   return (
     <div className="flex flex-col gap-10 py-4">
@@ -38,7 +38,7 @@ export default function Home() {
         </div>
 
         <CategoryList
-          categories={categories}
+          categories={data?.subcategories}
           isLoading={isLoading}
           error={error}
         />
