@@ -392,19 +392,16 @@ export type Database = {
       };
       redirects: {
         Row: {
-          from_path: string;
           id: string;
           to_path: string;
           updated_at: string | null;
         };
         Insert: {
-          from_path: string;
-          id?: string;
+          id: string;
           to_path: string;
           updated_at?: string | null;
         };
         Update: {
-          from_path?: string;
           id?: string;
           to_path?: string;
           updated_at?: string | null;
@@ -770,6 +767,7 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      get_category_page_data: { Args: { p_url_path: string }; Returns: Json };
       is_admin: { Args: never; Returns: boolean };
       my_role: { Args: never; Returns: number };
     };

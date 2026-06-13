@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { INDEX, QUERY_KEY, STORE } from "@/constants";
 import { getDB, type RSPDatabase } from "@/lib/idb";
+import { getSupabaseClient } from "@/lib/supabase-browser";
 import type { Category, EnrichedRecording, Material, Recording } from "@/types";
 
 export interface CategoryPageData {
@@ -24,13 +25,21 @@ const loadCategoryPage = async (
   const db = await getDB();
   if (!db) return null;
 
+  const supabase = getSupabaseClient();
+
   if (!slug.length) {
+    let subcategories = await db.getAllFromIndex(
+      STORE.CATEGORIES,
+      INDEX.BY_PATH,
+      "",
+    );
+    if (!subcategories.length) {
+      subcategories =
+        ((await supabase.from("categories").select("*").eq("path", ""))
+          .data as Category[]) ?? [];
+    }
     return {
-      subcategories: await db.getAllFromIndex(
-        STORE.CATEGORIES,
-        INDEX.BY_PATH,
-        "",
-      ),
+      subcategories,
       recordings: [],
     };
   }
@@ -44,14 +53,25 @@ const loadCategoryPage = async (
     };
   }
 
-  const urlPath = slug.join(".");
+  const urlPath = slug.join(".").replace(/-/g, "_");
   const category = await db.getFromIndex(
     STORE.CATEGORIES,
     INDEX.BY_URL,
     urlPath,
   );
 
-  if (!category) return null;
+  if (!category) {
+    const { data, error } = await supabase.rpc("get_category_page_data", {
+      p_url_path: urlPath,
+    });
+
+    if (error || !data) {
+      return null;
+    }
+
+    // Postgres native jsonb aggregation maps perfectly to your interface
+    return data as unknown as CategoryPageData;
+  }
 
   const expectedPath = `${category.path}.${category.id}`.replace(/^\./, "");
 
