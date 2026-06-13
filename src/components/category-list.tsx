@@ -6,12 +6,14 @@ interface CategoryListProps {
   categories: Category[] | undefined;
   isLoading: boolean;
   error?: unknown;
+  onCardKeyDown?: React.KeyboardEventHandler<HTMLAnchorElement>;
 }
 
 export const CategoryList = ({
   categories,
   isLoading,
   error,
+  onCardKeyDown,
 }: CategoryListProps) => {
   if (isLoading) {
     return (
@@ -49,7 +51,7 @@ export const CategoryList = ({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {categories.map((cat) => (
-        <CategoryCard key={cat.id} cat={cat} />
+        <CategoryCard key={cat.id} cat={cat} onKeyDown={onCardKeyDown} />
       ))}
     </div>
   );

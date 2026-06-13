@@ -5,16 +5,19 @@ import type { Category } from "@/types";
 
 interface CategoryCardProps {
   cat: Category;
+  onKeyDown?: React.KeyboardEventHandler<HTMLAnchorElement>;
 }
 
-export const CategoryCard = ({ cat }: CategoryCardProps) => {
+export const CategoryCard = ({ cat, onKeyDown }: CategoryCardProps) => {
   const imgUrl = getCategoryImageUrl(cat);
   const href = `/${categoryPath(cat.url_path)}`;
 
   return (
     <Link
       href={href}
-      className={`group relative flex flex-col overflow-hidden rounded-2xl h-48 border border-border bg-card shadow-sm hover:shadow-md hover:-translate-y-1 transition-all duration-300 cursor-pointer`}
+      onKeyDown={onKeyDown}
+      data-category-item
+      className={`group relative flex flex-col overflow-hidden rounded-2xl h-48 border border-border bg-card shadow-sm hover:shadow-md hover:-translate-y-1 focus:ring-2 focus:ring-primary focus:outline-hidden transition-all duration-300 cursor-pointer`}
     >
       {imgUrl ? (
         <img
