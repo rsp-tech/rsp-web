@@ -42,7 +42,7 @@ export function Footer() {
             <span>About</span>
           </Link>
           <Link
-            href="/contact"
+            href="/contact-us"
             className="hover:text-primary transition-colors flex items-center gap-1.5"
           >
             <Mail className="w-4 h-4" />

@@ -1,0 +1,232 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
+import { Loader2, Send, Mail, MapPin, MessageSquare } from "lucide-react";
+import { useSession } from "@/components/providers";
+import { getSupabaseClient } from "@/lib/supabase-browser";
+import { getUserDisplayName } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
+
+const CATEGORIES = [
+  { value: "Technical", label: "Technical Support / Feedback" },
+  { value: "Spiritual", label: "Spiritual Guidance / Enquiery" },
+  { value: "General", label: "General Inquiry" },
+  { value: "Books", label: "Books & Publications" },
+  { value: "Courses", label: "Online Certified Courses" },
+  { value: "Services", label: "Devotional Service Opportunities" },
+];
+
+export default function ContactUsPage() {
+  const { session } = useSession();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [category, setCategory] = useState("General");
+  const [subject, setSubject] = useState("");
+  const [message, setMessage] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  // Pre-fill name and email if logged in
+  useEffect(() => {
+    if (session?.user) {
+      setName(getUserDisplayName(session.user));
+      setEmail(session.user.email ?? "");
+    } else {
+      setName("");
+      setEmail("");
+    }
+  }, [session]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !email.trim() || !subject.trim() || !message.trim()) {
+      toast.error("Please fill in all required fields.");
+      return;
+    }
+
+    setSubmitting(true);
+    const supabase = getSupabaseClient();
+
+    try {
+      const { error } = await supabase.from("user_queries").insert({
+        guest_name: session ? null : name,
+        guest_email: session ? null : email,
+        user_id: session?.user?.id ?? null,
+        category,
+        subject,
+        message,
+        status: "pending",
+      });
+
+      if (error) throw error;
+
+      toast.success("Thank you! Your message has been sent successfully.");
+      setSubject("");
+      setMessage("");
+    } catch (err: any) {
+      console.error(err);
+      toast.error(`Failed to send message: ${err.message || "Unknown error"}`);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="max-w-5xl mx-auto py-6 flex flex-col gap-8">
+      <div className="flex flex-col gap-2 border-b border-border pb-6">
+        <h1 className="text-3xl sm:text-4xl font-extrabold font-heading text-foreground tracking-tight">
+          Contact Us
+        </h1>
+        <p className="text-muted-foreground text-sm">
+          Have questions or inquiries? Feel free to reach out to us by filling the form below.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        {/* Contact Info Sidebar */}
+        <div className="flex flex-col gap-6 lg:col-span-1">
+          <Card className="border-border/60">
+            <CardHeader>
+              <CardTitle className="text-lg font-bold flex items-center gap-2">
+                <MessageSquare className="w-5 h-5 text-primary" />
+                <span>Get in Touch</span>
+              </CardTitle>
+              <CardDescription className="text-xs">
+                We generally respond within 24-48 business hours.
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="flex flex-col gap-4 text-sm">
+              <div className="flex items-start gap-3">
+                <Mail className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                <div className="flex flex-col">
+                  <span className="font-bold text-foreground">Email</span>
+                  <a
+                    href="mailto:contact@radheshyamdas.com"
+                    className="text-muted-foreground hover:text-primary transition-colors text-xs"
+                  >
+                    contact@radheshyamdas.com
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
+                <div className="flex flex-col">
+                  <span className="font-bold text-foreground">Address</span>
+                  <span className="text-muted-foreground text-xs leading-relaxed">
+                    Voice Publication & Courses,<br />
+                    Pune, Maharashtra, India
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Contact Form */}
+        <div className="lg:col-span-2">
+          <Card className="border-border/60">
+            <CardHeader>
+              <CardTitle className="text-xl font-bold">Send a Message</CardTitle>
+              <CardDescription>
+                Fill out this form and our team will get back to you shortly.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                      Your Name <span className="text-destructive">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
+                      disabled={!!session}
+                      placeholder="Enter your full name"
+                      className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground disabled:opacity-75"
+                      required
+                    />
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                      Your Email <span className="text-destructive">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      disabled={!!session}
+                      placeholder="Enter your email address"
+                      className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground disabled:opacity-75"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                    Topic / Category <span className="text-destructive">*</span>
+                  </label>
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground"
+                  >
+                    {CATEGORIES.map((c) => (
+                      <option key={c.value} value={c.value}>
+                        {c.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                    Subject <span className="text-destructive">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    value={subject}
+                    onChange={(e) => setSubject(e.target.value)}
+                    placeholder="Brief subject of inquiry"
+                    className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground"
+                    required
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                    Message <span className="text-destructive">*</span>
+                  </label>
+                  <Textarea
+                    value={message}
+                    onChange={(e) => setMessage(e.target.value)}
+                    placeholder="Write details of your query here..."
+                    className="bg-muted min-h-[120px]"
+                    required
+                  />
+                </div>
+
+                <div className="flex justify-end pt-2">
+                  <Button type="submit" disabled={submitting} className="gap-2 px-5">
+                    {submitting ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Send className="w-4 h-4" />
+                    )}
+                    <span>Send Message</span>
+                  </Button>
+                </div>
+              </form>
+            </CardContent>
+          </Card>
+        </div>
+      </div>
+    </div>
+  );
+}
