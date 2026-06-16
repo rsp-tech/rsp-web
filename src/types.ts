@@ -7,6 +7,8 @@ export type Tables<
 export type Enums<T extends keyof Database["prod"]["Enums"]> =
   Database["prod"]["Enums"][T];
 
+export type LocalTable<T> = Omit<T, "created_at" | "metadata" | "updated_at">;
+
 type DatabaseCategory = Tables<"categories">;
 
 export type Category = Omit<DatabaseCategory, "path" | "url_path"> & {
@@ -67,12 +69,12 @@ export type UserQueryWithUser = UserQuery & {
 };
 
 export interface EnrichedRecording extends Recording {
-  speakers: Speaker[];
-  venue: Venue | null;
-  event: Event | null;
-  languages: Language[];
-  content_type: ContentType | null;
-  materials: Material[];
+  speakers: LocalTable<Speaker>[];
+  venue: LocalTable<Venue> | null;
+  event: LocalTable<Event> | null;
+  languages: LocalTable<Language>[];
+  content_type: LocalTable<ContentType> | null;
+  materials: LocalTable<Material>[];
 }
 
 export type SearchableTable = "recordings" | "categories" | "materials";
@@ -126,7 +128,7 @@ export interface SearchResult {
   hits: SearchDocument[];
 }
 
-export type SyncChangedIds = Partial<Record<SearchableTable, number[]>>;
+export type SyncChangedIds = Record<SearchableTable, number[]>;
 
 export interface SyncResult {
   changedCategoryPaths: string[];

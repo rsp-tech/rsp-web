@@ -9,6 +9,7 @@ import type {
   FeaturedItem,
   FeaturedSection,
   Language,
+  LocalTable,
   Material,
   Recording,
   Redirect,
@@ -17,10 +18,12 @@ import type {
   Venue,
 } from "@/types";
 
-export interface RSPDatabase {
+type StoreName = (typeof STORE)[keyof typeof STORE];
+
+export interface RSP_IDB {
   categories: {
     key: number;
-    value: Category;
+    value: LocalTable<Category>;
     indexes: {
       [INDEX.BY_URL]: string;
       [INDEX.BY_PATH]: string;
@@ -28,153 +31,170 @@ export interface RSPDatabase {
   };
   recordings: {
     key: number;
-    value: Recording;
+    value: LocalTable<Recording>;
     indexes: {
       [INDEX.BY_CATEGORY_ID]: number;
     };
   };
   materials: {
     key: number;
-    value: Material;
+    value: LocalTable<Material>;
     indexes: {
       [INDEX.BY_RECORDING_ID]: number;
     };
   };
   speakers: {
     key: number;
-    value: Speaker;
+    value: LocalTable<Speaker>;
   };
   languages: {
     key: number;
-    value: Language;
+    value: LocalTable<Language>;
   };
   content_types: {
     key: number;
-    value: ContentType;
+    value: LocalTable<ContentType>;
   };
   venues: {
     key: number;
-    value: Venue;
+    value: LocalTable<Venue>;
   };
   services: {
     key: number;
-    value: Service;
+    value: LocalTable<Service>;
   };
   redirects: {
     key: string;
-    value: Redirect;
+    value: LocalTable<Redirect>;
   };
   events: {
     key: number;
-    value: Event;
+    value: LocalTable<Event>;
   };
   faq_categories: {
     key: number;
-    value: FaqCategory;
+    value: LocalTable<FaqCategory>;
   };
   faqs: {
     key: number;
-    value: Faq;
+    value: LocalTable<Faq>;
     indexes: { [INDEX.BY_CATEGORY_ID]: number };
   };
   featured_sections: {
     key: number;
-    value: FeaturedSection;
+    value: LocalTable<FeaturedSection>;
   };
   featured_items: {
     key: number;
-    value: FeaturedItem;
+    value: LocalTable<FeaturedItem>;
     indexes: { [INDEX.BY_SECTION_ID]: number };
   };
-  metadata: {
+  sync_meta: {
+    key: StoreName;
+    value: string /** Timestamp e.g., "2026-06-15T12:24:09.011502+00:00" */;
+  };
+  role_meta: {
     key: string;
-    value: unknown;
+    value: string;
   };
 }
 
-let dbPromise: Promise<IDBPDatabase<RSPDatabase>> | null = null;
+let dbPromise: Promise<IDBPDatabase<RSP_IDB>> | null = null;
+
+const IDB_SCHEMA: Record<
+  StoreName,
+  { keyPath?: string; indexes?: { name: string; keyPath: string }[] }
+> = {
+  [STORE.CATEGORIES]: {
+    keyPath: "id",
+    indexes: [
+      { name: INDEX.BY_URL, keyPath: "url_path" },
+      { name: INDEX.BY_PATH, keyPath: "path" },
+    ],
+  },
+  [STORE.RECORDINGS]: {
+    keyPath: "id",
+    indexes: [{ name: INDEX.BY_CATEGORY_ID, keyPath: "category_id" }],
+  },
+  [STORE.MATERIALS]: {
+    keyPath: "id",
+    indexes: [{ name: INDEX.BY_RECORDING_ID, keyPath: "recording_id" }],
+  },
+  [STORE.SPEAKERS]: {
+    keyPath: "id",
+  },
+  [STORE.LANGUAGES]: {
+    keyPath: "id",
+  },
+  [STORE.CONTENT_TYPES]: {
+    keyPath: "id",
+  },
+  [STORE.VENUES]: {
+    keyPath: "id",
+  },
+  [STORE.SERVICES]: {
+    keyPath: "id",
+  },
+  [STORE.REDIRECTS]: {
+    keyPath: "id",
+  },
+  [STORE.EVENTS]: {
+    keyPath: "id",
+  },
+  [STORE.FAQ_CATEGORIES]: {
+    keyPath: "id",
+  },
+  [STORE.FAQS]: {
+    keyPath: "id",
+    indexes: [{ name: INDEX.BY_CATEGORY_ID, keyPath: "category_id" }],
+  },
+  [STORE.FEATURED_SECTIONS]: {
+    keyPath: "id",
+  },
+  [STORE.FEATURED_ITEMS]: {
+    keyPath: "id",
+    indexes: [{ name: INDEX.BY_SECTION_ID, keyPath: "section_id" }],
+  },
+  [STORE.SYNC_META]: {},
+  [STORE.ROLE_META]: {},
+};
 
 export const getDB = () => {
   if (typeof indexedDB === "undefined") return null;
 
   if (dbPromise) return dbPromise;
 
-  dbPromise = openDB<RSPDatabase>(DB_NAME, DB_VERSION, {
-    upgrade(db, _oldVersion, _newVersion, transaction) {
-      if (!db.objectStoreNames.contains(STORE.CATEGORIES)) {
-        const store = db.createObjectStore(STORE.CATEGORIES, { keyPath: "id" });
-        store.createIndex(INDEX.BY_PATH, "path");
-        store.createIndex(INDEX.BY_URL, "url_path");
-      } else {
-        const store = transaction.objectStore(STORE.CATEGORIES);
-        if (!store.indexNames.contains(INDEX.BY_URL)) {
-          store.createIndex(INDEX.BY_URL, "url_path");
-        }
-        if (!store.indexNames.contains(INDEX.BY_PATH)) {
-          store.createIndex(INDEX.BY_PATH, "path");
-        }
-      }
-
-      if (!db.objectStoreNames.contains(STORE.RECORDINGS)) {
-        const store = db.createObjectStore(STORE.RECORDINGS, { keyPath: "id" });
-        store.createIndex(INDEX.BY_CATEGORY_ID, "category_id");
-      } else {
-        const store = transaction.objectStore(STORE.RECORDINGS);
-        if (!store.indexNames.contains(INDEX.BY_CATEGORY_ID)) {
-          store.createIndex(INDEX.BY_CATEGORY_ID, "category_id");
-        }
-      }
-
-      if (!db.objectStoreNames.contains(STORE.MATERIALS)) {
-        const store = db.createObjectStore(STORE.MATERIALS, { keyPath: "id" });
-        store.createIndex(INDEX.BY_RECORDING_ID, "recording_id");
-      } else {
-        const store = transaction.objectStore(STORE.MATERIALS);
-        if (!store.indexNames.contains(INDEX.BY_RECORDING_ID)) {
-          store.createIndex(INDEX.BY_RECORDING_ID, "recording_id");
-        }
-      }
-
-      if (!db.objectStoreNames.contains(STORE.SPEAKERS)) {
-        db.createObjectStore(STORE.SPEAKERS, { keyPath: "id" });
-      }
-      if (!db.objectStoreNames.contains(STORE.LANGUAGES)) {
-        db.createObjectStore(STORE.LANGUAGES, { keyPath: "id" });
-      }
-      if (!db.objectStoreNames.contains(STORE.CONTENT_TYPES)) {
-        db.createObjectStore(STORE.CONTENT_TYPES, { keyPath: "id" });
-      }
-      if (!db.objectStoreNames.contains(STORE.VENUES)) {
-        db.createObjectStore(STORE.VENUES, { keyPath: "id" });
-      }
-      if (!db.objectStoreNames.contains(STORE.SERVICES)) {
-        db.createObjectStore(STORE.SERVICES, { keyPath: "id" });
-      }
-      if (!db.objectStoreNames.contains(STORE.REDIRECTS)) {
-        db.createObjectStore(STORE.REDIRECTS, { keyPath: "id" });
-      }
-      if (!db.objectStoreNames.contains(STORE.EVENTS)) {
-        db.createObjectStore(STORE.EVENTS, { keyPath: "id" });
-      }
-      if (!db.objectStoreNames.contains(STORE.FAQ_CATEGORIES)) {
-        db.createObjectStore(STORE.FAQ_CATEGORIES, { keyPath: "id" });
-      }
-      if (!db.objectStoreNames.contains(STORE.FAQS)) {
-        const store = db.createObjectStore(STORE.FAQS, { keyPath: "id" });
-        store.createIndex(INDEX.BY_CATEGORY_ID, "category_id");
-      }
-      if (!db.objectStoreNames.contains(STORE.FEATURED_SECTIONS)) {
-        db.createObjectStore(STORE.FEATURED_SECTIONS, { keyPath: "id" });
-      }
-      if (!db.objectStoreNames.contains(STORE.FEATURED_ITEMS)) {
-        const store = db.createObjectStore(STORE.FEATURED_ITEMS, {
-          keyPath: "id",
+  dbPromise = openDB<RSP_IDB>(DB_NAME, DB_VERSION, {
+    upgrade(db, oldVersion, newVersion, transaction) {
+      if (oldVersion !== newVersion) {
+        Object.values(STORE).forEach((store) => {
+          try {
+            db.deleteObjectStore(store);
+          } catch {
+            // Ignore error if store doesn't exist
+          }
         });
-        store.createIndex(INDEX.BY_SECTION_ID, "section_id");
       }
-      if (!db.objectStoreNames.contains(STORE.METADATA)) {
-        db.createObjectStore(STORE.METADATA);
-      }
+
+      Object.entries(IDB_SCHEMA).forEach(
+        ([storeName, { keyPath, indexes }]) => {
+          if (!db.objectStoreNames.contains(storeName)) {
+            const store = db.createObjectStore(storeName, {
+              keyPath,
+            });
+            indexes?.forEach((index) => {
+              store.createIndex(index.name, index.keyPath);
+            });
+          } else {
+            const store = transaction.objectStore(storeName);
+            indexes?.forEach((index) => {
+              if (!store.indexNames.contains(index.name)) {
+                store.createIndex(index.name, index.keyPath);
+              }
+            });
+          }
+        },
+      );
     },
   });
 

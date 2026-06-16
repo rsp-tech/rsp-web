@@ -15,7 +15,7 @@ export const ASSET_DOWNLOAD_BASE_URL = process.env
 
 // IndexedDB
 export const DB_NAME = "rsp.com";
-export const DB_VERSION = 2;
+export const DB_VERSION = 7;
 
 // Store names
 export const STORE = {
@@ -33,7 +33,132 @@ export const STORE = {
   FAQS: "faqs",
   FEATURED_SECTIONS: "featured_sections",
   FEATURED_ITEMS: "featured_items",
-  METADATA: "metadata",
+  SYNC_META: "sync_meta",
+  ROLE_META: "role_meta",
+} as const;
+
+export const ROLE_SYNCED_TABLES = [
+  STORE.CATEGORIES,
+  STORE.RECORDINGS,
+  STORE.MATERIALS,
+] as const;
+
+export const SEARCH_LOOKUP_TABLES = [
+  STORE.SPEAKERS,
+  STORE.VENUES,
+  STORE.LANGUAGES,
+  STORE.EVENTS,
+] as const;
+
+export const SYNC_COLUMNS = {
+  categories: `
+    id,
+    allowed_roles,
+    img_id,
+    name,
+    order_ind,
+    path,
+    url_path
+  `,
+
+  recordings: `
+    id,
+    allowed_roles,
+    audio_id,
+    category_id,
+    event_id,
+    lang_ids,
+    name,
+    order_ind,
+    recorded_at,
+    speaker_ids,
+    type_id,
+    venues_id,
+    yt_id
+  `,
+
+  materials: `
+    id,
+    allowed_roles,
+    name,
+    recording_id,
+    uri,
+    type
+  `,
+
+  speakers: `
+    id,
+    name
+  `,
+
+  languages: `
+    id,
+    name,
+    native_name
+  `,
+
+  content_types: `
+    id,
+    name
+  `,
+
+  venues: `
+    id,
+    name
+  `,
+
+  events: `
+    id,
+    name,
+    short_name
+  `,
+
+  redirects: `
+    id,
+    to_path
+  `,
+
+  services: `
+    id,
+    created_at,
+    description,
+    is_public,
+    name,
+    order_ind,
+    type
+  `,
+
+  faq_categories: `
+    id,
+    name,
+    order_ind,
+    slug
+  `,
+
+  faqs: `
+    id,
+    category_id,
+    answer,
+    question,
+    is_published,
+    order_ind
+  `,
+
+  featured_sections: `
+    id,
+    title,
+    layout,
+    is_active,
+    order_ind
+  `,
+
+  featured_items: `
+    id,
+    entity_id,
+    entity_type,
+    order_ind,
+    section_id
+  `,
 } as const;
 
 // Index names
@@ -47,8 +172,6 @@ export const INDEX = {
 
 // Metadata keys
 export const META_KEY = {
-  LAST_SYNC_PREFIX: "last_sync_",
-  CATEGORIES_LAST_UPDATED: "categories_last_updated",
   CLEANUP_ROLE: "cleanup_role",
   SYNC_ROLE: "sync_role",
 } as const;
@@ -85,4 +208,4 @@ export const SEARCH_LIMIT = 15;
 export const SEARCH_TOLERANCE = 1;
 export const SEARCH_BOOST_NAME = 2.0;
 export const SEARCH_BOOST_SPEAKER = 1.5;
-export const INVALIDATE_ALL_THRESHOLD = 100;
+export const INVALIDATE_ALL_THRESHOLD = 10;

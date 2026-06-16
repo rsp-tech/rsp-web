@@ -251,24 +251,27 @@ export type Database = {
           id: number;
           name: string;
           recording_id: number;
-          storage_key: string;
+          type: string | null;
           updated_at: string | null;
+          uri: string;
         };
         Insert: {
           allowed_roles?: number[];
           id?: number;
           name: string;
           recording_id: number;
-          storage_key: string;
+          type?: string | null;
           updated_at?: string | null;
+          uri: string;
         };
         Update: {
           allowed_roles?: number[];
           id?: number;
           name?: string;
           recording_id?: number;
-          storage_key?: string;
+          type?: string | null;
           updated_at?: string | null;
+          uri?: string;
         };
         Relationships: [
           {
@@ -456,6 +459,21 @@ export type Database = {
           id?: never;
           name?: string;
           updated_at?: string | null;
+        };
+        Relationships: [];
+      };
+      sync_meta: {
+        Row: {
+          table_name: string;
+          updated_at: string;
+        };
+        Insert: {
+          table_name: string;
+          updated_at: string;
+        };
+        Update: {
+          table_name?: string;
+          updated_at?: string;
         };
         Relationships: [];
       };
