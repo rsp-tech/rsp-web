@@ -13,7 +13,6 @@ export const CategoryList = ({
   categories,
   isLoading,
   error,
-  onCardKeyDown,
 }: CategoryListProps) => {
   if (isLoading) {
     return (
@@ -34,13 +33,40 @@ export const CategoryList = ({
     );
   }
 
-  if (!categories || categories.length === 0) {
+  if (!categories?.length) {
     return (
       <div className="p-8 text-center text-muted-foreground border border-dashed border-border rounded-2xl text-sm">
         No categories available. Background sync may be running.
       </div>
     );
   }
+
+  // Keyboard navigation for subcategories
+  const handleCategoryKeyDown = (e: React.KeyboardEvent<HTMLAnchorElement>) => {
+    const cards = Array.from(
+      document.querySelectorAll<HTMLElement>("[data-category-item]"),
+    );
+    const index = cards.indexOf(e.currentTarget);
+    if (index === -1) return;
+
+    if (e.key === "Tab" && !e.shiftKey) {
+      const firstRec = document.querySelector<HTMLElement>(
+        "[data-recording-item]",
+      );
+      if (firstRec) {
+        e.preventDefault();
+        firstRec.focus();
+      }
+    } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+      e.preventDefault();
+      const next = (index + 1) % cards.length;
+      cards[next]?.focus();
+    } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+      e.preventDefault();
+      const prev = (index - 1 + cards.length) % cards.length;
+      cards[prev]?.focus();
+    }
+  };
 
   categories.sort((a, b) =>
     a.order_ind !== null && b.order_ind !== null
@@ -51,7 +77,11 @@ export const CategoryList = ({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
       {categories.map((cat) => (
-        <CategoryCard key={cat.id} cat={cat} onKeyDown={onCardKeyDown} />
+        <CategoryCard
+          key={cat.id}
+          cat={cat}
+          onKeyDown={handleCategoryKeyDown}
+        />
       ))}
     </div>
   );
