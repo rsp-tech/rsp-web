@@ -247,7 +247,7 @@ export default function CategoryPage({
                             return (
                               <a
                                 key={mat.id}
-                                href={getAssetUrl(mat.storage_key)}
+                                href={getAssetUrl(mat.uri)}
                                 download
                                 className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition-colors border ${
                                   isMaterialHighlighted

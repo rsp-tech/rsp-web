@@ -7,24 +7,14 @@ import {
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useSession } from "@/components/providers";
-import {
-  INVALIDATE_ALL_THRESHOLD,
-  QUERY_KEY,
-  SUPABASE_PUBLISHABLE_KEY,
-  SUPABASE_URL,
-  SYNC_INTERVAL,
-  WORKER_MSG,
-} from "@/constants";
+import { QUERY_KEY, SYNC_INTERVAL, WORKER_MSG } from "@/constants";
 import { getWorker, notifySearchWorker, useSearch } from "@/hooks/use-search";
 import type { SearchableTable, SyncResult } from "@/types";
 
 interface WorkerConfig {
-  supabaseUrl: string;
-  supabaseKey: string;
   accessToken: string;
   roleId?: number;
   isPublic?: boolean;
-  queryClient: QueryClient;
 }
 
 type SyncWorkerMessage =
@@ -32,7 +22,12 @@ type SyncWorkerMessage =
   | { type: typeof WORKER_MSG.ERROR; message: string }
   | { type: typeof WORKER_MSG.PROGRESS; message: string };
 
-const runSync = ({ queryClient, ...config }: WorkerConfig): Promise<number> =>
+const runSync = ({
+  queryClient,
+  ...config
+}: WorkerConfig & {
+  queryClient: QueryClient;
+}): Promise<number> =>
   new Promise((resolve, reject) => {
     const worker = new Worker(new URL("@/workers/sync.ts", import.meta.url));
     worker.postMessage({ type: WORKER_MSG.START_SYNC, ...config });
@@ -42,15 +37,11 @@ const runSync = ({ queryClient, ...config }: WorkerConfig): Promise<number> =>
         const result = e.data;
         const { changedCategoryPaths } = result;
 
-        toast.success("Sync complete! Database updated.", {
+        toast.success("Sync complete!", {
           id: "sync-status",
         });
 
-        queryClient.invalidateQueries({
-          queryKey: [QUERY_KEY.CATEGORY_PAGE, "~"],
-        });
-
-        if (changedCategoryPaths.length > INVALIDATE_ALL_THRESHOLD) {
+        if (changedCategoryPaths.includes("*")) {
           queryClient.invalidateQueries({
             queryKey: [QUERY_KEY.CATEGORY_PAGE],
           });
@@ -104,8 +95,6 @@ export const useSync = () => {
   const isPublic = session?.user.app_metadata.is_public as boolean | undefined;
 
   const workerConfig = {
-    supabaseUrl: SUPABASE_URL,
-    supabaseKey: SUPABASE_PUBLISHABLE_KEY,
     accessToken: session?.access_token ?? "",
     roleId,
     isPublic,

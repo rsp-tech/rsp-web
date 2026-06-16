@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { INDEX, QUERY_KEY, STORE } from "@/constants";
-import { getDB, type RSPDatabase } from "@/lib/idb";
+import { getDB, type RSP_IDB } from "@/lib/idb";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import type { Category, EnrichedRecording, Material, Recording } from "@/types";
 
@@ -14,10 +14,10 @@ export interface CategoryPageData {
 }
 
 type NumberKeyStore = {
-  [StoreName in keyof RSPDatabase]: RSPDatabase[StoreName]["key"] extends number
+  [StoreName in keyof RSP_IDB]: RSP_IDB[StoreName]["key"] extends number
     ? StoreName
     : never;
-}[keyof RSPDatabase];
+}[keyof RSP_IDB];
 
 const loadCategoryPage = async (
   slug: string[],
@@ -113,10 +113,10 @@ const loadCategoryPage = async (
   const fetchSelected = async <StoreName extends NumberKeyStore>(
     storeName: StoreName,
     ids: Set<number>,
-  ): Promise<Map<number, RSPDatabase[StoreName]["value"]>> => {
+  ): Promise<Map<number, RSP_IDB[StoreName]["value"]>> => {
     const tx = db.transaction(storeName, "readonly");
     const store = tx.store;
-    const resultMap = new Map<number, RSPDatabase[StoreName]["value"]>();
+    const resultMap = new Map<number, RSP_IDB[StoreName]["value"]>();
 
     const promises = Array.from(ids).map((id) =>
       store.get(id).then((val) => {
