@@ -1,3 +1,4 @@
+import type { IDBPDatabase } from "idb";
 import {
   INVALIDATE_ALL_THRESHOLD,
   META_KEY,
@@ -6,17 +7,16 @@ import {
   SYNC_CONCURRENCY,
   WORKER_MSG,
 } from "@/constants";
-import { getDB, RSP_IDB } from "@/lib/idb";
+import { getDB, type RSP_IDB } from "@/lib/idb";
+import { getSupabaseClient } from "@/lib/supabase-browser";
 import { createLimiter, errorMessage } from "@/lib/utils";
 import type { SyncChangedIds, SyncResult } from "@/types";
-import { getSupabaseClient } from "@/lib/supabase-browser";
 import {
-  ChangedCategoryMeta,
+  type ChangedCategoryMeta,
   getTablesToSync,
   syncTable,
   syncTableForRole,
 } from "./utils";
-import { IDBPDatabase } from "idb";
 
 type WorkerMessage = {
   type: typeof WORKER_MSG.START_SYNC;

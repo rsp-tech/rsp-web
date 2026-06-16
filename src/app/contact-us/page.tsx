@@ -1,14 +1,20 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Loader2, Mail, MapPin, MessageSquare, Send } from "lucide-react";
+import { useEffect, useId, useState } from "react";
 import { toast } from "sonner";
-import { Loader2, Send, Mail, MapPin, MessageSquare } from "lucide-react";
 import { useSession } from "@/components/providers";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Textarea } from "@/components/ui/textarea";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { getUserDisplayName } from "@/lib/utils";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Textarea } from "@/components/ui/textarea";
 
 const CATEGORIES = [
   { value: "Technical", label: "Technical Support / Feedback" },
@@ -27,6 +33,8 @@ export default function ContactUsPage() {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
+
+  const id = useId();
 
   // Pre-fill name and email if logged in
   useEffect(() => {
@@ -65,6 +73,7 @@ export default function ContactUsPage() {
       toast.success("Thank you! Your message has been sent successfully.");
       setSubject("");
       setMessage("");
+      // biome-ignore lint/suspicious/noExplicitAny: catch block ok
     } catch (err: any) {
       console.error(err);
       toast.error(`Failed to send message: ${err.message || "Unknown error"}`);
@@ -80,7 +89,8 @@ export default function ContactUsPage() {
           Contact Us
         </h1>
         <p className="text-muted-foreground text-sm">
-          Have questions or inquiries? Feel free to reach out to us by filling the form below.
+          Have questions or inquiries? Feel free to reach out to us by filling
+          the form below.
         </p>
       </div>
 
@@ -116,7 +126,8 @@ export default function ContactUsPage() {
                 <div className="flex flex-col">
                   <span className="font-bold text-foreground">Address</span>
                   <span className="text-muted-foreground text-xs leading-relaxed">
-                    Voice Publication & Courses,<br />
+                    Voice Publication & Courses,
+                    <br />
                     Pune, Maharashtra, India
                   </span>
                 </div>
@@ -129,7 +140,9 @@ export default function ContactUsPage() {
         <div className="lg:col-span-2">
           <Card className="border-border/60">
             <CardHeader>
-              <CardTitle className="text-xl font-bold">Send a Message</CardTitle>
+              <CardTitle className="text-xl font-bold">
+                Send a Message
+              </CardTitle>
               <CardDescription>
                 Fill out this form and our team will get back to you shortly.
               </CardDescription>
@@ -138,11 +151,15 @@ export default function ContactUsPage() {
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                    <label
+                      className="text-xs font-bold text-muted-foreground uppercase tracking-wider"
+                      htmlFor={`${id}-1`}
+                    >
                       Your Name <span className="text-destructive">*</span>
                     </label>
                     <input
                       type="text"
+                      id={`${id}-1`}
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       disabled={!!session}
@@ -153,10 +170,14 @@ export default function ContactUsPage() {
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                    <label
+                      className="text-xs font-bold text-muted-foreground uppercase tracking-wider"
+                      htmlFor={`${id}-2`}
+                    >
                       Your Email <span className="text-destructive">*</span>
                     </label>
                     <input
+                      id={`${id}-2`}
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
@@ -169,10 +190,14 @@ export default function ContactUsPage() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                  <label
+                    className="text-xs font-bold text-muted-foreground uppercase tracking-wider"
+                    htmlFor={`${id}-3`}
+                  >
                     Topic / Category <span className="text-destructive">*</span>
                   </label>
                   <select
+                    id={`${id}-3`}
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
                     className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground"
@@ -186,10 +211,14 @@ export default function ContactUsPage() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                  <label
+                    className="text-xs font-bold text-muted-foreground uppercase tracking-wider"
+                    htmlFor={`${id}-4`}
+                  >
                     Subject <span className="text-destructive">*</span>
                   </label>
                   <input
+                    id={`${id}-4`}
                     type="text"
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
@@ -200,10 +229,14 @@ export default function ContactUsPage() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-bold text-muted-foreground uppercase tracking-wider">
+                  <label
+                    className="text-xs font-bold text-muted-foreground uppercase tracking-wider"
+                    htmlFor={`${id}-5`}
+                  >
                     Message <span className="text-destructive">*</span>
                   </label>
                   <Textarea
+                    id={`${id}-5`}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Write details of your query here..."
@@ -213,7 +246,11 @@ export default function ContactUsPage() {
                 </div>
 
                 <div className="flex justify-end pt-2">
-                  <Button type="submit" disabled={submitting} className="gap-2 px-5">
+                  <Button
+                    type="submit"
+                    disabled={submitting}
+                    className="gap-2 px-5"
+                  >
                     {submitting ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
                     ) : (

@@ -1,3 +1,4 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import type { IDBPDatabase } from "idb";
 import {
   SEARCH_LOOKUP_TABLES,
@@ -6,7 +7,6 @@ import {
   SYNC_PAGE_SIZE,
 } from "@/constants";
 import type { Database } from "@/database.types";
-import type { SupabaseClient } from "@supabase/supabase-js";
 import type { RSP_IDB } from "@/lib/idb";
 import type { SyncChangedIds } from "@/types";
 
