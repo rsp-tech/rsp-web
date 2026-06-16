@@ -1,6 +1,6 @@
 import type { IDBPDatabase } from "idb";
 import { META_KEY, STORE, WORKER_MSG } from "@/constants";
-import type { RSPDatabase } from "@/lib/idb";
+import type { RSP_IDB } from "@/lib/idb";
 import { getDB } from "@/lib/idb";
 import { errorMessage } from "@/lib/utils";
 
@@ -20,7 +20,7 @@ const isAllowed = (
   (roleId !== undefined && allowedRoles.includes(roleId));
 
 const cleanupTable = async (
-  db: IDBPDatabase<RSPDatabase>,
+  db: IDBPDatabase<RSP_IDB>,
   table: CleanupTable,
   roleId: number | undefined,
 ) => {
@@ -54,11 +54,11 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
 
     const nextRole = role ?? null;
     const hasStoredRole =
-      (await db.getKey(STORE.METADATA, META_KEY.CLEANUP_ROLE)) !== undefined;
-    const storedRole = await db.get(STORE.METADATA, META_KEY.CLEANUP_ROLE);
+      (await db.getKey(STORE.ROLE_META, META_KEY.CLEANUP_ROLE)) !== undefined;
+    const storedRole = await db.get(STORE.ROLE_META, META_KEY.CLEANUP_ROLE);
 
     if (!hasStoredRole) {
-      await db.put(STORE.METADATA, nextRole, META_KEY.CLEANUP_ROLE);
+      await db.put(STORE.ROLE_META, nextRole, META_KEY.CLEANUP_ROLE);
       postMessage({ type: WORKER_MSG.SKIPPED, reason: "No previous role" });
       return;
     }
@@ -69,7 +69,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
     }
 
     await Promise.all(TABLES.map((t) => cleanupTable(db, t, role)));
-    await db.put(STORE.METADATA, nextRole, META_KEY.CLEANUP_ROLE);
+    await db.put(STORE.ROLE_META, nextRole, META_KEY.CLEANUP_ROLE);
 
     postMessage({ type: WORKER_MSG.SUCCESS });
   } catch (err) {
