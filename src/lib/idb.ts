@@ -9,7 +9,6 @@ import type {
   FeaturedItem,
   FeaturedSection,
   Language,
-  LocalTable,
   Material,
   Recording,
   Redirect,
@@ -23,7 +22,7 @@ type StoreName = (typeof STORE)[keyof typeof STORE];
 export interface RSP_IDB {
   categories: {
     key: number;
-    value: LocalTable<Category>;
+    value: Category;
     indexes: {
       [INDEX.BY_URL]: string;
       [INDEX.BY_PATH]: string;
@@ -31,62 +30,62 @@ export interface RSP_IDB {
   };
   recordings: {
     key: number;
-    value: LocalTable<Recording>;
+    value: Recording;
     indexes: {
       [INDEX.BY_CATEGORY_ID]: number;
     };
   };
   materials: {
     key: number;
-    value: LocalTable<Material>;
+    value: Material;
     indexes: {
       [INDEX.BY_RECORDING_ID]: number;
     };
   };
   speakers: {
     key: number;
-    value: LocalTable<Speaker>;
+    value: Speaker;
   };
   languages: {
     key: number;
-    value: LocalTable<Language>;
+    value: Language;
   };
   content_types: {
     key: number;
-    value: LocalTable<ContentType>;
+    value: ContentType;
   };
   venues: {
     key: number;
-    value: LocalTable<Venue>;
+    value: Venue;
   };
   services: {
     key: number;
-    value: LocalTable<Service>;
+    value: Service;
   };
   redirects: {
     key: string;
-    value: LocalTable<Redirect>;
+    value: Redirect;
   };
   events: {
     key: number;
-    value: LocalTable<Event>;
+    value: Event;
   };
   faq_categories: {
     key: number;
-    value: LocalTable<FaqCategory>;
+    value: FaqCategory;
   };
   faqs: {
     key: number;
-    value: LocalTable<Faq>;
+    value: Faq;
     indexes: { [INDEX.BY_CATEGORY_ID]: number };
   };
   featured_sections: {
     key: number;
-    value: LocalTable<FeaturedSection>;
+    value: FeaturedSection;
   };
   featured_items: {
     key: number;
-    value: LocalTable<FeaturedItem>;
+    value: FeaturedItem;
     indexes: { [INDEX.BY_SECTION_ID]: number };
   };
   sync_meta: {

@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { INDEX, STORE } from "@/constants";
+import { useCategories } from "@/hooks/use-categories";
 import { useSearch } from "@/hooks/use-search";
 import { getDB } from "@/lib/idb";
 import { categoryPath } from "@/lib/utils";
@@ -23,7 +24,6 @@ import {
   SearchResults,
 } from "./search/search-results";
 import { SearchScopeTabs } from "./search/search-scope-tabs";
-import { useCategories } from "@/hooks/use-categories";
 
 export type SearchScope = "full" | "current" | "sub";
 

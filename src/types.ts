@@ -1,13 +1,13 @@
 import type { Database } from "@/database.types";
 
+type LocalTable<T> = Omit<T, "created_at" | "metadata" | "updated_at">;
+
 export type Tables<
   T extends keyof Database["prod"]["Tables"],
   U extends keyof Database["prod"]["Tables"][T] = "Row",
-> = Database["prod"]["Tables"][T][U];
+> = LocalTable<Database["prod"]["Tables"][T][U]>;
 export type Enums<T extends keyof Database["prod"]["Enums"]> =
   Database["prod"]["Enums"][T];
-
-export type LocalTable<T> = Omit<T, "created_at" | "metadata" | "updated_at">;
 
 type DatabaseCategory = Tables<"categories">;
 
