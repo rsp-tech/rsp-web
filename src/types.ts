@@ -84,8 +84,9 @@ export interface RecordingSearchDocument {
   id: string;
   name: string;
   speaker_names: string;
+  languages: string;
   venue_name: string;
-  date: string;
+  date: number;
   speaker_ids: number[];
   category_id: number;
   lang_ids: number[];
@@ -114,6 +115,8 @@ export interface RecordingSearchFilters {
   speaker_ids?: number[];
   lang_ids?: number[];
   venues_id?: number;
+  date_start?: string;
+  date_end?: string;
 }
 
 export interface SearchPayload {
