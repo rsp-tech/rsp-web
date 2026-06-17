@@ -18,6 +18,7 @@ import type {
   MaterialSearchDocument,
   Recording,
   RecordingSearchDocument,
+  RecordingSearchFilters,
   Speaker,
   Venue,
 } from "@/types";
@@ -43,6 +44,36 @@ export function useSearchBar() {
   });
   const [searching, setSearching] = useState(false);
   const [showDropdown, setShowDropdown] = useState(false);
+
+  // Filter States
+  const [filters, setFilters] = useState<RecordingSearchFilters>({
+    speaker_ids: [],
+    lang_ids: [],
+    venues_id: undefined,
+    date_start: "",
+    date_end: "",
+  });
+
+  const [availableSpeakers, setAvailableSpeakers] = useState<Speaker[]>([]);
+  const [availableLanguages, setAvailableLanguages] = useState<Language[]>([]);
+  const [availableVenues, setAvailableVenues] = useState<Venue[]>([]);
+
+  // Load available metadata for filters
+  useEffect(() => {
+    async function loadMetadata() {
+      const db = await getDB();
+      if (!db) return;
+      const [s, l, v] = await Promise.all([
+        db.getAll(STORE.SPEAKERS),
+        db.getAll(STORE.LANGUAGES),
+        db.getAll(STORE.VENUES),
+      ]);
+      setAvailableSpeakers(s.sort((a, b) => a.name.localeCompare(b.name)));
+      setAvailableLanguages(l.sort((a, b) => a.name.localeCompare(b.name)));
+      setAvailableVenues(v.sort((a, b) => a.name.localeCompare(b.name)));
+    }
+    loadMetadata();
+  }, []);
 
   // Determine current category from URL pathname
   useEffect(() => {
@@ -70,7 +101,7 @@ export function useSearchBar() {
     loadCurrentCategory();
   }, [pathname]);
 
-  // Execute scoped search when term or scope changes
+  // Execute scoped search when term, scope, or filters change
   useEffect(() => {
     const delayDebounce = setTimeout(async () => {
       if (!term.trim()) {
@@ -80,7 +111,7 @@ export function useSearchBar() {
 
       setSearching(true);
       try {
-        const rawResults = await searchAll(term);
+        const rawResults = await searchAll(term, filters);
         const db = await getDB();
         if (!db) return;
 
@@ -250,7 +281,7 @@ export function useSearchBar() {
     }, 250);
 
     return () => clearTimeout(delayDebounce);
-  }, [term, scope, currentCategory, searchAll]);
+  }, [term, scope, currentCategory, filters, searchAll]);
 
   const handleSelectCategory = (cat: Category) => {
     router.push(`/${categoryPath(cat.url_path)}`);
@@ -294,6 +325,11 @@ export function useSearchBar() {
     searching,
     showDropdown,
     setShowDropdown,
+    filters,
+    setFilters,
+    availableSpeakers,
+    availableLanguages,
+    availableVenues,
     handleSelectCategory,
     handleSelectRecording,
     handleSelectMaterial,

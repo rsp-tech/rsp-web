@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { getUserDisplayName } from "@/lib/utils";
@@ -151,12 +152,12 @@ export default function ContactUsPage() {
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
-                    <label
+                    <Label
                       className="text-xs font-bold text-muted-foreground uppercase tracking-wider"
                       htmlFor={`${id}-1`}
                     >
                       Your Name <span className="text-destructive">*</span>
-                    </label>
+                    </Label>
                     <input
                       type="text"
                       id={`${id}-1`}
@@ -170,12 +171,12 @@ export default function ContactUsPage() {
                   </div>
 
                   <div className="flex flex-col gap-1.5">
-                    <label
+                    <Label
                       className="text-xs font-bold text-muted-foreground uppercase tracking-wider"
                       htmlFor={`${id}-2`}
                     >
                       Your Email <span className="text-destructive">*</span>
-                    </label>
+                    </Label>
                     <input
                       id={`${id}-2`}
                       type="email"
@@ -190,12 +191,12 @@ export default function ContactUsPage() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label
+                  <Label
                     className="text-xs font-bold text-muted-foreground uppercase tracking-wider"
                     htmlFor={`${id}-3`}
                   >
                     Topic / Category <span className="text-destructive">*</span>
-                  </label>
+                  </Label>
                   <select
                     id={`${id}-3`}
                     value={category}
@@ -211,12 +212,12 @@ export default function ContactUsPage() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label
+                  <Label
                     className="text-xs font-bold text-muted-foreground uppercase tracking-wider"
                     htmlFor={`${id}-4`}
                   >
                     Subject <span className="text-destructive">*</span>
-                  </label>
+                  </Label>
                   <input
                     id={`${id}-4`}
                     type="text"
@@ -229,12 +230,12 @@ export default function ContactUsPage() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label
+                  <Label
                     className="text-xs font-bold text-muted-foreground uppercase tracking-wider"
                     htmlFor={`${id}-5`}
                   >
                     Message <span className="text-destructive">*</span>
-                  </label>
+                  </Label>
                   <Textarea
                     id={`${id}-5`}
                     value={message}

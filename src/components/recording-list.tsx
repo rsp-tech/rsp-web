@@ -8,6 +8,7 @@ import {
   CalendarArrowUp,
   FileDown,
   FileText,
+  Globe,
   MapPin,
   User,
 } from "lucide-react";
@@ -190,6 +191,18 @@ export const RecordingList = ({
                   <span className="flex items-center gap-1">
                     <Calendar className="w-3.5 h-3.5 text-muted-foreground/75" />
                     {new Date(rec.recorded_at).toLocaleDateString()}
+                  </span>
+                )}
+                {rec.languages.length > 0 && (
+                  <span className="flex items-center gap-1">
+                    <Globe className="w-3 h-3 text-muted-foreground/70" />
+                    {rec.languages
+                      .map((l) =>
+                        l.name === l.native_name
+                          ? l.name
+                          : `${l.name} (${l.native_name})`,
+                      )
+                      .join(", ")}
                   </span>
                 )}
               </div>

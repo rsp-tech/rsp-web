@@ -20,6 +20,7 @@ import { errorMessage } from "@/lib/utils";
 import type {
   Category,
   CategorySearchDocument,
+  Language,
   Material,
   MaterialSearchDocument,
   Recording,
@@ -35,11 +36,12 @@ const recordingsSchema = {
   id: "string",
   name: "string",
   speaker_names: "string",
+  languages: "string",
   venue_name: "string",
-  date: "string",
-  speaker_ids: "number[]",
+  date: "number",
+  speaker_ids: "enum[]",
   category_id: "number",
-  lang_ids: "number[]",
+  lang_ids: "enum[]",
   venues_id: "number",
 } as const;
 
@@ -62,6 +64,7 @@ type RecordingWhere = WhereCondition<typeof recordingsSchema>;
 
 interface LookupMaps {
   speakers: Map<number, string>;
+  languages: Map<number, string>;
   venues: Map<number, string>;
 }
 
@@ -93,6 +96,7 @@ const mapRecording = (
 ): RecordingSearchDocument => {
   const speakerIds = compactNumbers(recording.speaker_ids);
   const venueId = recording.venues_id ?? 0;
+  const recordingTs = Date.parse(recording.recorded_at ?? "");
   return {
     id: String(recording.id),
     name: recording.name,
@@ -100,8 +104,10 @@ const mapRecording = (
       .map((id) => maps.speakers.get(id))
       .filter(Boolean)
       .join(", "),
+    languages:
+      recording.lang_ids?.map((id) => maps.languages.get(id)).join(", ") ?? "",
     venue_name: maps.venues.get(venueId) ?? "",
-    date: recording.recorded_at ?? "",
+    date: Number.isFinite(recordingTs) ? recordingTs : 0,
     speaker_ids: speakerIds,
     category_id: recording.category_id,
     lang_ids: compactNumbers(recording.lang_ids),
@@ -126,14 +132,21 @@ const loadLookupMaps = async (): Promise<LookupMaps> => {
   const db = await getDB();
   if (!db) throw new Error("IndexedDB unavailable");
 
-  const [speakers, venues] = await Promise.all([
+  const [speakers, venues, languages] = await Promise.all([
     db.getAll(STORE.SPEAKERS),
     db.getAll(STORE.VENUES),
+    db.getAll(STORE.LANGUAGES),
   ]);
 
   return {
     speakers: new Map(speakers.map((s: Speaker) => [s.id, s.name])),
     venues: new Map(venues.map((v: Venue) => [v.id, v.name])),
+    languages: new Map(
+      languages.map((l: Language) => [
+        l.id,
+        l.name === l.native_name ? `${l.name} (${l.native_name})` : l.name,
+      ]),
+    ),
   };
 };
 
@@ -207,27 +220,33 @@ const updateDocs = async (
   const lookupMaps =
     table === STORE.RECORDINGS
       ? await loadLookupMaps()
-      : { speakers: new Map(), venues: new Map() };
+      : { speakers: new Map(), venues: new Map(), languages: new Map() };
 
-  for (const id of new Set(ids)) {
-    const stringId = String(id);
-    const doc = await db.get(table, id);
+  await Promise.all(
+    Array.from(new Set(ids)).map(async (id) => {
+      const stringId = String(id);
+      const doc = await db.get(table, id);
 
-    if (table === STORE.RECORDINGS) {
-      await safeRemove(currentEngine.recordingsDb, stringId);
-      if (doc)
-        await insert(currentEngine.recordingsDb, mapRecording(doc, lookupMaps));
-    } else if (table === STORE.CATEGORIES) {
-      await safeRemove(currentEngine.categoriesDb, stringId);
-      if (doc) await insert(currentEngine.categoriesDb, mapCategory(doc));
-    } else if (table === STORE.MATERIALS) {
-      await safeRemove(currentEngine.materialsDb, stringId);
-      if (doc) await insert(currentEngine.materialsDb, mapMaterial(doc));
-    }
-  }
+      if (table === STORE.RECORDINGS) {
+        await safeRemove(currentEngine.recordingsDb, stringId);
+        if (doc)
+          await insert(
+            currentEngine.recordingsDb,
+            mapRecording(doc, lookupMaps),
+          );
+      } else if (table === STORE.CATEGORIES) {
+        await safeRemove(currentEngine.categoriesDb, stringId);
+        if (doc) await insert(currentEngine.categoriesDb, mapCategory(doc));
+      } else if (table === STORE.MATERIALS) {
+        await safeRemove(currentEngine.materialsDb, stringId);
+        if (doc) await insert(currentEngine.materialsDb, mapMaterial(doc));
+      }
+    }),
+  );
 };
 
 // --- SEARCH LOGIC ---
+const MAX_DATE = new Date("9999-12-31").getTime();
 const toRecordingWhere = (
   filters: SearchPayload["filters"],
 ): RecordingWhere | undefined => {
@@ -239,22 +258,26 @@ const toRecordingWhere = (
   if (filters.venues_id !== undefined)
     clauses.push({ venues_id: { eq: filters.venues_id } });
 
+  if (filters.speaker_ids?.length) {
+    clauses.push({ speaker_ids: { containsAll: filters.speaker_ids } });
+  }
+
+  if (filters.lang_ids?.length) {
+    clauses.push({ lang_ids: { containsAll: filters.lang_ids } });
+  }
+
+  if (filters.date_start || filters.date_end) {
+    const startTs = filters.date_start ? Date.parse(filters.date_start) : 0;
+    const endTs = filters.date_end ? Date.parse(filters.date_end) : MAX_DATE;
+    clauses.push({
+      date: {
+        between: [startTs, endTs],
+      },
+    });
+  }
+
   if (!clauses.length) return undefined;
   return clauses.length === 1 ? clauses[0] : { and: clauses };
-};
-
-const includesEvery = (values: number[], required?: number[]): boolean =>
-  !required?.length || required.every((v) => values.includes(v));
-
-const matchesRecordingFilters = (
-  document: RecordingSearchDocument,
-  filters: SearchPayload["filters"],
-): boolean => {
-  if (!filters) return true;
-  return (
-    includesEvery(document.speaker_ids, filters.speaker_ids) &&
-    includesEvery(document.lang_ids, filters.lang_ids)
-  );
 };
 
 const runSearchAll = async (payload: SearchPayload): Promise<void> => {
@@ -264,10 +287,7 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
     const currentEngine = await getSearchEngine();
     const recordingWhere = toRecordingWhere(filters);
     // Inflate limit if doing client-side array intersections
-    const recordingLimit =
-      filters?.speaker_ids?.length || filters?.lang_ids?.length
-        ? SEARCH_LIMIT * 20
-        : SEARCH_LIMIT;
+    const recordingLimit = SEARCH_LIMIT;
 
     const results = await Promise.all(
       targets.map(async (target): Promise<SearchResult> => {
@@ -276,7 +296,7 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
             currentEngine.recordingsDb,
             {
               term,
-              properties: ["name", "speaker_names", "venue_name", "date"],
+              properties: ["name", "speaker_names", "venue_name", "languages"],
               boost: {
                 name: SEARCH_BOOST_NAME,
                 speaker_names: SEARCH_BOOST_SPEAKER,
@@ -289,10 +309,7 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
 
           return {
             target,
-            hits: result.hits
-              .map((hit) => hit.document)
-              .filter((doc) => matchesRecordingFilters(doc, filters))
-              .slice(0, SEARCH_LIMIT),
+            hits: result.hits.map((hit) => hit.document),
           };
         }
 
