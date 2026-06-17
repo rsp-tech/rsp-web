@@ -199,6 +199,7 @@ export const WORKER_MSG = {
 // Query keys
 export const QUERY_KEY = {
   CATEGORY_PAGE: "category-page",
+  ALL_CATEGORIES: "categories",
   NOTIFICATIONS: "notifications",
   SYNC: "sync",
 } as const;

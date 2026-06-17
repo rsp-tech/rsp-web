@@ -172,9 +172,8 @@ const loadCategoryPage = async (
   return { category, subcategories, recordings: enriched };
 };
 
-export const useCategoryPage = (slug: string[]) => {
-  return useQuery({
+export const useCategoryPage = (slug: string[]) =>
+  useQuery({
     queryKey: [QUERY_KEY.CATEGORY_PAGE, slug.join(".") || "~"],
     queryFn: () => loadCategoryPage(slug),
   });
-};

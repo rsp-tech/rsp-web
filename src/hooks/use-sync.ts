@@ -41,6 +41,12 @@ const runSync = ({
           id: "sync-status",
         });
 
+        if (changedCategoryPaths.length) {
+          queryClient.invalidateQueries({
+            queryKey: [QUERY_KEY.ALL_CATEGORIES],
+          });
+        }
+
         if (changedCategoryPaths.includes("*")) {
           queryClient.invalidateQueries({
             queryKey: [QUERY_KEY.CATEGORY_PAGE],

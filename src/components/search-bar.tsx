@@ -23,6 +23,7 @@ import {
   SearchResults,
 } from "./search/search-results";
 import { SearchScopeTabs } from "./search/search-scope-tabs";
+import { useCategories } from "@/hooks/use-categories";
 
 export type SearchScope = "full" | "current" | "sub";
 
@@ -36,6 +37,7 @@ export function SearchBar() {
   const router = useRouter();
   const pathname = usePathname();
   const { searchAll } = useSearch();
+  const { data: allCategories } = useCategories();
 
   const [term, setTerm] = useState("");
   const [scope, setScope] = useState<SearchScope>("full");
@@ -112,11 +114,9 @@ export function SearchBar() {
             matHits = res.hits as MaterialSearchDocument[];
         }
 
-        const allCategories = await db.getAll(STORE.CATEGORIES);
-
         // Fetch category maps
         const catMap = new Map<number, Category>();
-        for (const cat of allCategories) {
+        for (const cat of allCategories ?? []) {
           catMap.set(cat.id, cat);
         }
 
@@ -233,7 +233,7 @@ export function SearchBar() {
             );
             const subCatIds = new Set(
               allCategories
-                .filter(
+                ?.filter(
                   (c) =>
                     c.url_path === currentUrl ||
                     c.url_path.startsWith(`${currentUrl}.`),
@@ -263,7 +263,7 @@ export function SearchBar() {
     }, 250);
 
     return () => clearTimeout(delayDebounce);
-  }, [term, scope, currentCategory, searchAll]);
+  }, [term, scope, currentCategory, searchAll, allCategories]);
 
   const handleSelectCategory = (cat: Category) => {
     router.push(`/${categoryPath(cat.url_path)}`);
