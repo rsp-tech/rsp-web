@@ -81,9 +81,12 @@ export function SearchBar() {
             <div className="flex-1">
               <SearchInput
                 term={term}
+                onClick={(e) => e.stopPropagation()}
                 onChange={(val) => {
                   setTerm(val);
+                  setShowDropdown(true);
                 }}
+                onFocus={() => setShowDropdown(true)}
                 searching={searching}
               />
             </div>
@@ -133,13 +136,13 @@ export function SearchBar() {
                     Advanced Search Filters
                   </span>
                   {hasActiveFilters && (
-                    <Button
+                    <button
                       type="button"
                       onClick={handleResetFilters}
-                      className="text-[10px] text-primary hover:underline font-bold cursor-pointer"
+                      className="text-[10px] text-primary hover:bg-accent rounded-md font-bold cursor-pointer p-2"
                     >
                       Reset Filters
-                    </Button>
+                    </button>
                   )}
                 </div>
 
