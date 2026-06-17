@@ -40,35 +40,33 @@ const toSyncResult = async (
     bubbledChangeRecordingIds,
   } = changedCategoryMeta;
 
-  (
-    await Promise.all(
-      Array.from(bubbledChangeRecordingIds).map(
-        async (id) =>
-          changedRecordings[id] ??
-          (
-            await db.get(STORE.RECORDINGS, String(id))
-          ).category_id,
-      ),
-    )
-  ).forEach((id) => {
-    bubbledChangeCategoryIds.add(id);
-  });
-
   Object.keys(changedCategories).forEach((id) => {
     bubbledChangeCategoryIds.add(Number(id));
   });
 
+  if (bubbledChangeCategoryIds.size <= INVALIDATE_ALL_THRESHOLD) {
+    (
+      await Promise.all(
+        Array.from(bubbledChangeRecordingIds).map(
+          async (id) =>
+            changedRecordings[id] ??
+            (
+              await db.get(STORE.RECORDINGS, String(id))
+            ).category_id,
+        ),
+      )
+    ).forEach((id) => {
+      bubbledChangeCategoryIds.add(id);
+    });
+  }
+
   const changedCategoryPaths =
     bubbledChangeCategoryIds.size > INVALIDATE_ALL_THRESHOLD
       ? ["*"]
-      : await Promise.all(
-          Array.from(bubbledChangeCategoryIds).map(async (id) =>
-            id
-              ? (changedCategories[id] ??
-                (await db.get(STORE.CATEGORIES, String(id))).url_path)
-              : "~",
-          ),
+      : Array.from(bubbledChangeCategoryIds).map(
+          (id) => changedCategories[id] || id,
         );
+
   return {
     changedCategoryPaths,
     changedIds: {
