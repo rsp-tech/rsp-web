@@ -162,12 +162,12 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
 
     postMessage({
       type: WORKER_MSG.SUCCESS,
-      ...toSyncResult(
+      ...(await toSyncResult(
         db,
         changedCategoryMeta,
         changedIds,
         lookupTableChanges.some(Boolean),
-      ),
+      )),
     });
   } catch (err) {
     postMessage({ type: WORKER_MSG.ERROR, message: errorMessage(err) });

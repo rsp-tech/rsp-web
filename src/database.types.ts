@@ -464,15 +464,15 @@ export type Database = {
       };
       sync_meta: {
         Row: {
-          table_name: string;
+          id: string;
           updated_at: string;
         };
         Insert: {
-          table_name: string;
+          id: string;
           updated_at: string;
         };
         Update: {
-          table_name?: string;
+          id?: string;
           updated_at?: string;
         };
         Relationships: [];

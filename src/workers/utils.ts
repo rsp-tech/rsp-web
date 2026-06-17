@@ -12,7 +12,7 @@ import type { SyncChangedIds } from "@/types";
 
 type SupabaseProdClient = SupabaseClient<Database, "prod", "prod">;
 type SyncMetaRow = {
-  table_name: string;
+  id: string;
   updated_at: string;
 };
 
@@ -45,9 +45,7 @@ export interface SyncTableConfig {
 }
 
 const toUpdatedAtMap = (rows: SyncMetaRow[]): SyncMetaMap =>
-  Object.fromEntries(
-    rows.map(({ table_name, updated_at }) => [table_name, updated_at]),
-  );
+  Object.fromEntries(rows.map((entry) => [entry.id, entry.updated_at]));
 
 export const getTablesToSync = async (
   db: IDBPDatabase<RSP_IDB>,
@@ -55,7 +53,7 @@ export const getTablesToSync = async (
 ) => {
   const [idbRows, supaResult] = await Promise.all([
     db.getAll(STORE.SYNC_META),
-    supabase.from(STORE.SYNC_META).select("table_name, updated_at"),
+    supabase.from(STORE.SYNC_META).select("id, updated_at"),
   ]);
 
   if (supaResult.error) {
@@ -229,7 +227,8 @@ export const syncTable = async ({
     from += SYNC_PAGE_SIZE;
   }
 
-  await db.put(STORE.SYNC_META, highWatermark, table);
+  await db.put(STORE.SYNC_META, { id: table, updated_at: highWatermark });
+
   return (
     changedRows > 0 &&
     SEARCH_LOOKUP_TABLES.includes(

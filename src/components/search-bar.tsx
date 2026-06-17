@@ -3,6 +3,11 @@
 import { SlidersHorizontal } from "lucide-react";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { useSearchBar } from "@/hooks/use-search-bar";
 import { DateRangePicker } from "./search/date-picker";
 import { SearchInput } from "./search/search-input";
@@ -10,11 +15,6 @@ import { SearchResults } from "./search/search-results";
 import { SearchScopeTabs } from "./search/search-scope-tabs";
 import { SearchableSelect } from "./search/searchable-select";
 import { Label } from "./ui/label";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 
 export type SearchScope = "full" | "current" | "sub";
 

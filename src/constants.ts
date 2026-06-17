@@ -14,8 +14,8 @@ export const ASSET_DOWNLOAD_BASE_URL = process.env
   .NEXT_PUBLIC_ASSET_DOWNLOAD_BASE_URL as string;
 
 // IndexedDB
-export const DB_NAME = "rsp.com";
-export const DB_VERSION = 7;
+export const DB_NAME = "rsp";
+export const DB_VERSION = 1;
 
 // Store names
 export const STORE = {

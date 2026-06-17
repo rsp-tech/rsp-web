@@ -90,7 +90,7 @@ export interface RSP_IDB {
   };
   sync_meta: {
     key: StoreName;
-    value: string /** Timestamp e.g., "2026-06-15T12:24:09.011502+00:00" */;
+    value: { id: string; updated_at: string };
   };
   role_meta: {
     key: string;
@@ -154,7 +154,9 @@ const IDB_SCHEMA: Record<
     keyPath: "id",
     indexes: [{ name: INDEX.BY_SECTION_ID, keyPath: "section_id" }],
   },
-  [STORE.SYNC_META]: {},
+  [STORE.SYNC_META]: {
+    keyPath: "id",
+  },
   [STORE.ROLE_META]: {},
 };
 
