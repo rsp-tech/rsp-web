@@ -1,7 +1,7 @@
 "use client";
 
 import { CornerDownRight, Folder, Globe } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Category } from "@/types";
 import type { SearchScope } from "../search-bar";
 
@@ -17,36 +17,30 @@ export function SearchScopeTabs({
   currentCategory,
 }: SearchScopeTabsProps) {
   return (
-    <div className="flex border-b border-border bg-muted/40 p-1 gap-1 text-xs">
-      <Button
-        type="button"
-        variant={scope === "full" ? "secondary" : "ghost"}
-        size="xs"
-        onClick={() => setScope("full")}
-        className="flex-1"
-      >
-        <Globe className="w-3.5 h-3.5" /> Full Search
-      </Button>
-      <Button
-        type="button"
-        variant={scope === "current" ? "secondary" : "ghost"}
-        size="xs"
-        onClick={() => setScope("current")}
-        className="flex-grow"
-        title={`Search directly under ${currentCategory.name}`}
-      >
-        <Folder className="w-3.5 h-3.5" /> Current Page
-      </Button>
-      <Button
-        type="button"
-        variant={scope === "sub" ? "secondary" : "ghost"}
-        size="xs"
-        onClick={() => setScope("sub")}
-        className="flex-grow"
-        title={`Search under ${currentCategory.name} and its sub-categories`}
-      >
-        <CornerDownRight className="w-3.5 h-3.5" /> Sub-categories
-      </Button>
-    </div>
+    <Tabs
+      value={scope}
+      onValueChange={(val) => setScope(val as SearchScope)}
+      className="w-full"
+    >
+      <TabsList className="w-full flex rounded-none border-b border-border bg-muted/40 p-1 h-9">
+        <TabsTrigger value="full" className="flex-1 gap-1.5 text-xs py-1">
+          <Globe className="w-3.5 h-3.5" /> Full Search
+        </TabsTrigger>
+        <TabsTrigger
+          value="current"
+          className="flex-1 gap-1.5 text-xs py-1 truncate"
+          title={`Search directly under ${currentCategory.name}`}
+        >
+          <Folder className="w-3.5 h-3.5" /> Current Page
+        </TabsTrigger>
+        <TabsTrigger
+          value="sub"
+          className="flex-1 gap-1.5 text-xs py-1 truncate"
+          title={`Search under ${currentCategory.name} and sub-categories`}
+        >
+          <CornerDownRight className="w-3.5 h-3.5" /> Sub-categories
+        </TabsTrigger>
+      </TabsList>
+    </Tabs>
   );
 }
