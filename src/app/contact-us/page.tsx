@@ -13,6 +13,13 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { getUserDisplayName } from "@/lib/utils";
@@ -197,18 +204,21 @@ export default function ContactUsPage() {
                   >
                     Topic / Category <span className="text-destructive">*</span>
                   </Label>
-                  <select
-                    id={`${id}-3`}
+                  <Select
                     value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground"
+                    onValueChange={(val) => setCategory(val)}
                   >
-                    {CATEGORIES.map((c) => (
-                      <option key={c.value} value={c.value}>
-                        {c.label}
-                      </option>
-                    ))}
-                  </select>
+                    <SelectTrigger className="h-9 w-full bg-muted border-border text-foreground cursor-pointer">
+                      <SelectValue placeholder="Select topic" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {CATEGORIES.map((c) => (
+                        <SelectItem key={c.value} value={c.value}>
+                          {c.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
                 </div>
 
                 <div className="flex flex-col gap-1.5">

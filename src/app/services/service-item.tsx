@@ -8,6 +8,13 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import type { Service } from "@/types";
 
@@ -88,20 +95,28 @@ export const ServiceItem = ({
             >
               My Skill / Interest Level
             </label>
-            <select
-              id={selectId}
+            <Select
               value={detail.level}
-              onChange={(e) =>
-                handleUpdateDetail(service.id, "level", e.target.value)
+              onValueChange={(val) =>
+                handleUpdateDetail(service.id, "level", val)
               }
-              className="max-w-xs bg-muted border border-border rounded-lg text-sm px-3 py-1.5 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground"
             >
-              <option value="Basic">Basic / Willing to learn</option>
-              <option value="Intermediate">
-                Intermediate / Prior experience
-              </option>
-              <option value="Advanced">Advanced / Expert / Leader</option>
-            </select>
+              <SelectTrigger
+                id={selectId}
+                className="max-w-xs h-8 bg-muted border-border text-foreground cursor-pointer"
+              >
+                <SelectValue placeholder="Select level" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="Basic">Basic / Willing to learn</SelectItem>
+                <SelectItem value="Intermediate">
+                  Intermediate / Prior experience
+                </SelectItem>
+                <SelectItem value="Advanced">
+                  Advanced / Expert / Leader
+                </SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
           <div className="flex flex-col gap-1.5">
