@@ -1,3 +1,5 @@
+import { ArticleTracker } from "@/components/analytics/article-tracker";
+
 const styles = {
   h2: "text-2xl sm:text-4xl font-black font-heading tracking-tight text-foreground leading-tight mb-4",
   ul: "list-disc pl-6",
@@ -249,6 +251,14 @@ export default function About() {
           MIT and Harward Uty
         </li>
       </ul>
+      <ArticleTracker
+        contentProps={{
+          slug: "about",
+          title: "Radheshyam Das, M. Tech., IIT, Mumbai",
+          category: "About",
+          tags: ["Biography", "Radheshyam Das"],
+        }}
+      />
     </div>
   );
 }

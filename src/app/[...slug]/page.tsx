@@ -3,10 +3,11 @@
 import { ChevronRight, FolderOpen, Home, Loader2, Music } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { use } from "react";
+import { use, useEffect } from "react";
 import { CategoryList } from "@/components/category-list";
 import { RecordingList } from "@/components/recording-list";
 import { useCategoryPage } from "@/hooks/use-category-page";
+import { trackEvent } from "@/lib/analytics";
 import { slugToLabel } from "@/lib/utils";
 
 export default function CategoryPage({
@@ -16,6 +17,12 @@ export default function CategoryPage({
 }) {
   const { slug } = use(params);
   const { data, isPending, error } = useCategoryPage(slug);
+
+  useEffect(() => {
+    if (data?.category?.name) {
+      trackEvent("category_viewed", { category_name: data.category.name });
+    }
+  }, [data?.category?.name]);
 
   if (data?.redirectTo) {
     redirect(data.redirectTo);
@@ -103,7 +110,7 @@ export default function CategoryPage({
           Discourses & Recordings
         </h2>
 
-        <RecordingList {...{ recordings, isPending }} />
+        <RecordingList {...{ recordings, isPending, category }} />
       </section>
     </div>
   );

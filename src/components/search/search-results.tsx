@@ -16,7 +16,9 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { trackEvent } from "@/lib/analytics";
 import { getCategoryImageUrl } from "@/lib/storage";
+import { categoryPath } from "@/lib/utils";
 import type {
   Category,
   Language,
@@ -146,7 +148,17 @@ export function SearchResults({
                     key={rec.id}
                     type="button"
                     data-search-item
-                    onClick={() => onSelectRecording(rec)}
+                    onClick={() => {
+                      const idx = recordings.indexOf(rec);
+                      trackEvent("search_result_clicked", {
+                        query_term: term,
+                        clicked_slug: rec.category
+                          ? `${categoryPath(rec.category.url_path)}?q=${rec.id}`
+                          : `?q=${rec.id}`,
+                        position_index: idx,
+                      });
+                      onSelectRecording(rec);
+                    }}
                     className="w-full text-left flex flex-col gap-1.5 px-3 py-2.5 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-colors border border-transparent hover:border-border/50 cursor-pointer"
                   >
                     <div className="flex items-start justify-between gap-2 w-full">
@@ -219,7 +231,15 @@ export function SearchResults({
                     key={cat.id}
                     type="button"
                     data-search-item
-                    onClick={() => onSelectCategory(cat)}
+                    onClick={() => {
+                      const idx = recordings.length + categories.indexOf(cat);
+                      trackEvent("search_result_clicked", {
+                        query_term: term,
+                        clicked_slug: categoryPath(cat.url_path),
+                        position_index: idx,
+                      });
+                      onSelectCategory(cat);
+                    }}
                     className="w-full text-left justify-start gap-2 flex items-center px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-colors cursor-pointer"
                   >
                     <img
@@ -252,7 +272,20 @@ export function SearchResults({
                     key={mat.id}
                     type="button"
                     data-search-item
-                    onClick={() => onSelectMaterial(mat)}
+                    onClick={() => {
+                      const idx =
+                        recordings.length +
+                        categories.length +
+                        materials.indexOf(mat);
+                      trackEvent("search_result_clicked", {
+                        query_term: term,
+                        clicked_slug: mat.category
+                          ? `${categoryPath(mat.category.url_path)}?q=${mat.recording_id}&m=${mat.id}`
+                          : `?q=${mat.recording_id}&m=${mat.id}`,
+                        position_index: idx,
+                      });
+                      onSelectMaterial(mat);
+                    }}
                     className="w-full text-left flex flex-col gap-0.5 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-colors cursor-pointer"
                   >
                     <div className="flex items-center gap-2">

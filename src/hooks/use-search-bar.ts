@@ -9,6 +9,7 @@ import type {
 import type { SearchScope } from "@/components/search-bar";
 import { INDEX, STORE } from "@/constants";
 import { useSearch } from "@/hooks/use-search";
+import { trackEvent } from "@/lib/analytics";
 import { getDB } from "@/lib/idb";
 import { categoryPath } from "@/lib/utils";
 import type {
@@ -272,6 +273,14 @@ export function useSearchBar() {
           categories: filteredCats,
           recordings: filteredRecordings,
           materials: filteredMats,
+        });
+
+        trackEvent("search_performed", {
+          query_term: term,
+          results_count:
+            filteredCats.length +
+            filteredRecordings.length +
+            filteredMats.length,
         });
       } catch (err) {
         console.error("Search error:", err);

@@ -148,11 +148,8 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       tablesToSync.map(({ table, idbLastSync, lastSync }) =>
         limit(() =>
           syncTable({
-            supabase,
-            db,
+            ...commonSyncTableConfig,
             table,
-            changedIds,
-            changedCategoryMeta,
             idbLastSync,
             lastSync,
           }),

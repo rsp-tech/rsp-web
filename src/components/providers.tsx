@@ -6,6 +6,7 @@ import { ThemeProvider } from "next-themes";
 import { createContext, useContext, useEffect, useState } from "react";
 import { getQueryClient } from "@/lib/query-client";
 import { getSupabaseClient } from "@/lib/supabase-browser";
+import { PHProvider } from "./posthog-provider";
 
 interface SessionContextType {
   session: Session | null;
@@ -42,17 +43,19 @@ export function Providers({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <ThemeProvider
-      attribute="class"
-      defaultTheme="monk"
-      themes={["clean", "monk", "dark"]}
-      disableTransitionOnChange
-    >
-      <SessionContext value={{ session, isLoading }}>
-        <QueryClientProvider client={getQueryClient()}>
-          {children}
-        </QueryClientProvider>
-      </SessionContext>
-    </ThemeProvider>
+    <PHProvider>
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="monk"
+        themes={["clean", "monk", "dark"]}
+        disableTransitionOnChange
+      >
+        <SessionContext value={{ session, isLoading }}>
+          <QueryClientProvider client={getQueryClient()}>
+            {children}
+          </QueryClientProvider>
+        </SessionContext>
+      </ThemeProvider>
+    </PHProvider>
   );
 }

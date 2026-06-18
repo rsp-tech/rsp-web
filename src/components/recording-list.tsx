@@ -15,8 +15,10 @@ import {
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { SiYoutube } from "react-icons/si";
+import { trackEvent } from "@/lib/analytics";
 import { getAssetUrl } from "@/lib/storage";
-import type { EnrichedRecording } from "@/types";
+import { categoryPath } from "@/lib/utils";
+import type { Category, EnrichedRecording } from "@/types";
 import { Button } from "./ui/button";
 import {
   Select,
@@ -30,13 +32,27 @@ import {
 interface RecordingListProps {
   recordings: EnrichedRecording[];
   isPending?: boolean;
+  category?: Category;
 }
+
+const getContentProperties = (rec: EnrichedRecording, category?: Category) => {
+  return {
+    slug: category ? categoryPath(category.url_path) : "",
+    title: rec.name,
+    category: category ? category.name : "",
+    tags: [
+      ...(rec.speakers?.map((s) => s.name) || []),
+      ...(rec.languages?.map((l) => l.name) || []),
+    ],
+  };
+};
 
 type SortOption = "order_ind" | "name" | "date";
 
 export const RecordingList = ({
   recordings,
   isPending,
+  category,
 }: RecordingListProps) => {
   const searchParams = useSearchParams();
   const [sortBy, setSortBy] = useState<SortOption>("order_ind");
@@ -222,6 +238,13 @@ export const RecordingList = ({
                           key={mat.id}
                           href={getAssetUrl(mat.uri)}
                           download
+                          onClick={() => {
+                            trackEvent("resource_downloaded", {
+                              resource_name: mat.name,
+                              resource_type: mat.type,
+                              ...getContentProperties(rec, category),
+                            });
+                          }}
                           className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold transition-colors border ${
                             isMaterialHighlighted
                               ? "bg-primary/25 text-primary border-primary ring-1 ring-primary"
@@ -247,6 +270,12 @@ export const RecordingList = ({
                 <a
                   href={getAssetUrl(rec.audio_id)}
                   download
+                  onClick={() => {
+                    trackEvent("audio_played", {
+                      audio_title: rec.name,
+                      ...getContentProperties(rec, category),
+                    });
+                  }}
                   className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground text-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition-all border border-border cursor-pointer"
                   title="Download Audio"
                 >
