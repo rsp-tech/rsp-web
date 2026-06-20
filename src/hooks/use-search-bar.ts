@@ -145,7 +145,7 @@ export function useSearchBar() {
         }
 
         // Get matching recordings & search results categories
-        let filteredCats = catHits
+        const filteredCats = catHits
           .map((h) => catMap.get(Number(h.id)))
           .filter((c): c is Category => c !== undefined);
 
@@ -210,19 +210,10 @@ export function useSearchBar() {
           const currentUrl = currentCategory.url_path;
 
           if (scope === "current") {
-            filteredCats = filteredCats.filter((cat) => {
-              if (!cat.url_path.startsWith(`${currentUrl}.`)) return false;
-              return !cat.url_path
-                .substring(currentUrl.length + 1)
-                .includes(".");
-            });
             filteredMats = filteredMats.filter(
               (mat) => mat.recording?.category_id === currentCategory.id,
             );
           } else if (scope === "sub") {
-            filteredCats = filteredCats.filter((cat) =>
-              cat.url_path.startsWith(`${currentUrl}.`),
-            );
             const subCatIds = new Set(
               allCategories
                 .filter(
