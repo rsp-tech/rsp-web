@@ -134,7 +134,7 @@ export interface SearchResult {
 export type SyncChangedIds = Record<SearchableTable, number[]>;
 
 export interface SyncResult {
-  changedCategoryPaths: (string | number)[];
+  changedCategoryPaths: string[];
   changedIds: SyncChangedIds;
   rebuildSearchIndex: boolean;
 }

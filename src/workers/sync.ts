@@ -67,7 +67,7 @@ const toSyncResult = async (
           Array.from(bubbledChangeCategoryIds).map(async (id) =>
             id
               ? (changedCategories[id] ??
-                (await db.get(STORE.CATEGORIES, String(id))).url_path)
+                (await db.get(STORE.CATEGORIES, id))?.url_path)
               : "~",
           ),
         );

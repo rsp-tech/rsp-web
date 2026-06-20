@@ -7,7 +7,6 @@ import { getDB, type RSP_IDB } from "@/lib/idb";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { sortByOrderInd } from "@/lib/utils";
 import type { Category, EnrichedRecording, Material, Recording } from "@/types";
-import { useCategories } from "./use-categories";
 
 export interface CategoryPageData {
   category?: Category;
@@ -63,29 +62,26 @@ const fetchTargetedMaterials = async (
 
 const loadCategoryPage = async (
   urlPath: string,
-  categories?: Category[],
 ): Promise<CategoryPageData | null> => {
   const db = await getDB();
   if (!db) return null;
 
   // If sync hasn't completed, fallback to RPC
-  if (!categories?.length) {
-    const supabase = getSupabaseClient();
-    const { data, error } = await supabase.rpc("get_category_page_data", {
-      p_url_path: urlPath,
-    });
-
-    if (error || !data) {
-      return null;
-    }
-
-    // Postgres native jsonb aggregation maps perfectly to your interface
-    return data as unknown as CategoryPageData;
-  }
+  const supabase = getSupabaseClient();
 
   if (!urlPath) {
+    let subcategories = await db.getAllFromIndex(
+      STORE.CATEGORIES,
+      INDEX.BY_PATH,
+      "",
+    );
+    if (!subcategories.length) {
+      subcategories =
+        ((await supabase.from("categories").select("*").eq("path", ""))
+          .data as Category[]) ?? [];
+    }
     return {
-      subcategories: categories.filter((c) => !c.path).sort(sortByOrderInd()),
+      subcategories,
       recordings: [],
     };
   }
@@ -99,15 +95,32 @@ const loadCategoryPage = async (
     };
   }
 
-  const category = categories.find((c) => c.url_path === urlPath);
+  const category = await db.getFromIndex(
+    STORE.CATEGORIES,
+    INDEX.BY_URL,
+    urlPath,
+  );
 
-  if (!category) return null;
+  if (!category) {
+    const { data, error } = await supabase.rpc("get_category_page_data", {
+      p_url_path: urlPath,
+    });
+
+    if (error || !data) {
+      return null;
+    }
+
+    // Postgres native jsonb aggregation maps perfectly to your interface
+    return data as unknown as CategoryPageData;
+  }
 
   const expectedPath = `${category.path}.${category.id}`.replace(/^\./, "");
 
-  const subcategories = categories
-    .filter((c) => c.path === expectedPath)
-    .sort(sortByOrderInd());
+  const subcategories = await db.getAllFromIndex(
+    STORE.CATEGORIES,
+    INDEX.BY_PATH,
+    expectedPath,
+  );
 
   const recordings: Recording[] = await db.getAllFromIndex(
     STORE.RECORDINGS,
@@ -168,12 +181,10 @@ const loadCategoryPage = async (
 };
 
 export const useCategoryPage = (slug: string[]) => {
-  const { data, isPending } = useCategories();
   const urlPath = slug.join(".").replace(/-/g, "_");
 
   return useQuery({
     queryKey: [QUERY_KEY.CATEGORY_PAGE, urlPath || "~"],
-    queryFn: () => loadCategoryPage(urlPath, data),
-    enabled: !isPending,
+    queryFn: () => loadCategoryPage(urlPath),
   });
 };
