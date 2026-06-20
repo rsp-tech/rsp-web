@@ -204,36 +204,10 @@ export function useSearchBar() {
             }),
           );
 
-        let filteredMats = enrichedMaterials;
-
-        if (currentCategory) {
-          const currentUrl = currentCategory.url_path;
-
-          if (scope === "current") {
-            filteredMats = filteredMats.filter(
-              (mat) => mat.recording?.category_id === currentCategory.id,
-            );
-          } else if (scope === "sub") {
-            const subCatIds = new Set(
-              allCategories
-                .filter(
-                  (c) =>
-                    c.url_path === currentUrl ||
-                    c.url_path.startsWith(`${currentUrl}.`),
-                )
-                .map((c) => c.id),
-            );
-            filteredMats = filteredMats.filter(
-              (mat) =>
-                mat.recording && subCatIds.has(mat.recording.category_id),
-            );
-          }
-        }
-
         setResults({
           categories: filteredCats,
           recordings: enrichedRecordings,
-          materials: filteredMats,
+          materials: enrichedMaterials,
         });
 
         trackEvent("search_performed", {
@@ -241,7 +215,7 @@ export function useSearchBar() {
           results_count:
             filteredCats.length +
             enrichedRecordings.length +
-            filteredMats.length,
+            enrichedMaterials.length,
         });
       } catch (err) {
         console.error("Search error:", err);

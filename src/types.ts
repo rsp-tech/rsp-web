@@ -104,6 +104,7 @@ export interface MaterialSearchDocument {
   id: string;
   name: string;
   recording_id: number;
+  category_id: number;
 }
 
 export type SearchDocument =

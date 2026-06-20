@@ -56,12 +56,14 @@ const materialsSchema = {
   id: "string",
   name: "string",
   recording_id: "number",
+  category_id: "number",
 } as const;
 
 type RecordingsDb = Orama<typeof recordingsSchema>;
 type CategoriesDb = Orama<typeof categoriesSchema>;
 type CategoryWhere = WhereCondition<typeof categoriesSchema>;
 type MaterialsDb = Orama<typeof materialsSchema>;
+type MaterialWhere = WhereCondition<typeof materialsSchema>;
 type RecordingWhere = WhereCondition<typeof recordingsSchema>;
 
 interface LookupMaps {
@@ -124,10 +126,14 @@ const mapCategory = (category: Category): CategorySearchDocument => ({
   path: category.path,
 });
 
-const mapMaterial = (material: Material): MaterialSearchDocument => ({
+const mapMaterial = (
+  material: Material,
+  recCatIdMap: Record<number, number>,
+): MaterialSearchDocument => ({
   id: String(material.id),
   name: material.name,
   recording_id: material.recording_id,
+  category_id: recCatIdMap[material.recording_id] ?? 0,
 });
 
 // --- ENGINE LIFECYCLE ---
@@ -170,9 +176,12 @@ const createSearchEngine = async (): Promise<SearchEngine> => {
     loadLookupMaps(),
   ]);
 
+  const recCatIdMap = Object.fromEntries(
+    recordings.map((r) => [r.id, r.category_id]),
+  );
   const recordingDocs = recordings.map((r) => mapRecording(r, lookupMaps));
   const categoryDocs = categories.map(mapCategory);
-  const materialDocs = materials.map(mapMaterial);
+  const materialDocs = materials.map((m) => mapMaterial(m, recCatIdMap));
 
   await Promise.all([
     recordingDocs.length && insertMultiple(recordingsDb, recordingDocs),
@@ -225,6 +234,13 @@ const updateDocs = async (
       ? await loadLookupMaps()
       : { speakers: new Map(), venues: new Map(), languages: new Map() };
 
+  const recCatIdMap =
+    table === STORE.MATERIALS
+      ? Object.fromEntries(
+          (await db.getAll(STORE.RECORDINGS)).map((r) => [r.id, r.category_id]),
+        )
+      : {};
+
   await Promise.all(
     Array.from(new Set(ids)).map(async (id) => {
       const stringId = String(id);
@@ -242,7 +258,11 @@ const updateDocs = async (
         if (doc) await insert(currentEngine.categoriesDb, mapCategory(doc));
       } else if (table === STORE.MATERIALS) {
         await safeRemove(currentEngine.materialsDb, stringId);
-        if (doc) await insert(currentEngine.materialsDb, mapMaterial(doc));
+        if (doc)
+          await insert(
+            currentEngine.materialsDb,
+            mapMaterial(doc, recCatIdMap),
+          );
       }
     }),
   );
@@ -358,6 +378,26 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
           return { target, hits: result.hits.map((hit) => hit.document) };
         }
 
+        const clauses: MaterialWhere[] = [];
+
+        if (filters?.category_id !== undefined)
+          clauses.push({ category_id: { eq: filters.category_id } });
+
+        if (filters?.category_ids?.length) {
+          clauses.push({
+            or: filters.category_ids.map((id) => ({
+              category_id: { eq: id },
+            })),
+          });
+        }
+
+        const materialWhere =
+          clauses.length === 0
+            ? undefined
+            : clauses.length === 1
+              ? clauses[0]
+              : { and: clauses };
+
         const result = await search<MaterialsDb, MaterialSearchDocument>(
           currentEngine.materialsDb,
           {
@@ -365,6 +405,7 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
             properties: ["name"],
             limit: SEARCH_LIMIT,
             tolerance: SEARCH_TOLERANCE,
+            where: materialWhere,
           },
         );
         return { target, hits: result.hits.map((hit) => hit.document) };
