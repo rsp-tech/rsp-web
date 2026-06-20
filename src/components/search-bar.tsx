@@ -65,7 +65,7 @@ export function SearchBar() {
 
   const languageOptions = availableLanguages.map((l) => ({
     value: String(l.id),
-    label: l.name,
+    label: l.name === l.native_name ? l.name : `${l.name} (${l.native_name})`,
   }));
 
   const venueOptions = availableVenues.map((v) => ({

@@ -105,6 +105,18 @@ export const useSearch = () => {
 
       await waitForReady();
 
+      const hasActiveFilters =
+        filters &&
+        ((filters.speaker_ids && filters.speaker_ids.length > 0) ||
+          (filters.lang_ids && filters.lang_ids.length > 0) ||
+          filters.venues_id !== undefined ||
+          filters.date_start !== "" ||
+          filters.date_end !== "");
+
+      const targets = hasActiveFilters
+        ? [STORE.RECORDINGS]
+        : [STORE.RECORDINGS, STORE.CATEGORIES, STORE.MATERIALS];
+
       return new Promise<SearchResult[]>((resolve, reject) => {
         const reqId = `${crypto.randomUUID()}-${Date.now()}`;
         pendingRequests.set(reqId, { resolve, reject });
@@ -113,7 +125,7 @@ export const useSearch = () => {
           type: WORKER_MSG.SEARCH_ALL,
           payload: {
             term: trimmedTerm,
-            targets: [STORE.RECORDINGS, STORE.CATEGORIES, STORE.MATERIALS],
+            targets,
             reqId,
             filters,
           },
