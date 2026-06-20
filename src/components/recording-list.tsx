@@ -89,14 +89,19 @@ export const RecordingList = ({
         totalCount={recordings.length}
       />
 
-      {sortedRecordings.map((rec) => (
-        <RecordingCard
+      {sortedRecordings.map((rec, idx) => (
+        <div
           key={rec.id}
-          rec={rec}
-          q={q}
-          m={m}
-          onKeyDown={handleRecordingKeyDown}
-        />
+          className="animate-stagger-fade-in-up"
+          style={{ "--stagger-delay": `${idx * 40}ms` } as React.CSSProperties}
+        >
+          <RecordingCard
+            rec={rec}
+            q={q}
+            m={m}
+            onKeyDown={handleRecordingKeyDown}
+          />
+        </div>
       ))}
     </div>
   );

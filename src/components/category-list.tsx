@@ -16,10 +16,14 @@ export const CategoryList = ({
 }: CategoryListProps) => {
   if (isLoading) {
     return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-        {Array.from({ length: 6 }).map((_, i) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: ok for skeleton
-          <Skeleton key={i} className="h-48 rounded-2xl" />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        {Array.from({ length: 8 }).map((_, i) => (
+          <Skeleton
+            // biome-ignore lint/suspicious/noArrayIndexKey: ok for skeleton
+            key={i}
+            className="h-48 rounded-2xl animate-stagger-fade-in-up"
+            style={{ "--stagger-delay": `${i * 50}ms` } as React.CSSProperties}
+          />
         ))}
       </div>
     );
@@ -76,12 +80,14 @@ export const CategoryList = ({
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-      {categories.map((cat) => (
-        <CategoryCard
+      {categories.map((cat, idx) => (
+        <div
           key={cat.id}
-          cat={cat}
-          onKeyDown={handleCategoryKeyDown}
-        />
+          className="animate-stagger-fade-in-up"
+          style={{ "--stagger-delay": `${idx * 45}ms` } as React.CSSProperties}
+        >
+          <CategoryCard cat={cat} onKeyDown={handleCategoryKeyDown} />
+        </div>
       ))}
     </div>
   );

@@ -144,23 +144,28 @@ export function SearchResults({
             </AccordionTrigger>
             <AccordionContent className="pb-2">
               <div className="flex flex-col gap-1">
-                {recordings.map((rec) => (
+                {recordings.map((rec, idx) => (
                   <button
                     key={rec.id}
                     type="button"
                     data-search-item
                     onClick={() => {
-                      const idx = recordings.indexOf(rec);
+                      const idxClicked = recordings.indexOf(rec);
                       trackEvent("search_result_clicked", {
                         query_term: term,
                         clicked_slug: rec.category
                           ? `${categoryPath(rec.category.url_path)}?q=${rec.id}`
                           : `?q=${rec.id}`,
-                        position_index: idx,
+                        position_index: idxClicked,
                       });
                       onSelectRecording(rec);
                     }}
-                    className="w-full text-left flex flex-col gap-1.5 px-3 py-2.5 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-colors border border-transparent hover:border-border/50 cursor-pointer"
+                    className="w-full text-left flex flex-col gap-1.5 px-3 py-2.5 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-colors border border-transparent hover:border-border/50 cursor-pointer animate-stagger-fade-in-up"
+                    style={
+                      {
+                        "--stagger-delay": `${idx * 25}ms`,
+                      } as React.CSSProperties
+                    }
                   >
                     <div className="flex items-start justify-between gap-2 w-full">
                       <div className="flex items-center gap-2">
@@ -227,21 +232,27 @@ export function SearchResults({
             </AccordionTrigger>
             <AccordionContent className="pb-2">
               <div className="flex flex-col gap-0.5">
-                {categories.map((cat) => (
+                {categories.map((cat, idx) => (
                   <button
                     key={cat.id}
                     type="button"
                     data-search-item
                     onClick={() => {
-                      const idx = recordings.length + categories.indexOf(cat);
+                      const idxClicked =
+                        recordings.length + categories.indexOf(cat);
                       trackEvent("search_result_clicked", {
                         query_term: term,
                         clicked_slug: categoryPath(cat.url_path),
-                        position_index: idx,
+                        position_index: idxClicked,
                       });
                       onSelectCategory(cat);
                     }}
-                    className="w-full text-left justify-start gap-2 flex items-center px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-colors cursor-pointer"
+                    className="w-full text-left justify-start gap-2 flex items-center px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-colors cursor-pointer animate-stagger-fade-in-up"
+                    style={
+                      {
+                        "--stagger-delay": `${idx * 25}ms`,
+                      } as React.CSSProperties
+                    }
                   >
                     <img
                       src={getCategoryImageUrl(cat) ?? undefined}
@@ -268,13 +279,13 @@ export function SearchResults({
             </AccordionTrigger>
             <AccordionContent className="pb-2">
               <div className="flex flex-col gap-0.5">
-                {materials.map((mat) => (
+                {materials.map((mat, idx) => (
                   <button
                     key={mat.id}
                     type="button"
                     data-search-item
                     onClick={() => {
-                      const idx =
+                      const idxClicked =
                         recordings.length +
                         categories.length +
                         materials.indexOf(mat);
@@ -283,11 +294,16 @@ export function SearchResults({
                         clicked_slug: mat.category
                           ? `${categoryPath(mat.category.url_path)}?q=${mat.recording_id}&m=${mat.id}`
                           : `?q=${mat.recording_id}&m=${mat.id}`,
-                        position_index: idx,
+                        position_index: idxClicked,
                       });
                       onSelectMaterial(mat);
                     }}
-                    className="w-full text-left flex flex-col gap-0.5 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-colors cursor-pointer"
+                    className="w-full text-left flex flex-col gap-0.5 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-colors cursor-pointer animate-stagger-fade-in-up"
+                    style={
+                      {
+                        "--stagger-delay": `${idx * 25}ms`,
+                      } as React.CSSProperties
+                    }
                   >
                     <div className="flex items-center gap-2">
                       <FileText className="w-4 h-4 text-amber-500 shrink-0" />

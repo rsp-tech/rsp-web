@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Script from "next/script";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { PageTransition } from "@/components/page-transition";
 import { Providers } from "@/components/providers";
 import { SyncTrigger } from "@/components/sync-trigger";
 import { Toaster } from "@/components/ui/sonner";
@@ -47,7 +48,7 @@ export default function RootLayout({
           <Toaster position="bottom-right" />
           <Header />
           <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-6 flex flex-col">
-            {children}
+            <PageTransition>{children}</PageTransition>
           </main>
           <Footer />
         </Providers>

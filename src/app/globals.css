@@ -81,6 +81,7 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --shimmer-glow: rgba(255, 255, 255, 0.65);
 }
 
 .clean {
@@ -101,6 +102,7 @@
   --border: oklch(0.92 0.01 240);
   --input: oklch(0.92 0.01 240);
   --ring: oklch(0.45 0.16 240);
+  --shimmer-glow: rgba(255, 255, 255, 0.65);
 }
 
 .monk {
@@ -121,6 +123,7 @@
   --border: oklch(0.88 0.05 65);
   --input: oklch(0.88 0.05 65);
   --ring: oklch(0.65 0.22 45);
+  --shimmer-glow: rgba(255, 255, 255, 0.7);
 }
 
 .dark {
@@ -155,6 +158,7 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+  --shimmer-glow: rgba(255, 255, 255, 0.08);
 }
 
 .compact {
@@ -182,4 +186,72 @@
   html {
     @apply font-sans;
   }
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes expandDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+    max-height: 500px;
+  }
+}
+
+[data-slot="skeleton"],
+.animate-shimmer {
+  /* biome-ignore lint/complexity/noImportantStyles: required */
+  position: relative !important;
+  /* biome-ignore lint/complexity/noImportantStyles: required */
+  overflow: hidden !important;
+}
+
+[data-slot="skeleton"]::after,
+.animate-shimmer::after {
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background-image: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    var(--shimmer-glow, rgba(255, 255, 255, 0.15)) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  content: "";
+  animation: shimmer 1.6s infinite;
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-stagger-fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--stagger-delay, 0ms);
+}
+
+.animate-expand-down {
+  animation: expandDown 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  overflow: hidden;
 }

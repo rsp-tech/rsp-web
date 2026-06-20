@@ -24,10 +24,10 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
       tabIndex={0}
       data-recording-item
       onKeyDown={onKeyDown}
-      className={`p-5 border rounded-2xl shadow-xs transition-all flex flex-col md:flex-row justify-between items-start md:items-center gap-4 group focus:ring-2 focus:ring-primary focus:outline-hidden ${
+      className={`p-5 border rounded-2xl shadow-xs flex flex-col md:flex-row justify-between items-start md:items-center gap-4 group focus:ring-2 focus:ring-primary focus:outline-hidden transition-all duration-300 ease-out ${
         isHighlighted
           ? "border-primary bg-primary/5 ring-1 ring-primary"
-          : "border-border bg-card hover:shadow-sm"
+          : "border-border bg-card hover:shadow-md hover:-translate-y-0.5"
       }`}
     >
       {/* Meta details */}
@@ -97,7 +97,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
           <a
             href={getAssetUrl(rec.audio_id)}
             download
-            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground text-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition-all border border-border cursor-pointer"
+            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground text-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-[0.98] border border-border cursor-pointer"
             title="Download Audio"
           >
             <FileDown className="w-4 h-4" />
@@ -110,7 +110,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
             href={`https://youtube.com/watch?v=${rec.yt_id}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-[0.98] cursor-pointer"
             title="Watch on YouTube"
           >
             <SiYoutube className="w-4 h-4" />
