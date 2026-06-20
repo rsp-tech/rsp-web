@@ -216,16 +216,23 @@ export default function ServicesPage() {
             No service opportunities currently listed.
           </p>
         ) : (
-          services.map((service) => (
-            <ServiceItem
+          services.map((service, idx) => (
+            <div
               key={service.id}
-              {...{
-                service,
-                interests,
-                handleToggleInterest,
-                handleUpdateDetail,
-              }}
-            />
+              className="animate-stagger-fade-in-up"
+              style={
+                { "--stagger-delay": `${idx * 50}ms` } as React.CSSProperties
+              }
+            >
+              <ServiceItem
+                {...{
+                  service,
+                  interests,
+                  handleToggleInterest,
+                  handleUpdateDetail,
+                }}
+              />
+            </div>
           ))
         )}
       </div>
