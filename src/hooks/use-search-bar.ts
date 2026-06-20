@@ -8,8 +8,6 @@ import type {
 } from "@/components/search/search-results";
 import type { SearchScope } from "@/components/search-bar";
 import { INDEX, STORE } from "@/constants";
-import { useCategories } from "./use-categories";
-import { useMetadata } from "./use-metadata";
 import { useSearch } from "@/hooks/use-search";
 import { trackEvent } from "@/lib/analytics";
 import { getDB } from "@/lib/idb";
@@ -25,6 +23,8 @@ import type {
   Speaker,
   Venue,
 } from "@/types";
+import { useCategories } from "./use-categories";
+import { useMetadata } from "./use-metadata";
 
 interface FilteredHits {
   categories: Category[];
