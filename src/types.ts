@@ -112,6 +112,7 @@ export type SearchDocument =
 
 export interface RecordingSearchFilters {
   category_id?: number;
+  category_ids?: number[];
   speaker_ids?: number[];
   lang_ids?: number[];
   venues_id?: number;

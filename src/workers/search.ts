@@ -255,6 +255,15 @@ const toRecordingWhere = (
 
   if (filters.category_id !== undefined)
     clauses.push({ category_id: { eq: filters.category_id } });
+
+  if (filters.category_ids?.length) {
+    clauses.push({
+      or: filters.category_ids.map((id) => ({
+        category_id: { eq: id },
+      })),
+    });
+  }
+
   if (filters.venues_id !== undefined)
     clauses.push({ venues_id: { eq: filters.venues_id } });
 

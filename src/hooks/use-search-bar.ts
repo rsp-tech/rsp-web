@@ -99,7 +99,24 @@ export function useSearchBar() {
 
       setSearching(true);
       try {
-        const rawResults = await searchAll(term, filters);
+        const activeFilters: RecordingSearchFilters = { ...filters };
+        if (currentCategory) {
+          if (scope === "current") {
+            activeFilters.category_id = currentCategory.id;
+          } else if (scope === "sub") {
+            const currentUrl = currentCategory.url_path;
+            const subCatIds = allCategories
+              .filter(
+                (c) =>
+                  c.url_path === currentUrl ||
+                  c.url_path.startsWith(`${currentUrl}.`),
+              )
+              .map((c) => c.id);
+            activeFilters.category_ids = subCatIds;
+          }
+        }
+
+        const rawResults = await searchAll(term, activeFilters);
         const db = await getDB();
         if (!db) return;
 
@@ -225,9 +242,6 @@ export function useSearchBar() {
                 .substring(currentUrl.length + 1)
                 .includes(".");
             });
-            filteredRecordings = filteredRecordings.filter(
-              (rec) => rec.category_id === currentCategory.id,
-            );
             filteredMats = filteredMats.filter(
               (mat) => mat.recording?.category_id === currentCategory.id,
             );
@@ -243,9 +257,6 @@ export function useSearchBar() {
                     c.url_path.startsWith(`${currentUrl}.`),
                 )
                 .map((c) => c.id),
-            );
-            filteredRecordings = filteredRecordings.filter((rec) =>
-              subCatIds.has(rec.category_id),
             );
             filteredMats = filteredMats.filter(
               (mat) =>
