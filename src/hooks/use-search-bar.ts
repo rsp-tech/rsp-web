@@ -103,6 +103,11 @@ export function useSearchBar() {
         if (currentCategory) {
           if (scope === "current") {
             activeFilters.category_id = currentCategory.id;
+            activeFilters.category_path =
+              `${currentCategory.path}.${currentCategory.id}`.replace(
+                /^\./,
+                "",
+              );
           } else if (scope === "sub") {
             const currentUrl = currentCategory.url_path;
             const subCatIds = allCategories

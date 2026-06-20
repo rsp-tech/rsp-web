@@ -46,9 +46,10 @@ const recordingsSchema = {
 } as const;
 
 const categoriesSchema = {
-  id: "string",
+  id: "enum",
   name: "string",
   url_path: "string",
+  path: "enum",
 } as const;
 
 const materialsSchema = {
@@ -59,6 +60,7 @@ const materialsSchema = {
 
 type RecordingsDb = Orama<typeof recordingsSchema>;
 type CategoriesDb = Orama<typeof categoriesSchema>;
+type CategoryWhere = WhereCondition<typeof categoriesSchema>;
 type MaterialsDb = Orama<typeof materialsSchema>;
 type RecordingWhere = WhereCondition<typeof recordingsSchema>;
 
@@ -119,6 +121,7 @@ const mapCategory = (category: Category): CategorySearchDocument => ({
   id: String(category.id),
   name: category.name,
   url_path: category.url_path,
+  path: category.path,
 });
 
 const mapMaterial = (material: Material): MaterialSearchDocument => ({
@@ -323,12 +326,31 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
         }
 
         if (target === STORE.CATEGORIES) {
+          const clauses: CategoryWhere[] = [];
+          if (filters?.category_path !== undefined) {
+            clauses.push({ path: { eq: filters.category_path } });
+          }
+          if (filters?.category_ids?.length) {
+            clauses.push({
+              or: filters.category_ids.map((id) => ({
+                id: { eq: String(id) },
+              })),
+            });
+          }
+          const categoryWhere =
+            clauses.length === 0
+              ? undefined
+              : clauses.length === 1
+                ? clauses[0]
+                : { and: clauses };
+
           const result = await search<CategoriesDb, CategorySearchDocument>(
             currentEngine.categoriesDb,
             {
               term,
               properties: ["name"],
               boost: { name: SEARCH_BOOST_NAME },
+              where: categoryWhere,
               limit: SEARCH_LIMIT,
               tolerance: SEARCH_TOLERANCE,
             },

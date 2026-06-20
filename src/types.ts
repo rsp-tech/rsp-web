@@ -97,6 +97,7 @@ export interface CategorySearchDocument {
   id: string;
   name: string;
   url_path: string;
+  path: string;
 }
 
 export interface MaterialSearchDocument {
@@ -113,6 +114,7 @@ export type SearchDocument =
 export interface RecordingSearchFilters {
   category_id?: number;
   category_ids?: number[];
+  category_path?: string;
   speaker_ids?: number[];
   lang_ids?: number[];
   venues_id?: number;
