@@ -149,45 +149,15 @@ export function useSearchBar() {
           await Promise.all(recIds.map((id) => db.get(STORE.RECORDINGS, id)))
         ).filter((r): r is Recording => r !== undefined);
 
-        // Gather unique speaker, venue, and language IDs from recordings to query metadata in batch
-        const speakerIds = new Set<number>();
-        const venueIds = new Set<number>();
-        const langIds = new Set<number>();
-
-        for (const rec of fullRecs) {
-          rec.speaker_ids?.forEach((id) => {
-            speakerIds.add(id);
-          });
-          rec.lang_ids?.forEach((id) => {
-            langIds.add(id);
-          });
-          if (rec.venues_id) venueIds.add(rec.venues_id);
-        }
-
-        const speakerMap = new Map<number, Speaker>();
-        const venueMap = new Map<number, Venue>();
-        const langMap = new Map<number, Language>();
-
-        await Promise.all([
-          Promise.all(
-            Array.from(speakerIds).map(async (id) => {
-              const s = await db.get(STORE.SPEAKERS, id);
-              if (s) speakerMap.set(id, s);
-            }),
-          ),
-          Promise.all(
-            Array.from(venueIds).map(async (id) => {
-              const v = await db.get(STORE.VENUES, id);
-              if (v) venueMap.set(id, v);
-            }),
-          ),
-          Promise.all(
-            Array.from(langIds).map(async (id) => {
-              const l = await db.get(STORE.LANGUAGES, id);
-              if (l) langMap.set(id, l);
-            }),
-          ),
-        ]);
+        const speakerMap = new Map<number, Speaker>(
+          availableSpeakers.map((s) => [s.id, s]),
+        );
+        const venueMap = new Map<number, Venue>(
+          availableVenues.map((v) => [v.id, v]),
+        );
+        const langMap = new Map<number, Language>(
+          availableLanguages.map((l) => [l.id, l]),
+        );
 
         const enrichedRecordings: EnrichedRecordingSearchResult[] =
           fullRecs.map((rec) => ({
@@ -229,7 +199,6 @@ export function useSearchBar() {
             }),
           );
 
-        let filteredRecordings = enrichedRecordings;
         let filteredMats = enrichedMaterials;
 
         if (currentCategory) {
@@ -267,7 +236,7 @@ export function useSearchBar() {
 
         setResults({
           categories: filteredCats,
-          recordings: filteredRecordings,
+          recordings: enrichedRecordings,
           materials: filteredMats,
         });
 
@@ -275,7 +244,7 @@ export function useSearchBar() {
           query_term: term,
           results_count:
             filteredCats.length +
-            filteredRecordings.length +
+            enrichedRecordings.length +
             filteredMats.length,
         });
       } catch (err) {
@@ -286,7 +255,17 @@ export function useSearchBar() {
     }, 250);
 
     return () => clearTimeout(delayDebounce);
-  }, [term, scope, currentCategory, filters, searchAll, allCategories]);
+  }, [
+    term,
+    scope,
+    currentCategory,
+    filters,
+    searchAll,
+    allCategories,
+    availableSpeakers,
+    availableLanguages,
+    availableVenues,
+  ]);
 
   const handleSelectCategory = (cat: Category) => {
     router.push(`/${categoryPath(cat.url_path)}`);
