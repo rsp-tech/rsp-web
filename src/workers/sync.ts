@@ -63,8 +63,13 @@ const toSyncResult = async (
   const changedCategoryPaths =
     bubbledChangeCategoryIds.size > INVALIDATE_ALL_THRESHOLD
       ? ["*"]
-      : Array.from(bubbledChangeCategoryIds).map(
-          (id) => changedCategories[id] || id,
+      : await Promise.all(
+          Array.from(bubbledChangeCategoryIds).map(async (id) =>
+            id
+              ? (changedCategories[id] ??
+                (await db.get(STORE.CATEGORIES, String(id))).url_path)
+              : "~",
+          ),
         );
 
   return {

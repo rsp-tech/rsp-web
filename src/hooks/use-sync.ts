@@ -9,8 +9,7 @@ import { toast } from "sonner";
 import { useSession } from "@/components/providers";
 import { QUERY_KEY, SYNC_INTERVAL, WORKER_MSG } from "@/constants";
 import { getWorker, notifySearchWorker, useSearch } from "@/hooks/use-search";
-import type { Category, SearchableTable, SyncResult } from "@/types";
-import { useCategories } from "./use-categories";
+import type { SearchableTable, SyncResult } from "@/types";
 
 interface WorkerConfig {
   accessToken: string;
@@ -25,11 +24,9 @@ type SyncWorkerMessage =
 
 const runSync = ({
   queryClient,
-  categories,
   ...config
 }: WorkerConfig & {
   queryClient: QueryClient;
-  categories: Category[] | undefined;
 }): Promise<number> =>
   new Promise((resolve, reject) => {
     const worker = new Worker(new URL("@/workers/sync.ts", import.meta.url));
@@ -57,12 +54,7 @@ const runSync = ({
         } else {
           for (const path of changedCategoryPaths) {
             queryClient.invalidateQueries({
-              queryKey: [
-                QUERY_KEY.CATEGORY_PAGE,
-                typeof path === "string"
-                  ? path
-                  : (categories?.find((c) => c.id === path)?.url_path ?? "~"),
-              ],
+              queryKey: [QUERY_KEY.CATEGORY_PAGE, path],
             });
           }
         }
@@ -102,7 +94,6 @@ const toRoleId = (value: unknown): number | undefined =>
 
 export const useSync = () => {
   const { session, isLoading } = useSession();
-  const { data } = useCategories();
   const queryClient = useQueryClient();
   useSearch(); // ensure search worker is initialized alongside sync
 
@@ -114,7 +105,6 @@ export const useSync = () => {
     roleId,
     isPublic,
     queryClient,
-    categories: data,
   };
   return useQuery({
     queryKey: [QUERY_KEY.SYNC, roleId],
