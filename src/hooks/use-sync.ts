@@ -61,6 +61,15 @@ const runSync = ({
 
         if (result.rebuildSearchIndex) {
           getWorker().postMessage({ type: WORKER_MSG.BUILD_INDEX });
+          queryClient.invalidateQueries({
+            queryKey: [QUERY_KEY.SPEAKERS],
+          });
+          queryClient.invalidateQueries({
+            queryKey: [QUERY_KEY.LANGUAGES],
+          });
+          queryClient.invalidateQueries({
+            queryKey: [QUERY_KEY.VENUES],
+          });
         } else {
           for (const table of [
             "recordings",

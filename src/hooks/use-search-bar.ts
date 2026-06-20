@@ -8,6 +8,8 @@ import type {
 } from "@/components/search/search-results";
 import type { SearchScope } from "@/components/search-bar";
 import { INDEX, STORE } from "@/constants";
+import { useCategories } from "./use-categories";
+import { useMetadata } from "./use-metadata";
 import { useSearch } from "@/hooks/use-search";
 import { trackEvent } from "@/lib/analytics";
 import { getDB } from "@/lib/idb";
@@ -34,6 +36,12 @@ export function useSearchBar() {
   const router = useRouter();
   const pathname = usePathname();
   const { searchAll } = useSearch();
+  const { data: allCategories = [] } = useCategories();
+  const {
+    speakers: availableSpeakers,
+    languages: availableLanguages,
+    venues: availableVenues,
+  } = useMetadata();
 
   const [term, setTerm] = useState("");
   const [scope, setScope] = useState<SearchScope>("full");
@@ -54,27 +62,6 @@ export function useSearchBar() {
     date_start: "",
     date_end: "",
   });
-
-  const [availableSpeakers, setAvailableSpeakers] = useState<Speaker[]>([]);
-  const [availableLanguages, setAvailableLanguages] = useState<Language[]>([]);
-  const [availableVenues, setAvailableVenues] = useState<Venue[]>([]);
-
-  // Load available metadata for filters
-  useEffect(() => {
-    async function loadMetadata() {
-      const db = await getDB();
-      if (!db) return;
-      const [s, l, v] = await Promise.all([
-        db.getAll(STORE.SPEAKERS),
-        db.getAll(STORE.LANGUAGES),
-        db.getAll(STORE.VENUES),
-      ]);
-      setAvailableSpeakers(s.sort((a, b) => a.name.localeCompare(b.name)));
-      setAvailableLanguages(l.sort((a, b) => a.name.localeCompare(b.name)));
-      setAvailableVenues(v.sort((a, b) => a.name.localeCompare(b.name)));
-    }
-    loadMetadata();
-  }, []);
 
   // Determine current category from URL pathname
   useEffect(() => {
@@ -129,9 +116,7 @@ export function useSearchBar() {
             matHits = res.hits as MaterialSearchDocument[];
         }
 
-        const allCategories = await db.getAll(STORE.CATEGORIES);
-
-        // Fetch category maps
+        // Fetch category maps using allCategories from query cache
         const catMap = new Map<number, Category>();
         for (const cat of allCategories) {
           catMap.set(cat.id, cat);
@@ -290,7 +275,7 @@ export function useSearchBar() {
     }, 250);
 
     return () => clearTimeout(delayDebounce);
-  }, [term, scope, currentCategory, filters, searchAll]);
+  }, [term, scope, currentCategory, filters, searchAll, allCategories]);
 
   const handleSelectCategory = (cat: Category) => {
     router.push(`/${categoryPath(cat.url_path)}`);

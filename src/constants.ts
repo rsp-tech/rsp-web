@@ -202,6 +202,9 @@ export const QUERY_KEY = {
   ALL_CATEGORIES: "categories",
   NOTIFICATIONS: "notifications",
   SYNC: "sync",
+  SPEAKERS: "speakers",
+  LANGUAGES: "languages",
+  VENUES: "venues",
 } as const;
 
 // Search

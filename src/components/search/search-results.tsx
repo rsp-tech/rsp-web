@@ -130,13 +130,14 @@ export function SearchResults({
         }
         className="w-full"
         collapsible
+        key={`${recordings.length}-${categories.length}-${materials.length}`}
       >
         {/* Recordings Section */}
         {recordings.length > 0 && (
           <AccordionItem
             value="recordings"
             className="border-none"
-            key={recordings.length}
+            key="recordings"
           >
             <AccordionTrigger className="hover:no-underline py-2 px-2 text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80 hover:text-foreground transition-colors">
               Recordings ({recordings.length})
@@ -219,7 +220,7 @@ export function SearchResults({
           <AccordionItem
             value="categories"
             className="border-none"
-            key={categories.length}
+            key="categories"
           >
             <AccordionTrigger className="hover:no-underline py-2 px-2 text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80 hover:text-foreground transition-colors">
               Categories ({categories.length})
@@ -260,7 +261,7 @@ export function SearchResults({
           <AccordionItem
             value="materials"
             className="border-none"
-            key={materials.length}
+            key="materials"
           >
             <AccordionTrigger className="hover:no-underline py-2 px-2 text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80 hover:text-foreground transition-colors">
               Materials ({materials.length})
