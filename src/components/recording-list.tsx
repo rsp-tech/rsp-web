@@ -70,7 +70,7 @@ export const RecordingList = ({
     } else {
       const orderA = a.order_ind ?? 0;
       const orderB = b.order_ind ?? 0;
-      result = orderA - orderB;
+      result = orderB - orderA; // default reverse sorted
     }
     return sortOrder === "asc" ? result : -result;
   });

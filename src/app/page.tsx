@@ -38,7 +38,7 @@ export default function Home() {
         </div>
 
         <CategoryList
-          categories={data?.subcategories}
+          categories={data?.subcategories.filter((c) => c.url_path !== "trash")}
           isLoading={isLoading}
           error={error}
         />

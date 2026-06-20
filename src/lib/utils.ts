@@ -38,3 +38,8 @@ export const createLimiter = (concurrency: number) => {
     });
   };
 };
+
+export const sortByOrderInd =
+  (direction: 1 | -1 = 1) =>
+  (a: { order_ind?: number | null }, b: { order_ind?: number | null }) =>
+    direction * ((a.order_ind ?? 0) - (b.order_ind ?? 0));
