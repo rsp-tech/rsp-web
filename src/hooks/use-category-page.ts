@@ -5,6 +5,7 @@ import type { IDBPDatabase } from "idb";
 import { INDEX, QUERY_KEY, STORE } from "@/constants";
 import { getDB, type RSP_IDB } from "@/lib/idb";
 import { getSupabaseClient } from "@/lib/supabase-browser";
+import { sortByOrderInd } from "@/lib/utils";
 import type { Category, EnrichedRecording, Material, Recording } from "@/types";
 import { useCategories } from "./use-categories";
 
@@ -61,13 +62,12 @@ const fetchTargetedMaterials = async (
 };
 
 const loadCategoryPage = async (
-  slug: string[],
+  urlPath: string,
   categories?: Category[],
 ): Promise<CategoryPageData | null> => {
   const db = await getDB();
   if (!db) return null;
 
-  const urlPath = slug.join(".").replace(/-/g, "_");
   // If sync hasn't completed, fallback to RPC
   if (!categories?.length) {
     const supabase = getSupabaseClient();
@@ -83,14 +83,14 @@ const loadCategoryPage = async (
     return data as unknown as CategoryPageData;
   }
 
-  if (!slug.length) {
+  if (!urlPath) {
     return {
-      subcategories: categories.filter((c) => c.path === ""),
+      subcategories: categories.filter((c) => !c.path).sort(sortByOrderInd()),
       recordings: [],
     };
   }
 
-  const redirectTo = await db.get(STORE.REDIRECTS, slug.join("/"));
+  const redirectTo = await db.get(STORE.REDIRECTS, urlPath);
   if (redirectTo) {
     return {
       subcategories: [],
@@ -105,13 +105,17 @@ const loadCategoryPage = async (
 
   const expectedPath = `${category.path}.${category.id}`.replace(/^\./, "");
 
-  const subcategories = categories.filter((c) => c.path === expectedPath);
+  const subcategories = categories
+    .filter((c) => c.path === expectedPath)
+    .sort(sortByOrderInd());
 
   const recordings: Recording[] = await db.getAllFromIndex(
     STORE.RECORDINGS,
     INDEX.BY_CATEGORY_ID,
     category.id,
   );
+
+  recordings.sort(sortByOrderInd(-1));
 
   if (recordings.length === 0) {
     return { category, subcategories, recordings: [] };
@@ -165,9 +169,11 @@ const loadCategoryPage = async (
 
 export const useCategoryPage = (slug: string[]) => {
   const { data, isPending } = useCategories();
+  const urlPath = slug.join(".").replace(/-/g, "_");
+
   return useQuery({
-    queryKey: [QUERY_KEY.CATEGORY_PAGE, slug.join(".") || "~"],
-    queryFn: () => loadCategoryPage(slug, data),
+    queryKey: [QUERY_KEY.CATEGORY_PAGE, urlPath || "~"],
+    queryFn: () => loadCategoryPage(urlPath, data),
     enabled: !isPending,
   });
 };
