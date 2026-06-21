@@ -62,9 +62,14 @@ export type FaqCategory = Tables<"faq_categories">;
 export type Faq = Tables<"faqs">;
 export type FeaturedSection = Tables<"featured_sections">;
 export type FeaturedItem = Tables<"featured_items">;
-export type UserQuery = Tables<"user_queries">;
+export type UserQuery = Database["prod"]["Tables"]["user_queries"]["Row"];
+export type QueryReply = Database["prod"]["Tables"]["query_replies"]["Row"];
 
 export type UserQueryWithUser = UserQuery & {
+  users: { name: string | null; email: string } | null;
+};
+
+export type QueryReplyWithUser = QueryReply & {
   users: { name: string | null; email: string } | null;
 };
 
@@ -142,3 +147,6 @@ export interface SyncResult {
   changedIds: SyncChangedIds;
   rebuildSearchIndex: boolean;
 }
+
+export type UserProfile = Database["prod"]["Tables"]["users"]["Row"];
+export type UserEditRequest = Database["prod"]["Tables"]["user_edit_requests"]["Row"];

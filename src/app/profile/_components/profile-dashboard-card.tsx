@@ -1,0 +1,109 @@
+"use client";
+
+import { Card } from "@/components/ui/card";
+import type { User } from "@supabase/supabase-js";
+import {
+  Award,
+  ExternalLink,
+  Heart,
+  Mail,
+  MessageSquare,
+  Shield,
+} from "lucide-react";
+
+interface ProfileDashboardCardProps {
+  user: { email?: string };
+  fullName: string;
+  ashram: string;
+  interestsCount: number;
+  roleId: number | undefined;
+  getRoleLabel: (roleId: number | undefined) => string;
+  onServicesClick: () => void;
+  onQueriesClick: () => void;
+}
+
+export function ProfileDashboardCard({
+  user,
+  fullName,
+  ashram,
+  interestsCount,
+  roleId,
+  getRoleLabel,
+  onServicesClick,
+  onQueriesClick,
+}: ProfileDashboardCardProps) {
+  return (
+    <Card className="border-border/60 overflow-hidden">
+      <div className="h-24 bg-linear-to-r from-primary/15 via-primary/5 to-transparent border-b border-border/40" />
+      <div className="px-6 pb-6 relative flex flex-col items-center text-center -mt-10">
+        <div className="w-20 h-20 rounded-full bg-card border-2 border-primary flex items-center justify-center text-primary font-bold text-2xl shadow-sm mb-3">
+          {fullName
+            ? fullName.charAt(0).toUpperCase()
+            : user.email?.charAt(0).toUpperCase()}
+        </div>
+
+        <h2 className="text-lg font-bold text-foreground">
+          {fullName || user.email?.split("@")[0] || "User"}
+        </h2>
+        <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
+          <Mail className="w-3.5 h-3.5" />
+          {user.email}
+        </p>
+
+        <div className="w-full border-t border-border/60 my-5" />
+
+        <div className="w-full flex flex-col gap-3.5 text-left">
+          <div className="flex items-center gap-2 text-xs">
+            {[1, 4, 5, 7, 8].includes(roleId ?? 0) && (
+              <span
+                className={`font-bold pl-1.5 pr-2.5 py-1 rounded-full border text-xs flex gap-1 ${
+                  roleId === 4 || roleId === 7
+                    ? "bg-[#FF9933]/15 text-[#FF9933] border-[#FF9933]/30 dark:bg-[#FF9933]/25"
+                    : "bg-primary/10 text-primary border-primary/20"
+                }`}
+              >
+                <Shield className="size-4 text-muted-foreground/80" />
+                {getRoleLabel(roleId)}
+              </span>
+            )}
+            {ashram && (
+              <span className="font-bold text-foreground bg-muted px-2.5 py-0.5 rounded-full capitalize">
+                {ashram}
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-muted-foreground font-medium flex items-center gap-1.5">
+              <Heart className="w-3.5 h-3.5 text-muted-foreground/80" />
+              Service Interests
+            </span>
+            <button
+              type="button"
+              onClick={onServicesClick}
+              className="font-bold text-foreground bg-muted hover:bg-primary/15 hover:text-primary transition-colors px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer"
+            >
+              <span>{interestsCount}</span>
+              <ExternalLink className="w-2.5 h-2.5" />
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between text-xs">
+            <span className="text-muted-foreground font-medium flex items-center gap-1.5">
+              <MessageSquare className="w-3.5 h-3.5 text-muted-foreground/80" />
+              Support Tickets
+            </span>
+            <button
+              type="button"
+              onClick={onQueriesClick}
+              className="font-bold text-foreground bg-muted hover:bg-primary/15 hover:text-primary transition-colors px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer"
+            >
+              <span>Dashboard</span>
+              <ExternalLink className="w-2.5 h-2.5" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </Card>
+  );
+}

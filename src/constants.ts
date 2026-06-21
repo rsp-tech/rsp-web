@@ -205,6 +205,8 @@ export const QUERY_KEY = {
   SPEAKERS: "speakers",
   LANGUAGES: "languages",
   VENUES: "venues",
+  USER_PROFILE: "user-profile",
+  USER_PENDING_REQUEST: "user-pending-request",
 } as const;
 
 // Search
