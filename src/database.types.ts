@@ -17,6 +17,7 @@ export type Database = {
       categories: {
         Row: {
           allowed_roles: number[];
+          created_at: string | null;
           id: number;
           img_id: number | null;
           name: string;
@@ -27,6 +28,7 @@ export type Database = {
         };
         Insert: {
           allowed_roles?: number[];
+          created_at?: string | null;
           id?: number;
           img_id?: number | null;
           name: string;
@@ -37,6 +39,7 @@ export type Database = {
         };
         Update: {
           allowed_roles?: number[];
+          created_at?: string | null;
           id?: number;
           img_id?: number | null;
           name?: string;
@@ -313,11 +316,51 @@ export type Database = {
         };
         Relationships: [];
       };
+      query_replies: {
+        Row: {
+          created_at: string | null;
+          id: string;
+          message: string;
+          query_id: string;
+          user_id: string | null;
+        };
+        Insert: {
+          created_at?: string | null;
+          id?: string;
+          message: string;
+          query_id: string;
+          user_id?: string | null;
+        };
+        Update: {
+          created_at?: string | null;
+          id?: string;
+          message?: string;
+          query_id?: string;
+          user_id?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "query_replies_query_id_fkey";
+            columns: ["query_id"];
+            isOneToOne: false;
+            referencedRelation: "user_queries";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "query_replies_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
       recordings: {
         Row: {
           allowed_roles: number[];
           audio_id: string | null;
           category_id: number;
+          created_at: string | null;
           event_id: number | null;
           id: number;
           lang_ids: number[] | null;
@@ -334,6 +377,7 @@ export type Database = {
           allowed_roles?: number[];
           audio_id?: string | null;
           category_id: number;
+          created_at?: string | null;
           event_id?: number | null;
           id?: number;
           lang_ids?: number[] | null;
@@ -350,6 +394,7 @@ export type Database = {
           allowed_roles?: number[];
           audio_id?: string | null;
           category_id?: number;
+          created_at?: string | null;
           event_id?: number | null;
           id?: number;
           lang_ids?: number[] | null;
@@ -476,6 +521,107 @@ export type Database = {
           updated_at?: string;
         };
         Relationships: [];
+      };
+      user_edit_requests: {
+        Row: {
+          actor_id: string | null;
+          actor_type: string | null;
+          ashram: string | null;
+          authority_email: string | null;
+          authority_name: string | null;
+          authority_relationship: string | null;
+          created_at: string | null;
+          id: string;
+          name: string | null;
+          phone: string | null;
+          purpose: string | null;
+          reason: string | null;
+          requested_at: string | null;
+          requested_role_id: number | null;
+          review_comment: string | null;
+          reviewed_at: string | null;
+          reviewed_by: string | null;
+          status: string;
+          temple: string | null;
+          updated_at: string | null;
+          user_id: string;
+        };
+        Insert: {
+          actor_id?: string | null;
+          actor_type?: string | null;
+          ashram?: string | null;
+          authority_email?: string | null;
+          authority_name?: string | null;
+          authority_relationship?: string | null;
+          created_at?: string | null;
+          id?: string;
+          name?: string | null;
+          phone?: string | null;
+          purpose?: string | null;
+          reason?: string | null;
+          requested_at?: string | null;
+          requested_role_id?: number | null;
+          review_comment?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status: string;
+          temple?: string | null;
+          updated_at?: string | null;
+          user_id: string;
+        };
+        Update: {
+          actor_id?: string | null;
+          actor_type?: string | null;
+          ashram?: string | null;
+          authority_email?: string | null;
+          authority_name?: string | null;
+          authority_relationship?: string | null;
+          created_at?: string | null;
+          id?: string;
+          name?: string | null;
+          phone?: string | null;
+          purpose?: string | null;
+          reason?: string | null;
+          requested_at?: string | null;
+          requested_role_id?: number | null;
+          review_comment?: string | null;
+          reviewed_at?: string | null;
+          reviewed_by?: string | null;
+          status?: string;
+          temple?: string | null;
+          updated_at?: string | null;
+          user_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "user_edit_requests_actor_id_fkey";
+            columns: ["actor_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_edit_requests_requested_role_id_fkey";
+            columns: ["requested_role_id"];
+            isOneToOne: false;
+            referencedRelation: "roles";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_edit_requests_reviewed_by_fkey";
+            columns: ["reviewed_by"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "user_edit_requests_user_id_fkey";
+            columns: ["user_id"];
+            isOneToOne: false;
+            referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
       };
       user_notifications: {
         Row: {
@@ -758,6 +904,68 @@ export type Database = {
             columns: ["user_id"];
             isOneToOne: false;
             referencedRelation: "users";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      users: {
+        Row: {
+          ashram: string | null;
+          authority_email: string | null;
+          authority_name: string | null;
+          authority_relationship: string | null;
+          avatar_url: string | null;
+          created_at: string | null;
+          email: string;
+          id: string;
+          name: string | null;
+          phone: string | null;
+          purpose: string | null;
+          role_id: number;
+          status: string | null;
+          temple: string | null;
+          updated_at: string | null;
+        };
+        Insert: {
+          ashram?: string | null;
+          authority_email?: string | null;
+          authority_name?: string | null;
+          authority_relationship?: string | null;
+          avatar_url?: string | null;
+          created_at?: string | null;
+          email: string;
+          id: string;
+          name?: string | null;
+          phone?: string | null;
+          purpose?: string | null;
+          role_id?: number;
+          status?: string | null;
+          temple?: string | null;
+          updated_at?: string | null;
+        };
+        Update: {
+          ashram?: string | null;
+          authority_email?: string | null;
+          authority_name?: string | null;
+          authority_relationship?: string | null;
+          avatar_url?: string | null;
+          created_at?: string | null;
+          email?: string;
+          id?: string;
+          name?: string | null;
+          phone?: string | null;
+          purpose?: string | null;
+          role_id?: number;
+          status?: string | null;
+          temple?: string | null;
+          updated_at?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "users_role_id_fkey";
+            columns: ["role_id"];
+            isOneToOne: false;
+            referencedRelation: "roles";
             referencedColumns: ["id"];
           },
         ];

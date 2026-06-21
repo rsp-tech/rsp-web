@@ -7,11 +7,8 @@ const TABLES_TO_OMIT = [
   "images",
   "rec_meta",
   "roles",
-  "query_replies",
   "user_edit_audit",
-  "user_edit_requests",
   "user_whitelist",
-  "users",
 ] as const;
 
 const FIELDS_TO_OMIT: Record<string, string[]> = {
