@@ -3,7 +3,9 @@
 import { Project, SyntaxKind } from "ts-morph";
 
 const TABLES_TO_OMIT = [
+  "cat_meta",
   "images",
+  "rec_meta",
   "roles",
   "query_replies",
   "user_edit_audit",
@@ -13,8 +15,7 @@ const TABLES_TO_OMIT = [
 ] as const;
 
 const FIELDS_TO_OMIT: Record<string, string[]> = {
-  categories: ["metadata", "created_at"],
-  recordings: ["metadata", "created_at"],
+  materials: ["is_generic"],
 };
 
 const project = new Project();
