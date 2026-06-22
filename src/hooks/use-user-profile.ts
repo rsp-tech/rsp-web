@@ -1,15 +1,14 @@
 "use client";
 
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useSession } from "@/components/providers";
 import { QUERY_KEY } from "@/constants";
 import { getSupabaseClient } from "@/lib/supabase-browser";
-import { useSession } from "@/components/providers";
-import type { UserProfile, UserEditRequest } from "@/types";
+import type { UserEditRequest, UserProfile } from "@/types";
 
 export const useUserProfile = () => {
   const { session, isLoading: sessionLoading } = useSession();
   const userId = session?.user?.id;
-  const queryClient = useQueryClient();
 
   const profileQuery = useQuery({
     queryKey: [QUERY_KEY.USER_PROFILE, userId],
@@ -69,7 +68,11 @@ export const useUserProfile = () => {
 
   return {
     profile: profileQuery.data ?? null,
-    isLoading: profileQuery.isLoading || pendingRequestQuery.isLoading || interestsQuery.isLoading || sessionLoading,
+    isLoading:
+      profileQuery.isLoading ||
+      pendingRequestQuery.isLoading ||
+      interestsQuery.isLoading ||
+      sessionLoading,
     error: profileQuery.error,
     refetch: profileQuery.refetch,
     pendingRequest: pendingRequestQuery.data ?? null,

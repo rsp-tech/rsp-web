@@ -2,10 +2,16 @@ import type { Database } from "@/database.types";
 
 type LocalTable<T> = Omit<T, "created_at" | "metadata" | "updated_at">;
 
+export type DB_TABLE<
+  T extends keyof Database["prod"]["Tables"],
+  U extends keyof Database["prod"]["Tables"][T] = "Row",
+> = Database["prod"]["Tables"][T][U];
+
 export type Tables<
   T extends keyof Database["prod"]["Tables"],
   U extends keyof Database["prod"]["Tables"][T] = "Row",
-> = LocalTable<Database["prod"]["Tables"][T][U]>;
+> = LocalTable<DB_TABLE<T, U>>;
+
 export type Enums<T extends keyof Database["prod"]["Enums"]> =
   Database["prod"]["Enums"][T];
 
@@ -62,8 +68,8 @@ export type FaqCategory = Tables<"faq_categories">;
 export type Faq = Tables<"faqs">;
 export type FeaturedSection = Tables<"featured_sections">;
 export type FeaturedItem = Tables<"featured_items">;
-export type UserQuery = Database["prod"]["Tables"]["user_queries"]["Row"];
-export type QueryReply = Database["prod"]["Tables"]["query_replies"]["Row"];
+export type UserQuery = DB_TABLE<"user_queries">;
+export type QueryReply = DB_TABLE<"query_replies">;
 
 export type UserQueryWithUser = UserQuery & {
   users: { name: string | null; email: string } | null;
@@ -148,5 +154,5 @@ export interface SyncResult {
   rebuildSearchIndex: boolean;
 }
 
-export type UserProfile = Database["prod"]["Tables"]["users"]["Row"];
-export type UserEditRequest = Database["prod"]["Tables"]["user_edit_requests"]["Row"];
+export type UserProfile = DB_TABLE<"users">;
+export type UserEditRequest = DB_TABLE<"user_edit_requests">;

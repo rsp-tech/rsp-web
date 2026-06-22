@@ -215,3 +215,14 @@ export const SEARCH_TOLERANCE = 1;
 export const SEARCH_BOOST_NAME = 2.0;
 export const SEARCH_BOOST_SPEAKER = 1.5;
 export const INVALIDATE_ALL_THRESHOLD = 10;
+
+export const QUERY_CATEGORIES = [
+  { value: "technical", label: "Technical Support / Feedback" },
+  { value: "spiritual", label: "Spiritual Guidance / Inquiry" },
+  { value: "feedback", label: "Feedback" },
+  { value: "volunteering_inquiry", label: "Volunteering Inquiry" },
+  { value: "general", label: "General Inquiry" },
+  { value: "books", label: "Books & Publications" },
+  { value: "courses", label: "Online Certified Courses" },
+  { value: "services", label: "Service Related Queries" },
+];
