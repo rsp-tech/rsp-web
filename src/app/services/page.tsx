@@ -58,7 +58,7 @@ export default function ServicesPage() {
           for (const item of data || []) {
             interestMap.set(item.service_id, {
               service_id: item.service_id,
-              level: item.level ?? "Basic",
+              level: item.level ?? "curious",
               notes: item.notes ?? "",
             });
           }
@@ -82,7 +82,7 @@ export default function ServicesPage() {
     } else {
       next.set(serviceId, {
         service_id: serviceId,
-        level: "Basic",
+        level: "curious",
         notes: "",
       });
     }

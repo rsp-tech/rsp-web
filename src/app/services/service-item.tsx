@@ -108,13 +108,9 @@ export const ServiceItem = ({
                 <SelectValue placeholder="Select level" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="Basic">Basic / Willing to learn</SelectItem>
-                <SelectItem value="Intermediate">
-                  Intermediate / Prior experience
-                </SelectItem>
-                <SelectItem value="Advanced">
-                  Advanced / Expert / Leader
-                </SelectItem>
+                <SelectItem value="curious">Curious / Exploring & willing to learn</SelectItem>
+                <SelectItem value="interested">Interested / Ready to contribute</SelectItem>
+                <SelectItem value="committed">Committed / Ready to take regular responsibility</SelectItem>
               </SelectContent>
             </Select>
           </div>
