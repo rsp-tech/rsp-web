@@ -1,15 +1,7 @@
 "use client";
-
+import { ExternalLink, Heart, Mail, MessageSquare, Shield } from "lucide-react";
 import { Card } from "@/components/ui/card";
-import type { User } from "@supabase/supabase-js";
-import {
-  Award,
-  ExternalLink,
-  Heart,
-  Mail,
-  MessageSquare,
-  Shield,
-} from "lucide-react";
+import { getRoleLabel } from "../utils";
 
 interface ProfileDashboardCardProps {
   user: { email?: string };
@@ -17,7 +9,6 @@ interface ProfileDashboardCardProps {
   ashram: string;
   interestsCount: number;
   roleId: number | undefined;
-  getRoleLabel: (roleId: number | undefined) => string;
   onServicesClick: () => void;
   onQueriesClick: () => void;
 }
@@ -28,12 +19,11 @@ export function ProfileDashboardCard({
   ashram,
   interestsCount,
   roleId,
-  getRoleLabel,
   onServicesClick,
   onQueriesClick,
 }: ProfileDashboardCardProps) {
   return (
-    <Card className="border-border/60 overflow-hidden">
+    <Card className="border-border/60 overflow-hidden p-0">
       <div className="h-24 bg-linear-to-r from-primary/15 via-primary/5 to-transparent border-b border-border/40" />
       <div className="px-6 pb-6 relative flex flex-col items-center text-center -mt-10">
         <div className="w-20 h-20 rounded-full bg-card border-2 border-primary flex items-center justify-center text-primary font-bold text-2xl shadow-sm mb-3">
@@ -98,7 +88,6 @@ export function ProfileDashboardCard({
               onClick={onQueriesClick}
               className="font-bold text-foreground bg-muted hover:bg-primary/15 hover:text-primary transition-colors px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer"
             >
-              <span>Dashboard</span>
               <ExternalLink className="w-2.5 h-2.5" />
             </button>
           </div>

@@ -1,5 +1,8 @@
 "use client";
 
+import { Check, Loader2, Phone, Shield, Sparkles } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -19,9 +22,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { Check, Loader2, Phone, Shield, Sparkles } from "lucide-react";
-import type React from "react";
-import { useState } from "react";
 
 const ASHRAMS = [
   { value: "Visitor", label: "Visitor" },
