@@ -1,6 +1,15 @@
 "use client";
 
-import { Loader2, Mail, MapPin, MessageSquare, Send } from "lucide-react";
+import {
+  AlertCircle,
+  ExternalLink,
+  Loader2,
+  Mail,
+  MapPin,
+  MessageSquare,
+  Send,
+} from "lucide-react";
+import { useRouter } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import { toast } from "sonner";
 import { useSession } from "@/components/providers";
@@ -21,19 +30,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { QUERY_CATEGORIES } from "@/constants";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { getUserDisplayName } from "@/lib/utils";
 
-const CATEGORIES = [
-  { value: "Technical", label: "Technical Support / Feedback" },
-  { value: "Spiritual", label: "Spiritual Guidance / Enquiery" },
-  { value: "General", label: "General Inquiry" },
-  { value: "Books", label: "Books & Publications" },
-  { value: "Courses", label: "Online Certified Courses" },
-  { value: "Services", label: "Devotional Service Opportunities" },
-];
-
 export default function ContactUsPage() {
+  const router = useRouter();
   const { session } = useSession();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -41,6 +43,7 @@ export default function ContactUsPage() {
   const [subject, setSubject] = useState("");
   const [message, setMessage] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const id = useId();
 
@@ -63,6 +66,7 @@ export default function ContactUsPage() {
     }
 
     setSubmitting(true);
+    setSubmitError(null);
     const supabase = getSupabaseClient();
 
     try {
@@ -73,18 +77,23 @@ export default function ContactUsPage() {
         category,
         subject,
         message,
-        status: "pending",
       });
 
       if (error) throw error;
 
-      toast.success("Thank you! Your message has been sent successfully.");
+      toast.success(
+        session
+          ? "Thank you! Your message has been sent successfully. Track its status in your profile."
+          : "Thank you! Your message has been sent successfully.",
+      );
       setSubject("");
       setMessage("");
       // biome-ignore lint/suspicious/noExplicitAny: catch block ok
     } catch (err: any) {
       console.error(err);
-      toast.error(`Failed to send message: ${err.message || "Unknown error"}`);
+      const errMsg = err.message || "Unknown error";
+      setSubmitError(errMsg);
+      toast.error(`Failed to send message: ${errMsg}`);
     } finally {
       setSubmitting(false);
     }
@@ -156,6 +165,35 @@ export default function ContactUsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
+              {session && (
+                <div className="mb-6 p-4 bg-primary/10 rounded-lg border border-primary/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-foreground">
+                  <span className="font-semibold flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4 text-primary shrink-0" />
+                    You are logged in. You can track status of your requests and
+                    view previous queries.
+                  </span>
+                  <Button
+                    size="sm"
+                    variant="link"
+                    className="h-auto p-0 font-bold gap-1 text-primary hover:text-primary/80 self-start sm:self-center shrink-0 cursor-pointer"
+                    onClick={() => router.push("/profile/queries")}
+                  >
+                    <span>View Queries</span>
+                    <ExternalLink className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
+              )}
+
+              {submitError && (
+                <div className="mb-6 bg-destructive/10 border border-destructive/20 text-destructive text-sm rounded-lg p-4 flex gap-3 items-start shadow-sm">
+                  <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
+                  <div className="flex flex-col gap-1">
+                    <p className="font-semibold">Failed to Send Message</p>
+                    <p className="text-xs opacity-90">{submitError}</p>
+                  </div>
+                </div>
+              )}
+
               <form onSubmit={handleSubmit} className="flex flex-col gap-4">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div className="flex flex-col gap-1.5">
@@ -212,7 +250,7 @@ export default function ContactUsPage() {
                       <SelectValue placeholder="Select topic" />
                     </SelectTrigger>
                     <SelectContent>
-                      {CATEGORIES.map((c) => (
+                      {QUERY_CATEGORIES.map((c) => (
                         <SelectItem key={c.value} value={c.value}>
                           {c.label}
                         </SelectItem>

@@ -1,43 +1,25 @@
 "use client";
 
-import { Loader2, LogIn, User, AlertCircle, Clock } from "lucide-react";
+import { AlertCircle, Clock, LogIn, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AuthModal } from "@/components/auth-modal";
 import { useSession } from "@/components/providers";
 import { Button } from "@/components/ui/button";
-import { ProfileDashboardCard } from "./_components/profile-dashboard-card";
+import {
+  useSubmitProfileUpdate,
+  useUserProfile,
+} from "@/hooks/use-user-profile";
+import Loading from "../loading";
 import { PersonalSettingsForm } from "./_components/personal-settings-form";
-import { useUserProfile, useSubmitProfileUpdate } from "@/hooks/use-user-profile";
-
-const getRoleLabel = (roleId: number | undefined): string => {
-  switch (roleId) {
-    case 1:
-      return "Admin";
-    case 2:
-      return "Scholar";
-    case 3:
-      return "VOICE Leader";
-    case 4:
-      return "Brahmacari";
-    case 5:
-      return "BVP";
-    case 6:
-      return "Visitor";
-    case 7:
-      return "Aspiring Brahmacari";
-    case 8:
-      return "Manager";
-    default:
-      return "Visitor";
-  }
-};
+import { ProfileDashboardCard } from "./_components/profile-dashboard-card";
 
 export default function ProfilePage() {
   const router = useRouter();
   const { session, isLoading: sessionLoading } = useSession();
   const [authOpen, setAuthOpen] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const {
     profile,
@@ -60,6 +42,7 @@ export default function ProfilePage() {
     isVoiceLeader: boolean;
   }) => {
     if (!session?.user) return;
+    setSubmitError(null);
 
     // Determine the requested role ID based on the user selections
     let requested_role_id: number | null = 6; // Default to Visitor (6)
@@ -87,25 +70,19 @@ export default function ProfilePage() {
         reason: `Settings update (Ashram: ${values.ashram}, VOICE Leader: ${values.isVoiceLeader ? "Yes" : "No"})`,
       });
       toast.success("Settings update request submitted successfully!");
+      // biome-ignore lint/suspicious/noExplicitAny: catch block
     } catch (err: any) {
       console.error(err);
-      toast.error(
-        `Failed to submit settings request: ${err.message || "Unknown error"}`,
-      );
+      const errMsg = err.message || "Unknown error occurred.";
+      setSubmitError(errMsg);
+      toast.error(`Failed to submit settings request: ${errMsg}`);
     }
   };
 
   const isLoading = sessionLoading || profileLoading;
 
   if (isLoading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-32 gap-3">
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
-        <p className="text-sm font-semibold text-muted-foreground">
-          Loading profile details...
-        </p>
-      </div>
-    );
+    return <Loading message="Loading profile details..." />;
   }
 
   if (!session) {
@@ -119,7 +96,8 @@ export default function ProfilePage() {
             User Profile
           </h1>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
-            Log in to manage your spiritual profile, update ashram status, and select service preferences.
+            Log in to manage your spiritual profile, update ashram status, and
+            select service preferences.
           </p>
         </div>
         <Button
@@ -143,7 +121,8 @@ export default function ProfilePage() {
           My Profile
         </h1>
         <p className="text-muted-foreground text-sm">
-          Manage your account preferences, ashram status, and track leadership responsibilities.
+          Manage your account preferences, ashram status, and track leadership
+          responsibilities.
         </p>
       </div>
 
@@ -156,7 +135,6 @@ export default function ProfilePage() {
             ashram={profile?.ashram || ""}
             interestsCount={interestsCount}
             roleId={profile?.role_id}
-            getRoleLabel={getRoleLabel}
             onServicesClick={() => router.push("/services")}
             onQueriesClick={() => router.push("/profile/queries")}
           />
@@ -173,33 +151,26 @@ export default function ProfilePage() {
                   You submitted a settings request on{" "}
                   <span className="font-medium">
                     {pendingRequest.requested_at
-                      ? new Date(pendingRequest.requested_at).toLocaleDateString()
+                      ? new Date(
+                          pendingRequest.requested_at,
+                        ).toLocaleDateString()
                       : "recently"}
                   </span>
-                  . These changes are under review by an administrator:
                 </p>
-                <div className="mt-2 text-xs border-l-2 border-amber-500/30 pl-3 py-1 flex flex-col gap-1 text-muted-foreground dark:text-amber-300/80">
-                  {pendingRequest.name !== profile?.name && (
-                    <p>• Name change to: <span className="font-medium">{pendingRequest.name}</span></p>
-                  )}
-                  {pendingRequest.ashram !== profile?.ashram && (
-                    <p>• Ashram update to: <span className="font-medium">{pendingRequest.ashram}</span></p>
-                  )}
-                  {pendingRequest.requested_role_id !== profile?.role_id && (
-                    <p>
-                      • Role update to:{" "}
-                      <span className="font-medium">
-                        {getRoleLabel(pendingRequest.requested_role_id ?? undefined)}
-                      </span>
-                    </p>
-                  )}
-                  {pendingRequest.phone !== profile?.phone && (
-                    <p>• Phone change to: <span className="font-medium">{pendingRequest.phone || "None"}</span></p>
-                  )}
-                </div>
                 <p className="text-[10px] opacity-80 mt-2">
-                  To prevent conflicts, you cannot submit another profile update request until the active one is reviewed.
+                  To prevent conflicts, you cannot submit another profile update
+                  request until the active one is reviewed.
                 </p>
+              </div>
+            </div>
+          )}
+
+          {submitError && (
+            <div className="bg-destructive/10 border border-destructive/20 text-destructive text-sm rounded-lg p-4 flex gap-3 items-start shadow-sm">
+              <AlertCircle className="w-5 h-5 mt-0.5 shrink-0 text-destructive" />
+              <div className="flex flex-col gap-1">
+                <p className="font-semibold">Update Request Failed</p>
+                <p className="text-xs opacity-90">{submitError}</p>
               </div>
             </div>
           )}
