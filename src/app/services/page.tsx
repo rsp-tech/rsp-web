@@ -10,6 +10,7 @@ import { STORE } from "@/constants";
 import { getDB } from "@/lib/idb";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import type { Service, UserServiceInterest } from "@/types";
+import Loading from "../loading";
 import { ServiceItem } from "./service-item";
 
 interface ServiceInterest {
@@ -164,14 +165,7 @@ export default function ServicesPage() {
   };
 
   if (sessionLoading || loading) {
-    return (
-      <div className="flex flex-col items-center justify-center py-32 gap-3">
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
-        <p className="text-sm font-semibold text-muted-foreground">
-          Loading service opportunities...
-        </p>
-      </div>
-    );
+    return <Loading message="Loading service opportunities..." />;
   }
 
   if (!session) {

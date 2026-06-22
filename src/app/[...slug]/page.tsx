@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, FolderOpen, Home, Loader2, Music } from "lucide-react";
+import { ChevronRight, FolderOpen, Home, Music } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { use, useEffect } from "react";
@@ -9,6 +9,7 @@ import { RecordingList } from "@/components/recording-list";
 import { useCategoryPage } from "@/hooks/use-category-page";
 import { trackEvent } from "@/lib/analytics";
 import { slugToLabel } from "@/lib/utils";
+import Loading from "../loading";
 
 export default function CategoryPage({
   params,
@@ -29,14 +30,7 @@ export default function CategoryPage({
   }
 
   if (isPending) {
-    return (
-      <div className="flex flex-col items-center justify-center py-32 gap-3">
-        <Loader2 className="w-8 h-8 text-primary animate-spin" />
-        <p className="text-sm font-semibold text-muted-foreground">
-          Loading discourses...
-        </p>
-      </div>
-    );
+    return <Loading message="Loading discourses..." />;
   }
 
   if (error || !data?.category) {
