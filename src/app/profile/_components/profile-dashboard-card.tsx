@@ -7,7 +7,6 @@ interface ProfileDashboardCardProps {
   user: { email?: string };
   fullName: string;
   ashram: string;
-  interestsCount: number;
   roleId: number | undefined;
   onServicesClick: () => void;
   onQueriesClick: () => void;
@@ -17,7 +16,6 @@ export function ProfileDashboardCard({
   user,
   fullName,
   ashram,
-  interestsCount,
   roleId,
   onServicesClick,
   onQueriesClick,
@@ -73,7 +71,6 @@ export function ProfileDashboardCard({
               onClick={onServicesClick}
               className="font-bold text-foreground bg-muted hover:bg-primary/15 hover:text-primary transition-colors px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer"
             >
-              <span>{interestsCount}</span>
               <ExternalLink className="w-2.5 h-2.5" />
             </button>
           </div>

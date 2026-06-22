@@ -51,33 +51,14 @@ export const useUserProfile = () => {
     enabled: !sessionLoading && !!userId,
   });
 
-  const interestsQuery = useQuery({
-    queryKey: ["user-interests-count", userId],
-    queryFn: async (): Promise<number> => {
-      if (!userId) return 0;
-      const supabase = getSupabaseClient();
-      const { count, error } = await supabase
-        .from("user_service_interests")
-        .select("*", { count: "exact", head: true })
-        .eq("user_id", userId);
-      if (error) throw error;
-      return count ?? 0;
-    },
-    enabled: !sessionLoading && !!userId,
-  });
-
   return {
     profile: profileQuery.data ?? null,
     isLoading:
-      profileQuery.isLoading ||
-      pendingRequestQuery.isLoading ||
-      interestsQuery.isLoading ||
-      sessionLoading,
+      profileQuery.isLoading || pendingRequestQuery.isLoading || sessionLoading,
     error: profileQuery.error,
     refetch: profileQuery.refetch,
     pendingRequest: pendingRequestQuery.data ?? null,
     isPendingRequestLoading: pendingRequestQuery.isLoading,
-    interestsCount: interestsQuery.data ?? 0,
   };
 };
 

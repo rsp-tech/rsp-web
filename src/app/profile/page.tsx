@@ -25,7 +25,6 @@ export default function ProfilePage() {
     profile,
     isLoading: profileLoading,
     pendingRequest,
-    interestsCount,
   } = useUserProfile();
 
   const updateMutation = useSubmitProfileUpdate();
@@ -133,7 +132,6 @@ export default function ProfilePage() {
             user={session.user}
             fullName={profile?.name || ""}
             ashram={profile?.ashram || ""}
-            interestsCount={interestsCount}
             roleId={profile?.role_id}
             onServicesClick={() => router.push("/services")}
             onQueriesClick={() => router.push("/profile/queries")}

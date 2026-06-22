@@ -234,7 +234,7 @@ export function PersonalSettingsForm({
                 className="text-xs font-bold text-muted-foreground uppercase tracking-wider"
                 htmlFor="ashram"
               >
-                Spiritual Ashram (Status)
+                Ashram / Status
               </Label>
               <Select
                 value={ashram}
