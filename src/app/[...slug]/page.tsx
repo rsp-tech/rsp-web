@@ -1,39 +1,70 @@
-"use client";
-
-import { ChevronRight, FolderOpen, Home, Music } from "lucide-react";
-import Link from "next/link";
+import type { Metadata } from "next";
 import { redirect } from "next/navigation";
-import { use, useEffect } from "react";
-import { CategoryList } from "@/components/category-list";
-import { RecordingList } from "@/components/recording-list";
-import { useCategoryPage } from "@/hooks/use-category-page";
-import { trackEvent } from "@/lib/analytics";
+import type { CategoryPageData } from "@/hooks/use-category-page";
+import { getAssetUrl } from "@/lib/storage";
+import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { slugToLabel } from "@/lib/utils";
-import Loading from "../loading";
+import { CategoryPageClient } from "./_components/category-page-client";
 
-export default function CategoryPage({
-  params,
-}: {
+export const revalidate = 28800; // 8 hours (3 times a day)
+export const dynamicParams = true;
+
+interface PageProps {
   params: Promise<{ slug: string[] }>;
-}) {
-  const { slug } = use(params);
-  const { data, isPending, error } = useCategoryPage(slug);
+}
 
-  useEffect(() => {
-    if (data?.category?.name) {
-      trackEvent("category_viewed", { category_name: data.category.name });
-    }
-  }, [data?.category?.name]);
+export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+  const { slug } = await params;
+  const urlPath = slug.join(".").replace(/-/g, "_");
+  const supabase = getSupabaseServerClient();
 
-  if (data?.redirectTo) {
-    redirect(data.redirectTo);
-  }
+  const { data } = await supabase
+    .from("categories")
+    .select("name, img_id")
+    .eq("url_path", urlPath)
+    .single();
 
-  if (isPending) {
-    return <Loading message="Loading discourses..." />;
-  }
+  const title = data?.name
+    ? `${data.name} | HG Radheshyamdas Spiritual Discourses`
+    : "Spiritual Discourses";
+  const description = data?.name
+    ? `Explore lectures, commentaries, and wisdom on ${data.name} by HG Radheshyamdas.`
+    : "Spiritual lectures, commentaries, and wisdom by HG Radheshyamdas";
 
-  if (error || !data?.category) {
+  const imgPath = data?.img_id
+    ? `https://radheshyamdas.com/img/${data.img_id.toString(36)}.webp`
+    : "https://radheshyamdas.com/rsp.png";
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      type: "website",
+      images: [
+        {
+          url: imgPath,
+          alt: data?.name || "HG Radheshyamdas",
+        },
+      ],
+    },
+  };
+}
+
+export default async function CategoryPage({ params }: PageProps) {
+  const { slug } = await params;
+  const urlPath = slug.join(".").replace(/-/g, "_");
+  const supabase = getSupabaseServerClient();
+
+  const { data: rpcData, error } = await supabase.rpc(
+    "get_category_page_data",
+    {
+      p_url_path: urlPath,
+    },
+  );
+
+  if (error || !rpcData) {
     return (
       <div className="p-4 bg-destructive/10 text-destructive border border-destructive/20 rounded-xl text-sm font-medium">
         Failed to load this category. Please check your connection or path.
@@ -41,71 +72,95 @@ export default function CategoryPage({
     );
   }
 
-  const { category, subcategories, recordings } = data;
+  const data = rpcData as unknown as CategoryPageData;
 
-  const breadcrumbs = slug.map((slugPart, index) => {
-    const path = slug.slice(0, index + 1).join("/");
-    return { label: slugToLabel(slugPart), href: `/${path}` };
-  });
+  if (data.redirectTo) {
+    redirect(data.redirectTo);
+  }
+
+  if (!data.category) {
+    return (
+      <div className="p-4 bg-destructive/10 text-destructive border border-destructive/20 rounded-xl text-sm font-medium">
+        Category not found.
+      </div>
+    );
+  }
+
+  const { category, recordings } = data;
+
+  // Breadcrumbs JSON-LD
+  const breadcrumbsJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      {
+        "@type": "ListItem",
+        position: 1,
+        name: "Home",
+        item: "https://radheshyamdas.com",
+      },
+      ...slug.map((slugPart, index) => {
+        const path = slug.slice(0, index + 1).join("/");
+        return {
+          "@type": "ListItem",
+          position: index + 2,
+          name: slugToLabel(slugPart),
+          item: `https://radheshyamdas.com/${path}`,
+        };
+      }),
+    ],
+  };
+
+  // Recordings JSON-LD (ItemList + AudioObject)
+  const recordingsJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "ItemList",
+    name: category.name,
+    description: `Discourses and recordings in the ${category.name} category.`,
+    numberOfItems: recordings.length,
+    itemListElement: recordings.map((rec, index) => {
+      const hasAudio = !!rec.audio_id;
+      const hasYoutube = !!rec.yt_id;
+
+      return {
+        "@type": "ListItem",
+        position: index + 1,
+        item: {
+          "@type": "AudioObject",
+          name: rec.name,
+          description: `Spiritual discourse on "${rec.name}" by HG Radheshyamdas.`,
+          author: {
+            "@type": "Person",
+            name:
+              rec.speakers && rec.speakers.length > 0
+                ? rec.speakers.map((s) => s.name).join(", ")
+                : "HG Radheshyamdas",
+          },
+          datePublished: rec.recorded_at || undefined,
+          inLanguage:
+            rec.languages && rec.languages.length > 0
+              ? rec.languages.map((l) => l.name)
+              : ["English"],
+          contentUrl: hasAudio ? getAssetUrl(rec.audio_id ?? "") : undefined,
+          sameAs: hasYoutube
+            ? `https://youtube.com/watch?v=${rec.yt_id}`
+            : undefined,
+        },
+      };
+    }),
+  };
 
   return (
-    <div className="flex flex-col gap-8 py-2">
-      {/* Breadcrumb Navigation */}
-      <nav className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground/80 overflow-x-auto whitespace-nowrap py-1">
-        <Link
-          href="/"
-          className="hover:text-foreground transition-colors flex items-center gap-1"
-        >
-          <Home className="w-3.5 h-3.5" />
-          <span>Home</span>
-        </Link>
-        {breadcrumbs.map((crumb, idx) => (
-          <div key={crumb.href} className="flex items-center gap-1.5">
-            <ChevronRight className="w-3 h-3 text-muted-foreground/50 shrink-0" />
-            <Link
-              href={crumb.href}
-              className={`hover:text-foreground transition-colors ${
-                idx === breadcrumbs.length - 1
-                  ? "text-foreground font-bold"
-                  : ""
-              }`}
-            >
-              {crumb.label}
-            </Link>
-          </div>
-        ))}
-      </nav>
-
-      {/* Category Header */}
-      <div className="flex flex-col gap-2 border-b border-border pb-6">
-        <span className="text-xs font-bold text-primary tracking-wider uppercase">
-          Category
-        </span>
-        <h1 className="text-3xl sm:text-4xl font-extrabold font-heading text-foreground tracking-tight">
-          {category.name}
-        </h1>
-      </div>
-
-      {/* Subcategories Section */}
-      {subcategories.length > 0 && (
-        <section className="flex flex-col gap-4">
-          <h2 className="text-xl font-bold font-heading text-foreground flex items-center gap-2">
-            <FolderOpen className="w-5 h-5 text-primary" />
-            Subcategories
-          </h2>
-          <CategoryList categories={subcategories} isLoading={false} />
-        </section>
-      )}
-
-      {/* Recordings Section */}
-      <section className="flex flex-col gap-4">
-        <h2 className="text-xl font-bold font-heading text-foreground flex items-center gap-2">
-          <Music className="w-5 h-5 text-primary" />
-          Discourses & Recordings
-        </h2>
-
-        <RecordingList {...{ recordings, isPending, category }} />
-      </section>
-    </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(recordingsJsonLd) }}
+      />
+      <CategoryPageClient slug={slug} initialData={data} />
+    </>
   );
 }

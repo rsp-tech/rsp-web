@@ -62,9 +62,10 @@ const fetchTargetedMaterials = async (
 
 const loadCategoryPage = async (
   urlPath: string,
+  initialData?: CategoryPageData | null,
 ): Promise<CategoryPageData | null> => {
   const db = await getDB();
-  if (!db) return null;
+  if (!db) return initialData || null;
 
   // If sync hasn't completed, fallback to RPC
   const supabase = getSupabaseClient();
@@ -76,6 +77,9 @@ const loadCategoryPage = async (
       "",
     );
     if (!subcategories.length) {
+      if (initialData?.subcategories.length) {
+        return initialData;
+      }
       subcategories =
         ((await supabase.from("categories").select("*").eq("path", ""))
           .data as Category[]) ?? [];
@@ -102,6 +106,10 @@ const loadCategoryPage = async (
   );
 
   if (!category) {
+    if (initialData?.category) {
+      return initialData;
+    }
+
     const { data, error } = await supabase.rpc("get_category_page_data", {
       p_url_path: urlPath,
     });
@@ -180,11 +188,15 @@ const loadCategoryPage = async (
   return { category, subcategories, recordings: enriched };
 };
 
-export const useCategoryPage = (slug: string[]) => {
+export const useCategoryPage = (
+  slug: string[],
+  initialData?: CategoryPageData,
+) => {
   const urlPath = slug.join(".").replace(/-/g, "_");
 
   return useQuery({
     queryKey: [QUERY_KEY.CATEGORY_PAGE, urlPath || "~"],
-    queryFn: () => loadCategoryPage(urlPath),
+    queryFn: () => loadCategoryPage(urlPath, initialData),
+    initialData,
   });
 };
