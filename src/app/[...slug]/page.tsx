@@ -13,7 +13,9 @@ interface PageProps {
   params: Promise<{ slug: string[] }>;
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const urlPath = slug.join(".").replace(/-/g, "_");
   const supabase = getSupabaseServerClient();
@@ -38,6 +40,9 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return {
     title,
     description,
+    alternates: {
+      canonical: `https://radheshyamdas.com/${slug.join("/")}`,
+    },
     openGraph: {
       title,
       description,
@@ -154,10 +159,12 @@ export default async function CategoryPage({ params }: PageProps) {
     <>
       <script
         type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: ld+json
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbsJsonLd) }}
       />
       <script
         type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: ld+json
         dangerouslySetInnerHTML={{ __html: JSON.stringify(recordingsJsonLd) }}
       />
       <CategoryPageClient slug={slug} initialData={data} />

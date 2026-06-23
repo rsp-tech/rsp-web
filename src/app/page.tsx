@@ -1,17 +1,22 @@
 import type { Metadata } from "next";
+import type { CategoryPageData } from "@/hooks/use-category-page";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import type { Category } from "@/types";
-import type { CategoryPageData } from "@/hooks/use-category-page";
 import { HomePageClient } from "./_components/home-page-client";
 
 export const revalidate = 28800; // 8 hours (3 times a day)
 
 export const metadata: Metadata = {
   title: "HG Radheshyamdas Spiritual Discourses | Home",
-  description: "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by HG Radheshyamdas.",
+  description:
+    "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by HG Radheshyamdas.",
+  alternates: {
+    canonical: "https://radheshyamdas.com",
+  },
   openGraph: {
     title: "HG Radheshyamdas Spiritual Discourses",
-    description: "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by HG Radheshyamdas.",
+    description:
+      "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by HG Radheshyamdas.",
     url: "https://radheshyamdas.com",
     siteName: "HG Radheshyamdas Spiritual Discourses",
     type: "website",
@@ -30,7 +35,7 @@ export default async function Home() {
   const supabase = getSupabaseServerClient();
 
   // Fetch root categories on the server
-  const { data: subcategories, error } = await supabase
+  const { data: subcategories } = await supabase
     .from("categories")
     .select("*")
     .eq("path", "");
@@ -43,7 +48,12 @@ export default async function Home() {
   };
 
   const aboutList = rootCats
-    .filter((cat) => cat.url_path !== "trash" && typeof cat.url_path === "string" && cat.url_path.trim() !== "")
+    .filter(
+      (cat) =>
+        cat.url_path !== "trash" &&
+        typeof cat.url_path === "string" &&
+        cat.url_path.trim() !== "",
+    )
     .map((cat) => {
       const path = (cat.url_path as string)
         .replace(/_/g, "-")
@@ -61,7 +71,8 @@ export default async function Home() {
     "@type": "WebSite",
     name: "HG Radheshyamdas Spiritual Discourses",
     url: "https://radheshyamdas.com",
-    description: "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by HG Radheshyamdas.",
+    description:
+      "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by HG Radheshyamdas.",
     about: aboutList.length > 0 ? aboutList : undefined,
   };
 
@@ -96,10 +107,12 @@ export default async function Home() {
     <>
       <script
         type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: ld+json
         dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
       />
       <script
         type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: ld+json
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
       <HomePageClient initialData={initialData} />
