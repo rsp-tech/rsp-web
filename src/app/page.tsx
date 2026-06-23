@@ -35,10 +35,25 @@ export default async function Home() {
     .select("*")
     .eq("path", "");
 
+  const rootCats = (subcategories as Category[]) || [];
+
   const initialData: CategoryPageData = {
-    subcategories: (subcategories as Category[]) || [],
+    subcategories: rootCats,
     recordings: [],
   };
+
+  const aboutList = rootCats
+    .filter((cat) => cat.url_path !== "trash" && typeof cat.url_path === "string" && cat.url_path.trim() !== "")
+    .map((cat) => {
+      const path = (cat.url_path as string)
+        .replace(/_/g, "-")
+        .replace(/\./g, "/");
+      return {
+        "@type": "CollectionPage",
+        name: cat.name,
+        url: `https://radheshyamdas.com/${path}`,
+      };
+    });
 
   // Structured Data (JSON-LD) for AEO and search snippets
   const websiteJsonLd = {
@@ -47,6 +62,7 @@ export default async function Home() {
     name: "HG Radheshyamdas Spiritual Discourses",
     url: "https://radheshyamdas.com",
     description: "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by HG Radheshyamdas.",
+    about: aboutList.length > 0 ? aboutList : undefined,
   };
 
   const personJsonLd = {
