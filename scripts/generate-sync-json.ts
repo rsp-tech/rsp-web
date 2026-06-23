@@ -20,7 +20,6 @@ const CHUNK_SIZE = 2000;
 
 interface DatabaseRow {
   id: number | string;
-  updated_at?: string | null;
   [key: string]: unknown;
 }
 
@@ -38,7 +37,7 @@ async function fetchTableData(
   while (true) {
     const { data, error } = await supabase
       .from(table)
-      .select(`${columns}, updated_at`)
+      .select(columns)
       .order("id", { ascending: true })
       .range(from, from + pageSize - 1);
 
@@ -58,30 +57,28 @@ async function fetchTableData(
   return allRows;
 }
 
-// Calculate the maximum updated_at timestamp in a list of rows
-function getMaxUpdatedAt(rows: DatabaseRow[]): string | null {
-  if (rows.length === 0) return null;
-  let maxTime = 0;
-  let maxString: string | null = null;
-
-  for (const row of rows) {
-    if (row.updated_at) {
-      const time = new Date(row.updated_at).getTime();
-      if (time > maxTime) {
-        maxTime = time;
-        maxString = row.updated_at;
-      }
-    }
-  }
-  return maxString;
-}
-
 async function main() {
   try {
     // Create directory if not exists
     if (!fs.existsSync(PUBLIC_SYNC_DIR)) {
       fs.mkdirSync(PUBLIC_SYNC_DIR, { recursive: true });
     }
+
+    // 0. Fetch sync_meta watermarks from Supabase
+    console.log("Fetching sync_meta watermarks from Supabase...");
+    const { data: syncMetaRows, error: syncMetaError } = await supabase
+      .from("sync_meta")
+      .select("id, updated_at");
+
+    if (syncMetaError) {
+      throw new Error(`Failed to fetch sync_meta: ${syncMetaError.message}`);
+    }
+
+    const syncMetaMap = new Map<string, string>();
+    for (const row of syncMetaRows || []) {
+      syncMetaMap.set(row.id, row.updated_at);
+    }
+    console.log(`Loaded ${syncMetaMap.size} table watermarks from sync_meta.`);
 
     const manifest: {
       generated_at: string;
@@ -104,7 +101,7 @@ async function main() {
       "categories",
       "id, allowed_roles, img_id, name, order_ind, path, url_path",
     );
-    const categoriesMaxUpdate = getMaxUpdatedAt(categories);
+    const categoriesMaxUpdate = syncMetaMap.get("categories") || null;
     const categoriesFile = "categories.json";
     fs.writeFileSync(
       path.join(PUBLIC_SYNC_DIR, categoriesFile),
@@ -129,7 +126,7 @@ async function main() {
       "recordings",
       "id, allowed_roles, audio_id, category_id, event_id, lang_ids, name, order_ind, recorded_at, speaker_ids, type_id, venues_id, yt_id",
     );
-    const recordingsMaxUpdate = getMaxUpdatedAt(recordings);
+    const recordingsMaxUpdate = syncMetaMap.get("recordings") || null;
     const totalRecordings = recordings.length;
     let chunkIndex = 1;
 
@@ -140,7 +137,7 @@ async function main() {
         path.join(PUBLIC_SYNC_DIR, chunkFile),
         JSON.stringify({
           table: "recordings",
-          updated_at: recordingsMaxUpdate, // Global max is fine for initial sync watermark
+          updated_at: recordingsMaxUpdate,
           data: chunk,
         }),
       );
@@ -161,7 +158,7 @@ async function main() {
       "materials",
       "id, allowed_roles, name, recording_id, uri, type",
     );
-    const materialsMaxUpdate = getMaxUpdatedAt(materials);
+    const materialsMaxUpdate = syncMetaMap.get("materials") || null;
     const materialsFile = "materials.json";
     fs.writeFileSync(
       path.join(PUBLIC_SYNC_DIR, materialsFile),
@@ -212,7 +209,7 @@ async function main() {
 
     for (const t of metadataTables) {
       const rows = await fetchTableData(t.name, t.columns);
-      const maxUpdate = getMaxUpdatedAt(rows);
+      const maxUpdate = syncMetaMap.get(t.name) || null;
       metadataData[t.name] = rows;
       metadataMaxUpdates[t.name] = maxUpdate;
       metadataTablesManifest[t.name] = {
@@ -243,8 +240,8 @@ async function main() {
       "faqs",
       "id, category_id, answer, question, is_published, order_ind",
     );
-    const faqCategoriesMaxUpdate = getMaxUpdatedAt(faqCategories);
-    const faqsMaxUpdate = getMaxUpdatedAt(faqs);
+    const faqCategoriesMaxUpdate = syncMetaMap.get("faq_categories") || null;
+    const faqsMaxUpdate = syncMetaMap.get("faqs") || null;
 
     const faqsFile = "faqs.json";
     fs.writeFileSync(
