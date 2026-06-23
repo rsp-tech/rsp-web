@@ -1,5 +1,30 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { ArticleTracker } from "@/components/analytics/article-tracker";
+
+export const metadata: Metadata = {
+  title: "About HG Radheshyam Das | Credentials, Biography & Voice Outreach",
+  description:
+    "Read the biography, academic credentials (M. Tech. IIT Bombay), global student outreach leadership, and books published by HG Radheshyam Das.",
+  alternates: {
+    canonical: "https://radheshyamdas.com/about",
+  },
+  openGraph: {
+    title: "About HG Radheshyam Das | Credentials, Biography & Voice Outreach",
+    description:
+      "Read the biography, academic credentials (M. Tech. IIT Bombay), global student outreach leadership, and books published by HG Radheshyam Das.",
+    url: "https://radheshyamdas.com/about",
+    type: "profile",
+    images: [
+      {
+        url: "https://radheshyamdas.com/rsp.png",
+        width: 512,
+        height: 512,
+        alt: "HG Radheshyam Das",
+      },
+    ],
+  },
+};
 
 const styles = {
   h2: "text-2xl sm:text-4xl font-black font-heading tracking-tight text-foreground leading-tight mb-4",
