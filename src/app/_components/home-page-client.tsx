@@ -2,8 +2,8 @@
 
 import { BookOpen, Compass, FolderOpen } from "lucide-react";
 import { CategoryList } from "@/components/category-list";
-import { useCategoryPage } from "@/hooks/use-category-page";
 import type { CategoryPageData } from "@/hooks/use-category-page";
+import { useCategoryPage } from "@/hooks/use-category-page";
 
 interface HomePageClientProps {
   initialData: CategoryPageData;
