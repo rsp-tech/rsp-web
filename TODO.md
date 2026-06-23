@@ -1,5 +1,11 @@
 # Release Requirements
 
+- Capacity optimization
+  - rewrite image urls via redirects (For global edge caching)
+  - create json files for clean idb sync -- to avoid approx 5 mb egress on supabase for every new user
+- SEO
+  -
+
 # Feature Parity
 
 # Future (May be)
