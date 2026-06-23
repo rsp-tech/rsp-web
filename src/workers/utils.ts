@@ -18,7 +18,7 @@ type SyncMetaRow = {
 
 type SyncMetaMap = Record<string, string>;
 type TableName = (typeof STORE)[keyof typeof STORE];
-type SyncTable = Exclude<TableName, "sync_meta" | "role_meta">;
+export type SyncTable = Exclude<TableName, "sync_meta" | "role_meta">;
 type SyncRow = RSP_IDB[SyncTable]["value"] & {
   created_at?: string | null;
   id: number | string;
@@ -235,4 +235,72 @@ export const syncTable = async ({
       table as (typeof SEARCH_LOOKUP_TABLES)[number],
     )
   );
+};
+
+export interface TableMeta {
+  count: number;
+  max_updated_at: string | null;
+}
+
+export interface FileInfo {
+  name: string;
+  tables: Record<string, TableMeta>;
+}
+
+export type SyncManifest = {
+  files: FileInfo[];
+};
+
+export const loadStaticJsonSeeds = async (
+  db: IDBPDatabase<RSP_IDB>,
+  origin: string,
+): Promise<boolean> => {
+  const manifestRes = await fetch(`${origin}/sync/manifest.json`);
+  if (!manifestRes.ok) return false;
+
+  const manifest = (await manifestRes.json()) as SyncManifest;
+
+  // Fetch and process all files in parallel
+  await Promise.all(
+    manifest.files.map(async (fileInfo: FileInfo) => {
+      const fileRes = await fetch(`${origin}/sync/${fileInfo.name}`);
+      if (!fileRes.ok)
+        throw new Error(`Failed to fetch sync file: ${fileInfo.name}`);
+      const content = await fileRes.json();
+
+      if (content.table) {
+        // Single table files (categories, chunked recordings, materials)
+        const tx = db.transaction(content.table, "readwrite");
+        for (const row of content.data) {
+          tx.store.put(row);
+        }
+        await tx.done;
+      } else {
+        // Multi-table metadata or faqs files
+        for (const table of Object.keys(content.data)) {
+          const tx = db.transaction(table, "readwrite");
+          for (const row of content.data[table]) {
+            tx.store.put(row);
+          }
+          await tx.done;
+        }
+      }
+    }),
+  );
+
+  // Write updated_at watermarks to sync_meta
+  const syncMetaTx = db.transaction(STORE.SYNC_META, "readwrite");
+  for (const fileInfo of manifest.files) {
+    for (const [table, meta] of Object.entries(fileInfo.tables)) {
+      if (meta.max_updated_at) {
+        syncMetaTx.store.put({
+          id: table,
+          updated_at: meta.max_updated_at,
+        });
+      }
+    }
+  }
+  await syncMetaTx.done;
+
+  return true;
 };

@@ -42,3 +42,5 @@ next-env.d.ts
 
 .promptshield
 .temp
+
+public/sync
