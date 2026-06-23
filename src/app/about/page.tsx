@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { ArticleTracker } from "@/components/analytics/article-tracker";
 
 const styles = {
@@ -12,10 +13,13 @@ export default function About() {
         Radheshyam Das, M. Tech., IIT, Mumbai
       </h1>
       <p>
-        <img
+        <Image
           src="/rsp.png"
           alt="His Grace Radheshyam Das, M. Tech., IIT, Mumbai"
-          className="float-right ml-4 my-2 w-64"
+          width={256}
+          height={320}
+          className="float-right ml-4 my-2"
+          priority
         />
         Radheshyam das, born in a town close to Madurai, Tamil Nadu South India
         in a devout brahman family where he got exposure to Vedic chants of

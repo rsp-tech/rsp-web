@@ -108,9 +108,15 @@ export const ServiceItem = ({
                 <SelectValue placeholder="Select level" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="curious">Curious / Exploring & willing to learn</SelectItem>
-                <SelectItem value="interested">Interested / Ready to contribute</SelectItem>
-                <SelectItem value="committed">Committed / Ready to take regular responsibility</SelectItem>
+                <SelectItem value="curious">
+                  Curious / Exploring & willing to learn
+                </SelectItem>
+                <SelectItem value="interested">
+                  Interested / Ready to contribute
+                </SelectItem>
+                <SelectItem value="committed">
+                  Committed / Ready to take regular responsibility
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
