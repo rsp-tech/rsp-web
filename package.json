@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prebuild": "node --env-file=.env --experimental-strip-types scripts/generate-sync-json.ts",
+    "prebuild": "node --env-file=.env --experimental-strip-types scripts/generate-sync-json.mts",
     "dev": "next dev",
     "build": "next build",
     "start": "next start",

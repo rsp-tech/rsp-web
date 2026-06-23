@@ -53,7 +53,7 @@ const toSyncResult = async (
             changedRecordings[id] ??
             (
               await db.get(STORE.RECORDINGS, String(id))
-            ).category_id,
+            )?.category_id,
         ),
       )
     ).forEach((id) => {
@@ -140,10 +140,9 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
     };
 
     const nextRole = roleId ?? null;
-    const hasStoredRole =
-      (await db.getKey(STORE.ROLE_META, META_KEY.SYNC_ROLE)) !== undefined;
     const storedRole = await db.get(STORE.ROLE_META, META_KEY.SYNC_ROLE);
 
+    const hasStoredRole = storedRole !== undefined;
     if (!hasStoredRole) {
       await db.put(STORE.ROLE_META, nextRole, META_KEY.SYNC_ROLE);
     }
@@ -160,6 +159,9 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       !isPublic &&
       roleId !== undefined
     ) {
+      const syncLookup = Object.fromEntries(
+        tablesToSync.map((t) => [t.table, t]),
+      );
       await Promise.all(
         ROLE_SYNCED_TABLES.map((table) =>
           limit(() =>
@@ -167,7 +169,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
               ...commonSyncTableConfig,
               table,
               roleId,
-              lastSync: tablesToSync.find((t) => t.table === table)?.lastSync,
+              lastSync: syncLookup[table]?.lastSync,
             }),
           ),
         ),

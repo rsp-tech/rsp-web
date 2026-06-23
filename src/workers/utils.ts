@@ -18,7 +18,7 @@ type SyncMetaRow = {
 
 type SyncMetaMap = Record<string, string>;
 type TableName = (typeof STORE)[keyof typeof STORE];
-export type SyncTable = Exclude<TableName, "sync_meta" | "role_meta">;
+type SyncTable = Exclude<TableName, "sync_meta" | "role_meta">;
 type SyncRow = RSP_IDB[SyncTable]["value"] & {
   created_at?: string | null;
   id: number | string;
@@ -249,6 +249,7 @@ export interface FileInfo {
 
 export type SyncManifest = {
   files: FileInfo[];
+  generated_at: string;
 };
 
 export const loadStaticJsonSeeds = async (
