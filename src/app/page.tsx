@@ -1,48 +1,92 @@
-"use client";
+import type { Metadata } from "next";
+import { getSupabaseServerClient } from "@/lib/supabase-server";
+import type { Category } from "@/types";
+import type { CategoryPageData } from "@/hooks/use-category-page";
+import { HomePageClient } from "./_components/home-page-client";
 
-import { BookOpen, Compass, FolderOpen } from "lucide-react";
-import { CategoryList } from "@/components/category-list";
-import { useCategoryPage } from "@/hooks/use-category-page";
+export const revalidate = 28800; // 8 hours (3 times a day)
 
-export default function Home() {
-  const { data, isLoading, error } = useCategoryPage([]);
+export const metadata: Metadata = {
+  title: "HG Radheshyamdas Spiritual Discourses | Home",
+  description: "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by HG Radheshyamdas.",
+  openGraph: {
+    title: "HG Radheshyamdas Spiritual Discourses",
+    description: "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by HG Radheshyamdas.",
+    url: "https://radheshyamdas.com",
+    siteName: "HG Radheshyamdas Spiritual Discourses",
+    type: "website",
+    images: [
+      {
+        url: "https://radheshyamdas.com/rsp.png",
+        width: 512,
+        height: 512,
+        alt: "HG Radheshyamdas",
+      },
+    ],
+  },
+};
+
+export default async function Home() {
+  const supabase = getSupabaseServerClient();
+
+  // Fetch root categories on the server
+  const { data: subcategories, error } = await supabase
+    .from("categories")
+    .select("*")
+    .eq("path", "");
+
+  const initialData: CategoryPageData = {
+    subcategories: (subcategories as Category[]) || [],
+    recordings: [],
+  };
+
+  // Structured Data (JSON-LD) for AEO and search snippets
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "HG Radheshyamdas Spiritual Discourses",
+    url: "https://radheshyamdas.com",
+    description: "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by HG Radheshyamdas.",
+  };
+
+  const personJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    name: "Radheshyam Das",
+    alternateName: "HG Radheshyamdas",
+    jobTitle: "Temple President & Youth Mentor",
+    affiliation: {
+      "@type": "Organization",
+      name: "ISKCON Pune",
+    },
+    alumniOf: {
+      "@type": "EducationalOrganization",
+      name: "IIT Bombay",
+    },
+    knowsAbout: [
+      "Bhagavad Gita",
+      "Vedic Philosophy",
+      "Srimad Bhagavatam",
+      "Stress Management",
+      "Leadership Development",
+    ],
+    sameAs: [
+      "https://www.youtube.com/@RadheshyamDasDevotionalvideos",
+      "http://www.radheshyamdas.com",
+    ],
+  };
 
   return (
-    <div className="flex flex-col gap-10 py-4">
-      {/* Premium Hero Section */}
-      <section className="relative rounded-3xl bg-linear-to-r from-primary/10 via-primary/5 to-transparent border border-primary/10 p-8 sm:p-12 overflow-hidden flex flex-col gap-4">
-        <div className="absolute right-0 bottom-0 top-0 w-1/3 opacity-10 pointer-events-none hidden md:block">
-          <Compass className="w-full h-full text-primary" />
-        </div>
-        <div className="flex items-center gap-2 text-primary font-bold text-xs tracking-wider uppercase">
-          <BookOpen className="w-4 h-4" />
-          <span>Vedic Wisdom Online</span>
-        </div>
-        <h1 className="text-4xl sm:text-5xl font-black font-heading tracking-tight max-w-2xl text-foreground leading-tight">
-          Spiritual Discourses by{" "}
-          <span className="text-primary">HG Radheshyamdas</span>
-        </h1>
-        <p className="text-sm sm:text-base text-muted-foreground max-w-lg leading-relaxed font-medium">
-          Explore a rich treasury of spiritual lectures, deep commentaries on
-          scriptures, and wisdom to guide your daily life.
-        </p>
-      </section>
-
-      {/* Root Categories Section */}
-      <section className="flex flex-col gap-6">
-        <div className="flex items-center gap-2">
-          <FolderOpen className="w-5 h-5 text-primary" />
-          <h2 className="text-2xl font-bold font-heading text-foreground">
-            Explore Categories
-          </h2>
-        </div>
-
-        <CategoryList
-          categories={data?.subcategories.filter((c) => c.url_path !== "trash")}
-          isLoading={isLoading}
-          error={error}
-        />
-      </section>
-    </div>
+    <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
+      />
+      <HomePageClient initialData={initialData} />
+    </>
   );
 }
