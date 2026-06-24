@@ -62,36 +62,25 @@ export default async function CategoryPage({ params }: PageProps) {
   const urlPath = slug.join(".").replace(/-/g, "_");
   const supabase = getSupabaseServerClient();
 
-  const { data: rpcData, error } = await supabase.rpc(
-    "get_category_page_data",
-    {
-      p_url_path: urlPath,
-    },
-  );
+  const { data: rpcData } = await supabase.rpc("get_category_page_data", {
+    p_url_path: urlPath,
+  });
 
-  if (error || !rpcData) {
-    return (
-      <div className="p-4 bg-destructive/10 text-destructive border border-destructive/20 rounded-xl text-sm font-medium">
-        Failed to load this category. Please check your connection or path.
-      </div>
-    );
-  }
+  // if (error || !rpcData) {
+  //   return (
+  //     <div className="p-4 bg-destructive/10 text-destructive border border-destructive/20 rounded-xl text-sm font-medium">
+  //       Failed to load this category. Please check your connection or path.
+  //     </div>
+  //   );
+  // }
 
-  const data = rpcData as unknown as CategoryPageData;
+  const data = rpcData as unknown as CategoryPageData | undefined;
 
-  if (data.redirectTo) {
+  if (data?.redirectTo) {
     redirect(data.redirectTo);
   }
 
-  if (!data.category) {
-    return (
-      <div className="p-4 bg-destructive/10 text-destructive border border-destructive/20 rounded-xl text-sm font-medium">
-        Category not found.
-      </div>
-    );
-  }
-
-  const { category, recordings } = data;
+  const { category, recordings } = data ?? {};
 
   // Breadcrumbs JSON-LD
   const breadcrumbsJsonLd = {
@@ -120,10 +109,10 @@ export default async function CategoryPage({ params }: PageProps) {
   const recordingsJsonLd = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    name: category.name,
-    description: `Discourses and recordings in the ${category.name} category.`,
-    numberOfItems: recordings.length,
-    itemListElement: recordings.map((rec, index) => {
+    name: category?.name,
+    description: `Discourses and recordings in the ${category?.name} category.`,
+    numberOfItems: recordings?.length,
+    itemListElement: recordings?.map((rec, index) => {
       const hasAudio = !!rec.audio_id;
       const hasYoutube = !!rec.yt_id;
 
