@@ -5,6 +5,7 @@ import { redirect, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { CategoryList } from "@/components/category-list";
 import { Loading } from "@/components/loading";
+import { NotFoundState } from "@/components/not-found-state";
 import { RecordingList } from "@/components/recording-list";
 import {
   type CategoryPageData,
@@ -22,7 +23,10 @@ export const ClientShell = ({
 }) => {
   const pathname = usePathname();
   const slug = pathname.split("/").filter(Boolean);
-  const { data, isPending, error } = useCategoryPage(slug, initialData);
+  const { data, isPending, error, refetch } = useCategoryPage(
+    slug,
+    initialData,
+  );
 
   useEffect(() => {
     if (data?.category?.name) {
@@ -65,11 +69,7 @@ export const ClientShell = ({
   }
 
   if (error || !data?.category) {
-    return (
-      <div className="p-4 bg-destructive/10 text-destructive border border-destructive/20 rounded-xl text-sm font-medium">
-        Failed to load this category. Please check your connection or path.
-      </div>
-    );
+    return <NotFoundState onRetry={() => refetch()} />;
   }
 
   const { category, subcategories, recordings } = data;
