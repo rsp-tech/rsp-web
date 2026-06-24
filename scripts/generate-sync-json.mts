@@ -122,6 +122,26 @@ async function main() {
       await fs.mkdir(PUBLIC_SYNC_DIR, { recursive: true });
     }
 
+    // Load existing manifest if it exists
+    const manifestPath = path.join(PUBLIC_SYNC_DIR, "manifest.json");
+    let existingManifest: SyncManifest | null = null;
+    try {
+      const manifestContent = await fs.readFile(manifestPath, "utf-8");
+      existingManifest = JSON.parse(manifestContent);
+      console.log("Loaded existing sync manifest for incremental check.");
+    } catch {
+      console.log(
+        "No valid existing manifest found. Performing full seed generation.",
+      );
+    }
+
+    if (
+      existingManifest?.generated_at &&
+      Date.now() - new Date(existingManifest?.generated_at).getTime() < 600_000 // 10 min
+    ) {
+      return;
+    }
+
     // 0. Fetch sync_meta watermarks from Supabase
     console.log("Fetching sync_meta watermarks from Supabase...");
     const { data: syncMetaRows, error: syncMetaError } = await supabase
@@ -138,19 +158,6 @@ async function main() {
     console.log(
       `Loaded ${Object.keys(syncMetaMap).length} table watermarks from sync_meta.`,
     );
-
-    // Load existing manifest if it exists
-    const manifestPath = path.join(PUBLIC_SYNC_DIR, "manifest.json");
-    let existingManifest: SyncManifest | null = null;
-    try {
-      const manifestContent = await fs.readFile(manifestPath, "utf-8");
-      existingManifest = JSON.parse(manifestContent);
-      console.log("Loaded existing sync manifest for incremental check.");
-    } catch {
-      console.log(
-        "No valid existing manifest found. Performing full seed generation.",
-      );
-    }
 
     const manifest: SyncManifest = {
       generated_at: new Date().toISOString(),
