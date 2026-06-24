@@ -7,85 +7,81 @@ import type {
   RuntimeCaching,
   SerwistPlugin,
 } from "serwist";
-import { CacheFirst, Route, Serwist, StaleWhileRevalidate } from "serwist";
+import {
+  CacheFirst,
+  NetworkOnly,
+  Route,
+  Serwist,
+  StaleWhileRevalidate,
+} from "serwist";
 
 declare const self: ServiceWorkerGlobalScope & {
   __SW_MANIFEST: (PrecacheEntry | string)[] | undefined;
 };
 
-// Memory-Safe Eviction Engine: iterative batch cache-eviction utility
-async function trimCache(cacheName: string, maxItems: number) {
+// Optimized Regex Matchers
+const STATIC_ASSET_REGEX = /^\/_next\/static\/|\.(js|css|woff2?|ttf)$/;
+const FORBIDDEN_STATIC_REGEX = /\/_next\/data|\.(json|mp3|wav|pdf)$/;
+const GENERAL_IMAGE_REGEX = /\.(png|jpe?g|webp|svg|ico)$/;
+
+const CRITICAL_BRAND_IMAGES = [
+  "rsp.webp",
+  "icon-192x192.webp",
+  "icon-512x512.webp",
+  "favicon.ico",
+];
+
+// Concurrency-optimized eviction engine
+const trimCache = async (
+  cacheName: string,
+  maxItems: number,
+): Promise<void> => {
   try {
     const cache = await caches.open(cacheName);
     const keys = await cache.keys();
+
     if (keys.length > maxItems) {
-      const toDeleteCount = keys.length - maxItems;
-      for (let i = 0; i < toDeleteCount; i++) {
-        await cache.delete(keys[i]);
-      }
+      const deletePromises = keys
+        .slice(0, keys.length - maxItems)
+        .map((key) => cache.delete(key));
+
+      await Promise.all(deletePromises);
     }
   } catch (error) {
     console.error(`Failed to trim cache ${cacheName}:`, error);
   }
-}
+};
 
-const limitCacheItemsPlugin = (cacheName: string, maxItems: number): SerwistPlugin => ({
-  cacheDidUpdate: async ({ cacheName: updatedCacheName }) => {
-    if (updatedCacheName === cacheName) {
-      await trimCache(cacheName, maxItems);
-    }
+const limitCacheItemsPlugin = (maxItems: number): SerwistPlugin => ({
+  cacheDidUpdate: async ({ cacheName }) => {
+    await trimCache(cacheName, maxItems);
   },
 });
 
 const runtimeCaching: RuntimeCaching[] = [
   {
-    // Match local scripts, styles, and web workers (but not RSC payloads, metadata, or media)
-    matcher: ({ request, url }) => {
-      const isStaticAsset =
-        url.pathname.startsWith("/_next/static/") ||
-        url.pathname.endsWith(".js") ||
-        url.pathname.endsWith(".css") ||
-        url.pathname.endsWith(".woff2") ||
-        url.pathname.endsWith(".woff") ||
-        url.pathname.endsWith(".ttf");
-
-      const isForbidden =
-        request.headers.get("RSC") === "1" ||
-        url.pathname.includes("_next/data") ||
-        url.pathname.includes(".json") ||
-        url.pathname.endsWith(".mp3") ||
-        url.pathname.endsWith(".wav") ||
-        url.pathname.endsWith(".pdf");
-
-      return isStaticAsset && !isForbidden;
-    },
+    // 1. Static Assets (Scripts, Styles, Fonts)
+    matcher: ({ request, url }) =>
+      STATIC_ASSET_REGEX.test(url.pathname) &&
+      !FORBIDDEN_STATIC_REGEX.test(url.pathname) &&
+      request.headers.get("RSC") !== "1",
     handler: new StaleWhileRevalidate({
       cacheName: "static-assets",
-      plugins: [limitCacheItemsPlugin("static-assets", 50)],
+      plugins: [limitCacheItemsPlugin(50)],
     }),
   },
   {
-    // Match local images and icons (but not audio or documents)
-    matcher: ({ url }) => {
-      const isImg =
-        url.pathname.endsWith(".png") ||
-        url.pathname.endsWith(".jpg") ||
-        url.pathname.endsWith(".jpeg") ||
-        url.pathname.endsWith(".webp") ||
-        url.pathname.endsWith(".svg") ||
-        url.pathname.endsWith(".ico");
-
-      const isAudioOrBinary =
-        url.pathname.endsWith(".mp3") ||
-        url.pathname.endsWith(".wav") ||
-        url.pathname.endsWith(".pdf");
-
-      return isImg && !isAudioOrBinary;
-    },
+    // 2. Critical Branding Assets (Force Cache-First for Offline/PWA)
+    matcher: ({ url }) => CRITICAL_BRAND_IMAGES.includes(url.pathname),
     handler: new CacheFirst({
-      cacheName: "images",
-      plugins: [limitCacheItemsPlugin("images", 30)],
+      cacheName: "brand-assets",
+      plugins: [limitCacheItemsPlugin(CRITICAL_BRAND_IMAGES.length * 2)],
     }),
+  },
+  {
+    // 3. General Images (Network Only - Relies on native browser HTTP Cache-Control)
+    matcher: ({ url }) => GENERAL_IMAGE_REGEX.test(url.pathname),
+    handler: new NetworkOnly(),
   },
 ];
 
@@ -97,20 +93,13 @@ const serwist = new Serwist({
   runtimeCaching,
 });
 
-// Custom route for navigation requests (App Shell fallback)
+// App Shell fallback strategy for navigation requests
 const navigationRoute = new Route(
   ({ request }: RouteMatchCallbackOptions) => request.mode === "navigate",
   async ({ request }: RouteHandlerCallbackOptions) => {
-    // If offline, instantly return the pre-cached "/"
-    if (!self.navigator.onLine) {
-      const cached = await serwist.matchPrecache("/");
-      if (cached) return cached;
-    }
-
     try {
       return await fetch(request);
     } catch (error) {
-      // Fallback to "/" on network failure (e.g. offline, server down)
       const cached = await serwist.matchPrecache("/");
       if (cached) return cached;
       throw error;
@@ -119,5 +108,4 @@ const navigationRoute = new Route(
 );
 
 serwist.registerRoute(navigationRoute);
-
 serwist.addEventListeners();
