@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import type { CategoryPageData } from "@/hooks/use-category-page";
+import { getLocalCategories } from "@/lib/local-sync-data";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import type { Category } from "@/types";
 import { ClientShell } from "@/views/client-shell";
@@ -32,15 +33,27 @@ export const metadata: Metadata = {
 };
 
 export default async function Home() {
-  const supabase = getSupabaseServerClient();
+  let rootCats: Category[] = [];
 
-  // Fetch root categories on the server
-  const { data: subcategories } = await supabase
-    .from("categories")
-    .select("*")
-    .eq("path", "");
+  const isLocalSource =
+    process.env.NODE_ENV === "development" ||
+    process.env.NEXT_PHASE === "phase-production-build";
 
-  const rootCats = (subcategories as Category[]) || [];
+  if (isLocalSource) {
+    try {
+      const categories = await getLocalCategories();
+      rootCats = categories.filter((c: Category) => c.path === "");
+    } catch (e) {
+      console.error("Failed to load local root categories:", e);
+    }
+  } else {
+    const supabase = getSupabaseServerClient();
+    const { data: subcategories } = await supabase
+      .from("categories")
+      .select("*")
+      .eq("path", "");
+    rootCats = (subcategories as Category[]) || [];
+  }
 
   const initialData: CategoryPageData = {
     subcategories: rootCats,

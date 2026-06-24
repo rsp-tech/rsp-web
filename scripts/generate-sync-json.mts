@@ -137,7 +137,7 @@ async function main() {
 
     if (
       existingManifest?.generated_at &&
-      Date.now() - new Date(existingManifest?.generated_at).getTime() < 600_000 // 10 min
+      Date.now() - new Date(existingManifest?.generated_at).getTime() < 3600_000 // 1 hr
     ) {
       return;
     }

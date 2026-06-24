@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import type { CategoryPageData } from "@/hooks/use-category-page";
+import {
+  getLocalCategories,
+  getLocalCategoryPageData,
+} from "@/lib/local-sync-data";
 import { getAssetUrl } from "@/lib/storage";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { slugToLabel } from "@/lib/utils";
+import type { Category } from "@/types";
 import { ClientShell } from "@/views/client-shell";
 
 export const revalidate = 28800; // 8 hours (3 times a day)
@@ -18,23 +23,47 @@ export async function generateMetadata({
 }: PageProps): Promise<Metadata> {
   const { slug } = await params;
   const urlPath = slug.join(".").replace(/-/g, "_");
-  const supabase = getSupabaseServerClient();
 
-  const { data } = await supabase
-    .from("categories")
-    .select("name, img_id")
-    .eq("url_path", urlPath)
-    .single();
+  const isLocalSource =
+    process.env.NODE_ENV === "development" ||
+    process.env.NEXT_PHASE === "phase-production-build";
 
-  const title = data?.name
-    ? `${data.name} | HG Radheshyamdas Spiritual Discourses`
+  let categoryName = "";
+  let imgId: number | null = null;
+
+  if (isLocalSource) {
+    try {
+      const categories = await getLocalCategories();
+      const category = categories.find((c: Category) => c.url_path === urlPath);
+      if (category) {
+        categoryName = category.name;
+        imgId = category.img_id;
+      }
+    } catch (e) {
+      console.error("Failed to load local category metadata:", e);
+    }
+  } else {
+    const supabase = getSupabaseServerClient();
+    const { data } = await supabase
+      .from("categories")
+      .select("name, img_id")
+      .eq("url_path", urlPath)
+      .single();
+    if (data) {
+      categoryName = data.name;
+      imgId = data.img_id;
+    }
+  }
+
+  const title = categoryName
+    ? `${categoryName} | HG Radheshyamdas Spiritual Discourses`
     : "Spiritual Discourses";
-  const description = data?.name
-    ? `Explore lectures, commentaries, and wisdom on ${data.name} by HG Radheshyamdas.`
+  const description = categoryName
+    ? `Explore lectures, commentaries, and wisdom on ${categoryName} by HG Radheshyamdas.`
     : "Spiritual lectures, commentaries, and wisdom by HG Radheshyamdas";
 
-  const imgPath = data?.img_id
-    ? `https://radheshyamdas.com/img/${data.img_id.toString(36)}.webp`
+  const imgPath = imgId
+    ? `https://radheshyamdas.com/img/${imgId.toString(36)}.webp`
     : "https://radheshyamdas.com/rsp.webp";
 
   return {
@@ -50,7 +79,7 @@ export async function generateMetadata({
       images: [
         {
           url: imgPath,
-          alt: data?.name || "HG Radheshyamdas",
+          alt: categoryName || "HG Radheshyamdas",
         },
       ],
     },
@@ -60,11 +89,22 @@ export async function generateMetadata({
 export default async function CategoryPage({ params }: PageProps) {
   const { slug } = await params;
   const urlPath = slug.join(".").replace(/-/g, "_");
-  const supabase = getSupabaseServerClient();
 
-  const { data: rpcData } = await supabase.rpc("get_category_page_data", {
-    p_url_path: urlPath,
-  });
+  const isLocalSource =
+    process.env.NODE_ENV === "development" ||
+    process.env.NEXT_PHASE === "phase-production-build";
+
+  let rpcData: CategoryPageData | null = null;
+
+  if (isLocalSource) {
+    rpcData = await getLocalCategoryPageData(urlPath);
+  } else {
+    const supabase = getSupabaseServerClient();
+    const { data } = await supabase.rpc("get_category_page_data", {
+      p_url_path: urlPath,
+    });
+    rpcData = data as unknown as CategoryPageData;
+  }
 
   // if (error || !rpcData) {
   //   return (
