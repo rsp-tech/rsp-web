@@ -4,7 +4,7 @@ import type { CategoryPageData } from "@/hooks/use-category-page";
 import { getAssetUrl } from "@/lib/storage";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { slugToLabel } from "@/lib/utils";
-import { CategoryPageClient } from "./_components/category-page-client";
+import { ClientShell } from "@/views/client-shell";
 
 export const revalidate = 28800; // 8 hours (3 times a day)
 export const dynamicParams = true;
@@ -167,7 +167,7 @@ export default async function CategoryPage({ params }: PageProps) {
         // biome-ignore lint/security/noDangerouslySetInnerHtml: ld+json
         dangerouslySetInnerHTML={{ __html: JSON.stringify(recordingsJsonLd) }}
       />
-      <CategoryPageClient slug={slug} initialData={data} />
+      <ClientShell initialData={data} />
     </>
   );
 }

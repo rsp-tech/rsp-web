@@ -4,7 +4,7 @@ import { ArrowLeft, ExternalLink, MessageSquare, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
-import Loading from "@/components/loading";
+import { Loading } from "@/components/loading";
 import { useSession } from "@/components/providers";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";

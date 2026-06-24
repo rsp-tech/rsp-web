@@ -1,10 +1,18 @@
 "use client";
 
-import { ChevronRight, FolderOpen, Home, Music } from "lucide-react";
+import {
+  BookOpen,
+  ChevronRight,
+  Compass,
+  FolderOpen,
+  Home,
+  Music,
+} from "lucide-react";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { CategoryList } from "@/components/category-list";
+import { Loading } from "@/components/loading";
 import { RecordingList } from "@/components/recording-list";
 import {
   type CategoryPageData,
@@ -12,15 +20,14 @@ import {
 } from "@/hooks/use-category-page";
 import { trackEvent } from "@/lib/analytics";
 import { slugToLabel } from "@/lib/utils";
-import Loading from "../../../components/loading";
 
-export function CategoryPageClient({
-  slug,
+export const ClientShell = ({
   initialData,
 }: {
-  slug: string[];
   initialData?: CategoryPageData;
-}) {
+}) => {
+  const pathname = usePathname();
+  const slug = pathname.split("/").filter(Boolean);
   const { data, isPending, error } = useCategoryPage(slug, initialData);
 
   useEffect(() => {
@@ -35,6 +42,49 @@ export function CategoryPageClient({
 
   if (isPending) {
     return <Loading message="Loading discourses..." />;
+  }
+
+  if (slug.length === 0) {
+    return (
+      <div className="flex flex-col gap-10 py-4">
+        {/* Premium Hero Section */}
+        <section className="relative rounded-3xl bg-linear-to-r from-primary/10 via-primary/5 to-transparent border border-primary/10 p-8 sm:p-12 overflow-hidden flex flex-col gap-4">
+          <div className="absolute right-0 bottom-0 top-0 w-1/3 opacity-10 pointer-events-none hidden md:block">
+            <Compass className="w-full h-full text-primary" />
+          </div>
+          <div className="flex items-center gap-2 text-primary font-bold text-xs tracking-wider uppercase">
+            <BookOpen className="w-4 h-4" />
+            <span>Vedic Wisdom Online</span>
+          </div>
+          <h1 className="text-4xl sm:text-5xl font-black font-heading tracking-tight max-w-2xl text-foreground leading-tight">
+            Spiritual Discourses by{" "}
+            <span className="text-primary">HG Radheshyamdas</span>
+          </h1>
+          <p className="text-sm sm:text-base text-muted-foreground max-w-lg leading-relaxed font-medium">
+            Explore a rich treasury of spiritual lectures, deep commentaries on
+            scriptures, and wisdom to guide your daily life.
+          </p>
+        </section>
+
+        {/* Root Categories Section */}
+        <section className="flex flex-col gap-6">
+          <div className="flex items-center gap-2">
+            <FolderOpen className="w-5 h-5 text-primary" />
+            <h2 className="text-2xl font-bold font-heading text-foreground">
+              Explore Categories
+            </h2>
+          </div>
+
+          <CategoryList
+            categories={data?.subcategories.filter(
+              (c) => c.url_path !== "trash",
+            )}
+            isLoading={isPending}
+            error={error}
+          />
+        </section>
+      </div>
+    );
   }
 
   if (error || !data?.category) {
@@ -102,14 +152,15 @@ export function CategoryPageClient({
       )}
 
       {/* Recordings Section */}
-      <section className="flex flex-col gap-4">
-        <h2 className="text-xl font-bold font-heading text-foreground flex items-center gap-2">
-          <Music className="w-5 h-5 text-primary" />
-          Discourses & Recordings
-        </h2>
-
-        <RecordingList {...{ recordings, isPending, category }} />
-      </section>
+      {recordings.length > 0 && (
+        <section className="flex flex-col gap-4">
+          <h2 className="text-xl font-bold font-heading text-foreground flex items-center gap-2">
+            <Music className="w-5 h-5 text-primary" />
+            Discourses & Recordings
+          </h2>
+          <RecordingList {...{ recordings, isPending, category }} />
+        </section>
+      )}
     </div>
   );
-}
+};

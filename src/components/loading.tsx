@@ -1,7 +1,7 @@
 import { LoaderPinwheel } from "lucide-react";
 import type { CSSProperties } from "react";
 
-export default function Loading({ message }: { message?: string }) {
+export const Loading = ({ message }: { message?: string }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
       <div className="relative w-full max-w-lg px-8 py-12 text-center">
@@ -43,4 +43,4 @@ export default function Loading({ message }: { message?: string }) {
       </div>
     </div>
   );
-}
+};

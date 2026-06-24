@@ -5,13 +5,13 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
 import { AuthModal } from "@/components/auth-modal";
+import { Loading } from "@/components/loading";
 import { useSession } from "@/components/providers";
 import { Button } from "@/components/ui/button";
 import {
   useSubmitProfileUpdate,
   useUserProfile,
 } from "@/hooks/use-user-profile";
-import Loading from "../../components/loading";
 import { PersonalSettingsForm } from "./_components/personal-settings-form";
 import { ProfileDashboardCard } from "./_components/profile-dashboard-card";
 

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import type { CategoryPageData } from "@/hooks/use-category-page";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import type { Category } from "@/types";
-import { HomePageClient } from "./_components/home-page-client";
+import { ClientShell } from "@/views/client-shell";
 
 export const revalidate = 28800; // 8 hours (3 times a day)
 
@@ -115,7 +115,7 @@ export default async function Home() {
         // biome-ignore lint/security/noDangerouslySetInnerHtml: ld+json
         dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
       />
-      <HomePageClient initialData={initialData} />
+      <ClientShell initialData={initialData} />
     </>
   );
 }

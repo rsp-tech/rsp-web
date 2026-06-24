@@ -4,13 +4,13 @@ import { Heart, Loader2, LogIn, Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { AuthModal } from "@/components/auth-modal";
+import { Loading } from "@/components/loading";
 import { useSession } from "@/components/providers";
 import { Button } from "@/components/ui/button";
 import { STORE } from "@/constants";
 import { getDB } from "@/lib/idb";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import type { Service, UserServiceInterest } from "@/types";
-import Loading from "../../components/loading";
 import { ServiceItem } from "./service-item";
 
 interface ServiceInterest {
