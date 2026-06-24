@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { STORE, WORKER_MSG } from "@/constants";
 import type {
   RecordingSearchFilters,
@@ -86,6 +86,11 @@ export const notifySearchWorker = (table: SearchableTable, ids: number[]) => {
 };
 
 export const useSearch = () => {
+  useEffect(() => {
+    // Warm up the search worker on load so the JS module chunk is fetched and cached by the SW
+    getWorker();
+  }, []);
+
   const searchAll = useCallback(
     async (
       term: string,

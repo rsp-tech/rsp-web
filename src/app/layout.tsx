@@ -3,6 +3,7 @@ import { Geist } from "next/font/google";
 import Script from "next/script";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { OfflineIndicator } from "@/components/offline-indicator";
 import { PageTransition } from "@/components/page-transition";
 import { Providers } from "@/components/providers";
 import { SyncTrigger } from "@/components/sync-trigger";
@@ -37,6 +38,7 @@ export default function RootLayout({
           </Script>
         )}
         <Providers>
+          <OfflineIndicator />
           <SyncTrigger />
           <Toaster position="bottom-right" />
           <Header />

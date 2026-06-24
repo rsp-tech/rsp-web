@@ -8,6 +8,7 @@ import {
 import { toast } from "sonner";
 import { useSession } from "@/components/providers";
 import { QUERY_KEY, SYNC_INTERVAL, WORKER_MSG } from "@/constants";
+import { useOnlineStatus } from "@/hooks/use-online-status";
 import { getWorker, notifySearchWorker, useSearch } from "@/hooks/use-search";
 import type { SearchableTable, SyncResult } from "@/types";
 
@@ -106,6 +107,8 @@ export const useSync = () => {
   const queryClient = useQueryClient();
   useSearch(); // ensure search worker is initialized alongside sync
 
+  const isOnline = useOnlineStatus();
+
   const roleId = toRoleId(session?.user.app_metadata.role_id);
   const isPublic = session?.user.app_metadata.is_public as boolean | undefined;
 
@@ -120,6 +123,6 @@ export const useSync = () => {
     queryFn: () => runSync(workerConfig),
     staleTime: SYNC_INTERVAL,
     refetchInterval: SYNC_INTERVAL,
-    enabled: !isLoading,
+    enabled: !isLoading && isOnline,
   });
 };
