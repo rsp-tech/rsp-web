@@ -65,9 +65,6 @@ importers:
       react-icons:
         specifier: ^5.6.0
         version: 5.6.0(react@19.2.7)
-      serwist:
-        specifier: ^9.5.11
-        version: 9.5.11(browserslist@4.28.2)(typescript@6.0.3)
       shadcn:
         specifier: ^4.11.0
         version: 4.11.0(typescript@6.0.3)
@@ -105,6 +102,9 @@ importers:
       husky:
         specifier: ^9.1.7
         version: 9.1.7
+      serwist:
+        specifier: ^9.5.11
+        version: 9.5.11(browserslist@4.28.2)(typescript@6.0.3)
       supabase:
         specifier: ^2.105.0
         version: 2.105.0

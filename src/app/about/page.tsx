@@ -17,7 +17,7 @@ export const metadata: Metadata = {
     type: "profile",
     images: [
       {
-        url: "https://radheshyamdas.com/rsp.png",
+        url: "https://radheshyamdas.com/rsp.webp",
         width: 512,
         height: 512,
         alt: "HG Radheshyam Das",
@@ -39,7 +39,7 @@ export default function About() {
       </h1>
       <p>
         <Image
-          src="/rsp.png"
+          src="/rsp.webp"
           alt="His Grace Radheshyam Das, M. Tech., IIT, Mumbai"
           width={256}
           height={320}

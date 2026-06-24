@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   description:
     "Spiritual lectures, commentaries, and wisdom by HG Radheshyamdas",
   manifest: "/manifest.json",
-  icons: { icon: "/favicon.ico", apple: "/icon-192x192.png" },
+  icons: { icon: "/favicon.ico", apple: "/icon-192x192.webp" },
 };
 
 export default function RootLayout({

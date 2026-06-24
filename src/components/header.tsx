@@ -17,7 +17,7 @@ export function Header() {
       >
         <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 ring-2 ring-primary/20">
           <Image
-            src="/icon-192x192.png"
+            src="/icon-192x192.webp"
             alt="HG Radheshyamdas"
             width={32}
             height={32}

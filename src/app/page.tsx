@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     type: "website",
     images: [
       {
-        url: "https://radheshyamdas.com/rsp.png",
+        url: "https://radheshyamdas.com/rsp.webp",
         width: 512,
         height: 512,
         alt: "HG Radheshyamdas",

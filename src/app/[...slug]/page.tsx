@@ -35,7 +35,7 @@ export async function generateMetadata({
 
   const imgPath = data?.img_id
     ? `https://radheshyamdas.com/img/${data.img_id.toString(36)}.webp`
-    : "https://radheshyamdas.com/rsp.png";
+    : "https://radheshyamdas.com/rsp.webp";
 
   return {
     title,
