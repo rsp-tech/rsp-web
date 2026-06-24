@@ -13,6 +13,7 @@ import type {
   Speaker,
   Venue,
 } from "@/types";
+import { generateSyncJson } from "./generate-sync-json";
 
 interface MetadataFileContent {
   data: {
@@ -38,6 +39,10 @@ let cachedRecordings: Recording[] | null = null;
 let cachedMaterials: Material[] | null = null;
 
 async function loadDataIntoMemory(): Promise<void> {
+  if (process.env.NEXT_PHASE === "phase-production-build") {
+    await generateSyncJson();
+  }
+
   if (
     cachedCategories &&
     cachedMetadata &&
