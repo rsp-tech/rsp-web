@@ -25,10 +25,10 @@ const FORBIDDEN_STATIC_REGEX = /\/_next\/data|\.(json|mp3|wav|pdf)$/;
 const GENERAL_IMAGE_REGEX = /\.(png|jpe?g|webp|svg|ico)$/;
 
 const CRITICAL_BRAND_IMAGES = [
-  "rsp.webp",
-  "icon-192x192.webp",
-  "icon-512x512.webp",
-  "favicon.ico",
+  "/rsp.webp",
+  "/icon-192x192.webp",
+  "/icon-512x512.webp",
+  "/favicon.ico",
 ];
 
 // Concurrency-optimized eviction engine
