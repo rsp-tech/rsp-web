@@ -12,6 +12,7 @@ interface CategoryCardProps {
 
 export const CategoryCard = ({ cat, onKeyDown }: CategoryCardProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
+  const [isError, setIsError] = useState(false);
   const imgUrl = getCategoryImageUrl(cat);
   const href = `/${categoryPath(cat.url_path)}`;
 
@@ -28,10 +29,11 @@ export const CategoryCard = ({ cat, onKeyDown }: CategoryCardProps) => {
             <Skeleton className="absolute inset-0 w-full h-full rounded-none" />
           )}
           <img
-            src={imgUrl}
+            src={isError ? "/rsp.webp" : imgUrl}
             alt={cat.name}
             loading="lazy"
             onLoad={() => setIsLoaded(true)}
+            onError={() => setIsError(true)}
             className={cn(
               "absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-500",
               isLoaded ? "opacity-100" : "opacity-0",
