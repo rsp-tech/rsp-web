@@ -42,3 +42,10 @@ next-env.d.ts
 
 .promptshield
 .temp
+
+# Serwist
+/public/sw.js
+/public/sw.js.map
+/public/swe-worker-*.js
+/public/swe-worker-*.js.map
+

@@ -194,9 +194,19 @@ export const useCategoryPage = (
 ) => {
   const urlPath = slug.join(".").replace(/-/g, "_");
 
+  // Verify that the initial data matches the current URL route.
+  // If the service worker falls back to "/" shell when offline, the initial data of "/" (root categories)
+  // is passed down, which does not match the active dynamic route path.
+  const isValidInitialData =
+    initialData &&
+    ((urlPath === "" && !initialData.category) ||
+      (initialData.category && initialData.category.url_path === urlPath));
+
+  const queryInitialData = isValidInitialData ? initialData : undefined;
+
   return useQuery({
     queryKey: [QUERY_KEY.CATEGORY_PAGE, urlPath || "~"],
-    queryFn: () => loadCategoryPage(urlPath, initialData),
-    initialData,
+    queryFn: () => loadCategoryPage(urlPath, queryInitialData),
+    initialData: queryInitialData,
   });
 };

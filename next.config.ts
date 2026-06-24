@@ -1,4 +1,22 @@
+import { spawnSync } from "node:child_process";
+import crypto from "node:crypto";
+import withSerwistInit from "@serwist/next";
 import type { NextConfig } from "next";
+
+const revision =
+  spawnSync("git", ["rev-parse", "HEAD"], {
+    encoding: "utf-8",
+  }).stdout?.trim() || crypto.randomUUID();
+
+const withSerwist = withSerwistInit({
+  swSrc: "src/app/sw.ts",
+  swDest: "public/sw.js",
+  exclude: [/\.map$/, /^manifest.*\.js$/, /\.rsc$/],
+  additionalPrecacheEntries: [
+    { url: "/", revision },
+    { url: "/manifest.json", revision },
+  ],
+});
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -29,4 +47,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withSerwist(nextConfig);

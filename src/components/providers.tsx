@@ -7,6 +7,7 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { getQueryClient } from "@/lib/query-client";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { PHProvider } from "./posthog-provider";
+import { PwaRegister } from "./pwa-register";
 
 interface SessionContextType {
   session: Session | null;
@@ -52,6 +53,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       >
         <SessionContext value={{ session, isLoading }}>
           <QueryClientProvider client={getQueryClient()}>
+            <PwaRegister />
             {children}
           </QueryClientProvider>
         </SessionContext>
