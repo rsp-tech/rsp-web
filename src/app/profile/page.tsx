@@ -11,7 +11,7 @@ import {
   useSubmitProfileUpdate,
   useUserProfile,
 } from "@/hooks/use-user-profile";
-import Loading from "../loading";
+import Loading from "../../components/loading";
 import { PersonalSettingsForm } from "./_components/personal-settings-form";
 import { ProfileDashboardCard } from "./_components/profile-dashboard-card";
 

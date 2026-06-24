@@ -12,7 +12,7 @@ import {
 } from "@/hooks/use-category-page";
 import { trackEvent } from "@/lib/analytics";
 import { slugToLabel } from "@/lib/utils";
-import Loading from "../../loading";
+import Loading from "../../../components/loading";
 
 export function CategoryPageClient({
   slug,

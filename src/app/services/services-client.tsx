@@ -10,7 +10,7 @@ import { STORE } from "@/constants";
 import { getDB } from "@/lib/idb";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import type { Service, UserServiceInterest } from "@/types";
-import Loading from "../loading";
+import Loading from "../../components/loading";
 import { ServiceItem } from "./service-item";
 
 interface ServiceInterest {
