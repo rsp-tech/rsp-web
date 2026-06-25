@@ -44,8 +44,10 @@ export default function ProfilePage() {
     setSubmitError(null);
 
     // Determine the requested role ID based on the user selections
-    let requested_role_id: number | null = 6; // Default to Visitor (6)
-    if (values.ashram === "Brahmacari") {
+    let requested_role_id: number | null = profile?.role_id ?? 6; // Default to Visitor (6)
+    if ([1, 8].includes(requested_role_id)) {
+      // do not override higher roles
+    } else if (values.ashram === "Brahmacari") {
       requested_role_id = 4;
     } else if (values.ashram === "Aspiring Brahmacari") {
       requested_role_id = 7;
