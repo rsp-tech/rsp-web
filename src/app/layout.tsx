@@ -13,7 +13,8 @@ import "./globals.css";
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
-  display: "swap",
+  preload: false,
+  weight: ["400", "600", "700"],
 });
 
 export const metadata: Metadata = {
