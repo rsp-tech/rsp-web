@@ -11,7 +11,7 @@ import { STORE } from "@/constants";
 import { getDB } from "@/lib/idb";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import type { Service, UserServiceInterest } from "@/types";
-import { ServiceItem } from "./service-item";
+import { VolunteerItem } from "./volunteer-item";
 
 interface ServiceInterest {
   service_id: number;
@@ -19,7 +19,7 @@ interface ServiceInterest {
   notes: string;
 }
 
-export function ServicesClient() {
+export function GetInvolvedClient() {
   const { session, isLoading: sessionLoading } = useSession();
   const [services, setServices] = useState<Service[]>([]);
   const [interests, setInterests] = useState<Map<number, ServiceInterest>>(
@@ -67,7 +67,7 @@ export function ServicesClient() {
         }
       } catch (err) {
         console.error(err);
-        toast.error("Failed to load services or interests data.");
+        toast.error("Failed to load volunteering opportunities data.");
       } finally {
         setLoading(false);
       }
@@ -152,7 +152,7 @@ export function ServicesClient() {
       }
 
       setInitialInterests(new Map(interests));
-      toast.success("Service interests saved successfully!");
+      toast.success("Volunteering interests saved successfully!");
       // biome-ignore lint/suspicious/noExplicitAny: ok for catch err
     } catch (err: any) {
       console.error(err);
@@ -165,7 +165,7 @@ export function ServicesClient() {
   };
 
   if (sessionLoading || loading) {
-    return <Loading message="Loading service opportunities..." />;
+    return <Loading message="Loading volunteering opportunities..." />;
   }
 
   if (!session) {
@@ -176,11 +176,11 @@ export function ServicesClient() {
         </div>
         <div className="flex flex-col gap-2">
           <h1 className="text-3xl font-extrabold tracking-tight">
-            Service Opportunities
+            Get Involved
           </h1>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
-            Log in to view available devotional services and sign up to
-            contribute your skills.
+            Log in to view available devotional volunteering opportunities and
+            sign up to contribute your skills.
           </p>
         </div>
         <Button onClick={() => setAuthOpen(true)} className="gap-2">
@@ -196,7 +196,7 @@ export function ServicesClient() {
     <div className="max-w-4xl mx-auto py-4 flex flex-col gap-8">
       <div className="flex flex-col gap-2 border-b border-border pb-6">
         <h1 className="text-3xl sm:text-4xl font-extrabold font-heading text-foreground tracking-tight">
-          Devotional Service Opportunities
+          Devotional Volunteering & Service
         </h1>
         <p className="text-muted-foreground text-sm">
           Select the services you would like to volunteer for, select your
@@ -207,7 +207,7 @@ export function ServicesClient() {
       <div className="flex flex-col gap-6">
         {services.length === 0 ? (
           <p className="text-muted-foreground text-center py-12 border border-dashed rounded-xl text-sm">
-            No service opportunities currently listed.
+            No volunteering opportunities currently listed.
           </p>
         ) : (
           services.map((service, idx) => (
@@ -218,7 +218,7 @@ export function ServicesClient() {
                 { "--stagger-delay": `${idx * 50}ms` } as React.CSSProperties
               }
             >
-              <ServiceItem
+              <VolunteerItem
                 {...{
                   service,
                   interests,

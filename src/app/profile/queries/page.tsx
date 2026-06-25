@@ -317,16 +317,16 @@ export default function UserQueriesPage() {
         </CardContent>
         <CardFooter className="flex justify-between border-t border-border/40 pt-4 bg-muted/5">
           <p className="text-xs text-muted-foreground">
-            View service opportunities or manage skills?
+            View volunteering opportunities or manage skills?
           </p>
           <Button
             type="button"
             variant="outline"
             size="sm"
-            onClick={() => router.push("/services")}
+            onClick={() => router.push("/get-involved")}
             className="gap-1.5 cursor-pointer"
           >
-            <span>Devotional Services</span>
+            <span>Get Involved</span>
             <ExternalLink className="w-3.5 h-3.5" />
           </Button>
         </CardFooter>

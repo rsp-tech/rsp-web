@@ -2,10 +2,10 @@
 
 import {
   BookOpen,
-  Briefcase,
   Calendar,
   GraduationCap,
   Heart,
+  HeartHandshake,
   Info,
   Mail,
 } from "lucide-react";
@@ -76,11 +76,11 @@ export function Footer() {
             <span>Calendar</span>
           </a>
           <Link
-            href="/services"
+            href="/get-involved"
             className="hover:text-primary transition-colors flex items-center gap-1.5"
           >
-            <Briefcase className="w-4 h-4" />
-            <span>Services</span>
+            <HeartHandshake className="w-4 h-4 text-rose-500" />
+            <span>Get Involved</span>
           </Link>
         </div>
       </div>

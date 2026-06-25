@@ -18,7 +18,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import type { Service } from "@/types";
 
-interface ServiceItemProps {
+interface VolunteerItemProps {
   service: Service;
   interests: Map<number, { level: string; notes: string }>;
   handleToggleInterest: (serviceId: number) => void;
@@ -29,12 +29,12 @@ interface ServiceItemProps {
   ) => void;
 }
 
-export const ServiceItem = ({
+export const VolunteerItem = ({
   service,
   interests,
   handleToggleInterest,
   handleUpdateDetail,
-}: ServiceItemProps) => {
+}: VolunteerItemProps) => {
   const isChecked = interests.has(service.id);
   const detail = interests.get(service.id);
 
