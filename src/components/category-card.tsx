@@ -32,6 +32,7 @@ export const CategoryCard = ({
             alt=""
             fill
             priority={priority}
+            fetchPriority={priority ? "high" : undefined}
             onLoad={(e) => {
               e.currentTarget.parentElement?.classList.remove("animate-pulse");
             }}
