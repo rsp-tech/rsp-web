@@ -113,7 +113,45 @@ Full-text queries and filtering logic are processed entirely client-side without
 
 ---
 
-## 3. Project Structure
+## 3. User Settings & Volunteer Engagement
+
+The portal provides a user profile dashboard and devotional service signup page, fully aligned with remote PostgreSQL schema definitions, triggers, and security constraints.
+
+### Consolidated Settings & Approvals Workflow
+
+Rather than direct updates to the `users` table or modifications to `supabase.auth` metadata (which is treated as restricted and internal), all user settings and role changes follow a strict audit trail:
+
+- **Single Pending Request Constraint**: The database enforces that a user can have at most one pending edit request at any given time via a unique index on `user_edit_requests` (`status = 'pending'`).
+- **Profile Updates**: Submitting settings updates inserts a row into `prod.user_edit_requests` with `status: 'pending'`. The main dashboard card continues to render the currently approved profile details from the `users` table.
+- **Pending Alert Banner**: A dynamic warning banner surfaces at the top of the profile page detailing any active profile/role updates currently under administrative review.
+- **Form Submission Lock**: The submit button transitions to a disabled state when a request is active, or if no fields have been modified from their current values ("No Changes").
+- **Mentor Details**: Relationships with counselors/gurus are mapped to a structured dropdown (e.g. *Counselor / Mentor*, *Temple President / Authority*, *Spiritual Master*) with a text input fallback for custom entries.
+
+### Automated Role Upgrades
+
+System permissions are governed by role IDs (e.g., `1` for Admin, `2` for Student, `3` for VOICE Leader, `4` for Brahmacari, `7` for Aspiring Brahmacari, `6` for Visitor). Users do not request access levels directly; instead, their role upgrades are automatically derived and requested based on their profile settings choices:
+- Ashram **Brahmacari (Monk)** -> role ID `4`
+- Ashram **Aspiring Brahmacari** -> role ID `7`
+- Checking **Community or VOICE Leader / Mentor** -> role ID `3`
+- Ashram **Student / Youth Seeker** -> role ID `2`
+- Otherwise -> role ID `6` (Visitor)
+
+### Monastic Badge Visibility
+To protect user metadata privacy, the user's role is not surfaced in the UI for low-level or public roles (`visitor`, `student`, `leader`). Role badges are rendered exclusively for restricted system roles (`admin`, `brahmacari`, `aspBrahmacari`, `manager`), displaying a warm saffron theme (`bg-[#FF9933]/15 text-[#FF9933]`) for monastic roles (`brahmacari` and `aspBrahmacari`).
+
+### Intention-Based Volunteer Services
+
+Volunteering opportunities for devotional services (`src/app/services/page.tsx`) measure user engagement and intention. The `user_service_interests` table restricts interest levels via check constraints, which are mapped to UI options:
+- **Curious** (`'curious'`): Exploring and willing to learn.
+- **Interested** (`'interested'`): Ready to contribute occasionally.
+- **Committed** (`'committed'`): Ready to take regular responsibility or lead the service.
+
+### Error Banner Surfacing
+To improve accessibility and user experience, form submission errors on settings forms, contact forms, and support ticket response sections are captured via React Query/local states and rendered directly on the UI using persistent warning banners (`AlertCircle` icon) rather than depending solely on transient toast notifications.
+
+---
+
+## 4. Project Structure
 
 The project follows a standard Next.js App Router structure optimized for offline synchronization and component-level co-location. All source files utilize strict `dash-case` naming.
 
@@ -159,7 +197,7 @@ src/
 
 ---
 
-## 4. Local Setup & Verification
+## 5. Local Setup & Verification
 
 Follow these instructions to set up the repository locally and run the public application.
 
