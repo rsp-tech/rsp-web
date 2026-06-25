@@ -89,7 +89,7 @@ export const CategoryList = ({
           <CategoryCard
             cat={cat}
             onKeyDown={handleCategoryKeyDown}
-            priority={idx < 8}
+            priority={idx < 2}
           />
         </div>
       ))}
