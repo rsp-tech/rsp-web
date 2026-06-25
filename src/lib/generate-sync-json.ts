@@ -176,12 +176,12 @@ const runGenerateSyncJson = async () => {
 
   // 1. Categories
   const categoriesFile = "categories.json";
-  const categoriesMaxUpdate = syncMetaMap.categories || null;
+  const categoriesMaxUpdate = syncMetaMap["categories"] || null;
   const existingCategoriesEntry = existingManifest?.files.find(
     (f) => f.name === categoriesFile,
   );
   const categoriesLastSync =
-    existingCategoriesEntry?.tables?.categories?.max_updated_at || null;
+    existingCategoriesEntry?.tables?.["categories"]?.max_updated_at || null;
 
   if (await isFileUpToDate(categoriesFile, ["categories"])) {
     console.log(`categories.json is up-to-date. Skipping generation.`);
@@ -233,7 +233,7 @@ const runGenerateSyncJson = async () => {
   }
 
   // 2. Recordings (Chunked)
-  const recordingsMaxUpdate = syncMetaMap.recordings || null;
+  const recordingsMaxUpdate = syncMetaMap["recordings"] || null;
   const existingRecordingFiles =
     existingManifest?.files?.filter((f) => f.name.startsWith("recordings-")) ||
     [];
@@ -251,7 +251,7 @@ const runGenerateSyncJson = async () => {
   });
 
   const recordingsLastSync =
-    existingRecordingFiles[0]?.tables?.recordings?.max_updated_at || null;
+    existingRecordingFiles[0]?.tables?.["recordings"]?.max_updated_at || null;
   let recordingsUpToDate = false;
 
   if (existingRecordingFiles.length > 0) {
@@ -259,7 +259,7 @@ const runGenerateSyncJson = async () => {
     for (const fileEntry of existingRecordingFiles) {
       try {
         await fs.access(path.join(PUBLIC_SYNC_DIR, fileEntry.name));
-        const tableMeta = fileEntry.tables?.recordings;
+        const tableMeta = fileEntry.tables?.["recordings"];
         if (!tableMeta || tableMeta.max_updated_at !== recordingsMaxUpdate) {
           allChunksValid = false;
           break;
@@ -341,12 +341,12 @@ const runGenerateSyncJson = async () => {
 
   // 3. Materials
   const materialsFile = "materials.json";
-  const materialsMaxUpdate = syncMetaMap.materials || null;
+  const materialsMaxUpdate = syncMetaMap["materials"] || null;
   const existingMaterialsEntry = existingManifest?.files?.find(
     (f) => f.name === materialsFile,
   );
   const materialsLastSync =
-    existingMaterialsEntry?.tables?.materials?.max_updated_at || null;
+    existingMaterialsEntry?.tables?.["materials"]?.max_updated_at || null;
 
   if (await isFileUpToDate(materialsFile, ["materials"])) {
     console.log(`materials.json is up-to-date. Skipping generation.`);
@@ -514,13 +514,13 @@ const runGenerateSyncJson = async () => {
       );
     }
 
-    const faqCategoriesMaxUpdate = syncMetaMap.faq_categories || null;
-    const faqsMaxUpdate = syncMetaMap.faqs || null;
+    const faqCategoriesMaxUpdate = syncMetaMap["faq_categories"] || null;
+    const faqsMaxUpdate = syncMetaMap["faqs"] || null;
 
     const faqCategoriesLastSync =
-      existingFaqsEntry?.tables?.faq_categories?.max_updated_at || null;
+      existingFaqsEntry?.tables?.["faq_categories"]?.max_updated_at || null;
     const faqsLastSync =
-      existingFaqsEntry?.tables?.faqs?.max_updated_at || null;
+      existingFaqsEntry?.tables?.["faqs"]?.max_updated_at || null;
 
     let existingFaqCategories: DatabaseRow[] = [];
     let existingFaqs: DatabaseRow[] = [];

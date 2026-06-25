@@ -11,7 +11,7 @@ const revision =
 const withSerwist = withSerwistInit({
   swSrc: "src/app/sw.ts",
   swDest: "public/sw.js",
-  disable: process.env.NODE_ENV === "development",
+  disable: process.env["NODE_ENV"] === "development",
   exclude: [/\.map$/, /^manifest.*\.js$/, /\.rsc$/],
   additionalPrecacheEntries: [
     { url: "/", revision },
@@ -30,7 +30,7 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/img/:path*",
-        destination: `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/images/:path*`,
+        destination: `${process.env["NEXT_PUBLIC_SUPABASE_URL"]}/storage/v1/object/public/images/:path*`,
       },
     ];
   },

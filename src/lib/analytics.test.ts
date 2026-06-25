@@ -29,7 +29,7 @@ describe("analytics utility", () => {
     // Simulate server-side: window is undefined
     // @ts-expect-error
     delete global.window;
-    process.env.NEXT_PUBLIC_POSTHOG_KEY = "phc_test_key";
+    process.env["NEXT_PUBLIC_POSTHOG_KEY"] = "phc_test_key";
 
     trackEvent("test_event", { foo: "bar" });
 
@@ -39,7 +39,7 @@ describe("analytics utility", () => {
   it("should not fire events if NEXT_PUBLIC_POSTHOG_KEY is missing", () => {
     // biome-ignore lint/suspicious/noExplicitAny: Simulate client-side: window is defined
     global.window = {} as any;
-    delete process.env.NEXT_PUBLIC_POSTHOG_KEY;
+    delete process.env["NEXT_PUBLIC_POSTHOG_KEY"];
 
     trackEvent("test_event", { foo: "bar" });
 
@@ -49,7 +49,7 @@ describe("analytics utility", () => {
   it("should fire events if client-side and NEXT_PUBLIC_POSTHOG_KEY is present", () => {
     // biome-ignore lint/suspicious/noExplicitAny: Simulate client-side: window is defined
     global.window = {} as any;
-    process.env.NEXT_PUBLIC_POSTHOG_KEY = "phc_test_key";
+    process.env["NEXT_PUBLIC_POSTHOG_KEY"] = "phc_test_key";
 
     trackEvent("test_event", { foo: "bar" });
 

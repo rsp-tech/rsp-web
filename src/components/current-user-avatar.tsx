@@ -7,7 +7,7 @@ import { Skeleton } from "./ui/skeleton";
 
 export const CurrentUserAvatar = () => {
   const { session, isLoading } = useSession();
-  const profileImage = session?.user.user_metadata.avatar_url ?? null;
+  const profileImage = session?.user.user_metadata["avatar_url"] ?? null;
   const name = session?.user ? getUserDisplayName(session.user, "?") : "?";
   const initials = name
     .split(" ")

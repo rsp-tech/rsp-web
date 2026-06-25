@@ -109,8 +109,8 @@ export const useSync = () => {
 
   const isOnline = useOnlineStatus();
 
-  const roleId = toRoleId(session?.user.app_metadata.role_id);
-  const isPublic = session?.user.app_metadata.is_public as boolean | undefined;
+  const roleId = toRoleId(session?.user.app_metadata["role_id"]);
+  const isPublic = session?.user.app_metadata["is_public"] as boolean | undefined;
 
   const workerConfig = {
     accessToken: session?.access_token ?? "",

@@ -65,10 +65,10 @@ export const useNotificationListener = () => {
         { event: "INSERT", schema: "prod", table: "notifications" },
         (payload) => {
           const notif = payload.new;
-          if (notif && notif.target_type === "all") {
+          if (notif && notif["target_type"] === "all") {
             handleNewNotification(
-              notif.title || "New Announcement",
-              notif.message || "",
+              notif["title"] || "New Announcement",
+              notif["message"] || "",
             );
           } else {
             invalidate();
@@ -88,8 +88,8 @@ export const useNotificationListener = () => {
         (payload) => {
           const notif = payload.new;
           handleNewNotification(
-            notif?.title || "New Notification",
-            notif?.message || "",
+            notif?.["title"] || "New Notification",
+            notif?.["message"] || "",
           );
         },
       );

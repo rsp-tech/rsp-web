@@ -16,7 +16,7 @@ export const errorMessage = (err: unknown) =>
   err instanceof Error ? err.message : String(err);
 
 export const getUserDisplayName = (user: User, fallback = "User") =>
-  (user.user_metadata.full_name as string | undefined) ??
+  (user.user_metadata["full_name"] as string | undefined) ??
   user.email?.split("@")[0] ??
   fallback;
 

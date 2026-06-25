@@ -8,7 +8,7 @@ const toRoleId = (value: unknown): number | undefined =>
 
 export const useCleanup = () => {
   const { session, isLoading } = useSession();
-  const role = toRoleId(session?.user.app_metadata.role_id);
+  const role = toRoleId(session?.user.app_metadata["role_id"]);
 
   useEffect(() => {
     if (isLoading) return;

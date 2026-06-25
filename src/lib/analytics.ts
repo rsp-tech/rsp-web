@@ -18,7 +18,7 @@ export const trackEvent = (name: string, props?: Record<string, any>) => {
     return;
   }
 
-  if (!process.env.NEXT_PUBLIC_POSTHOG_KEY) {
+  if (!process.env["NEXT_PUBLIC_POSTHOG_KEY"]) {
     return;
   }
 
