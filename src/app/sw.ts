@@ -62,6 +62,7 @@ const runtimeCaching: RuntimeCaching[] = [
   {
     // 1. Static Assets (Scripts, Styles, Fonts)
     matcher: ({ request, url }) =>
+      url.origin === self.location.origin &&
       STATIC_ASSET_REGEX.test(url.pathname) &&
       !FORBIDDEN_STATIC_REGEX.test(url.pathname) &&
       request.headers.get("RSC") !== "1",

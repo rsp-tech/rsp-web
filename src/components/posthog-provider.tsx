@@ -81,6 +81,7 @@ export function PHProvider({ children }: PHProviderProps) {
         autocapture: false,
         disable_session_recording: true,
         disable_surveys: true,
+        capture_performance: false,
       });
     }
   }, []);

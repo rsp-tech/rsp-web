@@ -4,6 +4,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useSession } from "@/components/providers";
 import { QUERY_KEY } from "@/constants";
+import { useOnlineStatus } from "@/hooks/use-online-status";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 
 export interface AppNotification {
@@ -93,6 +94,7 @@ export const useNotifications = () => {
   const { session, isLoading: sessionLoading } = useSession();
   const queryClient = useQueryClient();
   const userId = session?.user?.id;
+  const isOnline = useOnlineStatus();
 
   const query = useQuery({
     queryKey: [QUERY_KEY.NOTIFICATIONS, userId],
@@ -101,7 +103,7 @@ export const useNotifications = () => {
   });
 
   useEffect(() => {
-    if (sessionLoading) return;
+    if (sessionLoading || !isOnline) return;
     const supabase = getSupabaseClient();
 
     const notifQueryKey = [QUERY_KEY.NOTIFICATIONS, userId];
@@ -134,7 +136,7 @@ export const useNotifications = () => {
       supabase.removeChannel(channel);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId, sessionLoading, queryClient]);
+  }, [userId, sessionLoading, queryClient, isOnline]);
 
   const markAsRead = useMutation({
     mutationFn: async (id: string) => {
