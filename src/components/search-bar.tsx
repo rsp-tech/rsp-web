@@ -5,8 +5,8 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Popover,
+  PopoverAnchor,
   PopoverContent,
-  PopoverTrigger,
 } from "@/components/ui/popover";
 import { useSearchBar } from "@/hooks/use-search-bar";
 import { DateRangePicker } from "./search/date-picker";
@@ -76,7 +76,7 @@ export function SearchBar() {
   return (
     <div className="relative w-full max-w-lg">
       <Popover open={showDropdown} onOpenChange={setShowDropdown}>
-        <PopoverTrigger asChild>
+        <PopoverAnchor asChild>
           <div className="flex gap-2 items-center w-full">
             <div className="flex-1">
               <SearchInput
@@ -88,6 +88,9 @@ export function SearchBar() {
                 }}
                 onFocus={() => setShowDropdown(true)}
                 searching={searching}
+                role="combobox"
+                aria-expanded={showDropdown}
+                aria-haspopup="dialog"
               />
             </div>
             {(term.trim() !== "" || showDropdown) && (
@@ -112,7 +115,7 @@ export function SearchBar() {
               </Button>
             )}
           </div>
-        </PopoverTrigger>
+        </PopoverAnchor>
 
         {/* Dropdown content */}
         {(term.trim() !== "" || currentCategory || showFilters) && (

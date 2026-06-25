@@ -22,7 +22,7 @@ export const CategoryList = ({
             // biome-ignore lint/suspicious/noArrayIndexKey: ok for skeleton
             key={i}
             className="h-48 rounded-2xl animate-stagger-fade-in-up"
-            style={{ "--stagger-delay": `${i * 50}ms` } as React.CSSProperties}
+            style={{ "--stagger-delay": `${i * 100}ms` } as React.CSSProperties}
           />
         ))}
       </div>
@@ -86,7 +86,11 @@ export const CategoryList = ({
           className="animate-stagger-fade-in-up"
           style={{ "--stagger-delay": `${idx * 45}ms` } as React.CSSProperties}
         >
-          <CategoryCard cat={cat} onKeyDown={handleCategoryKeyDown} />
+          <CategoryCard
+            cat={cat}
+            onKeyDown={handleCategoryKeyDown}
+            priority={idx < 4}
+          />
         </div>
       ))}
     </div>

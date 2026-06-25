@@ -78,6 +78,9 @@ export function PHProvider({ children }: PHProviderProps) {
         person_profiles: "identified_only",
         capture_pageview: false, // Pageview captured manually above to handle SPA routing correctly
         capture_pageleave: true,
+        autocapture: false,
+        disable_session_recording: true,
+        disable_surveys: true,
       });
     }
   }, []);

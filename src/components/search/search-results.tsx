@@ -256,7 +256,7 @@ export function SearchResults({
                   >
                     <img
                       src={getCategoryImageUrl(cat) ?? undefined}
-                      alt={cat.name}
+                      alt=""
                       className="size-8 rounded-md object-cover"
                     />
                     <span className="truncate font-medium">{cat.name}</span>

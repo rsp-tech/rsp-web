@@ -27,7 +27,7 @@ export default function RootLayout({
     <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {process.env.NEXT_PUBLIC_CLARITY_ID && (
-          <Script id="microsoft-clarity" strategy="afterInteractive">
+          <Script id="microsoft-clarity" strategy="lazyOnload">
             {`
               (function(c,l,a,r,i,t,y){
                   c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};

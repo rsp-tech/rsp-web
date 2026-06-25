@@ -8,9 +8,14 @@ import type { Category } from "@/types";
 interface CategoryCardProps {
   cat: Category;
   onKeyDown?: React.KeyboardEventHandler<HTMLAnchorElement>;
+  priority?: boolean;
 }
 
-export const CategoryCard = ({ cat, onKeyDown }: CategoryCardProps) => {
+export const CategoryCard = ({
+  cat,
+  onKeyDown,
+  priority,
+}: CategoryCardProps) => {
   const [isLoaded, setIsLoaded] = useState(false);
   const [isError, setIsError] = useState(false);
   const imgUrl = getCategoryImageUrl(cat);
@@ -30,8 +35,9 @@ export const CategoryCard = ({ cat, onKeyDown }: CategoryCardProps) => {
           )}
           <img
             src={isError ? "/rsp.webp" : imgUrl}
-            alt={cat.name}
-            loading="lazy"
+            alt=""
+            loading={priority ? "eager" : "lazy"}
+            fetchPriority={priority ? "high" : undefined}
             onLoad={() => setIsLoaded(true)}
             onError={() => setIsError(true)}
             className={cn(
