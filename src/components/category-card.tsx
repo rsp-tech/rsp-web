@@ -1,8 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { getCategoryImageUrl } from "@/lib/storage";
-import { categoryPath, cn } from "@/lib/utils";
+import { categoryPath } from "@/lib/utils";
 import type { Category } from "@/types";
 
 interface CategoryCardProps {
@@ -16,8 +15,6 @@ export const CategoryCard = ({
   onKeyDown,
   priority,
 }: CategoryCardProps) => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [isError, setIsError] = useState(false);
   const imgUrl = getCategoryImageUrl(cat);
   const href = `/${categoryPath(cat.url_path)}`;
 
@@ -29,23 +26,23 @@ export const CategoryCard = ({
       className="group relative flex flex-col overflow-hidden rounded-2xl h-60 border border-border bg-card shadow-sm hover:shadow-md hover:-translate-y-1 focus:ring-2 focus:ring-primary focus:outline-hidden transition-all duration-300 active:scale-98 cursor-pointer"
     >
       {imgUrl ? (
-        <>
-          {!isLoaded && (
-            <Skeleton className="absolute inset-0 w-full h-full rounded-none" />
-          )}
-          <img
-            src={isError ? "/rsp.webp" : imgUrl}
+        <div className="absolute inset-0 w-full h-full bg-muted animate-pulse">
+          <Image
+            src={imgUrl}
             alt=""
-            loading={priority ? "eager" : "lazy"}
-            fetchPriority={priority ? "high" : undefined}
-            onLoad={() => setIsLoaded(true)}
-            onError={() => setIsError(true)}
-            className={cn(
-              "absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-500",
-              isLoaded ? "opacity-100" : "opacity-0",
-            )}
+            fill
+            priority={priority}
+            onLoad={(e) => {
+              e.currentTarget.parentElement?.classList.remove("animate-pulse");
+            }}
+            onError={(e) => {
+              // Structural native fallback allocation
+              e.currentTarget.src = "/rsp.webp";
+              e.currentTarget.parentElement?.classList.remove("animate-pulse");
+            }}
+            className="object-cover group-hover:scale-105 transition-all duration-300"
           />
-        </>
+        </div>
       ) : (
         <div className="absolute inset-0 bg-linear-to-tr from-primary/20 via-primary/5 to-transparent" />
       )}

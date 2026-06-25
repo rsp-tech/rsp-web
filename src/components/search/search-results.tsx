@@ -9,6 +9,7 @@ import {
   Music,
   User,
 } from "lucide-react";
+import Image from "next/image";
 import { useEffect, useRef } from "react";
 import {
   Accordion,
@@ -254,8 +255,8 @@ export function SearchResults({
                       } as React.CSSProperties
                     }
                   >
-                    <img
-                      src={getCategoryImageUrl(cat) ?? undefined}
+                    <Image
+                      src={getCategoryImageUrl(cat) ?? "/rsp.webp"}
                       alt=""
                       className="size-8 rounded-md object-cover"
                     />

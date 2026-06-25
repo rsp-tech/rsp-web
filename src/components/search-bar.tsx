@@ -95,6 +95,7 @@ export function SearchBar() {
             </div>
             {(term.trim() !== "" || showDropdown) && (
               <Button
+                id="search-filters-toggle"
                 type="button"
                 variant={showFilters ? "secondary" : "outline"}
                 size="sm"
@@ -118,11 +119,17 @@ export function SearchBar() {
         </PopoverAnchor>
 
         {/* Dropdown content */}
-        {(term.trim() !== "" || currentCategory || showFilters) && (
+        {showDropdown && (
           <PopoverContent
             className="w-[var(--radix-popover-trigger-width)] p-0 bg-card border border-border shadow-xl rounded-xl overflow-hidden z-50 flex flex-col max-h-115"
             align="start"
             onOpenAutoFocus={(e) => e.preventDefault()}
+            onInteractOutside={(e) => {
+              const target = e.target as HTMLElement;
+              if (target.closest("#search-filters-toggle")) {
+                e.preventDefault();
+              }
+            }}
           >
             {currentCategory && (
               <SearchScopeTabs

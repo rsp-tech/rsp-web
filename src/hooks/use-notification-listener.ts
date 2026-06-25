@@ -104,4 +104,4 @@ export const useNotificationListener = () => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userId, sessionLoading, queryClient, isOnline]);
-}
+};
