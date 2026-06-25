@@ -1,6 +1,7 @@
 "use client";
 
 import { Home, LogIn, LogOut, Menu, Paintbrush, User } from "lucide-react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { CurrentUserAvatar } from "@/components/current-user-avatar";
@@ -19,7 +20,6 @@ import { AuthModal } from "./auth-modal";
 import { NavLinks } from "./nav-links";
 import { useSession } from "./providers";
 import { ThemeSelector } from "./theme-selector";
-import Link from "next/link";
 
 export function MobileDrawer() {
   const router = useRouter();
@@ -52,7 +52,7 @@ export function MobileDrawer() {
             <Menu className="w-5 h-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-[280px] p-6 flex flex-col gap-6">
+        <SheetContent side="left" className="w-70 p-6 flex flex-col gap-6">
           <SheetHeader className="p-0 border-b border-border pb-4 text-left">
             <SheetTitle className="font-heading font-bold text-lg text-foreground flex items-center gap-2">
               <span className="text-primary font-serif">RSP</span> Discourses

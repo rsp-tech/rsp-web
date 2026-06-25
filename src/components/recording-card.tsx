@@ -72,7 +72,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
         {/* Materials Downloads List */}
         {rec.materials && rec.materials.length > 0 && (
           <div className="mt-2 pt-2 border-t border-border/60 flex flex-col gap-1.5">
-            <span className="text-[10px] font-bold tracking-wider uppercase text-muted-foreground">
+            <span className="text-xxs font-bold tracking-wider uppercase text-muted-foreground">
               Supporting Materials ({rec.materials.length})
             </span>
             <div className="flex flex-wrap gap-2">
@@ -97,7 +97,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
           <a
             href={getAssetUrl(rec.audio_id)}
             download
-            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground text-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-[0.98] border border-border cursor-pointer"
+            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground text-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-98 border border-border cursor-pointer"
             title="Download Audio"
           >
             <FileDown className="w-4 h-4" />
@@ -110,7 +110,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
             href={`https://youtube.com/watch?v=${rec.yt_id}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-[0.98] cursor-pointer"
+            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-98 cursor-pointer"
             title="Watch on YouTube"
           >
             <SiYoutube className="w-4 h-4" />

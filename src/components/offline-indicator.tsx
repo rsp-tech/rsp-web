@@ -15,7 +15,7 @@ export function OfflineIndicator() {
         <span className="text-xs font-bold leading-none tracking-tight">
           Offline Mode
         </span>
-        <span className="text-[10px] opacity-80 leading-none">
+        <span className="text-xxs opacity-80 leading-none">
           Running from local database
         </span>
       </div>

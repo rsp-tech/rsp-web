@@ -46,7 +46,7 @@ export function ProfileDashboardCard({
               <span
                 className={`font-bold pl-1.5 pr-2.5 py-1 rounded-full border text-xs flex gap-1 ${
                   roleId === 4 || roleId === 7
-                    ? "bg-[#FF9933]/15 text-[#FF9933] border-[#FF9933]/30 dark:bg-[#FF9933]/25"
+                    ? "bg-primary/15 text-primary border-primary/30"
                     : "bg-primary/10 text-primary border-primary/20"
                 }`}
               >

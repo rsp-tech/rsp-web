@@ -112,7 +112,7 @@ export function NotificationCenter() {
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     {notif.message}
                   </p>
-                  <span className="text-[10px] text-muted-foreground/60 mt-1 font-medium">
+                  <span className="text-xxs text-muted-foreground/60 mt-1 font-medium">
                     {new Date(notif.created_at).toLocaleString()}
                   </span>
                 </div>

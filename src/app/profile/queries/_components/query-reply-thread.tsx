@@ -25,7 +25,7 @@ export function QueryReplyThread({
           answer.
         </p>
       ) : (
-        <div className="flex flex-col gap-3 max-h-[300px] overflow-y-auto pr-1">
+        <div className="flex flex-col gap-3 max-h-75 overflow-y-auto pr-1">
           {replies.map((reply) => {
             const isAdminReply = reply.user_id !== currentUserId;
             const replierName =
@@ -34,14 +34,14 @@ export function QueryReplyThread({
             return (
               <div
                 key={reply.id}
-                className={`flex flex-col gap-1 p-3 rounded-lg max-w-[85%] border ${
+                className={`flex flex-col gap-1 p-3 rounded-lg max-w-4/5 border ${
                   isAdminReply
                     ? "bg-primary/5 border-primary/20 self-start"
                     : "bg-muted/40 border-border/60 self-end text-right"
                 }`}
               >
                 <div
-                  className={`flex items-center gap-2 text-[10px] text-muted-foreground font-semibold ${
+                  className={`flex items-center gap-2 text-xxs text-muted-foreground font-semibold ${
                     isAdminReply ? "justify-start" : "justify-end"
                   }`}
                 >

@@ -29,7 +29,7 @@ export function SearchInput({
         onChange={(e) => onChange(e.target.value)}
         onFocus={onFocus}
         placeholder={placeholder}
-        className="pl-9 pr-16 h-9 w-full bg-muted border-border/80 focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
+        className="pl-9 pr-16 h-9 w-full bg-muted border-border focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
         {...props}
       />
       <div className="absolute right-3 flex items-center gap-1.5">

@@ -215,7 +215,7 @@ export default function UserQueriesPage() {
         return (
           <Badge
             variant="outline"
-            className="bg-amber-500/10 text-amber-500 border-amber-500/25"
+            className="bg-warning/10 text-warning border-warning/20"
           >
             Active / Pending
           </Badge>
@@ -224,7 +224,7 @@ export default function UserQueriesPage() {
         return (
           <Badge
             variant="outline"
-            className="bg-emerald-500/10 text-emerald-500 border-emerald-500/25"
+            className="bg-success/10 text-success border-success/20"
           >
             Resolved
           </Badge>

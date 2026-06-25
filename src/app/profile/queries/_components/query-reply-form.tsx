@@ -34,7 +34,7 @@ export function QueryReplyForm({
           placeholder="Type your response here..."
           value={replyText}
           onChange={(e) => onReplyTextChange(e.target.value)}
-          className="min-h-[60px] text-xs resize-none"
+          className="min-h-15 text-xs resize-none"
         />
         <Button
           type="button"

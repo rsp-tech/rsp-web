@@ -33,7 +33,7 @@ export function Header() {
             <span className="font-bold text-sm font-heading leading-tight text-foreground">
               HG Radheshyamdas
             </span>
-            <span className="text-[10px] text-muted-foreground font-semibold leading-none">
+            <span className="text-xxs text-muted-foreground font-semibold leading-none">
               Spiritual Discourses
             </span>
           </div>

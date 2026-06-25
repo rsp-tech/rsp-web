@@ -60,8 +60,8 @@ export const NotFoundState = ({
               </div>
 
               <div className="flex flex-col items-center gap-1.5 pt-2">
-                <div className="h-[1px] w-24 bg-primary/20" />
-                <span className="text-xs font-semibold uppercase tracking-[0.2em] text-muted-foreground/60">
+                <div className="h-px w-24 bg-primary/20" />
+                <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
                   Bhagavad Gita 18.62
                 </span>
               </div>
@@ -117,8 +117,8 @@ export const NotFoundState = ({
         </div>
 
         {/* Subtle Background Glows */}
-        <div className="absolute -top-16 -left-16 h-48 w-48 rounded-full bg-primary/5 blur-[80px] pointer-events-none" />
-        <div className="absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-primary/5 blur-[80px] pointer-events-none" />
+        <div className="absolute -top-16 -left-16 h-48 w-48 rounded-full bg-primary/5 blur-4xl pointer-events-none" />
+        <div className="absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-primary/5 blur-4xl pointer-events-none" />
       </div>
     </div>
   );

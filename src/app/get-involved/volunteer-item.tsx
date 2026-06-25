@@ -54,7 +54,7 @@ export const VolunteerItem = ({
           <CardTitle className="text-lg font-bold flex items-center gap-2">
             {service.name}
             {service.type && (
-              <span className="text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded-md font-semibold">
+              <span className="text-xxs bg-muted text-muted-foreground px-2 py-0.5 rounded-md font-semibold">
                 {service.type}
               </span>
             )}
@@ -135,7 +135,7 @@ export const VolunteerItem = ({
                 handleUpdateDetail(service.id, "notes", e.target.value)
               }
               placeholder="Share any details about how you can support this service..."
-              className="bg-muted min-h-[80px]"
+              className="bg-muted min-h-20"
             />
           </div>
         </CardContent>

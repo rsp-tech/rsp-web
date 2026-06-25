@@ -37,7 +37,7 @@ export function ThemeSelector() {
   return (
     <div className="group/theme flex items-center gap-1 hover:gap-2 border border-border bg-card p-1.5 rounded-lg transition-all duration-300 ease-out shrink-0">
       <Paintbrush className="w-4 h-4 text-muted-foreground ml-1 shrink-0 hidden md:block" />
-      <div className="flex gap-1 overflow-hidden transition-all duration-300 ease-out origin-left max-w-[300px] opacity-100 scale-x-100 md:max-w-0 md:opacity-0 md:scale-x-90 md:group-hover/theme:max-w-[300px] md:group-hover/theme:opacity-100 md:group-hover/theme:scale-x-100">
+      <div className="flex gap-1 overflow-hidden transition-all duration-300 ease-out origin-left max-w-75 opacity-100 scale-x-100 md:max-w-0 md:opacity-0 md:scale-x-90 md:group-hover/theme:max-w-75 md:group-hover/theme:opacity-100 md:group-hover/theme:scale-x-100">
         {COLOR_THEMES.map((t) => (
           <button
             key={t}

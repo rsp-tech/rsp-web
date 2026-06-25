@@ -35,7 +35,7 @@ const navLinks: {
   {
     href: "http://cvms.radheshyamdas.com/",
     Icon: Heart,
-    iconColorClass: "text-rose-500",
+    iconColorClass: "text-destructive",
     title: "Donate",
   },
   {
@@ -51,7 +51,7 @@ const navLinks: {
   {
     href: "/get-involved",
     Icon: HeartHandshake,
-    iconColorClass: "text-rose-500",
+    iconColorClass: "text-destructive",
     title: "Get Involved",
   },
 ];

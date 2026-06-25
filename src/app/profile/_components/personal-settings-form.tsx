@@ -266,7 +266,7 @@ export function PersonalSettingsForm({
               checked={isVoiceLeader}
               onChange={(e) => setIsVoiceLeader(e.target.checked)}
               disabled={hasPendingRequest}
-              className="mt-0.5 h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary cursor-pointer disabled:opacity-50"
+              className="mt-0.5 h-4 w-4 rounded border-input text-primary focus:ring-primary cursor-pointer disabled:opacity-50"
             />
             <div className="flex flex-col gap-0.5">
               <Label
@@ -275,7 +275,7 @@ export function PersonalSettingsForm({
               >
                 I serve as a Community or VOICE Leader / Mentor
               </Label>
-              <p className="text-[10px] text-muted-foreground">
+              <p className="text-xxs text-muted-foreground">
                 Check this option if you are leading youth groups, VOICE
                 programs, or local community centers.
               </p>
@@ -294,7 +294,7 @@ export function PersonalSettingsForm({
               value={purpose}
               onChange={(e) => setPurpose(e.target.value)}
               placeholder="e.g. Personal growth, Preaching preparation, Mentorship responsibilities"
-              className="min-h-[70px] bg-muted/20"
+              className="min-h-18 bg-muted/20"
               disabled={hasPendingRequest}
             />
           </div>
@@ -307,7 +307,7 @@ export function PersonalSettingsForm({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
                 <Label
-                  className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider"
+                  className="text-xxs font-bold text-muted-foreground uppercase tracking-wider"
                   htmlFor="authority-name"
                 >
                   Mentor Name
@@ -324,7 +324,7 @@ export function PersonalSettingsForm({
 
               <div className="flex flex-col gap-1.5">
                 <Label
-                  className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider"
+                  className="text-xxs font-bold text-muted-foreground uppercase tracking-wider"
                   htmlFor="authority-email"
                 >
                   Mentor Email
@@ -342,7 +342,7 @@ export function PersonalSettingsForm({
 
             <div className="flex flex-col gap-1.5">
               <Label
-                className="text-[10px] font-bold text-muted-foreground uppercase tracking-wider"
+                className="text-xxs font-bold text-muted-foreground uppercase tracking-wider"
                 htmlFor="authority-relationship"
               >
                 Relationship with Mentor

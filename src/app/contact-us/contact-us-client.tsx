@@ -289,7 +289,7 @@ export function ContactUsClient() {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Write details of your query here..."
-                    className="bg-muted min-h-[120px]"
+                    className="bg-muted min-h-30"
                     required
                   />
                 </div>

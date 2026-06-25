@@ -148,7 +148,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
           )}
 
           {successMsg && (
-            <div className="p-3 text-xs bg-emerald-500/10 text-emerald-600 border border-emerald-500/20 rounded-lg">
+            <div className="p-3 text-xs bg-success/10 text-success border border-success/20 rounded-lg">
               {successMsg}
             </div>
           )}

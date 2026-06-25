@@ -24,7 +24,7 @@ export const Loading = ({ message }: { message?: string }) => {
               <div className="h-0.5 w-32 overflow-hidden rounded-full bg-primary/10">
                 <div className="h-full w-full bg-primary animate-progress" />
               </div>
-              <p className="text-xs font-medium uppercase tracking-[0.2em] text-muted-foreground/60">
+              <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground/60">
                 Bhagavad Gita 18.66
               </p>
             </div>
@@ -38,8 +38,8 @@ export const Loading = ({ message }: { message?: string }) => {
         </div>
 
         {/* Subtle Background Glow */}
-        <div className="absolute -top-24 -left-24 h-64 w-64 rounded-full bg-primary/5 blur-[100px]" />
-        <div className="absolute -bottom-24 -right-24 h-64 w-64 rounded-full bg-primary/5 blur-[100px]" />
+        <div className="absolute -top-24 -left-24 h-64 w-64 rounded-full bg-primary/5 blur-4xl" />
+        <div className="absolute -bottom-24 -right-24 h-64 w-64 rounded-full bg-primary/5 blur-4xl" />
       </div>
     </div>
   );

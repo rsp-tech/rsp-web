@@ -139,7 +139,7 @@ export function SearchResults({
             className="border-none"
             key="recordings"
           >
-            <AccordionTrigger className="hover:no-underline py-2 px-2 text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80 hover:text-foreground transition-colors">
+            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground/80 hover:text-foreground transition-colors">
               Recordings ({recordings.length})
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -175,13 +175,13 @@ export function SearchResults({
                         </span>
                       </div>
                       {rec.category && (
-                        <span className="text-[10px] bg-primary/10 text-primary px-1.5 py-0.5 rounded-md font-medium shrink-0 max-w-[100px] truncate">
+                        <span className="text-xxs bg-primary/10 text-primary px-1.5 py-0.5 rounded-md font-medium shrink-0 max-w-25 truncate">
                           {rec.category.name}
                         </span>
                       )}
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[11px] text-muted-foreground pl-6 font-medium">
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xxs text-muted-foreground pl-6 font-medium">
                       {rec.speakers.length > 0 && (
                         <span className="flex items-center gap-1">
                           <User className="w-3 h-3 text-muted-foreground/70" />
@@ -227,7 +227,7 @@ export function SearchResults({
             className="border-none"
             key="categories"
           >
-            <AccordionTrigger className="hover:no-underline py-2 px-2 text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80 hover:text-foreground transition-colors">
+            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground/80 hover:text-foreground transition-colors">
               Categories ({categories.length})
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -274,7 +274,7 @@ export function SearchResults({
             className="border-none"
             key="materials"
           >
-            <AccordionTrigger className="hover:no-underline py-2 px-2 text-[10px] font-bold tracking-wider uppercase text-muted-foreground/80 hover:text-foreground transition-colors">
+            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground/80 hover:text-foreground transition-colors">
               Materials ({materials.length})
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -306,13 +306,13 @@ export function SearchResults({
                     }
                   >
                     <div className="flex items-center gap-2">
-                      <FileText className="w-4 h-4 text-amber-500 shrink-0" />
+                      <FileText className="w-4 h-4 text-warning shrink-0" />
                       <span className="font-semibold text-foreground truncate">
                         {mat.name}
                       </span>
                     </div>
                     {(mat.category || mat.recording) && (
-                      <div className="text-[10px] text-muted-foreground pl-6 flex items-center gap-1 font-medium truncate">
+                      <div className="text-xxs text-muted-foreground pl-6 flex items-center gap-1 font-medium truncate">
                         {mat.category && <span>{mat.category.name}</span>}
                         {mat.category && mat.recording && (
                           <ChevronRight className="w-2.5 h-2.5 shrink-0" />

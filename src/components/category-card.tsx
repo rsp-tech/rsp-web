@@ -26,7 +26,7 @@ export const CategoryCard = ({
       href={href}
       onKeyDown={onKeyDown}
       data-category-item
-      className="group relative flex flex-col overflow-hidden rounded-2xl h-60 border border-border bg-card shadow-sm hover:shadow-md hover:-translate-y-1 focus:ring-2 focus:ring-primary focus:outline-hidden transition-all duration-300 active:scale-[0.99] cursor-pointer"
+      className="group relative flex flex-col overflow-hidden rounded-2xl h-60 border border-border bg-card shadow-sm hover:shadow-md hover:-translate-y-1 focus:ring-2 focus:ring-primary focus:outline-hidden transition-all duration-300 active:scale-98 cursor-pointer"
     >
       {imgUrl ? (
         <>

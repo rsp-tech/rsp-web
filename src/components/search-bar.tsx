@@ -120,7 +120,7 @@ export function SearchBar() {
         {/* Dropdown content */}
         {(term.trim() !== "" || currentCategory || showFilters) && (
           <PopoverContent
-            className="w-[var(--radix-popover-trigger-width)] p-0 bg-card border border-border shadow-xl rounded-xl overflow-hidden z-50 flex flex-col max-h-[460px]"
+            className="w-[var(--radix-popover-trigger-width)] p-0 bg-card border border-border shadow-xl rounded-xl overflow-hidden z-50 flex flex-col max-h-115"
             align="start"
             onOpenAutoFocus={(e) => e.preventDefault()}
           >
@@ -142,7 +142,7 @@ export function SearchBar() {
                     <button
                       type="button"
                       onClick={handleResetFilters}
-                      className="text-[10px] text-primary hover:bg-accent rounded-md font-bold cursor-pointer p-2"
+                      className="text-xxs text-primary hover:bg-accent rounded-md font-bold cursor-pointer p-2"
                     >
                       Reset Filters
                     </button>
@@ -152,7 +152,7 @@ export function SearchBar() {
                 <div className="grid grid-cols-2 gap-x-3 gap-y-2">
                   {/* Speaker select */}
                   <div className="flex flex-col gap-1">
-                    <Label className="text-[10px] font-bold text-muted-foreground uppercase">
+                    <Label className="text-xxs font-bold text-muted-foreground uppercase">
                       Speaker
                     </Label>
                     <SearchableSelect
@@ -174,7 +174,7 @@ export function SearchBar() {
 
                   {/* Language select */}
                   <div className="flex flex-col gap-1">
-                    <Label className="text-[10px] font-bold text-muted-foreground uppercase">
+                    <Label className="text-xxs font-bold text-muted-foreground uppercase">
                       Language
                     </Label>
                     <SearchableSelect
@@ -194,7 +194,7 @@ export function SearchBar() {
 
                   {/* Venue select */}
                   <div className="flex flex-col gap-1">
-                    <Label className="text-[10px] font-bold text-muted-foreground uppercase">
+                    <Label className="text-xxs font-bold text-muted-foreground uppercase">
                       Venue
                     </Label>
                     <SearchableSelect
@@ -212,7 +212,7 @@ export function SearchBar() {
 
                   {/* Date range inputs */}
                   <div className="flex flex-col gap-1">
-                    <Label className="text-[10px] font-bold text-muted-foreground uppercase">
+                    <Label className="text-xxs font-bold text-muted-foreground uppercase">
                       Recorded Date Range
                     </Label>
                     <DateRangePicker
