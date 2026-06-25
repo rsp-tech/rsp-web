@@ -24,13 +24,16 @@ export const Loading = ({ message }: { message?: string }) => {
               <div className="h-0.5 w-32 overflow-hidden rounded-full bg-primary/10">
                 <div className="h-full w-full bg-primary animate-progress" />
               </div>
-              <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground/60">
+              <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground opacity-60">
                 Bhagavad Gita 18.66
               </p>
             </div>
             {message && (
-              <p className="text-xs opacity-75 -mb-2 italic text-primary flex items-center gap-2 justify-center animate-shimmer">
-                <LoaderPinwheel className="size-3.5 animate-spin [animation-duration:600ms]" />{" "}
+              <p className="text-xs opacity-80 -mb-2 italic text-primary flex items-center gap-2 justify-center animate-shimmer">
+                <LoaderPinwheel
+                  className="size-3.5 animate-spin"
+                  style={{ animationDuration: "600ms" }}
+                />
                 {message}
               </p>
             )}

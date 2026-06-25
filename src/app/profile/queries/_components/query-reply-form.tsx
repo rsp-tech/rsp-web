@@ -21,7 +21,7 @@ export function QueryReplyForm({
   sending,
 }: QueryReplyFormProps) {
   return (
-    <div className="border-t border-border/50 pt-4 flex flex-col gap-2">
+    <div className="border-t border-border/40 pt-4 flex flex-col gap-2">
       <Label
         htmlFor={`reply-text-${queryId}`}
         className="text-xs font-bold text-muted-foreground uppercase tracking-wider px-1"
@@ -34,7 +34,8 @@ export function QueryReplyForm({
           placeholder="Type your response here..."
           value={replyText}
           onChange={(e) => onReplyTextChange(e.target.value)}
-          className="min-h-15 text-xs resize-none"
+          className="text-xs resize-none"
+          style={{ minHeight: "3.75rem" }}
         />
         <Button
           type="button"

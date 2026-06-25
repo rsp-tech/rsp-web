@@ -21,7 +21,7 @@ export function ProfileDashboardCard({
   onQueriesClick,
 }: ProfileDashboardCardProps) {
   return (
-    <Card className="border-border/60 overflow-hidden p-0">
+    <Card className="border-border overflow-hidden p-0">
       <div className="h-24 bg-linear-to-r from-primary/15 via-primary/5 to-transparent border-b border-border/40" />
       <div className="px-6 pb-6 relative flex flex-col items-center text-center -mt-10">
         <div className="w-20 h-20 rounded-full bg-card border-2 border-primary flex items-center justify-center text-primary font-bold text-2xl shadow-sm mb-3">
@@ -38,7 +38,7 @@ export function ProfileDashboardCard({
           {user.email}
         </p>
 
-        <div className="w-full border-t border-border/60 my-5" />
+        <div className="w-full border-t border-border my-5" />
 
         <div className="w-full flex flex-col gap-3.5 text-left">
           <div className="flex items-center gap-2 text-xs">
@@ -50,7 +50,7 @@ export function ProfileDashboardCard({
                     : "bg-primary/10 text-primary border-primary/20"
                 }`}
               >
-                <Shield className="size-4 text-muted-foreground/80" />
+                <Shield className="size-4 text-muted-foreground opacity-80" />
                 {getRoleLabel(roleId)}
               </span>
             )}
@@ -63,7 +63,7 @@ export function ProfileDashboardCard({
 
           <div className="flex items-center justify-between text-xs">
             <span className="text-muted-foreground font-medium flex items-center gap-1.5">
-              <Heart className="w-3.5 h-3.5 text-muted-foreground/80" />
+              <Heart className="w-3.5 h-3.5 text-muted-foreground opacity-80" />
               Service Interests
             </span>
             <button
@@ -77,7 +77,7 @@ export function ProfileDashboardCard({
 
           <div className="flex items-center justify-between text-xs">
             <span className="text-muted-foreground font-medium flex items-center gap-1.5">
-              <MessageSquare className="w-3.5 h-3.5 text-muted-foreground/80" />
+              <MessageSquare className="w-3.5 h-3.5 text-muted-foreground opacity-80" />
               Support Tickets
             </span>
             <button

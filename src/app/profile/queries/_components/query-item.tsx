@@ -66,7 +66,7 @@ export function QueryItem({
       <AccordionContent className="pb-4 pt-1 px-1 border-t border-border/40 mt-1">
         <div className="flex flex-col gap-5 mt-2">
           {/* Original Query Message */}
-          <div className="bg-card border border-border/60 rounded-lg p-4 flex flex-col gap-2">
+          <div className="bg-card border border-border rounded-lg p-4 flex flex-col gap-2">
             <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span className="font-bold">Original Message</span>
               <span>
@@ -77,7 +77,7 @@ export function QueryItem({
                   : ""}
               </span>
             </div>
-            <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed bg-muted/20 p-3 rounded-lg border border-border/30">
+            <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed bg-muted/20 p-3 rounded-lg border border-border/40">
               {q.message}
             </p>
           </div>
@@ -95,7 +95,7 @@ export function QueryItem({
                     <p className="font-semibold text-xs text-destructive">
                       Failed to send reply
                     </p>
-                    <p className="text-xxs opacity-90 text-destructive">
+                    <p className="text-xxs opacity-80 text-destructive">
                       {submitError}
                     </p>
                   </div>

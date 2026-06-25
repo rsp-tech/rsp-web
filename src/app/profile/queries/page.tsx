@@ -282,7 +282,7 @@ export default function UserQueriesPage() {
       </div>
 
       {/* Main Dashboard Panel */}
-      <Card className="border-border/60">
+      <Card className="border-border">
         <CardHeader className="pb-3 border-b border-border/40 bg-muted/10">
           <CardTitle className="text-lg font-bold">Ticket Filters</CardTitle>
           <CardDescription>

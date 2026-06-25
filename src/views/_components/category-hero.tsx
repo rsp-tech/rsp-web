@@ -3,7 +3,10 @@ import { BookOpen, Compass } from "lucide-react";
 export const CategoryHero = () => {
   return (
     <section className="relative rounded-3xl bg-linear-to-r from-primary/10 via-primary/5 to-transparent border border-primary/10 p-8 sm:p-12 overflow-hidden flex flex-col gap-4">
-      <div className="absolute right-0 bottom-0 top-0 w-1/3 opacity-10 pointer-events-none hidden md:block">
+      <div
+        className="absolute right-0 bottom-0 top-0 w-1/3 pointer-events-none hidden md:block"
+        style={{ opacity: 0.1 }}
+      >
         <Compass className="w-full h-full text-primary" />
       </div>
       <div className="flex items-center gap-2 text-primary font-bold text-xs tracking-wider uppercase">

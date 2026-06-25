@@ -114,7 +114,7 @@ export function ContactUsClient() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
         {/* Contact Info Sidebar */}
         <div className="flex flex-col gap-6 lg:col-span-1">
-          <Card className="border-border/60">
+          <Card className="border-border">
             <CardHeader>
               <CardTitle className="text-lg font-bold flex items-center gap-2">
                 <MessageSquare className="w-5 h-5 text-primary" />
@@ -155,7 +155,7 @@ export function ContactUsClient() {
 
         {/* Contact Form */}
         <div className="lg:col-span-2">
-          <Card className="border-border/60">
+          <Card className="border-border">
             <CardHeader>
               <CardTitle className="text-xl font-bold">
                 Send a Message
@@ -189,7 +189,7 @@ export function ContactUsClient() {
                   <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
                   <div className="flex flex-col gap-1">
                     <p className="font-semibold">Failed to Send Message</p>
-                    <p className="text-xs opacity-90">{submitError}</p>
+                    <p className="text-xs opacity-80">{submitError}</p>
                   </div>
                 </div>
               )}
@@ -210,7 +210,7 @@ export function ContactUsClient() {
                       onChange={(e) => setName(e.target.value)}
                       disabled={!!session}
                       placeholder="Enter your full name"
-                      className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground disabled:opacity-75"
+                      className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground disabled:opacity-80"
                       required
                     />
                   </div>
@@ -229,7 +229,7 @@ export function ContactUsClient() {
                       onChange={(e) => setEmail(e.target.value)}
                       disabled={!!session}
                       placeholder="Enter your email address"
-                      className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground disabled:opacity-75"
+                      className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground disabled:opacity-80"
                       required
                     />
                   </div>
@@ -289,7 +289,8 @@ export function ContactUsClient() {
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Write details of your query here..."
-                    className="bg-muted min-h-30"
+                    className="bg-muted"
+                    style={{ minHeight: "7.5rem" }}
                     required
                   />
                 </div>

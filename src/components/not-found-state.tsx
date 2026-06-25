@@ -27,7 +27,7 @@ export const NotFoundState = ({
             {/* Pulsing Compass Icon */}
             <div className="relative flex items-center justify-center w-16 h-16 -mt-4 rounded-full bg-primary/10 text-primary">
               <Compass className="w-8 h-8 animate-pulse" />
-              <div className="absolute inset-0 rounded-full border border-primary/30 animate-ping opacity-75" />
+              <div className="absolute inset-0 rounded-full border border-primary/30 animate-ping opacity-80" />
             </div>
 
             {/* Sacred Verse Panel */}
@@ -61,7 +61,7 @@ export const NotFoundState = ({
 
               <div className="flex flex-col items-center gap-1.5 pt-2">
                 <div className="h-px w-24 bg-primary/20" />
-                <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground/60">
+                <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground opacity-60">
                   Bhagavad Gita 18.62
                 </span>
               </div>

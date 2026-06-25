@@ -121,7 +121,11 @@ export function SearchBar() {
         {/* Dropdown content */}
         {showDropdown && (
           <PopoverContent
-            className="w-[var(--radix-popover-trigger-width)] p-0 bg-card border border-border shadow-xl rounded-xl overflow-hidden z-50 flex flex-col max-h-115"
+            className="p-0 bg-card border border-border shadow-xl rounded-xl overflow-hidden z-50 flex flex-col"
+            style={{
+              width: "var(--radix-popover-trigger-width)",
+              maxHeight: "28.75rem",
+            }}
             align="start"
             onOpenAutoFocus={(e) => e.preventDefault()}
             onInteractOutside={(e) => {
@@ -140,7 +144,7 @@ export function SearchBar() {
             )}
             {/* Collapsible Filters Panel */}
             {showFilters && (
-              <div className="bg-muted/40 p-3 -mt-3 border-b border-border/85 flex flex-col gap-2.5 text-xs">
+              <div className="bg-muted/40 p-3 -mt-3 border-b border-border flex flex-col gap-2.5 text-xs">
                 <div className="flex items-center justify-between pb-1 border-b border-border/40">
                   <span className="font-bold text-foreground">
                     Advanced Search Filters

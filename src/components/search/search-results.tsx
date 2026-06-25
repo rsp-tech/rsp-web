@@ -77,7 +77,7 @@ export function SearchResults({
         containerRef.current.querySelectorAll<HTMLElement>(
           "[data-search-item]",
         ),
-      ).filter((item) => item.offsetParent !== null); // offsetParent is null if element or ancestor is display: none
+      ).filter((item) => !item.closest('[data-state="closed"]'));
 
       if (items.length === 0) return;
 
@@ -140,7 +140,7 @@ export function SearchResults({
             className="border-none"
             key="recordings"
           >
-            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground/80 hover:text-foreground transition-colors">
+            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:text-foreground transition-colors">
               Recordings ({recordings.length})
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -161,7 +161,7 @@ export function SearchResults({
                       });
                       onSelectRecording(rec);
                     }}
-                    className="w-full text-left flex flex-col gap-1.5 px-3 py-2.5 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-colors border border-transparent hover:border-border/50 cursor-pointer animate-stagger-fade-in-up"
+                    className="w-full text-left flex flex-col gap-1.5 px-3 py-2.5 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-colors border border-transparent hover:border-border/40 cursor-pointer animate-stagger-fade-in-up"
                     style={
                       {
                         "--stagger-delay": `${idx * 25}ms`,
@@ -176,7 +176,7 @@ export function SearchResults({
                         </span>
                       </div>
                       {rec.category && (
-                        <span className="text-xxs bg-primary/10 text-primary px-1.5 py-0.5 rounded-md font-medium shrink-0 max-w-25 truncate">
+                        <span className="text-xxs bg-primary/10 text-primary px-1.5 py-0.5 rounded-md font-medium shrink-0 max-w-24 truncate">
                           {rec.category.name}
                         </span>
                       )}
@@ -185,25 +185,25 @@ export function SearchResults({
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xxs text-muted-foreground pl-6 font-medium">
                       {rec.speakers.length > 0 && (
                         <span className="flex items-center gap-1">
-                          <User className="w-3 h-3 text-muted-foreground/70" />
+                          <User className="w-3 h-3 text-muted-foreground opacity-80" />
                           {rec.speakers.map((s) => s.name).join(", ")}
                         </span>
                       )}
                       {rec.venue && (
                         <span className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-muted-foreground/70" />
+                          <MapPin className="w-3 h-3 text-muted-foreground opacity-80" />
                           {rec.venue.name}
                         </span>
                       )}
                       {rec.recorded_at && (
                         <span className="flex items-center gap-1">
-                          <Calendar className="size-3 text-muted-foreground/70" />
+                          <Calendar className="size-3 text-muted-foreground opacity-80" />
                           {new Date(rec.recorded_at).toLocaleDateString()}
                         </span>
                       )}
                       {rec.languages.length > 0 && (
                         <span className="flex items-center gap-1">
-                          <Globe className="w-3 h-3 text-muted-foreground/70" />
+                          <Globe className="w-3 h-3 text-muted-foreground opacity-80" />
                           {rec.languages
                             .map((l) =>
                               l.name === l.native_name
@@ -228,7 +228,7 @@ export function SearchResults({
             className="border-none"
             key="categories"
           >
-            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground/80 hover:text-foreground transition-colors">
+            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:text-foreground transition-colors">
               Categories ({categories.length})
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -258,6 +258,8 @@ export function SearchResults({
                     <Image
                       src={getCategoryImageUrl(cat) ?? "/rsp.webp"}
                       alt=""
+                      width={32}
+                      height={32}
                       className="size-8 rounded-md object-cover"
                     />
                     <span className="truncate font-medium">{cat.name}</span>
@@ -275,7 +277,7 @@ export function SearchResults({
             className="border-none"
             key="materials"
           >
-            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground/80 hover:text-foreground transition-colors">
+            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:text-foreground transition-colors">
               Materials ({materials.length})
             </AccordionTrigger>
             <AccordionContent className="pb-2">

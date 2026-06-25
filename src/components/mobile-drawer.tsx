@@ -52,7 +52,11 @@ export function MobileDrawer() {
             <Menu className="w-5 h-5" />
           </Button>
         </SheetTrigger>
-        <SheetContent side="left" className="w-70 p-6 flex flex-col gap-6">
+        <SheetContent
+          side="left"
+          className="p-6 flex flex-col gap-6"
+          style={{ width: "17.5rem" }}
+        >
           <SheetHeader className="p-0 border-b border-border pb-4 text-left">
             <SheetTitle className="font-heading font-bold text-lg text-foreground flex items-center gap-2">
               <span className="text-primary font-serif">RSP</span> Discourses
@@ -61,7 +65,7 @@ export function MobileDrawer() {
 
           {/* User Settings Section */}
           <div className="flex flex-col gap-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground/70">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground opacity-80">
               Account
             </h3>
             {isLoading ? (
@@ -130,7 +134,7 @@ export function MobileDrawer() {
 
           {/* Theme Settings Section */}
           <div className="flex flex-col gap-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground/70 flex items-center gap-1.5">
+            <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground opacity-80 flex items-center gap-1.5">
               <Paintbrush className="w-3.5 h-3.5" />
               Theme Settings
             </h3>

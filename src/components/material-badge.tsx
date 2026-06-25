@@ -63,7 +63,9 @@ export function MaterialBadge({ mat, isHighlighted }: MaterialBadgeProps) {
       }`}
     >
       {getMaterialIcon()}
-      <span className="truncate max-w-37">{name}</span>
+      <span className="truncate" style={{ maxWidth: "9.25rem" }}>
+        {name}
+      </span>
       {isLink ? (
         <ExternalLink className="w-3 h-3 text-muted-foreground shrink-0" />
       ) : (

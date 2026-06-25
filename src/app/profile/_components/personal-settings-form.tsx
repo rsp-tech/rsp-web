@@ -157,7 +157,7 @@ export function PersonalSettingsForm({
   };
 
   return (
-    <Card className="border-border/60">
+    <Card className="border-border">
       <CardHeader>
         <CardTitle className="text-xl font-bold flex items-center gap-2">
           <Sparkles className="w-5 h-5 text-primary" />
@@ -197,7 +197,7 @@ export function PersonalSettingsForm({
                 Phone Number
               </Label>
               <div className="relative">
-                <Phone className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground/60" />
+                <Phone className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground opacity-60" />
                 <Input
                   type="tel"
                   id="phone"
@@ -266,7 +266,7 @@ export function PersonalSettingsForm({
               checked={isVoiceLeader}
               onChange={(e) => setIsVoiceLeader(e.target.checked)}
               disabled={hasPendingRequest}
-              className="mt-0.5 h-4 w-4 rounded border-input text-primary focus:ring-primary cursor-pointer disabled:opacity-50"
+              className="mt-0.5 h-4 w-4 rounded border-input text-primary focus:ring-primary cursor-pointer disabled:opacity-60"
             />
             <div className="flex flex-col gap-0.5">
               <Label
@@ -294,12 +294,13 @@ export function PersonalSettingsForm({
               value={purpose}
               onChange={(e) => setPurpose(e.target.value)}
               placeholder="e.g. Personal growth, Preaching preparation, Mentorship responsibilities"
-              className="min-h-18 bg-muted/20"
+              className="bg-muted/20"
+              style={{ minHeight: "4.5rem" }}
               disabled={hasPendingRequest}
             />
           </div>
 
-          <div className="border-t border-border/50 pt-4 mt-2 flex flex-col gap-3">
+          <div className="border-t border-border/40 pt-4 mt-2 flex flex-col gap-3">
             <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
               <Shield className="w-3.5 h-3.5 text-primary" />
               Spiritual Mentor / Guide Details

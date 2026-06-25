@@ -12,7 +12,7 @@ export const CategoryBreadcrumbs = ({
   breadcrumbs: Breadcrumb[];
 }) => {
   return (
-    <nav className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground/80 overflow-x-auto whitespace-nowrap py-1">
+    <nav className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground opacity-80 overflow-x-auto whitespace-nowrap py-1">
       <Link
         href="/"
         className="hover:text-foreground transition-colors flex items-center gap-1"
@@ -22,7 +22,7 @@ export const CategoryBreadcrumbs = ({
       </Link>
       {breadcrumbs.map((crumb, idx) => (
         <div key={crumb.href} className="flex items-center gap-1.5">
-          <ChevronRight className="w-3 h-3 text-muted-foreground/50 shrink-0" />
+          <ChevronRight className="w-3 h-3 text-muted-foreground opacity-60 shrink-0" />
           <Link
             href={crumb.href}
             className={`hover:text-foreground transition-colors ${

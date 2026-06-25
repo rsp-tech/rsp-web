@@ -2,6 +2,7 @@ import { spawnSync } from "node:child_process";
 import crypto from "node:crypto";
 import withSerwistInit from "@serwist/next";
 import type { NextConfig } from "next";
+import tailwindMangle from "unplugin-tailwindcss-mangle";
 
 const revision =
   spawnSync("git", ["rev-parse", "HEAD"], {
@@ -22,6 +23,7 @@ const withSerwist = withSerwistInit({
 const nextConfig: NextConfig = {
   /* config options here */
   reactCompiler: true,
+  reactStrictMode: true,
   images: {
     unoptimized: true,
   },
@@ -75,6 +77,13 @@ const nextConfig: NextConfig = {
         ],
       },
     ];
+  },
+  webpack: (config, { dev }) => {
+    // Only obfuscate classes during the production build pipeline
+    if (!dev) {
+      config.plugins.push(tailwindMangle.webpack({}));
+    }
+    return config;
   },
 };
 

@@ -49,7 +49,7 @@ export function QueryFilters({
             Search Tickets
           </Label>
           <div className="relative">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground/60" />
+            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground opacity-60" />
             <Input
               type="text"
               id="search-queries"
@@ -86,7 +86,7 @@ export function QueryFilters({
         </div>
       </div>
 
-      <div className="w-full border-t border-border/60 my-2" />
+      <div className="w-full border-t border-border my-2" />
 
       {/* Tabs for Ticket State (All, Active, Closed) */}
       <div className="flex items-center justify-between gap-4 mb-2">

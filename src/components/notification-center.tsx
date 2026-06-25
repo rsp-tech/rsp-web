@@ -36,7 +36,7 @@ export function NotificationCenter() {
             <>
               <BellRing className="w-5 h-5 text-primary animate-bounce" />
               <span className="absolute top-1 right-1 flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75" />
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-80" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
               </span>
             </>
@@ -68,7 +68,7 @@ export function NotificationCenter() {
           ) : notifications.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-muted-foreground gap-3">
               <div className="p-3 bg-muted rounded-full">
-                <Inbox className="w-6 h-6 text-muted-foreground/85" />
+                <Inbox className="w-6 h-6 text-muted-foreground opacity-80" />
               </div>
               <p className="text-sm font-medium">All caught up!</p>
               <p className="text-xs text-center px-4">
@@ -82,7 +82,7 @@ export function NotificationCenter() {
                 key={notif.id}
                 className={`p-3.5 border rounded-xl flex gap-3 transition-all ${
                   notif.read
-                    ? "bg-background border-border opacity-70"
+                    ? "bg-background border-border opacity-80"
                     : "bg-primary/5 border-primary/20 hover:bg-primary/10 shadow-xs"
                 }`}
               >
@@ -112,7 +112,7 @@ export function NotificationCenter() {
                   <p className="text-xs text-muted-foreground leading-relaxed">
                     {notif.message}
                   </p>
-                  <span className="text-xxs text-muted-foreground/60 mt-1 font-medium">
+                  <span className="text-xxs text-muted-foreground opacity-60 mt-1 font-medium">
                     {new Date(notif.created_at).toLocaleString()}
                   </span>
                 </div>

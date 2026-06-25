@@ -20,7 +20,7 @@ export function QueryReplyThread({
       </h5>
 
       {replies.length === 0 ? (
-        <p className="text-xs text-muted-foreground/80 italic px-2">
+        <p className="text-xs text-muted-foreground opacity-80 italic px-2">
           No response replies yet. We will notify you when administrators
           answer.
         </p>
@@ -37,7 +37,7 @@ export function QueryReplyThread({
                 className={`flex flex-col gap-1 p-3 rounded-lg max-w-4/5 border ${
                   isAdminReply
                     ? "bg-primary/5 border-primary/20 self-start"
-                    : "bg-muted/40 border-border/60 self-end text-right"
+                    : "bg-muted/40 border-border self-end text-right"
                 }`}
               >
                 <div

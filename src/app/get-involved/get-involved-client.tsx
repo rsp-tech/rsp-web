@@ -232,7 +232,7 @@ export function GetInvolvedClient() {
       </div>
 
       {services.length > 0 && (
-        <div className="flex justify-end pt-4 border-t border-border/80">
+        <div className="flex justify-end pt-4 border-t border-border">
           <Button
             type="button"
             size="lg"

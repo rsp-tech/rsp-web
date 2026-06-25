@@ -5,6 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "next dev --webpack",
+    "prepare": "tw-patch",
     "build": "next build --webpack",
     "start": "next start",
     "lint": "biome check",
@@ -49,8 +50,10 @@
     "serwist": "^9.5.11",
     "supabase": "^2.108.0",
     "tailwindcss": "^4.3.1",
+    "tailwindcss-patch": "^9.5.1",
     "ts-morph": "^28.0.0",
     "typescript": "^6.0.3",
+    "unplugin-tailwindcss-mangle": "^5.1.4",
     "vitest": "^4.1.9"
   },
   "browserslist": [

@@ -147,7 +147,7 @@ export default function ProfilePage() {
               <Clock className="w-5 h-5 mt-0.5 shrink-0 text-warning" />
               <div className="flex flex-col gap-1">
                 <p className="font-semibold">Update Request Pending Approval</p>
-                <p className="text-xs opacity-90">
+                <p className="text-xs opacity-80">
                   You submitted a settings request on{" "}
                   <span className="font-medium">
                     {pendingRequest.requested_at
@@ -170,7 +170,7 @@ export default function ProfilePage() {
               <AlertCircle className="w-5 h-5 mt-0.5 shrink-0 text-destructive" />
               <div className="flex flex-col gap-1">
                 <p className="font-semibold">Update Request Failed</p>
-                <p className="text-xs opacity-90">{submitError}</p>
+                <p className="text-xs opacity-80">{submitError}</p>
               </div>
             </div>
           )}

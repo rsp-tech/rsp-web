@@ -46,7 +46,7 @@ export const VolunteerItem = ({
       className={`transition-all duration-200 border-2 ${
         isChecked
           ? "border-primary bg-primary/5 shadow-xs"
-          : "border-border/60 hover:border-border"
+          : "border-border hover:border-border"
       }`}
     >
       <CardHeader className="flex flex-row items-start justify-between gap-4 pb-2">
@@ -87,7 +87,7 @@ export const VolunteerItem = ({
       </CardHeader>
 
       {isChecked && detail && (
-        <CardContent className="pt-2 flex flex-col gap-4 border-t border-border/40 mt-2 bg-background/50 py-4 rounded-b-xl animate-expand-down">
+        <CardContent className="pt-2 flex flex-col gap-4 border-t border-border/40 mt-2 bg-background/50 py-4 rounded-b-xl animate-fade-in-up">
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor={selectId}
