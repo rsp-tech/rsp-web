@@ -1,15 +1,6 @@
 "use client";
 
-import {
-  BookOpen,
-  Calendar,
-  GraduationCap,
-  Heart,
-  HeartHandshake,
-  Info,
-  Mail,
-} from "lucide-react";
-import Link from "next/link";
+import { NavLinks } from "./nav-links";
 
 export function Footer() {
   return (
@@ -23,65 +14,8 @@ export function Footer() {
             © {new Date().getFullYear()} Radheshyamdas.com. All rights reserved.
           </p>
         </div>
-
         <div className="flex flex-wrap justify-center gap-x-6 gap-y-3 text-sm font-semibold text-muted-foreground">
-          <a
-            href="https://voicepublication.in/search?attribute_Author=Radheshyam+Das"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-primary transition-colors flex items-center gap-1.5"
-          >
-            <BookOpen className="w-4 h-4" />
-            <span>Books</span>
-          </a>
-          <Link
-            href="/about"
-            className="hover:text-primary transition-colors flex items-center gap-1.5"
-          >
-            <Info className="w-4 h-4" />
-            <span>About</span>
-          </Link>
-          <Link
-            href="/contact-us"
-            className="hover:text-primary transition-colors flex items-center gap-1.5"
-          >
-            <Mail className="w-4 h-4" />
-            <span>Contact us</span>
-          </Link>
-          <a
-            href="http://cvms.radheshyamdas.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-primary transition-colors flex items-center gap-1.5"
-          >
-            <Heart className="w-4 h-4 text-rose-500" />
-            <span>Donate</span>
-          </a>
-          <a
-            href="https://courses.radheshyamdas.com/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-primary transition-colors flex items-center gap-1.5"
-          >
-            <GraduationCap className="w-4 h-4" />
-            <span>Online certified course</span>
-          </a>
-          <a
-            href="https://drive.google.com/drive/u/7/folders/16O9qZXeWSruSU3YyYhnpZkCsmIHtIf6s"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-primary transition-colors flex items-center gap-1.5"
-          >
-            <Calendar className="w-4 h-4" />
-            <span>Calendar</span>
-          </a>
-          <Link
-            href="/get-involved"
-            className="hover:text-primary transition-colors flex items-center gap-1.5"
-          >
-            <HeartHandshake className="w-4 h-4 text-rose-500" />
-            <span>Get Involved</span>
-          </Link>
+          <NavLinks />
         </div>
       </div>
     </footer>

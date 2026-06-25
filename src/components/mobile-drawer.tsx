@@ -16,8 +16,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { getUserDisplayName } from "@/lib/utils";
 import { AuthModal } from "./auth-modal";
+import { NavLinks } from "./nav-links";
 import { useSession } from "./providers";
 import { ThemeSelector } from "./theme-selector";
+import Link from "next/link";
 
 export function MobileDrawer() {
   const router = useRouter();
@@ -138,16 +140,15 @@ export function MobileDrawer() {
           </div>
 
           {/* Navigation Links */}
-          <div className="mt-auto flex flex-col gap-1.5">
-            <Button
-              variant="outline"
-              size="sm"
-              className="justify-start gap-2 h-9 text-foreground hover:bg-accent transition-colors"
-              onClick={() => handleNavigate("/")}
+          <div className="mt-auto flex flex-col gap-5">
+            <Link
+              href="/"
+              className="hover:text-primary transition-colors flex items-center gap-1.5"
             >
-              <Home className="w-4 h-4" />
-              Go to Home
-            </Button>
+              <Home className="size-4" />
+              <span>Go to Home</span>
+            </Link>
+            <NavLinks />
           </div>
         </SheetContent>
       </Sheet>

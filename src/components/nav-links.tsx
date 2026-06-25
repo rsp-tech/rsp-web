@@ -1,0 +1,73 @@
+import {
+  BookOpen,
+  Calendar,
+  GraduationCap,
+  Heart,
+  HeartHandshake,
+  Info,
+  type LucideIcon,
+  Mail,
+} from "lucide-react";
+import Link from "next/link";
+import { cn } from "@/lib/utils";
+
+const navLinks: {
+  href: string;
+  Icon: LucideIcon;
+  iconColorClass?: string;
+  title: string;
+}[] = [
+  {
+    href: "https://voicepublication.in/search?attribute_Author=Radheshyam+Das",
+    Icon: BookOpen,
+    title: "Books",
+  },
+  {
+    href: "/about",
+    Icon: Info,
+    title: "About",
+  },
+  {
+    href: "/contact-us",
+    Icon: Mail,
+    title: "Contact us",
+  },
+  {
+    href: "http://cvms.radheshyamdas.com/",
+    Icon: Heart,
+    iconColorClass: "text-rose-500",
+    title: "Donate",
+  },
+  {
+    href: "https://courses.radheshyamdas.com/",
+    Icon: GraduationCap,
+    title: "Online certified course",
+  },
+  {
+    href: "https://drive.google.com/drive/u/7/folders/16O9qZXeWSruSU3YyYhnpZkCsmIHtIf6s",
+    Icon: Calendar,
+    title: "Calendar",
+  },
+  {
+    href: "/get-involved",
+    Icon: HeartHandshake,
+    iconColorClass: "text-rose-500",
+    title: "Get Involved",
+  },
+];
+
+export const NavLinks = () =>
+  navLinks.map(({ href, Icon, iconColorClass, title }) => (
+    <Link
+      key={href}
+      href={href}
+      className="hover:text-primary transition-colors flex items-center gap-1.5"
+      aria-label={title}
+      {...(href.startsWith("http")
+        ? { target: "_blank", rel: "noopener noreferrer" }
+        : {})}
+    >
+      <Icon className={cn("w-4 h-4", iconColorClass)} />
+      <span>{title}</span>
+    </Link>
+  ));

@@ -79,7 +79,7 @@ export const CategoryList = ({
   );
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
       {categories.map((cat, idx) => (
         <div
           key={cat.id}
@@ -89,7 +89,7 @@ export const CategoryList = ({
           <CategoryCard
             cat={cat}
             onKeyDown={handleCategoryKeyDown}
-            priority={idx < 4}
+            priority={idx < 8}
           />
         </div>
       ))}
