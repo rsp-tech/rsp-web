@@ -19,10 +19,13 @@ export const NotFoundState = ({
   const router = useRouter();
 
   return (
-    <div className="flex flex-col items-center justify-center p-4 text-center animate-in fade-in duration-500">
+    <div
+      className="flex flex-col items-center justify-center p-4 text-center animate-in fade-in"
+      style={{ transitionDuration: "500ms", animationDuration: "500ms" }}
+    >
       <div className="relative w-full max-w-lg">
         {/* Shimmering Glassmorphic Card */}
-        <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-md transition-all duration-300">
+        <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-md transition-all duration-200">
           <div className="relative space-y-5 flex flex-col items-center">
             {/* Pulsing Compass Icon */}
             <div className="relative flex items-center justify-center w-16 h-16 -mt-4 rounded-full bg-primary/10 text-primary">
@@ -115,10 +118,6 @@ export const NotFoundState = ({
             </div>
           </div>
         </div>
-
-        {/* Subtle Background Glows */}
-        <div className="absolute -top-16 -left-16 h-48 w-48 rounded-full bg-primary/5 blur-4xl pointer-events-none" />
-        <div className="absolute -bottom-16 -right-16 h-48 w-48 rounded-full bg-primary/5 blur-4xl pointer-events-none" />
       </div>
     </div>
   );

@@ -69,7 +69,7 @@ const inputGroupButtonVariants = cva("flex items-center gap-2 text-sm", {
       xs: "h-6 gap-1 rounded-[calc(var(--radius)-3px)] px-1.5 [&>svg:not([class*='size-'])]:size-3.5",
       sm: "",
       "icon-xs": "size-6 rounded-[calc(var(--radius)-3px)] p-0 has-[>svg]:p-0",
-      "icon-sm": "size-8 p-0 has-[>svg]:p-0",
+      "icon-sm": "h-8 w-8 p-0 has-[>svg]:p-0",
     },
   },
   defaultVariants: {
@@ -116,7 +116,7 @@ function InputGroupInput({
     <Input
       data-slot="input-group-control"
       className={cn(
-        "flex-1 rounded-none border-0 bg-transparent ring-1 focus-visible:ring-1 disabled:bg-transparent aria-invalid:ring-1",
+        "flex-1 bg-transparent ring-1 focus-visible:ring-1 disabled:bg-transparent aria-invalid:ring-1",
         className,
       )}
       {...props}
@@ -132,7 +132,7 @@ function InputGroupTextarea({
     <Textarea
       data-slot="input-group-control"
       className={cn(
-        "flex-1 resize-none rounded-none border-0 bg-transparent py-2 ring-1 focus-visible:ring-1 disabled:bg-transparent aria-invalid:ring-1",
+        "flex-1 resize-none bg-transparent py-2 ring-1 focus-visible:ring-1 disabled:bg-transparent aria-invalid:ring-1",
         className,
       )}
       {...props}

@@ -1,5 +1,6 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { unzipSync } from "fflate";
 import type { CategoryPageData } from "@/hooks/use-category-page";
 import type {
   Category,
@@ -14,7 +15,6 @@ import type {
   Venue,
 } from "@/types";
 import { generateSyncJson } from "./generate-sync-json";
-import { unzipSync } from "fflate";
 import { parseCSVTable } from "./sync-utils";
 
 interface MetadataFileContent {
@@ -26,12 +26,6 @@ interface MetadataFileContent {
     content_types?: ContentType[];
     redirects?: Redirect[];
   };
-}
-
-interface ManifestFileContent {
-  files: {
-    name: string;
-  }[];
 }
 
 // Memory cache

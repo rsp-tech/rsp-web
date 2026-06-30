@@ -16,6 +16,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import { cn } from "@/lib/utils";
 import type { Service } from "@/types";
 
 interface VolunteerItemProps {
@@ -43,11 +44,12 @@ export const VolunteerItem = ({
 
   return (
     <Card
-      className={`transition-all duration-200 border-2 ${
+      className={cn(
+        "transition-all duration-200 border-2",
         isChecked
           ? "border-primary bg-primary/5 shadow-md"
-          : "border-border hover:border-border"
-      }`}
+          : "border-border hover:border-border",
+      )}
     >
       <CardHeader className="flex flex-row items-start justify-between gap-4 pb-2">
         <div className="flex-1 flex flex-col gap-1">

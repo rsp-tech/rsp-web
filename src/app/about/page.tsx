@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { ArticleTracker } from "@/components/analytics/article-tracker";
 
 export const metadata: Metadata = {
@@ -38,14 +37,18 @@ export default function About() {
         Radheshyam Das, M. Tech., IIT, Mumbai
       </h1>
       <p>
-        <Image
-          src="/rsp.webp"
-          alt="His Grace Radheshyam Das, M. Tech., IIT, Mumbai"
-          width={256}
-          height={320}
-          className="float-right ml-4 my-2"
-          priority
-        />
+        <picture>
+          <source srcSet="/rsp.avif" type="image/avif" />
+          <img
+            src="/rsp.webp"
+            alt="His Grace Radheshyam Das, M. Tech., IIT, Mumbai"
+            width={256}
+            height={320}
+            className="float-right ml-4 my-2"
+            loading="eager"
+            fetchPriority="high"
+          />
+        </picture>
         Radheshyam das, born in a town close to Madurai, Tamil Nadu South India
         in a devout brahman family where he got exposure to Vedic chants of
         Brahmans regularly visiting homes for religious events, which fascinated

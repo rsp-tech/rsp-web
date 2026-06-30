@@ -9,7 +9,6 @@ import {
   Music,
   User,
 } from "lucide-react";
-import Image from "next/image";
 import { useEffect, useRef } from "react";
 import {
   Accordion,
@@ -233,38 +232,46 @@ export function SearchResults({
             </AccordionTrigger>
             <AccordionContent className="pb-2">
               <div className="flex flex-col gap-0.5">
-                {categories.map((cat, idx) => (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    data-search-item
-                    onClick={() => {
-                      const idxClicked =
-                        recordings.length + categories.indexOf(cat);
-                      trackEvent("search_result_clicked", {
-                        query_term: term,
-                        clicked_slug: categoryPath(cat.url_path),
-                        position_index: idxClicked,
-                      });
-                      onSelectCategory(cat);
-                    }}
-                    className="w-full text-left justify-start gap-2 flex items-center px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all cursor-pointer opacity-0"
-                    style={{
-                      animation:
-                        "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
-                      animationDelay: `${idx * 50}ms`,
-                    }}
-                  >
-                    <Image
-                      src={getCategoryImageUrl(cat) ?? "/rsp.webp"}
-                      alt=""
-                      width={32}
-                      height={32}
-                      className="size-8 rounded-md object-cover"
-                    />
-                    <span className="truncate font-medium">{cat.name}</span>
-                  </button>
-                ))}
+                {categories.map((cat, idx) => {
+                  const imgUrl = getCategoryImageUrl(cat) ?? "/rsp.webp";
+                  const avifUrl = imgUrl.replace(".webp", ".avif");
+                  return (
+                    <button
+                      key={cat.id}
+                      type="button"
+                      data-search-item
+                      onClick={() => {
+                        const idxClicked =
+                          recordings.length + categories.indexOf(cat);
+                        trackEvent("search_result_clicked", {
+                          query_term: term,
+                          clicked_slug: categoryPath(cat.url_path),
+                          position_index: idxClicked,
+                        });
+                        onSelectCategory(cat);
+                      }}
+                      className="w-full text-left justify-start gap-2 flex items-center px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all cursor-pointer opacity-0"
+                      style={{
+                        animation:
+                          "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                        animationDelay: `${idx * 50}ms`,
+                      }}
+                    >
+                      <picture>
+                        <source srcSet={avifUrl} type="image/avif" />
+                        <img
+                          src={imgUrl}
+                          alt=""
+                          width={32}
+                          height={32}
+                          className="h-8 w-8 rounded-md object-cover"
+                          loading="lazy"
+                        />
+                      </picture>
+                      <span className="truncate font-medium">{cat.name}</span>
+                    </button>
+                  );
+                })}
               </div>
             </AccordionContent>
           </AccordionItem>

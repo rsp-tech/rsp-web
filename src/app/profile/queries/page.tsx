@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ExternalLink, MessageSquare, Plus } from "lucide-react";
+import { ExternalLink, MessageSquare, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -247,18 +247,6 @@ export default function UserQueriesPage() {
     <div className="max-w-5xl mx-auto py-6 flex flex-col gap-8">
       {/* Header and Back Link */}
       <div className="flex flex-col gap-4 border-b border-border pb-6">
-        <div>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            onClick={() => router.push("/profile")}
-            className="gap-1.5 h-8 px-2 -ml-2 text-muted-foreground hover:text-foreground cursor-pointer"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Back to Profile</span>
-          </Button>
-        </div>
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex flex-col gap-1">
             <h1 className="text-3xl sm:text-4xl font-extrabold font-heading text-foreground tracking-tight flex items-center gap-2">

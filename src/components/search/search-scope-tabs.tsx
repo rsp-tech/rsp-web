@@ -22,7 +22,10 @@ export function SearchScopeTabs({
       onValueChange={(val) => setScope(val as SearchScope)}
       className="w-full"
     >
-      <TabsList className="w-full flex rounded-none border-b border-border bg-muted/40 p-1 h-9">
+      <TabsList
+        className="w-full flex border-b border-border bg-muted/40 p-1 h-9"
+        style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
+      >
         <TabsTrigger value="full" className="flex-1 gap-1.5 text-xs py-1">
           <Globe className="w-3.5 h-3.5" /> Full Search
         </TabsTrigger>

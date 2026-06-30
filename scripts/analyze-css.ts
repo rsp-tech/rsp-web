@@ -1,6 +1,6 @@
+import { exec } from "node:child_process";
 import fs from "node:fs/promises";
 import path from "node:path";
-import { exec } from "node:child_process";
 import { promisify } from "node:util";
 import zlib from "node:zlib";
 import ts from "typescript";
@@ -123,7 +123,7 @@ const processFile = async (filePath: string): Promise<void> => {
       ts.isStringLiteral(node.moduleSpecifier)
     ) {
       const moduleSpecifier = node.moduleSpecifier.text;
-      let resolvedPath = moduleSpecifier.startsWith("@/")
+      const resolvedPath = moduleSpecifier.startsWith("@/")
         ? path.join("src", moduleSpecifier.replace("@/", ""))
         : path.relative(
             process.cwd(),

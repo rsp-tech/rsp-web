@@ -17,7 +17,7 @@ const runGenerateSyncJson = async () => {
 
   try {
     await fs.access(path.join(PUBLIC_DIR, "sync.zip"));
-    console.log("sync.zip already exists");
+    console.info("sync.zip already exists");
     return;
   } catch {}
 

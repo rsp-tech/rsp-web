@@ -29,7 +29,7 @@ export const Loading = ({ message }: { message?: string }) => {
               </p>
             </div>
             {message && (
-              <p className="text-xs opacity-80 -mb-2 italic text-primary flex items-center gap-2 justify-center animate-shimmer">
+              <p className="text-xs opacity-80 italic text-primary flex items-center gap-2 justify-center animate-shimmer">
                 <LoaderPinwheel
                   className="size-3.5 animate-spin"
                   style={{ animationDuration: "600ms" }}
@@ -39,10 +39,6 @@ export const Loading = ({ message }: { message?: string }) => {
             )}
           </div>
         </div>
-
-        {/* Subtle Background Glow */}
-        <div className="absolute -top-24 -left-24 h-64 w-64 rounded-full bg-primary/5 blur-4xl" />
-        <div className="absolute -bottom-24 -right-24 h-64 w-64 rounded-full bg-primary/5 blur-4xl" />
       </div>
     </div>
   );

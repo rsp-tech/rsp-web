@@ -1,7 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { unzipSync } from "fflate";
 import type { IDBPDatabase } from "idb";
-import { parseCSVTable } from "@/lib/sync-utils";
 import {
   SEARCH_LOOKUP_TABLES,
   STORE,
@@ -10,6 +9,7 @@ import {
 } from "@/constants";
 import type { Database } from "@/database.types";
 import type { RSP_IDB } from "@/lib/idb";
+import { parseCSVTable } from "@/lib/sync-utils";
 import type { SyncChangedIds } from "@/types";
 
 type SupabaseProdClient = SupabaseClient<Database, "prod", "prod">;

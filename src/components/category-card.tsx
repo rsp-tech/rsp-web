@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { getCategoryImageUrl } from "@/lib/storage";
 import { categoryPath } from "@/lib/utils";
@@ -16,6 +15,7 @@ export const CategoryCard = ({
   priority,
 }: CategoryCardProps) => {
   const imgUrl = getCategoryImageUrl(cat);
+  const avifUrl = imgUrl?.replace(".webp", ".avif");
   const href = `/${categoryPath(cat.url_path)}`;
 
   return (
@@ -23,26 +23,34 @@ export const CategoryCard = ({
       href={href}
       onKeyDown={onKeyDown}
       data-category-item
-      className="group relative flex flex-col overflow-hidden rounded-2xl h-60 border border-border bg-card shadow-md hover:shadow-md hover:-translate-y-1 focus:ring-1 focus:ring-primary focus:outline-hidden transition-all duration-300 active:scale-98 cursor-pointer"
+      className="group relative flex flex-col overflow-hidden rounded-2xl h-60 border border-border bg-card shadow-md hover:shadow-md focus:ring-1 focus:ring-primary focus:outline-hidden transition-all duration-200 active:scale-98 cursor-pointer"
     >
       {imgUrl ? (
         <div className="absolute inset-0 w-full h-full bg-muted animate-pulse">
-          <Image
-            src={imgUrl}
-            alt=""
-            fill
-            priority={priority}
-            fetchPriority={priority ? "high" : undefined}
-            onLoad={(e) => {
-              e.currentTarget.parentElement?.classList.remove("animate-pulse");
-            }}
-            onError={(e) => {
-              // Structural native fallback allocation
-              e.currentTarget.src = "/rsp.webp";
-              e.currentTarget.parentElement?.classList.remove("animate-pulse");
-            }}
-            className="object-cover group-hover:scale-105 transition-all duration-300"
-          />
+          <picture>
+            <source srcSet={avifUrl} type="image/avif" />
+            <img
+              src={imgUrl}
+              alt=""
+              loading={priority ? "eager" : "lazy"}
+              fetchPriority={priority ? "high" : undefined}
+              onLoad={(e) => {
+                const outerDiv = e.currentTarget.closest(".animate-pulse");
+                if (outerDiv) {
+                  outerDiv.classList.remove("animate-pulse");
+                }
+              }}
+              onError={(e) => {
+                // Structural native fallback allocation
+                e.currentTarget.src = "/rsp.webp";
+                const outerDiv = e.currentTarget.closest(".animate-pulse");
+                if (outerDiv) {
+                  outerDiv.classList.remove("animate-pulse");
+                }
+              }}
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-200"
+            />
+          </picture>
         </div>
       ) : (
         <div className="absolute inset-0 bg-linear-to-r from-primary/20 via-primary/5 to-transparent" />

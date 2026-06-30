@@ -1,5 +1,5 @@
-import * as React from "react";
 import { cva, type VariantProps } from "class-variance-authority";
+import * as React from "react";
 
 import { cn } from "@/lib/utils";
 
@@ -116,20 +116,17 @@ function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-const cardContentVariants = cva(
-  "px-4",
-  {
-    variants: {
-      size: {
-        default: "",
-        sm: "px-3",
-      },
-    },
-    defaultVariants: {
-      size: "default",
+const cardContentVariants = cva("px-4", {
+  variants: {
+    size: {
+      default: "",
+      sm: "px-3",
     },
   },
-);
+  defaultVariants: {
+    size: "default",
+  },
+});
 
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   const { size } = React.useContext(CardContext);

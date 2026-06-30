@@ -144,7 +144,7 @@ export function SearchBar() {
             )}
             {/* Collapsible Filters Panel */}
             {showFilters && (
-              <div className="bg-muted/40 p-3 -mt-3 border-b border-border flex flex-col gap-2.5 text-xs">
+              <div className="bg-muted/40 p-3 border-b border-border flex flex-col gap-2.5 text-xs">
                 <div className="flex items-center justify-between pb-1 border-b border-border/40">
                   <span className="font-bold text-foreground">
                     Advanced Search Filters
