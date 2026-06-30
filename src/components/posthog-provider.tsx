@@ -72,17 +72,19 @@ export function PHProvider({ children }: PHProviderProps) {
     const host =
       process.env["NEXT_PUBLIC_POSTHOG_HOST"] || "https://us.i.posthog.com";
 
-    if (key && typeof window !== "undefined") {
-      posthog.init(key, {
-        api_host: host,
-        person_profiles: "identified_only",
-        capture_pageview: false, // Pageview captured manually above to handle SPA routing correctly
-        capture_pageleave: true,
-        autocapture: false,
-        disable_session_recording: true,
-        disable_surveys: true,
-        capture_performance: false,
-      });
+    if (key) {
+      setTimeout(() => {
+        posthog.init(key, {
+          api_host: host,
+          person_profiles: "identified_only",
+          capture_pageview: false, // Pageview captured manually above to handle SPA routing correctly
+          capture_pageleave: true,
+          autocapture: false,
+          disable_session_recording: true,
+          disable_surveys: true,
+          capture_performance: false,
+        });
+      }, 500);
     }
   }, []);
 

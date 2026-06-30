@@ -20,9 +20,20 @@ const withSerwist = withSerwistInit({
 });
 
 const nextConfig: NextConfig = {
-  /* config options here */
   reactCompiler: true,
   reactStrictMode: true,
+
+  // 1. Force SWC to transpile Serwist and its Workbox sub-dependencies
+  // down to your modern ES2022 target, dropping legacy polyfills.
+  transpilePackages: [
+    "@serwist/next",
+    "@serwist/core",
+    "@serwist/sw",
+    "workbox-core",
+    "workbox-routing",
+    "workbox-strategies",
+  ],
+
   images: {
     unoptimized: true,
   },
