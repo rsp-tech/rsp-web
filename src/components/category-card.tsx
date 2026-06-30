@@ -26,7 +26,7 @@ export const CategoryCard = ({
       className="group relative flex flex-col overflow-hidden rounded-2xl h-60 border border-border bg-card shadow-md hover:shadow-md focus:ring-1 focus:ring-primary focus:outline-hidden transition-all duration-200 active:scale-98 cursor-pointer"
     >
       {imgUrl ? (
-        <div className="absolute inset-0 w-full h-full bg-muted animate-pulse">
+        <div className="absolute inset-0 w-full h-full bg-muted">
           <picture>
             <source srcSet={avifUrl} type="image/avif" />
             <img
@@ -34,17 +34,9 @@ export const CategoryCard = ({
               alt=""
               loading={priority ? "eager" : "lazy"}
               fetchPriority={priority ? "high" : undefined}
-              onLoad={(e) => {
-                e.currentTarget.parentElement?.classList.remove(
-                  "animate-pulse",
-                );
-              }}
               onError={(e) => {
                 // Structural native fallback allocation
                 e.currentTarget.src = "/rsp.webp";
-                e.currentTarget.parentElement?.classList.remove(
-                  "animate-pulse",
-                );
               }}
               className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-200"
             />
