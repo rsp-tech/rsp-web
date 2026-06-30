@@ -271,13 +271,3 @@
   animation: shimmer 1.6s infinite;
   animation-delay: var(--shimmer-delay);
 }
-
-.animate-fade-in-up {
-  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-}
-
-.animate-stagger-fade-in-up {
-  opacity: 0;
-  animation: fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  animation-delay: var(--stagger-delay, 0ms);
-}

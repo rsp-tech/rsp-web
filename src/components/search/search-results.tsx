@@ -161,12 +161,12 @@ export function SearchResults({
                       });
                       onSelectRecording(rec);
                     }}
-                    className="w-full text-left flex flex-col gap-1.5 px-3 py-2.5 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all border border-transparent hover:border-border/40 cursor-pointer animate-stagger-fade-in-up"
-                    style={
-                      {
-                        "--stagger-delay": `${idx * 25}ms`,
-                      } as React.CSSProperties
-                    }
+                    className="w-full text-left flex flex-col gap-1.5 px-3 py-2.5 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all border border-transparent hover:border-border/40 cursor-pointer opacity-0"
+                    style={{
+                      animation:
+                        "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                      animationDelay: `${idx * 50}ms`,
+                    }}
                   >
                     <div className="flex items-start justify-between gap-2 w-full">
                       <div className="flex items-center gap-2">
@@ -248,12 +248,12 @@ export function SearchResults({
                       });
                       onSelectCategory(cat);
                     }}
-                    className="w-full text-left justify-start gap-2 flex items-center px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all cursor-pointer animate-stagger-fade-in-up"
-                    style={
-                      {
-                        "--stagger-delay": `${idx * 25}ms`,
-                      } as React.CSSProperties
-                    }
+                    className="w-full text-left justify-start gap-2 flex items-center px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all cursor-pointer opacity-0"
+                    style={{
+                      animation:
+                        "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                      animationDelay: `${idx * 50}ms`,
+                    }}
                   >
                     <Image
                       src={getCategoryImageUrl(cat) ?? "/rsp.webp"}
@@ -301,12 +301,12 @@ export function SearchResults({
                       });
                       onSelectMaterial(mat);
                     }}
-                    className="w-full text-left flex flex-col gap-0.5 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all cursor-pointer animate-stagger-fade-in-up"
-                    style={
-                      {
-                        "--stagger-delay": `${idx * 25}ms`,
-                      } as React.CSSProperties
-                    }
+                    className="w-full text-left flex flex-col gap-0.5 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all cursor-pointer opacity-0"
+                    style={{
+                      animation:
+                        "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                      animationDelay: `${idx * 50}ms`,
+                    }}
                   >
                     <div className="flex items-center gap-2">
                       <FileText className="w-4 h-4 text-warning shrink-0" />

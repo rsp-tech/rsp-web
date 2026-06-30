@@ -21,8 +21,11 @@ export const CategoryList = ({
           <Skeleton
             // biome-ignore lint/suspicious/noArrayIndexKey: ok for skeleton
             key={i}
-            className="h-48 rounded-2xl animate-stagger-fade-in-up"
-            style={{ "--stagger-delay": `${i * 100}ms` } as React.CSSProperties}
+            className="h-48 rounded-2xl opacity-0"
+            style={{
+              animation: "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+              animationDelay: `${i * 100}ms`,
+            }}
           />
         ))}
       </div>
@@ -83,8 +86,11 @@ export const CategoryList = ({
       {categories.map((cat, idx) => (
         <div
           key={cat.id}
-          className="animate-stagger-fade-in-up"
-          style={{ "--stagger-delay": `${idx * 45}ms` } as React.CSSProperties}
+          className="opacity-0"
+          style={{
+            animation: "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+            animationDelay: `${idx * 50}ms`,
+          }}
         >
           <CategoryCard
             cat={cat}

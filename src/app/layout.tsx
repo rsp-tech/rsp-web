@@ -9,6 +9,7 @@ import { Providers } from "@/components/providers";
 import { SyncTrigger } from "@/components/sync-trigger";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
+import { cn } from "@/lib/utils";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -29,7 +30,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={`${geistSans.variable} h-full antialiased`}>
+    <html lang="en" className={cn(geistSans.variable, "h-full antialiased")}>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {process.env["NEXT_PUBLIC_CLARITY_ID"] && (
           <Script id="microsoft-clarity" strategy="lazyOnload">

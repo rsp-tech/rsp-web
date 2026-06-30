@@ -92,8 +92,11 @@ export const RecordingList = ({
       {sortedRecordings.map((rec, idx) => (
         <div
           key={rec.id}
-          className="animate-stagger-fade-in-up"
-          style={{ "--stagger-delay": `${idx * 40}ms` } as React.CSSProperties}
+          className="opacity-0"
+          style={{
+            animation: "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+            animationDelay: `${idx * 50}ms`,
+          }}
         >
           <RecordingCard
             rec={rec}

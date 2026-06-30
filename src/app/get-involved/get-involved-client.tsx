@@ -213,10 +213,12 @@ export function GetInvolvedClient() {
           services.map((service, idx) => (
             <div
               key={service.id}
-              className="animate-stagger-fade-in-up"
-              style={
-                { "--stagger-delay": `${idx * 50}ms` } as React.CSSProperties
-              }
+              className="opacity-0"
+              style={{
+                animation:
+                  "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                animationDelay: `${idx * 50}ms`,
+              }}
             >
               <VolunteerItem
                 {...{

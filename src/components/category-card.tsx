@@ -47,7 +47,7 @@ export const CategoryCard = ({
       ) : (
         <div className="absolute inset-0 bg-linear-to-r from-primary/20 via-primary/5 to-transparent" />
       )}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-r from-black/85 via-black/40 to-transparent" />
 
       <div className="relative mt-auto p-5 gap-1 flex flex-col">
         <h3 className="text-lg font-bold font-heading text-white group-hover:text-primary-foreground transition-all line-clamp-2">

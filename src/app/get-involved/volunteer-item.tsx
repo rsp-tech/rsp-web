@@ -87,7 +87,12 @@ export const VolunteerItem = ({
       </CardHeader>
 
       {isChecked && detail && (
-        <CardContent className="pt-2 flex flex-col gap-4 border-t border-border/40 mt-2 bg-background/50 py-4 rounded-b-xl animate-fade-in-up">
+        <CardContent
+          className="pt-2 flex flex-col gap-4 border-t border-border/40 mt-2 bg-background/50 py-4"
+          style={{
+            animation: "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+          }}
+        >
           <div className="flex flex-col gap-1.5">
             <label
               htmlFor={selectId}
