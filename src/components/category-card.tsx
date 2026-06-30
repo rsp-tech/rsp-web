@@ -35,18 +35,16 @@ export const CategoryCard = ({
               loading={priority ? "eager" : "lazy"}
               fetchPriority={priority ? "high" : undefined}
               onLoad={(e) => {
-                const outerDiv = e.currentTarget.closest(".animate-pulse");
-                if (outerDiv) {
-                  outerDiv.classList.remove("animate-pulse");
-                }
+                e.currentTarget.parentElement?.classList.remove(
+                  "animate-pulse",
+                );
               }}
               onError={(e) => {
                 // Structural native fallback allocation
                 e.currentTarget.src = "/rsp.webp";
-                const outerDiv = e.currentTarget.closest(".animate-pulse");
-                if (outerDiv) {
-                  outerDiv.classList.remove("animate-pulse");
-                }
+                e.currentTarget.parentElement?.classList.remove(
+                  "animate-pulse",
+                );
               }}
               className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-200"
             />
@@ -55,7 +53,7 @@ export const CategoryCard = ({
       ) : (
         <div className="absolute inset-0 bg-linear-to-r from-primary/20 via-primary/5 to-transparent" />
       )}
-      <div className="absolute inset-0 bg-linear-to-r from-black/85 via-black/40 to-transparent" />
+      <div className="absolute inset-0 bg-linear-to-r from-primary/20 via-primary/5 to-transparent" />
 
       <div className="relative mt-auto p-5 gap-1 flex flex-col">
         <h3 className="text-lg font-bold font-heading text-white group-hover:text-primary-foreground transition-all line-clamp-2">

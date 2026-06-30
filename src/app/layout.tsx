@@ -30,6 +30,18 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={cn(geistSans.variable, "h-full antialiased")}>
+      <head>
+        <link
+          rel="preconnect"
+          href={process.env["NEXT_PUBLIC_SUPABASE_URL"]}
+          crossOrigin="anonymous"
+        />
+        <link
+          rel="preconnect"
+          href={process.env["NEXT_PUBLIC_POSTHOG_HOST"]}
+          crossOrigin="anonymous"
+        />
+      </head>
       <body className="min-h-full flex flex-col bg-background text-foreground">
         {process.env["NEXT_PUBLIC_CLARITY_ID"] && (
           <Script
