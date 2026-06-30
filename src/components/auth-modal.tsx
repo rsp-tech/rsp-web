@@ -9,6 +9,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 
 interface AuthModalProps {
@@ -94,15 +95,15 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
               Email Address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
-              <input
+              <Mail className="absolute left-3 top-2 w-4 h-4 text-muted-foreground" />
+              <Input
                 id="auth-email"
                 type="email"
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="you@example.com"
-                className="w-full pl-9 pr-4 py-2 border border-border rounded-lg bg-background text-foreground placeholder-muted-foreground focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none text-sm transition-all"
+                className="pl-9"
               />
             </div>
           </div>
@@ -115,22 +116,22 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-2.5 w-4 h-4 text-muted-foreground" />
-              <input
+              <Lock className="absolute left-3 top-2 w-4 h-4 text-muted-foreground" />
+              <Input
                 id="auth-password"
                 type={showPassword ? "text" : "password"}
                 required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-9 pr-10 py-2 border border-border rounded-lg bg-background text-foreground placeholder-muted-foreground focus:ring-1 focus:ring-primary focus:border-primary focus:outline-none text-sm transition-all"
+                className="pl-9 pr-10"
               />
               <Button
                 type="button"
                 variant="ghost"
                 size="icon-sm"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-1 top-1 text-muted-foreground hover:text-foreground"
+                className="absolute right-0.5 top-0.5 text-muted-foreground hover:text-foreground"
               >
                 {showPassword ? (
                   <EyeOff className="w-4 h-4" />

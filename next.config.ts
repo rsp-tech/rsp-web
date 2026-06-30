@@ -22,7 +22,9 @@ const withSerwist = withSerwistInit({
 const nextConfig: NextConfig = {
   reactCompiler: true,
   reactStrictMode: true,
-
+  experimental: {
+    optimizeCss: true,
+  },
   images: {
     unoptimized: true,
   },

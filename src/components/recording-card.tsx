@@ -24,7 +24,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
       tabIndex={0}
       data-recording-item
       onKeyDown={onKeyDown}
-      className={`p-5 border rounded-2xl shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4 group focus:ring-1 focus:ring-primary focus:outline-hidden transition-all duration-200 ease-out ${
+      className={`p-5 border rounded-2xl shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4 group focus:ring-1 focus:ring-primary focus:outline-hidden transition-all duration-200 ease-in-out ${
         isHighlighted
           ? "border-primary bg-primary/5 ring-1 ring-primary"
           : "border-border bg-card hover:shadow-md"

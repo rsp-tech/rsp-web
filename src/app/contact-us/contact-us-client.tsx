@@ -21,6 +21,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -203,14 +204,14 @@ export function ContactUsClient() {
                     >
                       Your Name <span className="text-destructive">*</span>
                     </Label>
-                    <input
+                    <Input
                       type="text"
                       id={`${id}-1`}
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       disabled={!!session}
                       placeholder="Enter your full name"
-                      className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground disabled:opacity-60"
+                      className="bg-muted"
                       required
                     />
                   </div>
@@ -222,14 +223,14 @@ export function ContactUsClient() {
                     >
                       Your Email <span className="text-destructive">*</span>
                     </Label>
-                    <input
+                    <Input
                       id={`${id}-2`}
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       disabled={!!session}
                       placeholder="Enter your email address"
-                      className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground disabled:opacity-60"
+                      className="bg-muted"
                       required
                     />
                   </div>
@@ -266,13 +267,13 @@ export function ContactUsClient() {
                   >
                     Subject <span className="text-destructive">*</span>
                   </Label>
-                  <input
+                  <Input
                     id={`${id}-4`}
                     type="text"
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
                     placeholder="Brief subject of inquiry"
-                    className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground"
+                    className="bg-muted"
                     required
                   />
                 </div>

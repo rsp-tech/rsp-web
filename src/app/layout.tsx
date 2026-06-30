@@ -9,6 +9,7 @@ import { Providers } from "@/components/providers";
 import { SyncTrigger } from "@/components/sync-trigger";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
+import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
 
 const geistSans = Geist({
@@ -29,7 +30,16 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={cn(geistSans.variable, "h-full antialiased")}>
+    <html
+      lang="en"
+      className={cn(geistSans.variable, "h-full")}
+      style={
+        {
+          "-webkit-font-smoothing": "antialiased",
+          "-moz-osx-font-smoothing": "grayscale",
+        } as CSSProperties
+      }
+    >
       <head>
         <link
           rel="preconnect"
