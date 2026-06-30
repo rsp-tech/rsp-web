@@ -1,5 +1,8 @@
 # radheshyamdas.com
 
+Hare Krishna Hare Krishna Krishna Krishna Hare Hare
+Hare Rama Hare Rama Rama Rama Hare Hare
+
 ## 1. Header & Project Overview
 
 **radheshyamdas.com** is the high-performance public portal for accessing the spiritual discourses, audio recordings, and study materials of HG Radheshyamdas, receiving content updates synced from the corresponding administrative control plane. Built with an offline-first architecture, it synchronizes Supabase data into a local IndexedDB store and routes all full-text searches through an in-memory client-side Orama index. This setup guarantees sub-millisecond query responses and seamless content browsing even under poor or completely absent network connectivity.
