@@ -14,7 +14,7 @@ import type { SyncChangedIds, SyncResult } from "@/types";
 import {
   type ChangedCategoryMeta,
   getTablesToSync,
-  loadStaticJsonSeeds,
+  loadStaticZipSeeds,
   syncTable,
   syncTableForRole,
 } from "./utils";
@@ -99,27 +99,27 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       message: "Syncing...",
     });
 
-    // Optimize first-time sync by loading pre-compiled static JSON seeds
+    // Optimize first-time sync by loading pre-compiled static ZIP database seed
     const idbSyncMetaCount = await db.count(STORE.SYNC_META);
     if (idbSyncMetaCount === 0) {
       try {
         postMessage({
           type: WORKER_MSG.PROGRESS,
-          message: "Downloading static database seed...",
+          message: "Downloading database seed...",
         });
 
-        const loaded = await loadStaticJsonSeeds(db, self.location.origin);
+        const loaded = await loadStaticZipSeeds(db, self.location.origin);
         if (loaded) {
           postMessage({
             type: WORKER_MSG.PROGRESS,
-            message: "Static database seed loaded successfully.",
+            message: "Database seed loaded successfully.",
           });
         }
-      } catch (jsonErr) {
+      } catch (zipErr) {
         // Fallback silently to normal Supabase sync if static files fail
         console.error(
-          "Static sync JSON seed failed, falling back to dynamic Supabase sync:",
-          jsonErr,
+          "Static sync ZIP seed failed, falling back to dynamic Supabase sync:",
+          zipErr,
         );
       }
     }

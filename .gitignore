@@ -49,3 +49,5 @@ next-env.d.ts
 /public/swe-worker-*.js
 /public/swe-worker-*.js.map
 
+# sync
+public/sync.zip

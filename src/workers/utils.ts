@@ -1,5 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { unzipSync } from "fflate";
 import type { IDBPDatabase } from "idb";
+import { parseCSVTable } from "@/lib/sync-utils";
 import {
   SEARCH_LOOKUP_TABLES,
   STORE,
@@ -237,68 +239,48 @@ export const syncTable = async ({
   );
 };
 
-export interface TableMeta {
-  count: number;
-  max_updated_at: string | null;
-}
-
-export interface FileInfo {
-  name: string;
-  tables: Record<string, TableMeta>;
-}
-
-export type SyncManifest = {
-  files: FileInfo[];
-  generated_at: string;
-};
-
-export const loadStaticJsonSeeds = async (
+export const loadStaticZipSeeds = async (
   db: IDBPDatabase<RSP_IDB>,
   origin: string,
 ): Promise<boolean> => {
-  const manifestRes = await fetch(`${origin}/sync/manifest.json`);
-  if (!manifestRes.ok) return false;
+  const zipRes = await fetch(`${origin}/sync.zip`);
+  if (!zipRes.ok) return false;
 
-  const manifest = (await manifestRes.json()) as SyncManifest;
+  const unzipped = unzipSync(new Uint8Array(await zipRes.arrayBuffer()));
 
-  // Fetch and process all files in parallel
-  await Promise.all(
-    manifest.files.map(async (fileInfo: FileInfo) => {
-      const fileRes = await fetch(`${origin}/sync/${fileInfo.name}`);
-      if (!fileRes.ok)
-        throw new Error(`Failed to fetch sync file: ${fileInfo.name}`);
-      const content = await fileRes.json();
+  const syncStateBytes = unzipped["sync_state.json"];
+  if (!syncStateBytes) {
+    throw new Error("sync_state.json not found in sync.zip");
+  }
 
-      if (content.table) {
-        // Single table files (categories, chunked recordings, materials)
-        const tx = db.transaction(content.table, "readwrite");
-        for (const row of content.data) {
-          tx.store.put(row);
-        }
-        await tx.done;
-      } else {
-        // Multi-table metadata or faqs files
-        for (const table of Object.keys(content.data)) {
-          const tx = db.transaction(table, "readwrite");
-          for (const row of content.data[table]) {
-            tx.store.put(row);
-          }
-          await tx.done;
-        }
-      }
-    }),
-  );
+  const syncState = JSON.parse(
+    new TextDecoder().decode(syncStateBytes),
+  ) as Record<string, string>;
+
+  const txs: Promise<void>[] = [];
+  const tables = Object.keys(SYNC_COLUMNS) as SyncTable[];
+
+  for (const table of tables) {
+    const records = parseCSVTable<RSP_IDB[SyncTable]["value"]>(unzipped, table);
+    if (records.length === 0) continue;
+
+    const tx = db.transaction(table, "readwrite");
+    for (const record of records) {
+      tx.store.put(record);
+    }
+    txs.push(tx.done);
+  }
+
+  await Promise.all(txs);
 
   // Write updated_at watermarks to sync_meta
   const syncMetaTx = db.transaction(STORE.SYNC_META, "readwrite");
-  for (const fileInfo of manifest.files) {
-    for (const [table, meta] of Object.entries(fileInfo.tables)) {
-      if (meta.max_updated_at) {
-        syncMetaTx.store.put({
-          id: table,
-          updated_at: meta.max_updated_at,
-        });
-      }
+  for (const [table, lastUpdated] of Object.entries(syncState)) {
+    if (tables.includes(table as SyncTable) && lastUpdated) {
+      syncMetaTx.store.put({
+        id: table as SyncTable,
+        updated_at: lastUpdated,
+      });
     }
   }
   await syncMetaTx.done;

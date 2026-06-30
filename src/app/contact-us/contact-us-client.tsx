@@ -210,7 +210,7 @@ export function ContactUsClient() {
                       onChange={(e) => setName(e.target.value)}
                       disabled={!!session}
                       placeholder="Enter your full name"
-                      className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground disabled:opacity-80"
+                      className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground disabled:opacity-60"
                       required
                     />
                   </div>
@@ -229,7 +229,7 @@ export function ContactUsClient() {
                       onChange={(e) => setEmail(e.target.value)}
                       disabled={!!session}
                       placeholder="Enter your email address"
-                      className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground disabled:opacity-80"
+                      className="bg-muted border border-border rounded-lg text-sm px-3 py-2 focus:outline-hidden focus:ring-1 focus:ring-primary text-foreground disabled:opacity-60"
                       required
                     />
                   </div>

@@ -14,6 +14,8 @@ import type {
   Venue,
 } from "@/types";
 import { generateSyncJson } from "./generate-sync-json";
+import { unzipSync } from "fflate";
+import { parseCSVTable } from "./sync-utils";
 
 interface MetadataFileContent {
   data: {
@@ -51,91 +53,33 @@ async function loadDataIntoMemory(): Promise<void> {
   ) {
     return;
   }
-  const syncDir = path.join(process.cwd(), "public", "sync");
 
-  const promises: Promise<void>[] = [];
+  const zipPath = path.join(process.cwd(), "public", "sync.zip");
+  try {
+    const zipBuffer = await fs.readFile(zipPath);
+    const unzipped = unzipSync(new Uint8Array(zipBuffer));
 
-  // 1. Load Categories in parallel
-  if (!cachedCategories) {
-    promises.push(
-      fs
-        .readFile(path.join(syncDir, "categories.json"), "utf-8")
-        .then((content) => {
-          cachedCategories = (JSON.parse(content).data as Category[]) || [];
-        })
-        .catch((e) => {
-          console.error("Failed to cache categories:", e);
-          cachedCategories = [];
-        }),
-    );
+    cachedCategories = parseCSVTable<Category>(unzipped, "categories");
+    cachedRecordings = parseCSVTable<Recording>(unzipped, "recordings");
+    cachedMaterials = parseCSVTable<Material>(unzipped, "materials");
+
+    cachedMetadata = {
+      data: {
+        speakers: parseCSVTable<Speaker>(unzipped, "speakers"),
+        venues: parseCSVTable<Venue>(unzipped, "venues"),
+        events: parseCSVTable<Event>(unzipped, "events"),
+        languages: parseCSVTable<Language>(unzipped, "languages"),
+        content_types: parseCSVTable<ContentType>(unzipped, "content_types"),
+        redirects: parseCSVTable<Redirect>(unzipped, "redirects"),
+      },
+    };
+  } catch (e) {
+    console.error("Failed to load/parse sync.zip:", e);
+    cachedCategories = [];
+    cachedRecordings = [];
+    cachedMaterials = [];
+    cachedMetadata = { data: {} };
   }
-
-  // 2. Load Metadata in parallel
-  if (!cachedMetadata) {
-    promises.push(
-      fs
-        .readFile(path.join(syncDir, "metadata.json"), "utf-8")
-        .then((content) => {
-          cachedMetadata = JSON.parse(content) as MetadataFileContent;
-        })
-        .catch((e) => {
-          console.error("Failed to cache metadata:", e);
-          cachedMetadata = { data: {} };
-        }),
-    );
-  }
-
-  // 3. Load Materials in parallel
-  if (!cachedMaterials) {
-    promises.push(
-      fs
-        .readFile(path.join(syncDir, "materials.json"), "utf-8")
-        .then((content) => {
-          cachedMaterials = (JSON.parse(content).data as Material[]) || [];
-        })
-        .catch((e) => {
-          console.error("Failed to cache materials:", e);
-          cachedMaterials = [];
-        }),
-    );
-  }
-
-  // 4. Load Recordings chunked files in parallel
-  if (!cachedRecordings) {
-    promises.push(
-      (async () => {
-        try {
-          const manifestContent = await fs.readFile(
-            path.join(syncDir, "manifest.json"),
-            "utf-8",
-          );
-          const manifest = JSON.parse(manifestContent) as ManifestFileContent;
-          const recordingFiles = manifest.files
-            .map((f) => f.name)
-            .filter((name: string) => name.startsWith("recordings-"));
-
-          // Read all chunks concurrently
-          const chunkContents = await Promise.all(
-            recordingFiles.map((file) =>
-              fs.readFile(path.join(syncDir, file), "utf-8"),
-            ),
-          );
-
-          let allRecordings: Recording[] = [];
-          for (const content of chunkContents) {
-            const chunkData = (JSON.parse(content).data as Recording[]) || [];
-            allRecordings = allRecordings.concat(chunkData);
-          }
-          cachedRecordings = allRecordings;
-        } catch (e) {
-          console.error("Failed to cache recordings:", e);
-          cachedRecordings = [];
-        }
-      })(),
-    );
-  }
-
-  await Promise.all(promises);
 }
 
 export async function getLocalCategories(): Promise<Category[]> {

@@ -1,6 +1,8 @@
 // Supabase
 export const SUPABASE_URL = process.env["NEXT_PUBLIC_SUPABASE_URL"] as string;
-export const SUPABASE_PUBLISHABLE_KEY = process.env["NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"] as string;
+export const SUPABASE_PUBLISHABLE_KEY = process.env[
+  "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
+] as string;
 export const SYNC_INTERVAL = Number.parseInt(
   process.env["NEXT_PUBLIC_SYNC_INTERVAL"] || "300000",
   10,
@@ -8,8 +10,15 @@ export const SYNC_INTERVAL = Number.parseInt(
 export const SYNC_PAGE_SIZE = 1000;
 export const SYNC_CONCURRENCY = 4;
 
-export const ASSET_BAE_URL = process.env["NEXT_PUBLIC_ASSET_BASE_URL"] as string;
-export const ASSET_DOWNLOAD_BASE_URL = process.env["NEXT_PUBLIC_ASSET_DOWNLOAD_BASE_URL"] as string;
+export const ASSET_BAE_URL = process.env[
+  "NEXT_PUBLIC_ASSET_BASE_URL"
+] as string;
+export const ASSET_DOWNLOAD_BASE_URL = process.env[
+  "NEXT_PUBLIC_ASSET_DOWNLOAD_BASE_URL"
+] as string;
+
+export const BACKUP_TOKEN = process.env["BACKUP_TOKEN"] as string;
+export const BACKUP_BASE_URL = process.env["BACKUP_BASE_URL"] as string;
 
 // IndexedDB
 export const DB_NAME = "rsp";
