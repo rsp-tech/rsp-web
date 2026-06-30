@@ -30,6 +30,9 @@
       },
       "performance": {
         "noImgElement": "off"
+      },
+      "complexity": {
+        "useLiteralKeys": "off"
       }
     },
     "domains": {
