@@ -140,7 +140,7 @@ export function SearchResults({
             className="border-none"
             key="recordings"
           >
-            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:text-foreground transition-colors">
+            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:text-foreground transition-all">
               Recordings ({recordings.length})
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -161,7 +161,7 @@ export function SearchResults({
                       });
                       onSelectRecording(rec);
                     }}
-                    className="w-full text-left flex flex-col gap-1.5 px-3 py-2.5 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-colors border border-transparent hover:border-border/40 cursor-pointer animate-stagger-fade-in-up"
+                    className="w-full text-left flex flex-col gap-1.5 px-3 py-2.5 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all border border-transparent hover:border-border/40 cursor-pointer animate-stagger-fade-in-up"
                     style={
                       {
                         "--stagger-delay": `${idx * 25}ms`,
@@ -228,7 +228,7 @@ export function SearchResults({
             className="border-none"
             key="categories"
           >
-            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:text-foreground transition-colors">
+            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:text-foreground transition-all">
               Categories ({categories.length})
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -248,7 +248,7 @@ export function SearchResults({
                       });
                       onSelectCategory(cat);
                     }}
-                    className="w-full text-left justify-start gap-2 flex items-center px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-colors cursor-pointer animate-stagger-fade-in-up"
+                    className="w-full text-left justify-start gap-2 flex items-center px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all cursor-pointer animate-stagger-fade-in-up"
                     style={
                       {
                         "--stagger-delay": `${idx * 25}ms`,
@@ -277,7 +277,7 @@ export function SearchResults({
             className="border-none"
             key="materials"
           >
-            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:text-foreground transition-colors">
+            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:text-foreground transition-all">
               Materials ({materials.length})
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -301,7 +301,7 @@ export function SearchResults({
                       });
                       onSelectMaterial(mat);
                     }}
-                    className="w-full text-left flex flex-col gap-0.5 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-colors cursor-pointer animate-stagger-fade-in-up"
+                    className="w-full text-left flex flex-col gap-0.5 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all cursor-pointer animate-stagger-fade-in-up"
                     style={
                       {
                         "--stagger-delay": `${idx * 25}ms`,

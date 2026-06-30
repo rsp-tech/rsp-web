@@ -131,7 +131,7 @@ export function ContactUsClient() {
                   <span className="font-bold text-foreground">Email</span>
                   <a
                     href="mailto:contact@radheshyamdas.com"
-                    className="text-muted-foreground hover:text-primary transition-colors text-xs"
+                    className="text-muted-foreground hover:text-primary transition-all text-xs"
                   >
                     contact@radheshyamdas.com
                   </a>
@@ -185,7 +185,7 @@ export function ContactUsClient() {
               )}
 
               {submitError && (
-                <div className="mb-6 bg-destructive/10 border border-destructive/20 text-destructive text-sm rounded-lg p-4 flex gap-3 items-start shadow-sm">
+                <div className="mb-6 bg-destructive/10 border border-destructive/20 text-destructive text-sm rounded-lg p-4 flex gap-3 items-start shadow-md">
                   <AlertCircle className="w-5 h-5 mt-0.5 shrink-0" />
                   <div className="flex flex-col gap-1">
                     <p className="font-semibold">Failed to Send Message</p>

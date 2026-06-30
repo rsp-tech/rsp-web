@@ -15,7 +15,7 @@ export const CategoryBreadcrumbs = ({
     <nav className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground opacity-80 overflow-x-auto whitespace-nowrap py-1">
       <Link
         href="/"
-        className="hover:text-foreground transition-colors flex items-center gap-1"
+        className="hover:text-foreground transition-all flex items-center gap-1"
       >
         <Home className="w-3.5 h-3.5" />
         <span>Home</span>
@@ -25,7 +25,7 @@ export const CategoryBreadcrumbs = ({
           <ChevronRight className="w-3 h-3 text-muted-foreground opacity-60 shrink-0" />
           <Link
             href={crumb.href}
-            className={`hover:text-foreground transition-colors ${
+            className={`hover:text-foreground transition-all ${
               idx === breadcrumbs.length - 1 ? "text-foreground font-bold" : ""
             }`}
           >

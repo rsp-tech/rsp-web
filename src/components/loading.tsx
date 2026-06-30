@@ -6,7 +6,7 @@ export const Loading = ({ message }: { message?: string }) => {
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
       <div className="relative w-full max-w-lg px-8 py-12 text-center">
         {/* Shimmering Dialog */}
-        <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 shadow-2xl transition-all">
+        <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 shadow-md transition-all">
           <div className="relative space-y-6">
             <div className="space-y-4">
               <p

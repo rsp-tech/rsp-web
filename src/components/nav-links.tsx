@@ -61,7 +61,7 @@ export const NavLinks = () =>
     <Link
       key={href}
       href={href}
-      className="hover:text-primary transition-colors flex items-center gap-1.5"
+      className="hover:text-primary transition-all flex items-center gap-1.5"
       aria-label={title}
       {...(href.startsWith("http")
         ? { target: "_blank", rel: "noopener noreferrer" }

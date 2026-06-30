@@ -24,7 +24,7 @@ export function ProfileDashboardCard({
     <Card className="border-border overflow-hidden p-0">
       <div className="h-24 bg-linear-to-r from-primary/15 via-primary/5 to-transparent border-b border-border/40" />
       <div className="px-6 pb-6 relative flex flex-col items-center text-center -mt-10">
-        <div className="w-20 h-20 rounded-full bg-card border-2 border-primary flex items-center justify-center text-primary font-bold text-2xl shadow-sm mb-3">
+        <div className="w-20 h-20 rounded-full bg-card border-2 border-primary flex items-center justify-center text-primary font-bold text-2xl shadow-md mb-3">
           {fullName
             ? fullName.charAt(0).toUpperCase()
             : user.email?.charAt(0).toUpperCase()}
@@ -69,7 +69,7 @@ export function ProfileDashboardCard({
             <button
               type="button"
               onClick={onServicesClick}
-              className="font-bold text-foreground bg-muted hover:bg-primary/15 hover:text-primary transition-colors px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer"
+              className="font-bold text-foreground bg-muted hover:bg-primary/15 hover:text-primary transition-all px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer"
             >
               <ExternalLink className="w-2.5 h-2.5" />
             </button>
@@ -83,7 +83,7 @@ export function ProfileDashboardCard({
             <button
               type="button"
               onClick={onQueriesClick}
-              className="font-bold text-foreground bg-muted hover:bg-primary/15 hover:text-primary transition-colors px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer"
+              className="font-bold text-foreground bg-muted hover:bg-primary/15 hover:text-primary transition-all px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer"
             >
               <ExternalLink className="w-2.5 h-2.5" />
             </button>

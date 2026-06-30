@@ -37,7 +37,7 @@ export function QueryItem({
   return (
     <AccordionItem
       value={q.id}
-      className="px-4 border-none hover:bg-muted/10 transition-colors"
+      className="px-4 border-none hover:bg-muted/10 transition-all"
       key={replies.length}
     >
       <AccordionTrigger className="w-full hover:no-underline py-4 flex items-start gap-4 cursor-pointer">
@@ -89,7 +89,7 @@ export function QueryItem({
           {q.status === "open" ? (
             <div className="flex flex-col gap-2 mt-1">
               {submitError && (
-                <div className="bg-destructive/10 border border-destructive/20 text-destructive text-sm rounded-lg p-3 flex gap-2.5 items-start shadow-sm mb-2">
+                <div className="bg-destructive/10 border border-destructive/20 text-destructive text-sm rounded-lg p-3 flex gap-2.5 items-start shadow-md mb-2">
                   <AlertCircle className="w-4 h-4 mt-0.5 shrink-0 text-destructive" />
                   <div className="flex flex-col gap-0.5">
                     <p className="font-semibold text-xs text-destructive">

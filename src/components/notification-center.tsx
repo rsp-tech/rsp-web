@@ -83,7 +83,7 @@ export function NotificationCenter() {
                 className={`p-3.5 border rounded-xl flex gap-3 transition-all ${
                   notif.read
                     ? "bg-background border-border opacity-80"
-                    : "bg-primary/5 border-primary/20 hover:bg-primary/10 shadow-xs"
+                    : "bg-primary/5 border-primary/20 hover:bg-primary/10 shadow-md"
                 }`}
               >
                 <div className="mt-0.5">

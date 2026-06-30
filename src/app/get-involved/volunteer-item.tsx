@@ -45,7 +45,7 @@ export const VolunteerItem = ({
     <Card
       className={`transition-all duration-200 border-2 ${
         isChecked
-          ? "border-primary bg-primary/5 shadow-xs"
+          ? "border-primary bg-primary/5 shadow-md"
           : "border-border hover:border-border"
       }`}
     >

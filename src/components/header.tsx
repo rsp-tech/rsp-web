@@ -10,16 +10,22 @@ import { UserNav } from "./user-nav";
 
 export function Header() {
   return (
-    <header className="sticky top-0 z-30 w-full border-b border-border bg-background/60 backdrop-blur-md px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4">
+    <header
+      className="sticky top-0 z-30 w-full border-b border-border bg-background/60 px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4"
+      style={{
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+      }}
+    >
       <div className="flex items-center gap-1 sm:gap-2">
         <MobileDrawer />
 
         {/* Brand */}
         <Link
           href="/"
-          className="flex items-center gap-1.5 sm:gap-2 hover:opacity-95 transition-opacity shrink-0"
+          className="flex items-center gap-1.5 sm:gap-2 hover:opacity-95 transition-all shrink-0"
         >
-          <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 ring-2 ring-primary/20">
+          <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 ring-1 ring-primary/20">
             <Image
               src="/icon-192x192.webp"
               alt="HG Radheshyamdas"

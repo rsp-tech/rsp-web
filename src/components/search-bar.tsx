@@ -121,7 +121,7 @@ export function SearchBar() {
         {/* Dropdown content */}
         {showDropdown && (
           <PopoverContent
-            className="p-0 bg-card border border-border shadow-xl rounded-xl overflow-hidden z-50 flex flex-col"
+            className="p-0 bg-card border border-border shadow-md rounded-xl overflow-hidden z-50 flex flex-col"
             style={{
               width: "var(--radix-popover-trigger-width)",
               maxHeight: "28.75rem",

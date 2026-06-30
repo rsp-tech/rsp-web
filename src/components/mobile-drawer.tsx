@@ -46,7 +46,7 @@ export function MobileDrawer() {
           <Button
             variant="ghost"
             size="icon-sm"
-            className="w-9 h-9 md:hidden hover:bg-accent text-foreground transition-colors shrink-0"
+            className="w-9 h-9 md:hidden hover:bg-accent text-foreground transition-all shrink-0"
             aria-label="Open menu"
           >
             <Menu className="w-5 h-5" />
@@ -98,7 +98,7 @@ export function MobileDrawer() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="justify-start gap-2 h-9 text-foreground hover:bg-accent transition-colors"
+                    className="justify-start gap-2 h-9 text-foreground hover:bg-accent transition-all"
                     onClick={() => handleNavigate("/profile")}
                   >
                     <User className="w-4 h-4 text-muted-foreground" />
@@ -107,7 +107,7 @@ export function MobileDrawer() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="justify-start gap-2 h-9 text-destructive hover:text-destructive hover:bg-destructive/10 transition-colors"
+                    className="justify-start gap-2 h-9 text-destructive hover:text-destructive hover:bg-destructive/10 transition-all"
                     onClick={handleLogout}
                   >
                     <LogOut className="w-4 h-4" />
@@ -147,7 +147,7 @@ export function MobileDrawer() {
           <div className="mt-auto flex flex-col gap-5">
             <Link
               href="/"
-              className="hover:text-primary transition-colors flex items-center gap-1.5"
+              className="hover:text-primary transition-all flex items-center gap-1.5"
             >
               <Home className="size-4" />
               <span>Go to Home</span>

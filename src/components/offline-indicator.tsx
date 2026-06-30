@@ -9,7 +9,13 @@ export function OfflineIndicator() {
   if (isOnline) return null;
 
   return (
-    <div className="fixed bottom-4 left-4 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl border border-destructive/20 bg-destructive/10 text-destructive-foreground backdrop-blur-md shadow-lg animate-in slide-in-from-bottom-5 duration-300">
+    <div
+      className="fixed bottom-4 left-4 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl border border-destructive/20 bg-destructive/10 text-destructive-foreground shadow-md animate-in slide-in-from-bottom-5 duration-300"
+      style={{
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+      }}
+    >
       <WifiOff className="w-4 h-4 text-destructive shrink-0" />
       <div className="flex flex-col gap-0.5">
         <span className="text-xs font-bold leading-none tracking-tight">

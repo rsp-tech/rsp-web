@@ -22,7 +22,7 @@ export const NotFoundState = ({
     <div className="flex flex-col items-center justify-center p-4 text-center animate-in fade-in duration-500">
       <div className="relative w-full max-w-lg">
         {/* Shimmering Glassmorphic Card */}
-        <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-xl transition-all duration-300">
+        <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-md transition-all duration-300">
           <div className="relative space-y-5 flex flex-col items-center">
             {/* Pulsing Compass Icon */}
             <div className="relative flex items-center justify-center w-16 h-16 -mt-4 rounded-full bg-primary/10 text-primary">

@@ -1,13 +1,19 @@
 import fs from "node:fs/promises";
 import path from "node:path";
+import { exec } from "node:child_process";
+import { promisify } from "node:util";
+import zlib from "node:zlib";
 import ts from "typescript";
 
-// import { processBuildCSS } from "./process-build-css";
+const execAsync = promisify(exec);
+const brotliCompressAsync = promisify(zlib.brotliCompress);
 
 const SRC_DIR = path.join(process.cwd(), "src");
 const OUTPUT_FILE = path.join(process.cwd(), "classname-usage.json");
 const OUTPUT_CSV = path.join(process.cwd(), "classname-usage.csv");
-const OUTPUT_FULL_FILE = path.join(process.cwd(), "classname-usage-full.json");
+
+const CSS_ENTRY = "./src/app/globals.css";
+const CSS_BASELINE_OUT = "./dist/tailwind-baseline.css";
 
 interface ClassUsage {
   count: number;
@@ -16,83 +22,91 @@ interface ClassUsage {
 
 const usageMap = new Map<string, ClassUsage>();
 const filesUsingCn = new Set<string>();
-const primitiveExports = new Map<string, Set<string>>(); // filePath -> Set<ExportedName>
-const primitivesUsedWithClassName = new Map<string, Set<string>>(); // primitiveFilePath -> Set<ConsumerFilePath>
+const primitiveExports = new Map<string, Set<string>>();
+const primitivesUsedWithClassName = new Map<string, Set<string>>();
+
+const pool = async <T, R>(
+  items: T[],
+  limit: number,
+  fn: (item: T) => Promise<R>,
+): Promise<R[]> => {
+  const results: R[] = [];
+  const copies = [...items];
+  const run = async (): Promise<void> => {
+    while (copies.length > 0) {
+      const item = copies.shift();
+      if (item) results.push(await fn(item));
+    }
+  };
+  await Promise.all(Array.from({ length: limit }, run));
+  return results;
+};
 
 const getAllFiles = async (dir: string): Promise<string[]> => {
-  let fileList: string[] = [];
-  const files = await fs.readdir(dir);
+  const fileList: string[] = [];
+  const files = await fs.readdir(dir, { withFileTypes: true });
+
   await Promise.all(
     files.map(async (file) => {
-      const filePath = path.join(dir, file);
-      const stat = await fs.stat(filePath);
-      if (stat.isDirectory()) {
-        const subFiles = await getAllFiles(filePath);
-        fileList = fileList.concat(subFiles);
-      } else if (file.endsWith(".tsx")) {
+      const filePath = path.join(dir, file.name);
+      if (file.isDirectory()) {
+        fileList.push(...(await getAllFiles(filePath)));
+      } else if (file.name.endsWith(".tsx")) {
         fileList.push(filePath);
       }
     }),
   );
-
   return fileList;
 };
 
-// Pass 1: Identify primitives and their exports
-const identifyPrimitives = async (filePath: string) => {
+const identifyPrimitives = async (filePath: string): Promise<void> => {
   const fileContent = await fs.readFile(filePath, "utf-8");
+  if (!fileContent.includes("cn(")) return;
 
-  if (fileContent.includes("import { cn } from ")) {
-    const relativePath = path.relative(process.cwd(), filePath);
-    filesUsingCn.add(relativePath);
+  const relativePath = path.relative(process.cwd(), filePath);
+  filesUsingCn.add(relativePath);
 
-    const sourceFile = ts.createSourceFile(
-      filePath,
-      fileContent,
-      ts.ScriptTarget.Latest,
-      true,
-    );
+  const sourceFile = ts.createSourceFile(
+    filePath,
+    fileContent,
+    ts.ScriptTarget.Latest,
+    true,
+  );
+  const exports = new Set<string>();
 
-    const exports = new Set<string>();
+  const visit = (node: ts.Node) => {
+    if (ts.isExportAssignment(node) && ts.isIdentifier(node.expression)) {
+      exports.add(node.expression.text);
+    } else if (
+      ts.isExportDeclaration(node) &&
+      node.exportClause &&
+      ts.isNamedExports(node.exportClause)
+    ) {
+      node.exportClause.elements.forEach((el) => {
+        exports.add(el.name.text);
+      });
+    } else if (
+      ts.isFunctionDeclaration(node) &&
+      node.name &&
+      node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)
+    ) {
+      exports.add(node.name.text);
+    } else if (
+      ts.isVariableStatement(node) &&
+      node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)
+    ) {
+      node.declarationList.declarations.forEach((d) => {
+        if (ts.isIdentifier(d.name)) exports.add(d.name.text);
+      });
+    }
+    ts.forEachChild(node, visit);
+  };
 
-    // Find exports
-    const visit = (node: ts.Node) => {
-      if (ts.isExportAssignment(node)) {
-        // Default export
-        if (ts.isIdentifier(node.expression)) {
-          exports.add(node.expression.text);
-        }
-      } else if (ts.isExportDeclaration(node)) {
-        if (node.exportClause && ts.isNamedExports(node.exportClause)) {
-          node.exportClause.elements.forEach((element) => {
-            exports.add(element.name.text);
-          });
-        }
-      } else if (
-        ts.isFunctionDeclaration(node) &&
-        node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)
-      ) {
-        if (node.name) exports.add(node.name.text);
-      } else if (
-        ts.isVariableStatement(node) &&
-        node.modifiers?.some((m) => m.kind === ts.SyntaxKind.ExportKeyword)
-      ) {
-        node.declarationList.declarations.forEach((d) => {
-          if (ts.isIdentifier(d.name)) {
-            exports.add(d.name.text);
-          }
-        });
-      }
-      ts.forEachChild(node, visit);
-    };
-
-    visit(sourceFile);
-    primitiveExports.set(relativePath, exports);
-  }
+  visit(sourceFile);
+  primitiveExports.set(relativePath, exports);
 };
 
-// Pass 2: Analyze Usage
-const processFile = async (filePath: string) => {
+const processFile = async (filePath: string): Promise<void> => {
   const fileContent = await fs.readFile(filePath, "utf-8");
   const sourceFile = ts.createSourceFile(
     filePath,
@@ -100,41 +114,29 @@ const processFile = async (filePath: string) => {
     ts.ScriptTarget.Latest,
     true,
   );
-
   const relativePath = path.relative(process.cwd(), filePath);
-
-  // 2a. Identify Imported Primitives
-  const importedPrimitives = new Map<string, string>(); // LocalName -> PrimitiveRelativePath
+  const importedPrimitives = new Map<string, string>();
 
   const visitImports = (node: ts.Node) => {
-    if (ts.isImportDeclaration(node)) {
-      const moduleSpecifier = (node.moduleSpecifier as ts.StringLiteral).text;
-      let resolvedPath = "";
+    if (
+      ts.isImportDeclaration(node) &&
+      ts.isStringLiteral(node.moduleSpecifier)
+    ) {
+      const moduleSpecifier = node.moduleSpecifier.text;
+      let resolvedPath = moduleSpecifier.startsWith("@/")
+        ? path.join("src", moduleSpecifier.replace("@/", ""))
+        : path.relative(
+            process.cwd(),
+            path.resolve(path.dirname(filePath), moduleSpecifier),
+          );
 
-      if (moduleSpecifier.startsWith("@/")) {
-        resolvedPath = path.join("src", moduleSpecifier.replace("@/", ""));
-      } else if (moduleSpecifier.startsWith(".")) {
-        resolvedPath = path.relative(
-          process.cwd(),
-          path.resolve(path.dirname(filePath), moduleSpecifier),
-        );
-      }
-
-      // Try extensions
-      const extensions = [".tsx", ".ts"];
       let matchedPath = "";
-
-      // Check if resolvedPath is in filesUsingCn (ignoring extension mismatch for a sec)
-      // We stored filesUsingCn with correct extension.
-      // So we need to match "src/components/ui/button" -> "src/components/ui/button.tsx"
-
-      for (const ext of extensions) {
+      for (const ext of [".tsx", ".ts"]) {
         const p = resolvedPath + ext;
         if (filesUsingCn.has(p)) {
           matchedPath = p;
           break;
         }
-        // Also check index?
         const pIndex = path.join(resolvedPath, `index${ext}`);
         if (filesUsingCn.has(pIndex)) {
           matchedPath = pIndex;
@@ -142,60 +144,33 @@ const processFile = async (filePath: string) => {
         }
       }
 
-      if (matchedPath && node.importClause) {
-        const namedBindings = node.importClause.namedBindings;
-        if (namedBindings && ts.isNamedImports(namedBindings)) {
-          namedBindings.elements.forEach((element) => {
-            const importName = element.propertyName?.text || element.name.text;
-            const localName = element.name.text;
-
-            // Check if this importName is actually exported by the primitive
-            const exports = primitiveExports.get(matchedPath);
-            if (exports?.has(importName)) {
-              importedPrimitives.set(localName, matchedPath);
-            }
-          });
-        }
+      if (
+        matchedPath &&
+        node.importClause?.namedBindings &&
+        ts.isNamedImports(node.importClause.namedBindings)
+      ) {
+        node.importClause.namedBindings.elements.forEach((element) => {
+          const importName = element.propertyName?.text || element.name.text;
+          if (primitiveExports.get(matchedPath)?.has(importName)) {
+            importedPrimitives.set(element.name.text, matchedPath);
+          }
+        });
       }
     }
     ts.forEachChild(node, visitImports);
   };
   visitImports(sourceFile);
 
-  // 2b. Scan for ClassName Usage and Class Extraction (Original Logic)
-  const visit = (node: ts.Node) => {
-    // Check for Primitive Usage with className
-    if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
-      const tagName = node.tagName.getText();
-      const primitivePath = importedPrimitives.get(tagName);
-
-      if (primitivePath) {
-        const hasClassName = node.attributes.properties.some(
-          (p) => ts.isJsxAttribute(p) && p.name.getText() === "className",
-        );
-
-        if (hasClassName) {
-          const consumers =
-            primitivesUsedWithClassName.get(primitivePath) || new Set();
-          consumers.add(relativePath);
-          primitivesUsedWithClassName.set(primitivePath, consumers);
-        }
+  const addClasses = (text: string, source: string) => {
+    const classes = text.split(/\s+/).filter(Boolean);
+    for (const cls of classes) {
+      let entry = usageMap.get(cls);
+      if (!entry) {
+        entry = { count: 0, components: new Set() };
+        usageMap.set(cls, entry);
       }
-    }
-
-    if (ts.isJsxAttribute(node) && node.name.getText() === "className") {
-      if (node.initializer) {
-        extractStrings(node.initializer);
-      }
-    }
-    ts.forEachChild(node, visit);
-  };
-
-  const extractStrings = (node: ts.Node) => {
-    if (ts.isStringLiteral(node)) {
-      addClasses(node.text, relativePath);
-    } else if (ts.isJsxExpression(node) && node.expression) {
-      extractStringsFromExpression(node.expression);
+      entry.count++;
+      entry.components.add(source);
     }
   };
 
@@ -212,45 +187,74 @@ const processFile = async (filePath: string) => {
     }
   };
 
-  const addClasses = (text: string, source: string) => {
-    const classes = text.split(/\s+/).filter(Boolean);
-    for (const cls of classes) {
-      const entry = usageMap.get(cls) || { count: 0, components: new Set() };
-      entry.count++;
-      entry.components.add(source);
-      usageMap.set(cls, entry);
+  const visit = (node: ts.Node) => {
+    if (ts.isJsxOpeningElement(node) || ts.isJsxSelfClosingElement(node)) {
+      const tagName = node.tagName.getText();
+      const primitivePath = importedPrimitives.get(tagName);
+      if (primitivePath) {
+        const hasClassName = node.attributes.properties.some(
+          (p) => ts.isJsxAttribute(p) && p.name.getText() === "className",
+        );
+        if (hasClassName) {
+          const consumers =
+            primitivesUsedWithClassName.get(primitivePath) || new Set();
+          consumers.add(relativePath);
+          primitivesUsedWithClassName.set(primitivePath, consumers);
+        }
+      }
     }
+    if (
+      ts.isJsxAttribute(node) &&
+      node.name.getText() === "className" &&
+      node.initializer
+    ) {
+      if (ts.isStringLiteral(node.initializer)) {
+        addClasses(node.initializer.text, relativePath);
+      } else if (
+        ts.isJsxExpression(node.initializer) &&
+        node.initializer.expression
+      ) {
+        extractStringsFromExpression(node.initializer.expression);
+      }
+    }
+    ts.forEachChild(node, visit);
   };
 
   visit(sourceFile);
 };
 
-const main = async () => {
+const getBrotliSize = async (fileBuffer: Buffer): Promise<number> => {
+  const compressed = await brotliCompressAsync(fileBuffer, {
+    params: {
+      [zlib.constants.BROTLI_PARAM_MODE]: zlib.constants.BROTLI_MODE_TEXT,
+      [zlib.constants.BROTLI_PARAM_QUALITY]: 11,
+    },
+  });
+  return compressed.length;
+};
+
+const compileCSS = async (input: string, output: string): Promise<Buffer> => {
+  await execAsync(`pnpm tailwindcss -i ${input} -o ${output} --minify`);
+  return fs.readFile(output);
+};
+
+const main = async (): Promise<void> => {
   console.log("🔍 Starting analysis...");
   const start = performance.now();
 
   try {
-    // await processBuildCSS(); // skipping for speed in this iter if not needed, but keeping for consistency
-    // Actually user asked to update script, assume full run
-
-    console.log("🔍 Pass 1: scanning for cn usage...");
     const files = await getAllFiles(SRC_DIR);
 
-    // Pass 1
-    await Promise.all(files.map((file) => identifyPrimitives(file)));
-    console.log(`Found ${filesUsingCn.size} UI primitives using cn.`);
+    console.log("🔍 Pass 1: Scanning primitives...");
+    await pool(files, 15, identifyPrimitives);
 
-    console.log("🔍 Pass 2: analyzing class usage and primitive consumers...");
-    // Pass 2
-    await Promise.all(
-      files.map(async (file) => {
-        try {
-          await processFile(file);
-        } catch (error) {
-          console.error(`Error processing file ${file}:`, error);
-        }
-      }),
-    );
+    console.log("🔍 Pass 2: Processing usage tree...");
+    await pool(files, 15, processFile);
+
+    console.log("⚡ Triggering isolated production CSS compilation...");
+    const baselineBuffer = await compileCSS(CSS_ENTRY, CSS_BASELINE_OUT);
+    const baselineBrotliSize = await getBrotliSize(baselineBuffer);
+    const baselineString = baselineBuffer.toString("utf-8");
 
     const sorted = Array.from(usageMap.entries())
       .map(([cls, usage]) => ({
@@ -258,84 +262,92 @@ const main = async () => {
         count: usage.count,
         components: Array.from(usage.components),
       }))
-      .sort((a, b) => b.className.localeCompare(a.className));
+      .sort((a, b) => b.count - a.count);
 
-    // Convert primitivesUsedWithClassName to array for JSON
+    console.log("🧪 Processing total dataset footprint calculations...");
+
+    const finalReportData: Array<{
+      className: string;
+      frequency: number;
+      length: number;
+      uncompressedBytes: number;
+      brotliBytesUpperLimit: number;
+    }> = [];
+
+    for (const item of sorted) {
+      const clsName = item.className;
+
+      // Strictly escape ALL non-alphanumeric characters to prevent RegExp engine syntax crashes
+      const escapedSelector = clsName.replace(/([^a-zA-Z0-9_-])/g, "\\$1");
+
+      // Handles exact class match blocks, ensuring structural variants don't throw syntax breaks
+      const regex = new RegExp(`\\.${escapedSelector}\\s*\\{[^\\}]*\\}`, "g");
+      const matches = baselineString.match(regex);
+
+      let uncompressedBytes = 0;
+      let brotliBytesUpperLimit = 0;
+
+      if (matches && matches.length > 0) {
+        const combinedRules = matches.join("\n");
+        uncompressedBytes = Buffer.byteLength(combinedRules, "utf-8");
+        brotliBytesUpperLimit = await getBrotliSize(
+          Buffer.from(combinedRules, "utf-8"),
+        );
+      }
+
+      finalReportData.push({
+        className: clsName,
+        frequency: item.count,
+        length: clsName.length,
+        uncompressedBytes,
+        brotliBytesUpperLimit,
+      });
+    }
+
+    // Write structured JSON
     const primitiveUsageOutput: Record<string, string[]> = {};
     for (const [prim, consumers] of primitivesUsedWithClassName.entries()) {
       primitiveUsageOutput[prim] = Array.from(consumers).sort();
     }
 
-    const oldClasses = new Set<string>();
-    try {
-      const oldContent = await fs.readFile(OUTPUT_FILE, "utf-8");
-      const oldData = JSON.parse(oldContent);
-      if (oldData?.data) {
-        Object.keys(oldData.data).forEach((cls) => {
-          oldClasses.add(cls);
-        });
-      }
-    } catch {
-      // Ignore if file doesn't exist
-    }
-
-    const newClasses = sorted
-      .filter((item) => !oldClasses.has(item.className))
-      .map((item) => item.className);
-
-    const output = {
+    const jsonOutput = {
       totalClasses: sorted.length,
       timestamp: new Date().toISOString(),
-      filesUsingCn: Array.from(filesUsingCn).sort(),
+      baselineCSSBytes: baselineBuffer.length,
+      baselineBrotliBytes: baselineBrotliSize,
       primitiveUsage: primitiveUsageOutput,
-      newClasses,
-      data: sorted.reduce(
-        // biome-ignore lint/performance/noAccumulatingSpread: ok
-        (acc, item) => ({ ...acc, [item.className]: item.count }),
-        {},
-      ),
+      data: finalReportData,
     };
+    await fs.writeFile(OUTPUT_FILE, JSON.stringify(jsonOutput, null, 2));
 
-    await fs.writeFile(OUTPUT_FILE, JSON.stringify(output, null, 2));
+    // Write comprehensive CSV with all data rows
+    const csvRows = [
+      "classname,frequency,cls_length,uncompressed_css_bytes,brotli_css_bytes_saving_limit",
+    ];
+    for (const row of finalReportData) {
+      // Escape strings containing quotes or commas for safe CSV formats
+      const safeCls = /^-/.test(row.className)
+        ? `.${row.className}`
+        : /[,"]/.test(row.className)
+          ? `"${row.className.replace(/"/g, '""')}"`
+          : row.className;
 
-    const rows = [",,,", ",classname,frequency,cls-length"];
-    Object.entries(output.data).forEach(([cls, count]) => {
-      rows.push(`,${cls.replace(/^-/, ".-")},${count},${cls.length}`);
-    });
-    await fs.writeFile(OUTPUT_CSV, rows.join("\n"));
+      csvRows.push(
+        `${safeCls},${row.frequency},${row.length},${row.uncompressedBytes},${row.brotliBytesUpperLimit}`,
+      );
+    }
+    await fs.writeFile(OUTPUT_CSV, csvRows.join("\n"));
 
-    // Also save full version
-    await fs.writeFile(
-      OUTPUT_FULL_FILE,
-      JSON.stringify(
-        {
-          ...output,
-          newClasses,
-          data: sorted,
-        },
-        null,
-        2,
-      ),
+    console.log(
+      `\n✅ Done. Generated report mapping all ${sorted.length} classes.`,
     );
-
-    console.log(`✅ Analysis complete. found ${sorted.length} unique classes.`);
-    console.log(`📂 Output saved to ${OUTPUT_FILE}`);
-
-    // console.log("\n🏆 Top 10 Most Used Classes:");
-    // sorted.slice(0, 10).forEach((item) => {
-    //   console.log(`  ${item.className}: ${item.count}`);
-    // });
-
-    console.log("\n🔍 Primitives with className overrides:");
-    Object.entries(primitiveUsageOutput).forEach(([prim, consumers]) => {
-      console.log(`  ${prim}: Used in ${consumers.length} files`);
-    });
-
-    const end = performance.now();
-    console.log(`\n⏱️  Time taken: ${(end - start).toFixed(2)}ms`);
+    console.log(`📂 JSON data stored at: ${OUTPUT_FILE}`);
+    console.log(`📂 CSV records written to: ${OUTPUT_CSV}`);
+    console.log(
+      `\n⏱️ Total Execution Pipeline Time: ${((performance.now() - start) / 1000).toFixed(2)}s`,
+    );
   } catch (err) {
-    console.error("An error occurred:", err);
-    process.exit(1);
+    console.error("Critical execution breakdown:", err);
   }
 };
 

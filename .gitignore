@@ -51,3 +51,5 @@ next-env.d.ts
 
 # sync
 public/sync.zip
+
+dist
