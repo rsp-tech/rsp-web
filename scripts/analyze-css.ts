@@ -304,6 +304,35 @@ const main = async (): Promise<void> => {
       });
     }
 
+    // --- Next.js Build Artifact Analysis Additions ---
+    const nextCssDir = path.join(process.cwd(), ".next", "static", "css");
+    const nextCssFilesData: Array<{
+      file: string;
+      rawBytes: number;
+      brotliBytes: number;
+    }> = [];
+
+    try {
+      const nextFiles = await fs.readdir(nextCssDir);
+      const cssChunks = nextFiles.filter((f) => f.endsWith(".css"));
+
+      for (const file of cssChunks) {
+        const fullPath = path.join(nextCssDir, file);
+        const buf = await fs.readFile(fullPath);
+        const bSize = await getBrotliSize(buf);
+        nextCssFilesData.push({
+          file,
+          rawBytes: buf.length,
+          brotliBytes: bSize,
+        });
+      }
+    } catch {
+      console.warn(
+        "⚠️ Warning: Could not locate '.next/static/css'. Run 'next build' first.",
+      );
+    }
+    // ------------------------------------------------
+
     // Write structured JSON
     const primitiveUsageOutput: Record<string, string[]> = {};
     for (const [prim, consumers] of primitivesUsedWithClassName.entries()) {
@@ -315,6 +344,7 @@ const main = async (): Promise<void> => {
       timestamp: new Date().toISOString(),
       baselineCSSBytes: baselineBuffer.length,
       baselineBrotliBytes: baselineBrotliSize,
+      nextGeneratedCss: nextCssFilesData, // Injected Next.js output array
       primitiveUsage: primitiveUsageOutput,
       data: finalReportData,
     };
