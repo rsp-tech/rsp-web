@@ -180,7 +180,7 @@ export function SearchResults({
                       )}
                     </div>
 
-                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1 text-xxs text-muted-foreground pl-6 font-medium">
+                    <div className="flex flex-wrap items-center gap-3 text-xxs text-muted-foreground pl-6 font-medium">
                       {rec.speakers.length > 0 && (
                         <span className="flex items-center gap-1">
                           <User className="w-3 h-3 text-muted-foreground opacity-80" />
@@ -226,7 +226,7 @@ export function SearchResults({
               Categories ({categories.length})
             </AccordionTrigger>
             <AccordionContent className="pb-2">
-              <div className="flex flex-col gap-0.5">
+              <div className="flex flex-col gap-1">
                 {categories.map((cat, idx) => {
                   const imgUrl = getCategoryImageUrl(cat) ?? "/rsp.webp";
                   const avifUrl = imgUrl.replace(".webp", ".avif");
@@ -279,7 +279,7 @@ export function SearchResults({
               Materials ({materials.length})
             </AccordionTrigger>
             <AccordionContent className="pb-2">
-              <div className="flex flex-col gap-0.5">
+              <div className="flex flex-col gap-1">
                 {materials.map((mat, idx) => (
                   <button
                     key={mat.id}
@@ -299,7 +299,7 @@ export function SearchResults({
                       });
                       onSelectMaterial(mat);
                     }}
-                    className="w-full text-left flex flex-col gap-0.5 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all cursor-pointer opacity-0"
+                    className="w-full text-left flex flex-col gap-1 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all cursor-pointer opacity-0"
                     style={{
                       animation:
                         "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",

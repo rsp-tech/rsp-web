@@ -13,7 +13,7 @@ const themeButtonCn = (active: boolean) =>
     "px-2.5 py-1 text-xs font-medium rounded-md transition-all capitalize",
     active
       ? "bg-primary text-primary-foreground shadow-md"
-      : "text-muted-foreground hover:bg-muted hover:",
+      : "text-muted-foreground hover:bg-muted hover:text-foreground",
   );
 
 export function ThemeSelector() {

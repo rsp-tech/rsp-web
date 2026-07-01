@@ -10,7 +10,7 @@ export function OfflineIndicator() {
 
   return (
     <div
-      className="fixed z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl border border-destructive/20 bg-destructive/10 text-destructive-foreground shadow-md animate-in duration-200"
+      className="fixed z-50 flex items-center gap-3 px-4 py-3 rounded-xl border border-destructive/20 bg-destructive/10 text-destructive-foreground shadow-md animate-in duration-200"
       style={{
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",
@@ -19,7 +19,7 @@ export function OfflineIndicator() {
       }}
     >
       <WifiOff className="w-4 h-4 text-destructive shrink-0" />
-      <div className="flex flex-col gap-0.5">
+      <div className="flex flex-col gap-1">
         <span className="text-xs font-bold leading-none tracking-tight">
           Offline Mode
         </span>

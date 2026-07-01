@@ -39,7 +39,7 @@ export const CategoryCard = ({
                 // Structural native fallback allocation
                 e.currentTarget.src = "/rsp.webp";
               }}
-              className="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-all duration-200"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-125 transition-all duration-200"
             />
           </picture>
         </div>

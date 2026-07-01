@@ -144,7 +144,7 @@ export function MobileDrawer() {
           </div>
 
           {/* Navigation Links */}
-          <div className="mt-auto flex flex-col gap-5">
+          <div className="mt-auto flex flex-col gap-4">
             <Link
               href="/"
               className="hover:text-primary transition-all flex items-center gap-1.5"

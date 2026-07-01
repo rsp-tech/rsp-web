@@ -23,7 +23,7 @@ export function ProfileDashboardCard({
   return (
     <Card className="border-border overflow-hidden p-0">
       <div
-        className="bg-linear-to-r from-primary/15 via-primary/5 to-transparent border-b border-border/40"
+        className="bg-linear-to-r from-primary/20 via-primary/5 to-transparent border-b border-border/40"
         style={{ height: "6rem" }}
       />
       <div
@@ -52,13 +52,13 @@ export function ProfileDashboardCard({
           style={{ margin: "1.25rem 0" }}
         />
 
-        <div className="w-full flex flex-col gap-3.5 text-left">
+        <div className="w-full flex flex-col gap-4 text-left">
           <div className="flex items-center gap-2 text-xs">
             {[1, 4, 5, 7, 8].includes(roleId ?? 0) && (
               <span
-                className={`font-bold pl-1.5 pr-2.5 py-1 rounded-full border text-xs flex gap-1 ${
+                className={`font-bold p-2 rounded-full border text-xs flex gap-1 ${
                   roleId === 4 || roleId === 7
-                    ? "bg-primary/15 text-primary border-primary/30"
+                    ? "bg-primary/20 text-primary border-primary/30"
                     : "bg-primary/10 text-primary border-primary/20"
                 }`}
               >
@@ -81,7 +81,7 @@ export function ProfileDashboardCard({
             <button
               type="button"
               onClick={onServicesClick}
-              className="font-bold bg-muted hover:bg-primary/15 hover:text-primary transition-all px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer"
+              className="font-bold bg-muted hover:bg-primary/20 hover:text-primary transition-all px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer"
             >
               <ExternalLink className="w-2.5 h-2.5" />
             </button>
@@ -95,7 +95,7 @@ export function ProfileDashboardCard({
             <button
               type="button"
               onClick={onQueriesClick}
-              className="font-bold bg-muted hover:bg-primary/15 hover:text-primary transition-all px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer"
+              className="font-bold bg-muted hover:bg-primary/20 hover:text-primary transition-all px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer"
             >
               <ExternalLink className="w-2.5 h-2.5" />
             </button>

@@ -1,17 +1,23 @@
 {
-  "totalClasses": 484,
-  "timestamp": "2026-07-01T07:44:40.056Z",
-  "baselineCSSBytes": 72039,
-  "baselineBrotliBytes": 10372,
+  "totalClasses": 458,
+  "timestamp": "2026-07-01T09:27:22.462Z",
+  "baselineCSSBytes": 68029,
+  "baselineBrotliBytes": 10013,
   "nextGeneratedCss": [
     {
-      "file": "ab38f5c9fa75ad83.css",
-      "rawBytes": 75698,
-      "brotliBytes": 11011,
-      "gZipBytes": 12869
+      "file": "fd773e24454bb873.css",
+      "rawBytes": 71718,
+      "brotliBytes": 10603,
+      "gZipBytes": 12392
     }
   ],
   "primitiveUsage": {
+    "src\\components\\ui\\skeleton.tsx": [
+      "src\\components\\category-list.tsx",
+      "src\\components\\current-user-avatar.tsx",
+      "src\\components\\mobile-drawer.tsx",
+      "src\\components\\user-nav.tsx"
+    ],
     "src\\components\\ui\\dialog.tsx": [
       "src\\components\\auth-modal.tsx"
     ],
@@ -41,12 +47,6 @@
       "src\\components\\ui\\calendar.tsx",
       "src\\components\\ui\\dialog.tsx",
       "src\\components\\ui\\sheet.tsx",
-      "src\\components\\user-nav.tsx"
-    ],
-    "src\\components\\ui\\skeleton.tsx": [
-      "src\\components\\category-list.tsx",
-      "src\\components\\current-user-avatar.tsx",
-      "src\\components\\mobile-drawer.tsx",
       "src\\components\\user-nav.tsx"
     ],
     "src\\components\\ui\\sheet.tsx": [
@@ -156,6 +156,13 @@
       "brotliBytesUpperLimit": 40
     },
     {
+      "className": "border-border",
+      "frequency": 47,
+      "length": 13,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
       "className": "gap-1.5",
       "frequency": 47,
       "length": 7,
@@ -163,11 +170,11 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "border-border",
+      "className": "gap-1",
       "frequency": 46,
-      "length": 13,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "length": 5,
+      "uncompressedBytes": 26,
+      "brotliBytesUpperLimit": 30
     },
     {
       "className": "text-primary",
@@ -219,13 +226,6 @@
       "brotliBytesUpperLimit": 61
     },
     {
-      "className": "gap-1",
-      "frequency": 36,
-      "length": 5,
-      "uncompressedBytes": 26,
-      "brotliBytesUpperLimit": 30
-    },
-    {
       "className": "transition-all",
       "frequency": 35,
       "length": 14,
@@ -254,13 +254,6 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "opacity-80",
-      "frequency": 29,
-      "length": 10,
-      "uncompressedBytes": 23,
-      "brotliBytesUpperLimit": 27
-    },
-    {
       "className": "cursor-pointer",
       "frequency": 29,
       "length": 14,
@@ -273,6 +266,27 @@
       "length": 14,
       "uncompressedBytes": 89,
       "brotliBytesUpperLimit": 57
+    },
+    {
+      "className": "opacity-80",
+      "frequency": 29,
+      "length": 10,
+      "uncompressedBytes": 23,
+      "brotliBytesUpperLimit": 27
+    },
+    {
+      "className": "gap-3",
+      "frequency": 28,
+      "length": 5,
+      "uncompressedBytes": 36,
+      "brotliBytesUpperLimit": 40
+    },
+    {
+      "className": "gap-4",
+      "frequency": 26,
+      "length": 5,
+      "uncompressedBytes": 36,
+      "brotliBytesUpperLimit": 40
     },
     {
       "className": "text-xxs",
@@ -296,13 +310,6 @@
       "brotliBytesUpperLimit": 45
     },
     {
-      "className": "gap-4",
-      "frequency": 23,
-      "length": 5,
-      "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
-    },
-    {
       "className": "font-medium",
       "frequency": 23,
       "length": 11,
@@ -324,13 +331,6 @@
       "brotliBytesUpperLimit": 41
     },
     {
-      "className": "gap-3",
-      "frequency": 22,
-      "length": 5,
-      "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
-    },
-    {
       "className": "bg-muted",
       "frequency": 20,
       "length": 8,
@@ -345,11 +345,32 @@
       "brotliBytesUpperLimit": 47
     },
     {
+      "className": "h-8",
+      "frequency": 18,
+      "length": 3,
+      "uncompressedBytes": 37,
+      "brotliBytesUpperLimit": 41
+    },
+    {
+      "className": "shadow-md",
+      "frequency": 17,
+      "length": 9,
+      "uncompressedBytes": 254,
+      "brotliBytesUpperLimit": 106
+    },
+    {
       "className": "absolute",
       "frequency": 17,
       "length": 8,
       "uncompressedBytes": 28,
       "brotliBytesUpperLimit": 19
+    },
+    {
+      "className": "justify-center",
+      "frequency": 17,
+      "length": 14,
+      "uncompressedBytes": 39,
+      "brotliBytesUpperLimit": 31
     },
     {
       "className": "text-center",
@@ -366,25 +387,11 @@
       "brotliBytesUpperLimit": 35
     },
     {
-      "className": "justify-center",
-      "frequency": 17,
-      "length": 14,
-      "uncompressedBytes": 39,
-      "brotliBytesUpperLimit": 31
-    },
-    {
-      "className": "h-8",
-      "frequency": 17,
-      "length": 3,
-      "uncompressedBytes": 37,
-      "brotliBytesUpperLimit": 41
-    },
-    {
-      "className": "shadow-md",
-      "frequency": 17,
-      "length": 9,
-      "uncompressedBytes": 254,
-      "brotliBytesUpperLimit": 106
+      "className": "duration-200",
+      "frequency": 16,
+      "length": 12,
+      "uncompressedBytes": 56,
+      "brotliBytesUpperLimit": 58
     },
     {
       "className": "font-heading",
@@ -399,13 +406,6 @@
       "length": 6,
       "uncompressedBytes": 15,
       "brotliBytesUpperLimit": 19
-    },
-    {
-      "className": "duration-200",
-      "frequency": 16,
-      "length": 12,
-      "uncompressedBytes": 56,
-      "brotliBytesUpperLimit": 58
     },
     {
       "className": "items-start",
@@ -464,18 +464,25 @@
       "brotliBytesUpperLimit": 62
     },
     {
-      "className": "gap-6",
-      "frequency": 14,
-      "length": 5,
-      "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
-    },
-    {
       "className": "overflow-hidden",
       "frequency": 14,
       "length": 15,
       "uncompressedBytes": 33,
       "brotliBytesUpperLimit": 24
+    },
+    {
+      "className": "w-8",
+      "frequency": 14,
+      "length": 3,
+      "uncompressedBytes": 36,
+      "brotliBytesUpperLimit": 40
+    },
+    {
+      "className": "gap-6",
+      "frequency": 14,
+      "length": 5,
+      "uncompressedBytes": 36,
+      "brotliBytesUpperLimit": 40
     },
     {
       "className": "leading-relaxed",
@@ -492,18 +499,18 @@
       "brotliBytesUpperLimit": 56
     },
     {
-      "className": "w-8",
-      "frequency": 13,
-      "length": 3,
-      "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
-    },
-    {
       "className": "grid",
       "frequency": 12,
       "length": 4,
       "uncompressedBytes": 19,
       "brotliBytesUpperLimit": 23
+    },
+    {
+      "className": "p-4",
+      "frequency": 12,
+      "length": 3,
+      "uncompressedBytes": 38,
+      "brotliBytesUpperLimit": 42
     },
     {
       "className": "border-border/40",
@@ -513,6 +520,13 @@
       "brotliBytesUpperLimit": 0
     },
     {
+      "className": "bg-card",
+      "frequency": 11,
+      "length": 7,
+      "uncompressedBytes": 38,
+      "brotliBytesUpperLimit": 38
+    },
+    {
       "className": "py-2",
       "frequency": 11,
       "length": 4,
@@ -520,11 +534,11 @@
       "brotliBytesUpperLimit": 48
     },
     {
-      "className": "p-4",
+      "className": "h-3",
       "frequency": 11,
       "length": 3,
-      "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 42
+      "uncompressedBytes": 37,
+      "brotliBytesUpperLimit": 41
     },
     {
       "className": "text-xl",
@@ -534,32 +548,11 @@
       "brotliBytesUpperLimit": 57
     },
     {
-      "className": "py-1",
+      "className": "mt-2",
       "frequency": 10,
       "length": 4,
-      "uncompressedBytes": 35,
-      "brotliBytesUpperLimit": 39
-    },
-    {
-      "className": "bg-card",
-      "frequency": 10,
-      "length": 7,
-      "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 38
-    },
-    {
-      "className": "h-3",
-      "frequency": 10,
-      "length": 3,
-      "uncompressedBytes": 37,
-      "brotliBytesUpperLimit": 41
-    },
-    {
-      "className": "text-left",
-      "frequency": 10,
-      "length": 9,
-      "uncompressedBytes": 27,
-      "brotliBytesUpperLimit": 31
+      "uncompressedBytes": 42,
+      "brotliBytesUpperLimit": 46
     },
     {
       "className": "rounded-xl",
@@ -569,11 +562,11 @@
       "brotliBytesUpperLimit": 56
     },
     {
-      "className": "gap-0.5",
+      "className": "text-left",
       "frequency": 10,
-      "length": 7,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "length": 9,
+      "uncompressedBytes": 27,
+      "brotliBytesUpperLimit": 31
     },
     {
       "className": "mt-0.5",
@@ -588,6 +581,34 @@
       "length": 3,
       "uncompressedBytes": 38,
       "brotliBytesUpperLimit": 42
+    },
+    {
+      "className": "py-1",
+      "frequency": 9,
+      "length": 4,
+      "uncompressedBytes": 35,
+      "brotliBytesUpperLimit": 39
+    },
+    {
+      "className": "grid-cols-1",
+      "frequency": 9,
+      "length": 11,
+      "uncompressedBytes": 59,
+      "brotliBytesUpperLimit": 56
+    },
+    {
+      "className": "opacity-0",
+      "frequency": 9,
+      "length": 9,
+      "uncompressedBytes": 21,
+      "brotliBytesUpperLimit": 25
+    },
+    {
+      "className": "h-9",
+      "frequency": 9,
+      "length": 3,
+      "uncompressedBytes": 37,
+      "brotliBytesUpperLimit": 41
     },
     {
       "className": "z-50",
@@ -625,39 +646,11 @@
       "brotliBytesUpperLimit": 40
     },
     {
-      "className": "h-9",
-      "frequency": 9,
-      "length": 3,
-      "uncompressedBytes": 37,
-      "brotliBytesUpperLimit": 41
-    },
-    {
-      "className": "grid-cols-1",
-      "frequency": 9,
-      "length": 11,
-      "uncompressedBytes": 59,
-      "brotliBytesUpperLimit": 56
-    },
-    {
-      "className": "opacity-0",
-      "frequency": 9,
-      "length": 9,
-      "uncompressedBytes": 21,
-      "brotliBytesUpperLimit": 25
-    },
-    {
       "className": "text-3xl",
       "frequency": 9,
       "length": 8,
       "uncompressedBytes": 95,
       "brotliBytesUpperLimit": 56
-    },
-    {
-      "className": "mt-2",
-      "frequency": 8,
-      "length": 4,
-      "uncompressedBytes": 42,
-      "brotliBytesUpperLimit": 46
     },
     {
       "className": "inset-0",
@@ -667,18 +660,18 @@
       "brotliBytesUpperLimit": 21
     },
     {
-      "className": "animate-spin",
-      "frequency": 8,
-      "length": 12,
-      "uncompressedBytes": 44,
-      "brotliBytesUpperLimit": 43
-    },
-    {
       "className": "text-lg",
       "frequency": 8,
       "length": 7,
       "uncompressedBytes": 92,
       "brotliBytesUpperLimit": 56
+    },
+    {
+      "className": "animate-spin",
+      "frequency": 8,
+      "length": 12,
+      "uncompressedBytes": 44,
+      "brotliBytesUpperLimit": 43
     },
     {
       "className": "pt-2",
@@ -702,11 +695,11 @@
       "brotliBytesUpperLimit": 40
     },
     {
-      "className": "flex-wrap",
+      "className": "rounded-2xl",
       "frequency": 7,
-      "length": 9,
-      "uncompressedBytes": 26,
-      "brotliBytesUpperLimit": 30
+      "length": 11,
+      "uncompressedBytes": 53,
+      "brotliBytesUpperLimit": 57
     },
     {
       "className": "h-full",
@@ -714,6 +707,13 @@
       "length": 6,
       "uncompressedBytes": 20,
       "brotliBytesUpperLimit": 24
+    },
+    {
+      "className": "flex-wrap",
+      "frequency": 7,
+      "length": 9,
+      "uncompressedBytes": 26,
+      "brotliBytesUpperLimit": 30
     },
     {
       "className": "hidden",
@@ -730,11 +730,18 @@
       "brotliBytesUpperLimit": 46
     },
     {
-      "className": "rounded-2xl",
+      "className": "hover:bg-accent",
       "frequency": 7,
-      "length": 11,
-      "uncompressedBytes": 53,
-      "brotliBytesUpperLimit": 57
+      "length": 15,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "p-0",
+      "frequency": 7,
+      "length": 3,
+      "uncompressedBytes": 15,
+      "brotliBytesUpperLimit": 19
     },
     {
       "className": "font-serif",
@@ -756,20 +763,6 @@
       "length": 13,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "hover:bg-accent",
-      "frequency": 7,
-      "length": 15,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "p-0",
-      "frequency": 7,
-      "length": 3,
-      "uncompressedBytes": 15,
-      "brotliBytesUpperLimit": 19
     },
     {
       "className": "py-0.5",
@@ -807,6 +800,13 @@
       "brotliBytesUpperLimit": 0
     },
     {
+      "className": "sm:grid-cols-2",
+      "frequency": 6,
+      "length": 14,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
       "className": "fixed",
       "frequency": 6,
       "length": 5,
@@ -831,13 +831,6 @@
       "className": "px-2.5",
       "frequency": 6,
       "length": 6,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "sm:grid-cols-2",
-      "frequency": 6,
-      "length": 14,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
     },
@@ -884,6 +877,13 @@
       "brotliBytesUpperLimit": 50
     },
     {
+      "className": "focus:outline-hidden",
+      "frequency": 5,
+      "length": 20,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
       "className": "pl-9",
       "frequency": 5,
       "length": 4,
@@ -891,16 +891,16 @@
       "brotliBytesUpperLimit": 48
     },
     {
-      "className": "bg-background",
+      "className": "ring-1",
       "frequency": 5,
-      "length": 13,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "length": 6,
+      "uncompressedBytes": 261,
+      "brotliBytesUpperLimit": 106
     },
     {
-      "className": "focus:outline-hidden",
+      "className": "hover:text-primary",
       "frequency": 5,
-      "length": 20,
+      "length": 18,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
     },
@@ -910,13 +910,6 @@
       "length": 11,
       "uncompressedBytes": 33,
       "brotliBytesUpperLimit": 31
-    },
-    {
-      "className": "hover:text-primary",
-      "frequency": 5,
-      "length": 18,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
     },
     {
       "className": "overflow-y-auto",
@@ -931,6 +924,13 @@
       "length": 5,
       "uncompressedBytes": 47,
       "brotliBytesUpperLimit": 51
+    },
+    {
+      "className": "p-2",
+      "frequency": 5,
+      "length": 3,
+      "uncompressedBytes": 38,
+      "brotliBytesUpperLimit": 42
     },
     {
       "className": "mr-2",
@@ -996,67 +996,11 @@
       "brotliBytesUpperLimit": 47
     },
     {
-      "className": "left-3",
-      "frequency": 4,
-      "length": 6,
-      "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 42
-    },
-    {
-      "className": "bg-background/50",
-      "frequency": 4,
-      "length": 16,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
       "className": "object-cover",
       "frequency": 4,
       "length": 12,
       "uncompressedBytes": 31,
       "brotliBytesUpperLimit": 34
-    },
-    {
-      "className": "px-3",
-      "frequency": 4,
-      "length": 4,
-      "uncompressedBytes": 46,
-      "brotliBytesUpperLimit": 50
-    },
-    {
-      "className": "ring-1",
-      "frequency": 4,
-      "length": 6,
-      "uncompressedBytes": 261,
-      "brotliBytesUpperLimit": 106
-    },
-    {
-      "className": "md:block",
-      "frequency": 4,
-      "length": 8,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "max-w-lg",
-      "frequency": 4,
-      "length": 8,
-      "uncompressedBytes": 40,
-      "brotliBytesUpperLimit": 44
-    },
-    {
-      "className": "p-8",
-      "frequency": 4,
-      "length": 3,
-      "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 42
-    },
-    {
-      "className": "text-2xl",
-      "frequency": 4,
-      "length": 8,
-      "uncompressedBytes": 95,
-      "brotliBytesUpperLimit": 56
     },
     {
       "className": "bg-linear-to-r",
@@ -1080,11 +1024,74 @@
       "brotliBytesUpperLimit": 83
     },
     {
+      "className": "left-3",
+      "frequency": 4,
+      "length": 6,
+      "uncompressedBytes": 38,
+      "brotliBytesUpperLimit": 42
+    },
+    {
+      "className": "p-8",
+      "frequency": 4,
+      "length": 3,
+      "uncompressedBytes": 38,
+      "brotliBytesUpperLimit": 42
+    },
+    {
+      "className": "border-dashed",
+      "frequency": 4,
+      "length": 13,
+      "uncompressedBytes": 60,
+      "brotliBytesUpperLimit": 41
+    },
+    {
+      "className": "bg-background/50",
+      "frequency": 4,
+      "length": 16,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "px-3",
+      "frequency": 4,
+      "length": 4,
+      "uncompressedBytes": 46,
+      "brotliBytesUpperLimit": 50
+    },
+    {
+      "className": "md:block",
+      "frequency": 4,
+      "length": 8,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
       "className": "justify-start",
       "frequency": 4,
       "length": 13,
       "uncompressedBytes": 42,
       "brotliBytesUpperLimit": 35
+    },
+    {
+      "className": "bg-background",
+      "frequency": 4,
+      "length": 13,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "max-w-lg",
+      "frequency": 4,
+      "length": 8,
+      "uncompressedBytes": 40,
+      "brotliBytesUpperLimit": 44
+    },
+    {
+      "className": "text-2xl",
+      "frequency": 4,
+      "length": 8,
+      "uncompressedBytes": 95,
+      "brotliBytesUpperLimit": 56
     },
     {
       "className": "w-16",
@@ -1115,13 +1122,6 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "gap-2.5",
-      "frequency": 4,
-      "length": 7,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
       "className": "px-4",
       "frequency": 4,
       "length": 4,
@@ -1129,18 +1129,11 @@
       "brotliBytesUpperLimit": 50
     },
     {
-      "className": "h-2",
+      "className": "bg-primary/5",
       "frequency": 4,
-      "length": 3,
-      "uncompressedBytes": 37,
-      "brotliBytesUpperLimit": 41
-    },
-    {
-      "className": "border-dashed",
-      "frequency": 4,
-      "length": 13,
-      "uncompressedBytes": 60,
-      "brotliBytesUpperLimit": 41
+      "length": 12,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
     },
     {
       "className": "ease-in-out",
@@ -1155,13 +1148,6 @@
       "length": 11,
       "uncompressedBytes": 38,
       "brotliBytesUpperLimit": 36
-    },
-    {
-      "className": "p-2",
-      "frequency": 4,
-      "length": 3,
-      "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 42
     },
     {
       "className": "pointer-events-none",
@@ -1206,62 +1192,6 @@
       "brotliBytesUpperLimit": 41
     },
     {
-      "className": "p-6",
-      "frequency": 3,
-      "length": 3,
-      "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 42
-    },
-    {
-      "className": "top-2",
-      "frequency": 3,
-      "length": 5,
-      "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
-    },
-    {
-      "className": "text-success",
-      "frequency": 3,
-      "length": 12,
-      "uncompressedBytes": 35,
-      "brotliBytesUpperLimit": 34
-    },
-    {
-      "className": "mt-auto",
-      "frequency": 3,
-      "length": 7,
-      "uncompressedBytes": 25,
-      "brotliBytesUpperLimit": 29
-    },
-    {
-      "className": "max-w-7xl",
-      "frequency": 3,
-      "length": 9,
-      "uncompressedBytes": 42,
-      "brotliBytesUpperLimit": 41
-    },
-    {
-      "className": "py-2.5",
-      "frequency": 3,
-      "length": 6,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "leading-tight",
-      "frequency": 3,
-      "length": 13,
-      "uncompressedBytes": 82,
-      "brotliBytesUpperLimit": 51
-    },
-    {
-      "className": "space-y-4",
-      "frequency": 3,
-      "length": 9,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
       "className": "group",
       "frequency": 3,
       "length": 5,
@@ -1283,6 +1213,20 @@
       "brotliBytesUpperLimit": 0
     },
     {
+      "className": "from-primary/20",
+      "frequency": 3,
+      "length": 15,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "mt-auto",
+      "frequency": 3,
+      "length": 7,
+      "uncompressedBytes": 25,
+      "brotliBytesUpperLimit": 29
+    },
+    {
       "className": "bg-black/10",
       "frequency": 3,
       "length": 11,
@@ -1295,6 +1239,48 @@
       "length": 16,
       "uncompressedBytes": 610,
       "brotliBytesUpperLimit": 135
+    },
+    {
+      "className": "p-6",
+      "frequency": 3,
+      "length": 3,
+      "uncompressedBytes": 38,
+      "brotliBytesUpperLimit": 42
+    },
+    {
+      "className": "text-success",
+      "frequency": 3,
+      "length": 12,
+      "uncompressedBytes": 35,
+      "brotliBytesUpperLimit": 34
+    },
+    {
+      "className": "md:grid-cols-3",
+      "frequency": 3,
+      "length": 14,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "max-w-7xl",
+      "frequency": 3,
+      "length": 9,
+      "uncompressedBytes": 42,
+      "brotliBytesUpperLimit": 41
+    },
+    {
+      "className": "py-2.5",
+      "frequency": 3,
+      "length": 6,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "leading-tight",
+      "frequency": 3,
+      "length": 13,
+      "uncompressedBytes": 82,
+      "brotliBytesUpperLimit": 51
     },
     {
       "className": "pb-4",
@@ -1325,11 +1311,25 @@
       "brotliBytesUpperLimit": 25
     },
     {
+      "className": "space-y-4",
+      "frequency": 3,
+      "length": 9,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
       "className": "max-w-sm",
       "frequency": 3,
       "length": 8,
       "uncompressedBytes": 40,
       "brotliBytesUpperLimit": 44
+    },
+    {
+      "className": "h-2",
+      "frequency": 3,
+      "length": 3,
+      "uncompressedBytes": 37,
+      "brotliBytesUpperLimit": 41
     },
     {
       "className": "w-2",
@@ -1339,14 +1339,14 @@
       "brotliBytesUpperLimit": 40
     },
     {
-      "className": "bg-primary/5",
+      "className": "mb-2",
       "frequency": 3,
-      "length": 12,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "length": 4,
+      "uncompressedBytes": 45,
+      "brotliBytesUpperLimit": 49
     },
     {
-      "className": "md:grid-cols-3",
+      "className": "border-primary",
       "frequency": 3,
       "length": 14,
       "uncompressedBytes": 0,
@@ -1360,18 +1360,18 @@
       "brotliBytesUpperLimit": 51
     },
     {
-      "className": "mb-2",
-      "frequency": 3,
-      "length": 4,
-      "uncompressedBytes": 45,
-      "brotliBytesUpperLimit": 49
-    },
-    {
       "className": "bg-muted/40",
       "frequency": 3,
       "length": 11,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "right-3",
+      "frequency": 3,
+      "length": 7,
+      "uncompressedBytes": 40,
+      "brotliBytesUpperLimit": 44
     },
     {
       "className": "focus:bg-accent",
@@ -1465,6 +1465,13 @@
       "brotliBytesUpperLimit": 0
     },
     {
+      "className": "top-3",
+      "frequency": 3,
+      "length": 5,
+      "uncompressedBytes": 36,
+      "brotliBytesUpperLimit": 40
+    },
+    {
       "className": "border-input",
       "frequency": 3,
       "length": 12,
@@ -1472,18 +1479,18 @@
       "brotliBytesUpperLimit": 42
     },
     {
-      "className": "max-w-5xl",
-      "frequency": 3,
-      "length": 9,
-      "uncompressedBytes": 42,
-      "brotliBytesUpperLimit": 41
-    },
-    {
       "className": "px-6",
       "frequency": 3,
       "length": 4,
       "uncompressedBytes": 46,
       "brotliBytesUpperLimit": 50
+    },
+    {
+      "className": "max-w-5xl",
+      "frequency": 3,
+      "length": 9,
+      "uncompressedBytes": 42,
+      "brotliBytesUpperLimit": 41
     },
     {
       "className": "bg-muted/20",
@@ -1498,6 +1505,41 @@
       "length": 4,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 38
+    },
+    {
+      "className": "hover:shadow-md",
+      "frequency": 2,
+      "length": 15,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "focus:ring-1",
+      "frequency": 2,
+      "length": 12,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "text-white",
+      "frequency": 2,
+      "length": 10,
+      "uncompressedBytes": 37,
+      "brotliBytesUpperLimit": 41
+    },
+    {
+      "className": "line-clamp-2",
+      "frequency": 2,
+      "length": 12,
+      "uncompressedBytes": 99,
+      "brotliBytesUpperLimit": 57
+    },
+    {
+      "className": "top-2",
+      "frequency": 2,
+      "length": 5,
+      "uncompressedBytes": 36,
+      "brotliBytesUpperLimit": 40
     },
     {
       "className": "pr-10",
@@ -1542,48 +1584,6 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "w-32",
-      "frequency": 2,
-      "length": 4,
-      "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 42
-    },
-    {
-      "className": "tracking-widest",
-      "frequency": 2,
-      "length": 15,
-      "uncompressedBytes": 92,
-      "brotliBytesUpperLimit": 56
-    },
-    {
-      "className": "focus:ring-1",
-      "frequency": 2,
-      "length": 12,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "from-primary/20",
-      "frequency": 2,
-      "length": 15,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "text-white",
-      "frequency": 2,
-      "length": 10,
-      "uncompressedBytes": 37,
-      "brotliBytesUpperLimit": 41
-    },
-    {
-      "className": "line-clamp-2",
-      "frequency": 2,
-      "length": 12,
-      "uncompressedBytes": 99,
-      "brotliBytesUpperLimit": 57
-    },
-    {
       "className": "space-y-2",
       "frequency": 2,
       "length": 9,
@@ -1598,11 +1598,18 @@
       "brotliBytesUpperLimit": 32
     },
     {
-      "className": "gap-5",
+      "className": "w-32",
       "frequency": 2,
-      "length": 5,
-      "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
+      "length": 4,
+      "uncompressedBytes": 38,
+      "brotliBytesUpperLimit": 42
+    },
+    {
+      "className": "tracking-widest",
+      "frequency": 2,
+      "length": 15,
+      "uncompressedBytes": 92,
+      "brotliBytesUpperLimit": 56
     },
     {
       "className": "animate-in",
@@ -1675,6 +1682,13 @@
       "brotliBytesUpperLimit": 0
     },
     {
+      "className": "pb-3",
+      "frequency": 2,
+      "length": 4,
+      "uncompressedBytes": 46,
+      "brotliBytesUpperLimit": 50
+    },
+    {
       "className": "md:flex-initial",
       "frequency": 2,
       "length": 15,
@@ -1689,46 +1703,11 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "pb-3",
-      "frequency": 2,
-      "length": 4,
-      "uncompressedBytes": 46,
-      "brotliBytesUpperLimit": 50
-    },
-    {
-      "className": "gap-x-3",
-      "frequency": 2,
-      "length": 7,
-      "uncompressedBytes": 45,
-      "brotliBytesUpperLimit": 49
-    },
-    {
-      "className": "max-w-xs",
-      "frequency": 2,
-      "length": 8,
-      "uncompressedBytes": 40,
-      "brotliBytesUpperLimit": 44
-    },
-    {
       "className": "opacity-100",
       "frequency": 2,
       "length": 11,
       "uncompressedBytes": 23,
       "brotliBytesUpperLimit": 27
-    },
-    {
-      "className": "mt-4",
-      "frequency": 2,
-      "length": 4,
-      "uncompressedBytes": 42,
-      "brotliBytesUpperLimit": 46
-    },
-    {
-      "className": "right-3",
-      "frequency": 2,
-      "length": 7,
-      "uncompressedBytes": 40,
-      "brotliBytesUpperLimit": 44
     },
     {
       "className": "border-transparent",
@@ -1745,18 +1724,18 @@
       "brotliBytesUpperLimit": 48
     },
     {
-      "className": "disabled:pointer-events-none",
-      "frequency": 2,
-      "length": 28,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
       "className": "isolate",
       "frequency": 2,
       "length": 7,
       "uncompressedBytes": 27,
       "brotliBytesUpperLimit": 31
+    },
+    {
+      "className": "disabled:pointer-events-none",
+      "frequency": 2,
+      "length": 28,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
     },
     {
       "className": "max-h-75",
@@ -1778,6 +1757,13 @@
       "length": 11,
       "uncompressedBytes": 55,
       "brotliBytesUpperLimit": 44
+    },
+    {
+      "className": "sr-only",
+      "frequency": 2,
+      "length": 7,
+      "uncompressedBytes": 141,
+      "brotliBytesUpperLimit": 81
     },
     {
       "className": "data-[side=bottom]:slide-in-from-top-2",
@@ -1836,18 +1822,11 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "sr-only",
+      "className": "sm:text-5xl",
       "frequency": 2,
-      "length": 7,
-      "uncompressedBytes": 141,
-      "brotliBytesUpperLimit": 81
-    },
-    {
-      "className": "top-3",
-      "frequency": 2,
-      "length": 5,
-      "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
+      "length": 11,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
     },
     {
       "className": "min-h-20",
@@ -1855,13 +1834,6 @@
       "length": 8,
       "uncompressedBytes": 47,
       "brotliBytesUpperLimit": 51
-    },
-    {
-      "className": "sm:text-5xl",
-      "frequency": 2,
-      "length": 11,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
     },
     {
       "className": "mb-4",
@@ -1876,6 +1848,13 @@
       "length": 4,
       "uncompressedBytes": 44,
       "brotliBytesUpperLimit": 48
+    },
+    {
+      "className": "border-2",
+      "frequency": 2,
+      "length": 8,
+      "uncompressedBytes": 63,
+      "brotliBytesUpperLimit": 64
     },
     {
       "className": "lg:grid-cols-3",
@@ -1934,20 +1913,6 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "border-2",
-      "frequency": 2,
-      "length": 8,
-      "uncompressedBytes": 63,
-      "brotliBytesUpperLimit": 64
-    },
-    {
-      "className": "border-primary",
-      "frequency": 2,
-      "length": 14,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
       "className": "py-24",
       "frequency": 2,
       "length": 5,
@@ -1969,9 +1934,16 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "hover:bg-primary/15",
+      "className": "hover:bg-primary/20",
       "frequency": 2,
       "length": 19,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "group-hover:scale-125",
+      "frequency": 1,
+      "length": 21,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
     },
@@ -2009,6 +1981,34 @@
       "length": 4,
       "uncompressedBytes": 23,
       "brotliBytesUpperLimit": 27
+    },
+    {
+      "className": "lg:grid-cols-4",
+      "frequency": 1,
+      "length": 14,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "md:gap-8",
+      "frequency": 1,
+      "length": 8,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "lg:gap-12",
+      "frequency": 1,
+      "length": 9,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "lg:pb-4",
+      "frequency": 1,
+      "length": 7,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
     },
     {
       "className": "text-card-foreground",
@@ -2081,48 +2081,6 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "space-y-6",
-      "frequency": 1,
-      "length": 9,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "h-0.5",
-      "frequency": 1,
-      "length": 5,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "size-3.5",
-      "frequency": 1,
-      "length": 8,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "hover:shadow-md",
-      "frequency": 1,
-      "length": 15,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "group-hover:scale-105",
-      "frequency": 1,
-      "length": 21,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "text-info",
-      "frequency": 1,
-      "length": 9,
-      "uncompressedBytes": 29,
-      "brotliBytesUpperLimit": 33
-    },
-    {
       "className": "md:hidden",
       "frequency": 1,
       "length": 9,
@@ -2149,6 +2107,34 @@
       "length": 23,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "space-y-6",
+      "frequency": 1,
+      "length": 9,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "h-1",
+      "frequency": 1,
+      "length": 3,
+      "uncompressedBytes": 27,
+      "brotliBytesUpperLimit": 31
+    },
+    {
+      "className": "size-3.5",
+      "frequency": 1,
+      "length": 8,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "text-info",
+      "frequency": 1,
+      "length": 9,
+      "uncompressedBytes": 29,
+      "brotliBytesUpperLimit": 33
     },
     {
       "className": "fade-in",
@@ -2256,44 +2242,16 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "lg:grid-cols-4",
-      "frequency": 1,
-      "length": 14,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "md:gap-8",
-      "frequency": 1,
-      "length": 8,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "lg:gap-12",
-      "frequency": 1,
-      "length": 9,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "lg:pb-4",
-      "frequency": 1,
-      "length": 7,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "p-5",
-      "frequency": 1,
-      "length": 3,
-      "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 42
-    },
-    {
       "className": "md:items-center",
       "frequency": 1,
       "length": 15,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "ring-primary",
+      "frequency": 1,
+      "length": 12,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
     },
@@ -2354,34 +2312,6 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "sm:inline",
-      "frequency": 1,
-      "length": 9,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "pb-1",
-      "frequency": 1,
-      "length": 4,
-      "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 32
-    },
-    {
-      "className": "grid-cols-2",
-      "frequency": 1,
-      "length": 11,
-      "uncompressedBytes": 59,
-      "brotliBytesUpperLimit": 56
-    },
-    {
-      "className": "gap-y-2",
-      "frequency": 1,
-      "length": 7,
-      "uncompressedBytes": 42,
-      "brotliBytesUpperLimit": 46
-    },
-    {
       "className": "group/theme",
       "frequency": 1,
       "length": 11,
@@ -2417,6 +2347,13 @@
       "brotliBytesUpperLimit": 30
     },
     {
+      "className": "max-w-xs",
+      "frequency": 1,
+      "length": 8,
+      "uncompressedBytes": 40,
+      "brotliBytesUpperLimit": 44
+    },
+    {
       "className": "md:max-w-0",
       "frequency": 1,
       "length": 10,
@@ -2443,6 +2380,27 @@
       "length": 32,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "sm:inline",
+      "frequency": 1,
+      "length": 9,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "pb-1",
+      "frequency": 1,
+      "length": 4,
+      "uncompressedBytes": 36,
+      "brotliBytesUpperLimit": 32
+    },
+    {
+      "className": "grid-cols-2",
+      "frequency": 1,
+      "length": 11,
+      "uncompressedBytes": 59,
+      "brotliBytesUpperLimit": 56
     },
     {
       "className": "focus:text-destructive",
@@ -2508,18 +2466,130 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "gap-y-1",
-      "frequency": 1,
-      "length": 7,
-      "uncompressedBytes": 32,
-      "brotliBytesUpperLimit": 36
-    },
-    {
       "className": "ml-2",
       "frequency": 1,
       "length": 4,
       "uncompressedBytes": 43,
       "brotliBytesUpperLimit": 47
+    },
+    {
+      "className": "group/calendar",
+      "frequency": 1,
+      "length": 14,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "z-10",
+      "frequency": 1,
+      "length": 4,
+      "uncompressedBytes": 17,
+      "brotliBytesUpperLimit": 21
+    },
+    {
+      "className": "aspect-square",
+      "frequency": 1,
+      "length": 13,
+      "uncompressedBytes": 30,
+      "brotliBytesUpperLimit": 34
+    },
+    {
+      "className": "size-auto",
+      "frequency": 1,
+      "length": 9,
+      "uncompressedBytes": 34,
+      "brotliBytesUpperLimit": 38
+    },
+    {
+      "className": "min-w-8",
+      "frequency": 1,
+      "length": 7,
+      "uncompressedBytes": 44,
+      "brotliBytesUpperLimit": 48
+    },
+    {
+      "className": "group-data-[focused=true]/day:relative",
+      "frequency": 1,
+      "length": 38,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "group-data-[focused=true]/day:z-10",
+      "frequency": 1,
+      "length": 34,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "group-data-[focused=true]/day:border-ring",
+      "frequency": 1,
+      "length": 41,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "data-[range-end=true]:bg-primary",
+      "frequency": 1,
+      "length": 32,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "data-[range-end=true]:text-primary-foreground",
+      "frequency": 1,
+      "length": 45,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "data-[range-middle=true]:bg-muted",
+      "frequency": 1,
+      "length": 33,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "data-[range-start=true]:bg-primary",
+      "frequency": 1,
+      "length": 34,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "data-[range-start=true]:text-primary-foreground",
+      "frequency": 1,
+      "length": 47,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "data-[selected-single=true]:bg-primary",
+      "frequency": 1,
+      "length": 38,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "data-[selected-single=true]:text-primary-foreground",
+      "frequency": 1,
+      "length": 51,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "[&>span]:text-xs",
+      "frequency": 1,
+      "length": 16,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "[&>span]:opacity-80",
+      "frequency": 1,
+      "length": 19,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
     },
     {
       "className": "group/accordion-trigger",
@@ -2592,202 +2662,6 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "group/calendar",
-      "frequency": 1,
-      "length": 14,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "[--cell-radius:var(--radius-md)]",
-      "frequency": 1,
-      "length": 32,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "[--cell-size:--spacing(7)]",
-      "frequency": 1,
-      "length": 26,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "in-data-[slot=card-content]:bg-transparent",
-      "frequency": 1,
-      "length": 42,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "in-data-[slot=popover-content]:bg-transparent",
-      "frequency": 1,
-      "length": 45,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "size-(--cell-size)",
-      "frequency": 1,
-      "length": 18,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "z-10",
-      "frequency": 1,
-      "length": 4,
-      "uncompressedBytes": 17,
-      "brotliBytesUpperLimit": 21
-    },
-    {
-      "className": "aspect-square",
-      "frequency": 1,
-      "length": 13,
-      "uncompressedBytes": 30,
-      "brotliBytesUpperLimit": 34
-    },
-    {
-      "className": "size-auto",
-      "frequency": 1,
-      "length": 9,
-      "uncompressedBytes": 34,
-      "brotliBytesUpperLimit": 38
-    },
-    {
-      "className": "min-w-(--cell-size)",
-      "frequency": 1,
-      "length": 19,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "group-data-[focused=true]/day:relative",
-      "frequency": 1,
-      "length": 38,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "group-data-[focused=true]/day:z-10",
-      "frequency": 1,
-      "length": 34,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "group-data-[focused=true]/day:border-ring",
-      "frequency": 1,
-      "length": 41,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "group-data-[focused=true]/day:ring-1",
-      "frequency": 1,
-      "length": 36,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "group-data-[focused=true]/day:ring-ring/50",
-      "frequency": 1,
-      "length": 42,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "data-[range-end=true]:rounded-(--cell-radius)",
-      "frequency": 1,
-      "length": 45,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "data-[range-end=true]:rounded-r-(--cell-radius)",
-      "frequency": 1,
-      "length": 47,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "data-[range-end=true]:bg-primary",
-      "frequency": 1,
-      "length": 32,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "data-[range-end=true]:text-primary-foreground",
-      "frequency": 1,
-      "length": 45,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "data-[range-middle=true]:bg-muted",
-      "frequency": 1,
-      "length": 33,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "data-[range-middle=true]:data-[range-start=true]:rounded-(--cell-radius)",
-      "frequency": 1,
-      "length": 72,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "data-[range-start=true]:rounded-l-(--cell-radius)",
-      "frequency": 1,
-      "length": 49,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "data-[range-start=true]:bg-primary",
-      "frequency": 1,
-      "length": 34,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "data-[range-start=true]:text-primary-foreground",
-      "frequency": 1,
-      "length": 47,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "data-[selected-single=true]:bg-primary",
-      "frequency": 1,
-      "length": 38,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "data-[selected-single=true]:text-primary-foreground",
-      "frequency": 1,
-      "length": 51,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "[&>span]:text-xs",
-      "frequency": 1,
-      "length": 16,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "[&>span]:opacity-80",
-      "frequency": 1,
-      "length": 19,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
       "className": "size-full",
       "frequency": 1,
       "length": 9,
@@ -2830,13 +2704,6 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "in-data-[slot=dialog-content]:rounded-lg!",
-      "frequency": 1,
-      "length": 41,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
       "className": "data-[disabled=true]:pointer-events-none",
       "frequency": 1,
       "length": 40,
@@ -2858,13 +2725,6 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "data-selected:",
-      "frequency": 1,
-      "length": 14,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
       "className": "group-data-[checked=true]/command-item:opacity-100",
       "frequency": 1,
       "length": 50,
@@ -2872,11 +2732,46 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "min-w-36",
+      "className": "top-1/2",
+      "frequency": 1,
+      "length": 7,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "left-1/2",
       "frequency": 1,
       "length": 8,
-      "uncompressedBytes": 46,
-      "brotliBytesUpperLimit": 50
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "max-w-[calc(100%-2rem)]",
+      "frequency": 1,
+      "length": 23,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "-translate-x-1/2",
+      "frequency": 1,
+      "length": 16,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "-translate-y-1/2",
+      "frequency": 1,
+      "length": 16,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "sm:max-w-sm",
+      "frequency": 1,
+      "length": 11,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
     },
     {
       "className": "data-[state=closed]:overflow-hidden",
@@ -2926,55 +2821,6 @@
       "length": 38,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "top-1/2",
-      "frequency": 1,
-      "length": 7,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "left-1/2",
-      "frequency": 1,
-      "length": 8,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "max-w-[calc(100%-2rem)]",
-      "frequency": 1,
-      "length": 23,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "-translate-x-1/2",
-      "frequency": 1,
-      "length": 16,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "-translate-y-1/2",
-      "frequency": 1,
-      "length": 16,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "sm:max-w-sm",
-      "frequency": 1,
-      "length": 11,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "right-2",
-      "frequency": 1,
-      "length": 7,
-      "uncompressedBytes": 40,
-      "brotliBytesUpperLimit": 44
     },
     {
       "className": "group-data-[disabled=true]:pointer-events-none",
@@ -3222,13 +3068,6 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "toaster",
-      "frequency": 1,
-      "length": 7,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
       "className": "group/tabs",
       "frequency": 1,
       "length": 10,
@@ -3243,32 +3082,11 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "field-sizing-content",
+      "className": "toaster",
       "frequency": 1,
-      "length": 20,
-      "uncompressedBytes": 43,
-      "brotliBytesUpperLimit": 33
-    },
-    {
-      "className": "placeholder:text-muted-foreground",
-      "frequency": 1,
-      "length": 33,
+      "length": 7,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "overflow-x-auto",
-      "frequency": 1,
-      "length": 15,
-      "uncompressedBytes": 33,
-      "brotliBytesUpperLimit": 37
-    },
-    {
-      "className": "whitespace-nowrap",
-      "frequency": 1,
-      "length": 17,
-      "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 33
     },
     {
       "className": "from-primary/10",
@@ -3299,6 +3117,34 @@
       "brotliBytesUpperLimit": 56
     },
     {
+      "className": "field-sizing-content",
+      "frequency": 1,
+      "length": 20,
+      "uncompressedBytes": 43,
+      "brotliBytesUpperLimit": 33
+    },
+    {
+      "className": "placeholder:text-muted-foreground",
+      "frequency": 1,
+      "length": 33,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "overflow-x-auto",
+      "frequency": 1,
+      "length": 15,
+      "uncompressedBytes": 33,
+      "brotliBytesUpperLimit": 37
+    },
+    {
+      "className": "whitespace-nowrap",
+      "frequency": 1,
+      "length": 17,
+      "uncompressedBytes": 38,
+      "brotliBytesUpperLimit": 33
+    },
+    {
       "className": "min-h-full",
       "frequency": 1,
       "length": 10,
@@ -3327,20 +3173,6 @@
       "brotliBytesUpperLimit": 47
     },
     {
-      "className": "h-auto",
-      "frequency": 1,
-      "length": 6,
-      "uncompressedBytes": 20,
-      "brotliBytesUpperLimit": 24
-    },
-    {
-      "className": "hover:text-primary/80",
-      "frequency": 1,
-      "length": 21,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
       "className": "hover:border-border",
       "frequency": 1,
       "length": 19,
@@ -3353,6 +3185,20 @@
       "length": 8,
       "uncompressedBytes": 29,
       "brotliBytesUpperLimit": 33
+    },
+    {
+      "className": "h-auto",
+      "frequency": 1,
+      "length": 6,
+      "uncompressedBytes": 20,
+      "brotliBytesUpperLimit": 24
+    },
+    {
+      "className": "hover:text-primary/80",
+      "frequency": 1,
+      "length": 21,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
     },
     {
       "className": "text-warning-foreground",
@@ -3390,55 +3236,6 @@
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "from-primary/15",
-      "frequency": 1,
-      "length": 15,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "gap-3.5",
-      "frequency": 1,
-      "length": 7,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "pl-1.5",
-      "frequency": 1,
-      "length": 6,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "pr-2.5",
-      "frequency": 1,
-      "length": 6,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "capitalize",
-      "frequency": 1,
-      "length": 10,
-      "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 36
-    },
-    {
-      "className": "md:col-span-2",
-      "frequency": 1,
-      "length": 13,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "grid-cols-3",
-      "frequency": 1,
-      "length": 11,
-      "uncompressedBytes": 59,
-      "brotliBytesUpperLimit": 56
-    },
-    {
       "className": "pt-6",
       "frequency": 1,
       "length": 4,
@@ -3451,6 +3248,13 @@
       "length": 10,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "capitalize",
+      "frequency": 1,
+      "length": 10,
+      "uncompressedBytes": 38,
+      "brotliBytesUpperLimit": 36
     },
     {
       "className": "divide-y",
@@ -3472,6 +3276,20 @@
       "length": 11,
       "uncompressedBytes": 25,
       "brotliBytesUpperLimit": 27
+    },
+    {
+      "className": "md:col-span-2",
+      "frequency": 1,
+      "length": 13,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0
+    },
+    {
+      "className": "grid-cols-3",
+      "frequency": 1,
+      "length": 11,
+      "uncompressedBytes": 59,
+      "brotliBytesUpperLimit": 56
     },
     {
       "className": "hover:bg-muted/20",

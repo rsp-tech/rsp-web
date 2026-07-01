@@ -5,6 +5,7 @@ import { SiYoutube } from "react-icons/si";
 import { getAssetUrl } from "@/lib/storage";
 import type { EnrichedRecording } from "@/types";
 import { MaterialBadge } from "./material-badge";
+import { cn } from "@/lib/utils";
 
 interface RecordingCardProps {
   rec: EnrichedRecording;
@@ -24,11 +25,12 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
       tabIndex={0}
       data-recording-item
       onKeyDown={onKeyDown}
-      className={`p-5 border rounded-2xl shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4 group focus:ring-1 focus:ring-primary focus:outline-hidden transition-all duration-200 ease-in-out ${
+      className={cn(
+        "p-4 border rounded-2xl shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4 group focus:ring-1 focus:ring-primary focus:outline-hidden transition-all duration-200 ease-in-out",
         isHighlighted
           ? "border-primary bg-primary/5 ring-1 ring-primary"
-          : "border-border bg-card hover:shadow-md"
-      }`}
+          : "border-border bg-card hover:shadow-md",
+      )}
     >
       {/* Meta details */}
       <div className="flex-1 flex flex-col gap-2">

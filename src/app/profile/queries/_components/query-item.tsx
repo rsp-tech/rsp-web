@@ -62,7 +62,7 @@ export function QueryItem({
         </div>
       </AccordionTrigger>
       <AccordionContent className="pb-4 pt-1 px-1 border-t border-border/40 mt-1">
-        <div className="flex flex-col gap-5 mt-2">
+        <div className="flex flex-col gap-4 mt-2">
           {/* Original Query Message */}
           <div className="bg-card border border-border rounded-lg p-4 flex flex-col gap-2">
             <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -87,9 +87,9 @@ export function QueryItem({
           {q.status === "open" ? (
             <div className="flex flex-col gap-2 mt-1">
               {submitError && (
-                <div className="bg-destructive/10 border border-destructive/20 text-destructive text-sm rounded-lg p-3 flex gap-2.5 items-start shadow-md mb-2">
+                <div className="bg-destructive/10 border border-destructive/20 text-destructive text-sm rounded-lg p-3 flex gap-3 items-start shadow-md mb-2">
                   <AlertCircle className="w-4 h-4 mt-0.5 shrink-0 text-destructive" />
-                  <div className="flex flex-col gap-0.5">
+                  <div className="flex flex-col gap-1">
                     <p className="font-semibold text-xs text-destructive">
                       Failed to send reply
                     </p>

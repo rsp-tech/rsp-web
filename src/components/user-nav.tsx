@@ -60,7 +60,7 @@ export function UserNav() {
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" forceMount style={{ width: "14rem" }}>
         <DropdownMenuLabel className="border-b border-border">
-          <div className="flex flex-col gap-0.5">
+          <div className="flex flex-col gap-1">
             <p className="text-sm font-medium leading-none">
               {getUserDisplayName(session.user)}
             </p>

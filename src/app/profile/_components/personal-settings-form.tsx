@@ -250,7 +250,7 @@ export function PersonalSettingsForm({
               disabled={hasPendingRequest}
               className="mt-0.5 h-4 w-4 rounded border-input text-primary focus:ring-primary cursor-pointer disabled:opacity-60"
             />
-            <div className="flex flex-col gap-0.5">
+            <div className="flex flex-col gap-1">
               <Label
                 htmlFor="voice-leader"
                 className="text-xs font-semibold cursor-pointer"
@@ -359,7 +359,7 @@ export function PersonalSettingsForm({
             </div>
           </div>
         </CardContent>
-        <CardFooter className="flex justify-end pt-2 border-t border-border/40 mt-4">
+        <CardFooter className="flex justify-end pt-2 border-t border-border/40 mt-2">
           <Button
             type="submit"
             disabled={updating || hasPendingRequest || isUnchanged}

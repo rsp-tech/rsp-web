@@ -144,7 +144,7 @@ export function SearchBar() {
             )}
             {/* Collapsible Filters Panel */}
             {showFilters && (
-              <div className="bg-muted/40 p-3 border-b border-border flex flex-col gap-2.5 text-xs">
+              <div className="bg-muted/40 p-3 border-b border-border flex flex-col gap-3 text-xs">
                 <div className="flex items-center justify-between pb-1 border-b border-border/40">
                   <span className="font-bold ">Advanced Search Filters</span>
                   {hasActiveFilters && (
@@ -158,7 +158,7 @@ export function SearchBar() {
                   )}
                 </div>
 
-                <div className="grid grid-cols-2 gap-x-3 gap-y-2">
+                <div className="grid grid-cols-2 gap-3">
                   {/* Speaker select */}
                   <div className="flex flex-col gap-1">
                     <Label className="text-xxs font-bold text-muted-foreground uppercase">

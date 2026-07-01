@@ -96,7 +96,7 @@ export function NotificationCenter() {
                     className={`w-4 h-4 ${notif.read ? "text-muted-foreground" : "text-primary"}`}
                   />
                 </div>
-                <div className="flex-1 flex flex-col gap-0.5">
+                <div className="flex-1 flex flex-col gap-1">
                   <div className="flex justify-between items-start gap-1">
                     <h4 className="font-semibold text-sm pr-4">
                       {notif.title}

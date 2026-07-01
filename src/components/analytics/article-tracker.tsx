@@ -47,6 +47,6 @@ export function ArticleTracker({ contentProps }: ArticleTrackerProps) {
   }, [contentProps]);
 
   return (
-    <div ref={sentinelRef} className="h-2 w-full mt-4" aria-hidden="true" />
+    <div ref={sentinelRef} className="h-3 w-full mt-2" aria-hidden="true" />
   );
 }

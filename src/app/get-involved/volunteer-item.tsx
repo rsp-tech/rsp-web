@@ -98,14 +98,24 @@ export const VolunteerItem = ({
             </label>
             <SearchableSelect
               options={[
-                { value: "curious", label: "Curious / Exploring & willing to learn" },
-                { value: "interested", label: "Interested / Ready to contribute" },
-                { value: "committed", label: "Committed / Ready to take regular responsibility" },
+                {
+                  value: "curious",
+                  label: "Curious / Exploring & willing to learn",
+                },
+                {
+                  value: "interested",
+                  label: "Interested / Ready to contribute",
+                },
+                {
+                  value: "committed",
+                  label: "Committed / Ready to take regular responsibility",
+                },
               ]}
               value={detail.level}
               onChange={(val) => handleUpdateDetail(service.id, "level", val)}
               placeholder="Select level"
-              className="max-w-xs bg-muted"
+              className="bg-muted"
+              style={{ maxWidth: "20rem" }}
             />
           </div>
 
