@@ -7,6 +7,7 @@ import ts from "typescript";
 
 const execAsync = promisify(exec);
 const brotliCompressAsync = promisify(zlib.brotliCompress);
+const gzip = promisify(zlib.gzip);
 
 const SRC_DIR = path.join(process.cwd(), "src");
 const OUTPUT_FILE = path.join(process.cwd(), "classname-usage.json");
@@ -233,6 +234,11 @@ const getBrotliSize = async (fileBuffer: Buffer): Promise<number> => {
   return compressed.length;
 };
 
+const getGZipSize = async (fileBuffer: Buffer): Promise<number> => {
+  const compressed = await gzip(fileBuffer);
+  return compressed.length;
+};
+
 const compileCSS = async (input: string, output: string): Promise<Buffer> => {
   await execAsync(`pnpm tailwindcss -i ${input} -o ${output} --minify`);
   return fs.readFile(output);
@@ -310,6 +316,7 @@ const main = async (): Promise<void> => {
       file: string;
       rawBytes: number;
       brotliBytes: number;
+      gZipBytes: number;
     }> = [];
 
     try {
@@ -319,11 +326,11 @@ const main = async (): Promise<void> => {
       for (const file of cssChunks) {
         const fullPath = path.join(nextCssDir, file);
         const buf = await fs.readFile(fullPath);
-        const bSize = await getBrotliSize(buf);
         nextCssFilesData.push({
           file,
           rawBytes: buf.length,
-          brotliBytes: bSize,
+          brotliBytes: await getBrotliSize(buf),
+          gZipBytes: await getGZipSize(buf),
         });
       }
     } catch {
