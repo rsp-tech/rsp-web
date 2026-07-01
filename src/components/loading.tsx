@@ -4,9 +4,12 @@ import type { CSSProperties } from "react";
 export const Loading = ({ message }: { message?: string }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-background">
-      <div className="relative w-full max-w-lg px-8 py-12 text-center">
+      <div className="relative w-full max-w-lg p-8 text-center">
         {/* Shimmering Dialog */}
-        <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-10 shadow-md transition-all">
+        <div
+          className="relative overflow-hidden rounded-2xl border border-border bg-card shadow-md transition-all"
+          style={{ padding: "2.5rem" }}
+        >
           <div className="relative space-y-6">
             <div className="space-y-4">
               <p
@@ -22,7 +25,10 @@ export const Loading = ({ message }: { message?: string }) => {
 
             <div className="flex flex-col items-center gap-2">
               <div className="h-0.5 w-32 overflow-hidden rounded-full bg-primary/10">
-                <div className="h-full w-full bg-primary animate-progress" />
+                <div
+                  className="h-full w-full bg-primary"
+                  style={{ animation: "progress 2s infinite ease-in-out" }}
+                />
               </div>
               <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground opacity-60">
                 Bhagavad Gita 18.66

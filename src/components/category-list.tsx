@@ -21,10 +21,11 @@ export const CategoryList = ({
           <Skeleton
             // biome-ignore lint/suspicious/noArrayIndexKey: ok for skeleton
             key={i}
-            className="h-48 rounded-2xl opacity-0"
+            className="rounded-2xl opacity-0"
             style={{
               animation: "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
               animationDelay: `${i * 100}ms`,
+              height: "12rem",
             }}
           />
         ))}

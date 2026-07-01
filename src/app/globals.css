@@ -55,7 +55,6 @@
   --color-info: var(--info);
   --color-info-foreground: var(--info-foreground);
 
-  --animate-progress: progress 2s infinite ease-in-out;
   @keyframes progress {
     0% {
       transform: translateX(-100%);

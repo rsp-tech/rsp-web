@@ -134,11 +134,7 @@ export function SearchResults({
       >
         {/* Recordings Section */}
         {recordings.length > 0 && (
-          <AccordionItem
-            value="recordings"
-            className="border-none"
-            key="recordings"
-          >
+          <AccordionItem value="recordings" key="recordings">
             <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:text-foreground transition-all">
               Recordings ({recordings.length})
             </AccordionTrigger>
@@ -175,7 +171,10 @@ export function SearchResults({
                         </span>
                       </div>
                       {rec.category && (
-                        <span className="text-xxs bg-primary/10 text-primary px-1.5 py-0.5 rounded-md font-medium shrink-0 max-w-24 truncate">
+                        <span
+                          className="text-xxs bg-primary/10 text-primary px-1.5 py-0.5 rounded-md font-medium shrink-0 truncate"
+                          style={{ maxWidth: "6rem" }}
+                        >
                           {rec.category.name}
                         </span>
                       )}
@@ -196,7 +195,7 @@ export function SearchResults({
                       )}
                       {rec.recorded_at && (
                         <span className="flex items-center gap-1">
-                          <Calendar className="size-3 text-muted-foreground opacity-80" />
+                          <Calendar className="w-3 h-3 text-muted-foreground opacity-80" />
                           {new Date(rec.recorded_at).toLocaleDateString()}
                         </span>
                       )}
@@ -222,11 +221,7 @@ export function SearchResults({
 
         {/* Categories Section */}
         {categories.length > 0 && (
-          <AccordionItem
-            value="categories"
-            className="border-none"
-            key="categories"
-          >
+          <AccordionItem value="categories" key="categories">
             <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:text-foreground transition-all">
               Categories ({categories.length})
             </AccordionTrigger>
@@ -279,11 +274,7 @@ export function SearchResults({
 
         {/* Materials Section */}
         {materials.length > 0 && (
-          <AccordionItem
-            value="materials"
-            className="border-none"
-            key="materials"
-          >
+          <AccordionItem value="materials" key="materials">
             <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:text-foreground transition-all">
               Materials ({materials.length})
             </AccordionTrigger>

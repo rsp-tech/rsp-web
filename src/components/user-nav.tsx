@@ -11,7 +11,6 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -59,8 +58,8 @@ export function UserNav() {
           <CurrentUserAvatar />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" align="end" forceMount>
-        <DropdownMenuLabel className="font-normal">
+      <DropdownMenuContent align="end" forceMount style={{ width: "14rem" }}>
+        <DropdownMenuLabel className="border-b border-border">
           <div className="flex flex-col gap-0.5">
             <p className="text-sm font-medium leading-none">
               {getUserDisplayName(session.user)}
@@ -72,14 +71,12 @@ export function UserNav() {
             )}
           </div>
         </DropdownMenuLabel>
-        <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={() => router.push("/profile")}>
             <User className="mr-2 h-4 w-4" />
             Profile
           </DropdownMenuItem>
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
         <DropdownMenuItem
           onClick={handleLogout}
           className="text-destructive focus:text-destructive focus:bg-destructive/10"

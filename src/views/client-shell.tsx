@@ -44,7 +44,7 @@ export const ClientShell = ({
 
   if (slug.length === 0) {
     return (
-      <div className="flex flex-col gap-10 py-4">
+      <div className="flex flex-col py-4" style={{ gap: "2.5rem" }}>
         <CategoryHero />
 
         {/* Root Categories Section */}
@@ -88,7 +88,7 @@ export const ClientShell = ({
         <span className="text-xs font-bold text-primary tracking-wider uppercase">
           Category
         </span>
-        <h1 className="text-3xl sm:text-4xl font-extrabold font-heading text-foreground tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-bold font-heading text-foreground tracking-tight">
           {category.name}
         </h1>
       </div>

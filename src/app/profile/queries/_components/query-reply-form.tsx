@@ -41,7 +41,8 @@ export function QueryReplyForm({
           type="button"
           onClick={onSendReply}
           disabled={sending || !replyText.trim()}
-          className="h-12 w-16 shrink-0 cursor-pointer"
+          className="shrink-0 cursor-pointer"
+          style={{ height: "3rem", width: "4rem" }}
         >
           {sending ? (
             <Loader2 className="w-4 h-4 animate-spin" />

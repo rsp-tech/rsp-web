@@ -34,7 +34,10 @@ export function NotificationCenter() {
         >
           {unreadCount > 0 ? (
             <>
-              <BellRing className="w-5 h-5 text-primary animate-bounce" />
+              <BellRing
+                className="w-5 h-5 text-primary"
+                style={{ animation: "bounce 1s infinite" }}
+              />
               <span className="absolute top-1 right-1 flex h-2 w-2">
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-80" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
@@ -61,7 +64,7 @@ export function NotificationCenter() {
 
         <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-12 gap-2 text-muted-foreground">
+            <div className="flex flex-col items-center justify-center py-16 gap-2 text-muted-foreground">
               <Loader2 className="w-6 h-6 text-primary animate-spin" />
               <p className="text-xs font-medium">Loading notifications...</p>
             </div>

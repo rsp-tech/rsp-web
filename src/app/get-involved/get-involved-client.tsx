@@ -175,9 +175,7 @@ export function GetInvolvedClient() {
           <Heart className="w-8 h-8" />
         </div>
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-extrabold tracking-tight">
-            Get Involved
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight">Get Involved</h1>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
             Log in to view available devotional volunteering opportunities and
             sign up to contribute your skills.
@@ -193,9 +191,12 @@ export function GetInvolvedClient() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-4 flex flex-col gap-8">
+    <div
+      className="mx-auto py-4 flex flex-col gap-8"
+      style={{ maxWidth: "56rem" }}
+    >
       <div className="flex flex-col gap-2 border-b border-border pb-6">
-        <h1 className="text-3xl sm:text-4xl font-extrabold font-heading text-foreground tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-bold font-heading text-foreground tracking-tight">
           Devotional Volunteering & Service
         </h1>
         <p className="text-muted-foreground text-sm">
@@ -206,7 +207,7 @@ export function GetInvolvedClient() {
 
       <div className="flex flex-col gap-6">
         {services.length === 0 ? (
-          <p className="text-muted-foreground text-center py-12 border border-dashed rounded-xl text-sm">
+          <p className="text-muted-foreground text-center py-16 border border-dashed rounded-xl text-sm">
             No volunteering opportunities currently listed.
           </p>
         ) : (

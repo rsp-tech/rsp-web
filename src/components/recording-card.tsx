@@ -32,11 +32,14 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
     >
       {/* Meta details */}
       <div className="flex-1 flex flex-col gap-2">
-        <h3 className="font-bold text-base text-foreground leading-snug group-hover:text-primary transition-all">
+        <h3 className="font-bold text-foreground leading-snug group-hover:text-primary transition-all">
           {rec.name}
         </h3>
 
-        <div className="flex flex-wrap items-center gap-x-4 gap-y-1.5 text-xs text-muted-foreground font-medium">
+        <div
+          className="flex flex-wrap items-center text-xs text-muted-foreground font-medium"
+          style={{ columnGap: "1rem", rowGap: "0.375rem" }}
+        >
           {rec.speakers && rec.speakers.length > 0 && (
             <span className="flex items-center gap-1">
               <User className="w-3.5 h-3.5 text-muted-foreground opacity-80" />

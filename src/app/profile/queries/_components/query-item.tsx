@@ -37,7 +37,7 @@ export function QueryItem({
   return (
     <AccordionItem
       value={q.id}
-      className="px-4 border-none hover:bg-muted/10 transition-all"
+      className="px-4 hover:bg-muted/10 transition-all"
       key={replies.length}
     >
       <AccordionTrigger className="w-full hover:no-underline py-4 flex items-start gap-4 cursor-pointer">
@@ -55,7 +55,7 @@ export function QueryItem({
                 : "Date unknown"}
             </span>
           </div>
-          <h4 className="font-bold text-foreground text-sm sm:text-base leading-snug truncate mt-1">
+          <h4 className="font-bold text-foreground leading-snug truncate mt-1">
             {q.subject}
           </h4>
         </div>
@@ -77,7 +77,7 @@ export function QueryItem({
                   : ""}
               </span>
             </div>
-            <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed bg-muted/20 p-3 rounded-lg border border-border/40">
+            <p className="text-sm text-foreground leading-relaxed bg-muted/20 p-3 rounded-lg border border-border/40">
               {q.message}
             </p>
           </div>

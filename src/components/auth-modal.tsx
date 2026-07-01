@@ -162,7 +162,10 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         {/* Divider */}
         <div className="relative flex py-1 items-center">
           <div className="flex-grow border-t border-border" />
-          <span className="flex-shrink mx-4 text-xs text-muted-foreground font-medium">
+          <span
+            className="flex-shrink text-xs text-muted-foreground font-medium"
+            style={{ marginInline: "1rem" }}
+          >
             or continue with
           </span>
           <div className="flex-grow border-t border-border" />

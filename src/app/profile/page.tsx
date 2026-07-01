@@ -93,9 +93,7 @@ export default function ProfilePage() {
           <User className="w-8 h-8" />
         </div>
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-extrabold tracking-tight">
-            User Profile
-          </h1>
+          <h1 className="text-3xl font-bold tracking-tight">User Profile</h1>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
             Log in to manage your spiritual profile, update ashram status, and
             select service preferences.
@@ -118,7 +116,7 @@ export default function ProfilePage() {
     <div className="max-w-5xl mx-auto py-6 flex flex-col gap-8">
       {/* Page Header */}
       <div className="flex flex-col gap-2 border-b border-border pb-6">
-        <h1 className="text-3xl sm:text-4xl font-extrabold font-heading text-foreground tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-bold font-heading text-foreground tracking-tight">
           My Profile
         </h1>
         <p className="text-muted-foreground text-sm">

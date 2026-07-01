@@ -25,7 +25,10 @@ export function QueryReplyThread({
           answer.
         </p>
       ) : (
-        <div className="flex flex-col gap-3 max-h-75 overflow-y-auto pr-1">
+        <div
+          className="flex flex-col gap-3 max-h-75 overflow-y-auto"
+          style={{ paddingRight: "0.25rem" }}
+        >
           {replies.map((reply) => {
             const isAdminReply = reply.user_id !== currentUserId;
             const replierName =
@@ -60,7 +63,7 @@ export function QueryReplyThread({
                       : ""}
                   </span>
                 </div>
-                <p className="text-xs text-foreground leading-relaxed whitespace-pre-wrap mt-0.5 text-left">
+                <p className="text-xs text-foreground leading-relaxed mt-0.5 text-left">
                   {reply.message}
                 </p>
               </div>

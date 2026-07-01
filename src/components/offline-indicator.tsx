@@ -10,10 +10,12 @@ export function OfflineIndicator() {
 
   return (
     <div
-      className="fixed bottom-4 left-4 z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl border border-destructive/20 bg-destructive/10 text-destructive-foreground shadow-md animate-in duration-200"
+      className="fixed z-50 flex items-center gap-2.5 px-4 py-3 rounded-xl border border-destructive/20 bg-destructive/10 text-destructive-foreground shadow-md animate-in duration-200"
       style={{
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",
+        left: "1rem",
+        bottom: "1rem",
       }}
     >
       <WifiOff className="w-4 h-4 text-destructive shrink-0" />

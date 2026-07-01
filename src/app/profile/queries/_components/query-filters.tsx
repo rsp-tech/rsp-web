@@ -94,7 +94,7 @@ export function QueryFilters({
           defaultValue="all"
           value={statusFilter}
           onValueChange={onStatusChange}
-          className="w-xs"
+          style={{ width: "20rem" }}
         >
           <TabsList className="grid grid-cols-3 w-full">
             <TabsTrigger type="button" value="all" className="cursor-pointer">

@@ -22,9 +22,18 @@ export function ProfileDashboardCard({
 }: ProfileDashboardCardProps) {
   return (
     <Card className="border-border overflow-hidden p-0">
-      <div className="h-24 bg-linear-to-r from-primary/15 via-primary/5 to-transparent border-b border-border/40" />
-      <div className="px-6 pb-6 relative flex flex-col items-center text-center -mt-10">
-        <div className="w-20 h-20 rounded-full bg-card border-2 border-primary flex items-center justify-center text-primary font-bold text-2xl shadow-md mb-3">
+      <div
+        className="bg-linear-to-r from-primary/15 via-primary/5 to-transparent border-b border-border/40"
+        style={{ height: "6rem" }}
+      />
+      <div
+        className="px-6 pb-6 relative flex flex-col items-center text-center"
+        style={{ marginTop: "-2.5rem" }}
+      >
+        <div
+          className="rounded-full bg-card border-2 border-primary flex items-center justify-center text-primary font-bold text-2xl shadow-md mb-4"
+          style={{ height: "5rem", width: "5rem" }}
+        >
           {fullName
             ? fullName.charAt(0).toUpperCase()
             : user.email?.charAt(0).toUpperCase()}
@@ -38,7 +47,10 @@ export function ProfileDashboardCard({
           {user.email}
         </p>
 
-        <div className="w-full border-t border-border my-5" />
+        <div
+          className="w-full border-t border-border"
+          style={{ margin: "1.25rem 0" }}
+        />
 
         <div className="w-full flex flex-col gap-3.5 text-left">
           <div className="flex items-center gap-2 text-xs">

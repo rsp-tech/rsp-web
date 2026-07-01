@@ -10,6 +10,7 @@
     "lint": "biome check",
     "db-types:prune": "node --experimental-strip-types scripts/prune-supabase-types.ts",
     "css": "node --experimental-strip-types scripts/analyze-css.ts",
+    "purge-ui": "node --experimental-strip-types scripts/purge-dead-ui.ts",
     "css:build": "node --experimental-strip-types scripts/process-build-css.ts",
     "db-types": "dotenv -- bash -c 'pnpm supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema prod > src/database.types.ts && pnpm db-types:prune '",
     "format": "biome format --write"

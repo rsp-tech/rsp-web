@@ -171,7 +171,7 @@ export default function UserQueriesPage() {
           <MessageSquare className="w-8 h-8" />
         </div>
         <div className="flex flex-col gap-2">
-          <h1 className="text-3xl font-extrabold tracking-tight">
+          <h1 className="text-3xl font-bold tracking-tight">
             Queries Dashboard
           </h1>
           <p className="text-muted-foreground text-sm max-w-md mx-auto">
@@ -249,7 +249,7 @@ export default function UserQueriesPage() {
       <div className="flex flex-col gap-4 border-b border-border pb-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex flex-col gap-1">
-            <h1 className="text-3xl sm:text-4xl font-extrabold font-heading text-foreground tracking-tight flex items-center gap-2">
+            <h1 className="text-3xl sm:text-4xl font-bold font-heading text-foreground tracking-tight flex items-center gap-2">
               <MessageSquare className="w-8 h-8 text-primary shrink-0" />
               <span>Query Dashboard</span>
             </h1>

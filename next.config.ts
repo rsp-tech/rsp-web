@@ -24,6 +24,7 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   experimental: {
     optimizeCss: true,
+    optimizePackageImports: ["@/components"],
   },
   images: {
     unoptimized: true,

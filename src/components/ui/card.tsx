@@ -67,20 +67,17 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-const cardTitleVariants = cva(
-  "font-heading text-base leading-snug font-medium",
-  {
-    variants: {
-      size: {
-        default: "",
-        sm: "text-sm",
-      },
-    },
-    defaultVariants: {
-      size: "default",
+const cardTitleVariants = cva("font-heading leading-snug font-medium", {
+  variants: {
+    size: {
+      default: "",
+      sm: "text-sm",
     },
   },
-);
+  defaultVariants: {
+    size: "default",
+  },
+});
 
 function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   const { size } = React.useContext(CardContext);

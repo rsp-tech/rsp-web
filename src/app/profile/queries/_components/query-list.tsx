@@ -37,7 +37,7 @@ export function QueryList({
   if (queries.length === 0) {
     return (
       <div className="text-center py-16 border border-dashed rounded-xl flex flex-col items-center gap-3">
-        <MessageSquare className="w-12 h-12 text-muted-foreground opacity-60" />
+        <MessageSquare className="w-10 h-10 text-muted-foreground opacity-60" />
         <h3 className="font-bold text-foreground">No queries match</h3>
         <p className="text-xs text-muted-foreground max-w-sm">
           We couldn't find any tickets matching your search filters. Try

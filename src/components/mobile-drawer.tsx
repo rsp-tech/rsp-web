@@ -46,7 +46,7 @@ export function MobileDrawer() {
           <Button
             variant="ghost"
             size="icon-sm"
-            className="w-9 h-9 md:hidden hover:bg-accent text-foreground transition-all shrink-0"
+            className="w-8 h-8 md:hidden hover:bg-accent text-foreground transition-all shrink-0"
             aria-label="Open menu"
           >
             <Menu className="w-5 h-5" />
@@ -72,8 +72,8 @@ export function MobileDrawer() {
               <div className="flex items-center gap-3 py-2">
                 <Skeleton className="h-10 w-10 rounded-full" />
                 <div className="space-y-2">
-                  <Skeleton className="h-4 w-28" />
-                  <Skeleton className="h-3 w-36" />
+                  <Skeleton className="h-4" style={{ width: "7rem" }} />
+                  <Skeleton className="h-3" style={{ width: "9rem" }} />
                 </div>
               </div>
             ) : session ? (

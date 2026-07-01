@@ -28,7 +28,10 @@ export const NotFoundState = ({
         <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-md transition-all duration-200">
           <div className="relative space-y-5 flex flex-col items-center">
             {/* Pulsing Compass Icon */}
-            <div className="relative flex items-center justify-center w-16 h-16 -mt-4 rounded-full bg-primary/10 text-primary">
+            <div
+              className="relative flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary"
+              style={{ marginTop: "-1rem" }}
+            >
               <Compass className="w-8 h-8 animate-pulse" />
               <div className="absolute inset-0 rounded-full border border-primary/30 animate-ping opacity-80" />
             </div>
@@ -63,7 +66,10 @@ export const NotFoundState = ({
               </div>
 
               <div className="flex flex-col items-center gap-1.5 pt-2">
-                <div className="h-px w-24 bg-primary/20" />
+                <div
+                  className="bg-primary/20"
+                  style={{ height: "1px", width: "6rem" }}
+                />
                 <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground opacity-60">
                   Bhagavad Gita 18.62
                 </span>
