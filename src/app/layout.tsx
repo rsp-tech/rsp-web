@@ -53,7 +53,7 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
-        {process.env["NEXT_PUBLIC_CLARITY_ID"] && (
+        {/* {process.env["NEXT_PUBLIC_CLARITY_ID"] && (
           <Script
             id="microsoft-clarity"
             strategy="lazyOnload"
@@ -71,7 +71,7 @@ export default function RootLayout({
       `,
             }}
           />
-        )}
+        )} */}
         <Providers>
           <OfflineIndicator />
           <SyncTrigger />

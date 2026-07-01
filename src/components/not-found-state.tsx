@@ -33,7 +33,7 @@ export const NotFoundState = ({
               style={{ marginTop: "-1rem" }}
             >
               <Compass className="w-8 h-8 animate-pulse" />
-              <div className="absolute inset-0 rounded-full border border-primary/30 animate-ping opacity-80" />
+              <div className="absolute inset-0 rounded-full border border-primary/10 animate-ping opacity-80" />
             </div>
 
             {/* Sacred Verse Panel */}

@@ -56,10 +56,10 @@ export function ProfileDashboardCard({
           <div className="flex items-center gap-2 text-xs">
             {[1, 4, 5, 7, 8].includes(roleId ?? 0) && (
               <span
-                className={`font-bold p-2 rounded-full border text-xs flex gap-1 ${
+                className={`font-bold p-2 rounded-full border text-xs flex gap-1 bg-primary/10 text-primary ${
                   roleId === 4 || roleId === 7
-                    ? "bg-primary/20 text-primary border-primary/30"
-                    : "bg-primary/10 text-primary border-primary/20"
+                    ? "border-primary/30"
+                    : "border-primary/20"
                 }`}
               >
                 <Shield className="size-4 text-muted-foreground opacity-80" />

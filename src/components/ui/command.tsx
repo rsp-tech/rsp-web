@@ -27,7 +27,8 @@ function CommandInput({
   return (
     <fieldset
       data-slot="command-input-wrapper"
-      className="p-2 py-1 m-1 flex items-center gap-2 bg-muted rounded-lg"
+      className="p-2 py-1 flex items-center gap-2 bg-muted rounded-lg"
+      style={{ margin: "0.25rem" }}
     >
       <SearchIcon className="size-4 shrink-0 opacity-60" />
       <CommandPrimitive.Input
@@ -93,7 +94,7 @@ function CommandItem({
     <CommandPrimitive.Item
       data-slot="command-item"
       className={cn(
-        "group/command-item relative flex cursor-default items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-60 data-selected:bg-muted",
+        "group/command-item relative flex items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-60 data-selected:bg-muted",
         className,
       )}
       {...props}

@@ -24,7 +24,10 @@ export const Loading = ({ message }: { message?: string }) => {
             </div>
 
             <div className="flex flex-col items-center gap-2">
-              <div className="h-1 w-32 overflow-hidden rounded-full bg-primary/10">
+              <div
+                className="w-32 overflow-hidden rounded-full bg-primary/10"
+                style={{ height: "0.25rem" }}
+              >
                 <div
                   className="h-full w-full bg-primary"
                   style={{ animation: "progress 2s infinite ease-in-out" }}

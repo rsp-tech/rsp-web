@@ -21,6 +21,7 @@ const withSerwist = withSerwistInit({
 const nextConfig: NextConfig = {
   reactCompiler: true,
   reactStrictMode: true,
+  productionBrowserSourceMaps: true,
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ["@/components"],
