@@ -3,13 +3,7 @@
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/search/searchable-select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { QUERY_CATEGORIES } from "@/constants";
 
@@ -68,21 +62,13 @@ export function QueryFilters({
           >
             Topic Category
           </Label>
-          <Select value={categoryFilter} onValueChange={onCategoryChange}>
-            <SelectTrigger
-              id="filter-category"
-              className="h-9 w-full bg-card border-border text-foreground cursor-pointer"
-            >
-              <SelectValue placeholder="All Categories" />
-            </SelectTrigger>
-            <SelectContent>
-              {CATEGORY_OPTIONS.map((opt) => (
-                <SelectItem key={opt.value} value={opt.value}>
-                  {opt.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <SearchableSelect
+            options={CATEGORY_OPTIONS}
+            value={categoryFilter}
+            onChange={onCategoryChange}
+            placeholder="All Categories"
+            className="h-9 bg-card cursor-pointer"
+          />
         </div>
       </div>
 
@@ -117,8 +103,7 @@ export function QueryFilters({
           </TabsList>
         </Tabs>
         <span className="text-xs font-semibold text-muted-foreground">
-          Matches found:{" "}
-          <span className="text-foreground font-bold">{totalMatches}</span>
+          Matches found: <span className="font-bold">{totalMatches}</span>
         </span>
       </div>
     </div>

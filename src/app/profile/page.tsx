@@ -116,7 +116,7 @@ export default function ProfilePage() {
     <div className="max-w-5xl mx-auto py-6 flex flex-col gap-8">
       {/* Page Header */}
       <div className="flex flex-col gap-2 border-b border-border pb-6">
-        <h1 className="text-3xl sm:text-4xl font-bold font-heading text-foreground tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-bold font-heading tracking-tight">
           My Profile
         </h1>
         <p className="text-muted-foreground text-sm">

@@ -83,9 +83,7 @@ export const NotFoundState = ({
 
             {/* Message */}
             <div className="space-y-2 pt-2">
-              <h2 className="text-xl font-bold tracking-tight text-foreground">
-                {title}
-              </h2>
+              <h2 className="text-xl font-bold tracking-tight ">{title}</h2>
               <p className="text-sm text-muted-foreground max-w-sm mx-auto leading-relaxed">
                 {message}
               </p>
@@ -96,7 +94,7 @@ export const NotFoundState = ({
               <Button
                 variant="outline"
                 onClick={() => router.back()}
-                className="flex items-center gap-2 border-border text-foreground hover:bg-accent hover:text-accent-foreground transition-all"
+                className="flex items-center gap-2 border-border hover:bg-accent hover:text-accent-foreground transition-all"
               >
                 <ArrowLeft className="w-4 h-4" />
                 Go Back
@@ -115,7 +113,7 @@ export const NotFoundState = ({
                 <Button
                   variant="ghost"
                   onClick={onRetry}
-                  className="flex items-center gap-2 text-muted-foreground hover:text-foreground hover:bg-accent/50 transition-all"
+                  className="flex items-center gap-2 text-muted-foreground hover:hover:bg-accent/50 transition-all"
                 >
                   <RefreshCw className="w-4 h-4" />
                   Try Again

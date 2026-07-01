@@ -46,7 +46,7 @@ export function MobileDrawer() {
           <Button
             variant="ghost"
             size="icon-sm"
-            className="w-8 h-8 md:hidden hover:bg-accent text-foreground transition-all shrink-0"
+            className="w-8 h-8 md:hidden hover:bg-accent transition-all shrink-0"
             aria-label="Open menu"
           >
             <Menu className="w-5 h-5" />
@@ -58,7 +58,7 @@ export function MobileDrawer() {
           style={{ width: "17.5rem" }}
         >
           <SheetHeader className="p-0 border-b border-border pb-4 text-left">
-            <SheetTitle className="font-heading font-bold text-lg text-foreground flex items-center gap-2">
+            <SheetTitle className="font-heading font-bold text-lg flex items-center gap-2">
               <span className="text-primary font-serif">RSP</span> Discourses
             </SheetTitle>
           </SheetHeader>
@@ -83,7 +83,7 @@ export function MobileDrawer() {
                     <CurrentUserAvatar />
                   </div>
                   <div className="flex flex-col min-w-0">
-                    <span className="font-semibold text-sm text-foreground truncate">
+                    <span className="font-semibold text-sm truncate">
                       {getUserDisplayName(session.user)}
                     </span>
                     {session.user.email && (
@@ -98,7 +98,7 @@ export function MobileDrawer() {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="justify-start gap-2 h-9 text-foreground hover:bg-accent transition-all"
+                    className="justify-start gap-2 h-9 hover:bg-accent transition-all"
                     onClick={() => handleNavigate("/profile")}
                   >
                     <User className="w-4 h-4 text-muted-foreground" />

@@ -196,7 +196,7 @@ export function GetInvolvedClient() {
       style={{ maxWidth: "56rem" }}
     >
       <div className="flex flex-col gap-2 border-b border-border pb-6">
-        <h1 className="text-3xl sm:text-4xl font-bold font-heading text-foreground tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-bold font-heading tracking-tight">
           Devotional Volunteering & Service
         </h1>
         <p className="text-muted-foreground text-sm">

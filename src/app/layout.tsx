@@ -52,7 +52,7 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
       </head>
-      <body className="min-h-full flex flex-col bg-background text-foreground">
+      <body className="min-h-full flex flex-col">
         {process.env["NEXT_PUBLIC_CLARITY_ID"] && (
           <Script
             id="microsoft-clarity"

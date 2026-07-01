@@ -32,7 +32,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
     >
       {/* Meta details */}
       <div className="flex-1 flex flex-col gap-2">
-        <h3 className="font-bold text-foreground leading-snug group-hover:text-primary transition-all">
+        <h3 className="font-bold leading-snug group-hover:text-primary transition-all">
           {rec.name}
         </h3>
 
@@ -100,7 +100,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
           <a
             href={getAssetUrl(rec.audio_id)}
             download
-            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground text-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-98 border border-border cursor-pointer"
+            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-98 border border-border cursor-pointer"
             title="Download Audio"
           >
             <FileDown className="w-4 h-4" />

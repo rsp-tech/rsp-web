@@ -26,7 +26,7 @@ export const metadata: Metadata = {
 };
 
 const styles = {
-  h2: "text-2xl sm:text-4xl font-bold font-heading tracking-tight text-foreground leading-tight mb-4",
+  h2: "text-2xl sm:text-4xl font-bold font-heading tracking-tight leading-tight mb-4",
   ul: "list-disc pl-6",
 };
 
@@ -36,7 +36,7 @@ export default function About() {
       className="max-w-7xl p-4 text-justify space-y-4 leading-relaxed text-lg"
       style={{ margin: "auto" }}
     >
-      <h1 className="text-3xl sm:text-5xl font-bold font-heading tracking-tight text-foreground leading-tight mb-4">
+      <h1 className="text-3xl sm:text-5xl font-bold font-heading tracking-tight leading-tight mb-4">
         Radheshyam Das, M. Tech., IIT, Mumbai
       </h1>
       <p>

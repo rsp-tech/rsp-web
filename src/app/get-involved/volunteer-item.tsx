@@ -8,13 +8,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/search/searchable-select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { Service } from "@/types";
@@ -62,7 +56,7 @@ export const VolunteerItem = ({
             )}
           </CardTitle>
           {service.description && (
-            <CardDescription className="text-sm text-foreground/80">
+            <CardDescription className="text-sm">
               {service.description}
             </CardDescription>
           )}
@@ -102,30 +96,17 @@ export const VolunteerItem = ({
             >
               My Skill / Interest Level
             </label>
-            <Select
+            <SearchableSelect
+              options={[
+                { value: "curious", label: "Curious / Exploring & willing to learn" },
+                { value: "interested", label: "Interested / Ready to contribute" },
+                { value: "committed", label: "Committed / Ready to take regular responsibility" },
+              ]}
               value={detail.level}
-              onValueChange={(val) =>
-                handleUpdateDetail(service.id, "level", val)
-              }
-            >
-              <SelectTrigger
-                id={selectId}
-                className="max-w-xs h-8 bg-muted border-border text-foreground cursor-pointer"
-              >
-                <SelectValue placeholder="Select level" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="curious">
-                  Curious / Exploring & willing to learn
-                </SelectItem>
-                <SelectItem value="interested">
-                  Interested / Ready to contribute
-                </SelectItem>
-                <SelectItem value="committed">
-                  Committed / Ready to take regular responsibility
-                </SelectItem>
-              </SelectContent>
-            </Select>
+              onChange={(val) => handleUpdateDetail(service.id, "level", val)}
+              placeholder="Select level"
+              className="max-w-xs bg-muted"
+            />
           </div>
 
           <div className="flex flex-col gap-1.5">

@@ -8,13 +8,7 @@ import {
   CalendarArrowDown,
   CalendarArrowUp,
 } from "lucide-react";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/search/searchable-select";
 import { Button } from "./ui/button";
 import { Label } from "./ui/label";
 
@@ -52,19 +46,17 @@ export function RecordingSortControls({
 
       <div className="flex items-center gap-3">
         <Label className="text-muted-foreground font-bold">Sort by:</Label>
-        <Select
+        <SearchableSelect
+          options={[
+            { value: "order_ind", label: "Default" },
+            { value: "name", label: "By Name" },
+            { value: "date", label: "By Date" },
+          ]}
           value={sortBy}
-          onValueChange={(value) => setSortBy(value as SortOption)}
-        >
-          <SelectTrigger className="w-32">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="order_ind">Default</SelectItem>
-            <SelectItem value="name">By Name</SelectItem>
-            <SelectItem value="date">By Date</SelectItem>
-          </SelectContent>
-        </Select>
+          onChange={(value) => setSortBy(value as SortOption)}
+          placeholder="Sort by"
+          className="w-32"
+        />
 
         <Button
           type="button"

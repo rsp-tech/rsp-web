@@ -135,7 +135,7 @@ export function SearchResults({
         {/* Recordings Section */}
         {recordings.length > 0 && (
           <AccordionItem value="recordings" key="recordings">
-            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:text-foreground transition-all">
+            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:transition-all">
               Recordings ({recordings.length})
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -166,7 +166,7 @@ export function SearchResults({
                     <div className="flex items-start justify-between gap-2 w-full">
                       <div className="flex items-center gap-2">
                         <Music className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                        <span className="font-semibold text-foreground leading-snug line-clamp-2">
+                        <span className="font-semibold leading-snug line-clamp-2">
                           {rec.name}
                         </span>
                       </div>
@@ -222,7 +222,7 @@ export function SearchResults({
         {/* Categories Section */}
         {categories.length > 0 && (
           <AccordionItem value="categories" key="categories">
-            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:text-foreground transition-all">
+            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:transition-all">
               Categories ({categories.length})
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -275,7 +275,7 @@ export function SearchResults({
         {/* Materials Section */}
         {materials.length > 0 && (
           <AccordionItem value="materials" key="materials">
-            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:text-foreground transition-all">
+            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:transition-all">
               Materials ({materials.length})
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -308,9 +308,7 @@ export function SearchResults({
                   >
                     <div className="flex items-center gap-2">
                       <FileText className="w-4 h-4 text-warning shrink-0" />
-                      <span className="font-semibold text-foreground truncate">
-                        {mat.name}
-                      </span>
+                      <span className="font-semibold truncate">{mat.name}</span>
                     </div>
                     {(mat.category || mat.recording) && (
                       <div className="text-xxs text-muted-foreground pl-6 flex items-center gap-1 font-medium truncate">

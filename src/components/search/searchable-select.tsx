@@ -30,7 +30,11 @@ interface SearchableSelectProps {
   placeholder: string;
   emptyMessage?: string;
   className?: string;
+  searchable?: boolean;
+  style?: React.CSSProperties;
 }
+
+const MIN_SEARCHABLE = 6;
 
 export function SearchableSelect({
   options,
@@ -39,10 +43,13 @@ export function SearchableSelect({
   placeholder,
   emptyMessage = "No option found.",
   className,
+  style,
+  searchable,
 }: SearchableSelectProps) {
   const [open, setOpen] = React.useState(false);
 
   const selectedOption = options.find((opt) => opt.value === value);
+  const showSearch = searchable ?? options.length >= MIN_SEARCHABLE;
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -64,11 +71,11 @@ export function SearchableSelect({
       </PopoverTrigger>
       <PopoverContent
         className="p-0"
-        style={{ width: "12.5rem" }}
+        style={{ width: "var(--radix-popover-trigger-width)", ...style }}
         align="start"
       >
         <Command>
-          <CommandInput placeholder={`Search...`} />
+          {showSearch && <CommandInput placeholder="Search..." />}
           <CommandList>
             <CommandEmpty>{emptyMessage}</CommandEmpty>
             <CommandGroup>

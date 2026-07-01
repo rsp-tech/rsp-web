@@ -59,7 +59,7 @@ export function MaterialBadge({ mat, isHighlighted }: MaterialBadgeProps) {
       className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all border ${
         isHighlighted
           ? "bg-primary/25 text-primary border-primary ring-1 ring-primary"
-          : "bg-muted hover:bg-primary/10 hover:text-primary text-foreground border-border"
+          : "bg-muted hover:bg-primary/10 hover:text-primary border-border"
       }`}
     >
       {getMaterialIcon()}

@@ -63,7 +63,7 @@ export function QueryReplyThread({
                       : ""}
                   </span>
                 </div>
-                <p className="text-xs text-foreground leading-relaxed mt-0.5 text-left">
+                <p className="text-xs leading-relaxed mt-0.5 text-left">
                   {reply.message}
                 </p>
               </div>

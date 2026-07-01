@@ -13,7 +13,7 @@ export const CategoryHero = () => {
         <BookOpen className="w-4 h-4" />
         <span>Vedic Wisdom Online</span>
       </div>
-      <h1 className="text-4xl sm:text-5xl font-bold font-heading tracking-tight max-w-2xl text-foreground leading-tight">
+      <h1 className="text-4xl sm:text-5xl font-bold font-heading tracking-tight max-w-2xl leading-tight">
         Spiritual Discourses by{" "}
         <span className="text-primary">HG Radheshyamdas</span>
       </h1>

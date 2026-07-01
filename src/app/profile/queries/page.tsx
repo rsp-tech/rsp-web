@@ -249,7 +249,7 @@ export default function UserQueriesPage() {
       <div className="flex flex-col gap-4 border-b border-border pb-6">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex flex-col gap-1">
-            <h1 className="text-3xl sm:text-4xl font-bold font-heading text-foreground tracking-tight flex items-center gap-2">
+            <h1 className="text-3xl sm:text-4xl font-bold font-heading tracking-tight flex items-center gap-2">
               <MessageSquare className="w-8 h-8 text-primary shrink-0" />
               <span>Query Dashboard</span>
             </h1>
@@ -271,7 +271,7 @@ export default function UserQueriesPage() {
 
       {/* Main Dashboard Panel */}
       <Card className="border-border">
-        <CardHeader className="pb-3 border-b border-border/40 bg-muted/10">
+        <CardHeader className="pb-3 border-b border-border/40 bg-muted/20">
           <CardTitle className="text-lg font-bold">Ticket Filters</CardTitle>
           <CardDescription>
             Narrow down queries by search term, topic category, or active

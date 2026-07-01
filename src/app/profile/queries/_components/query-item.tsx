@@ -37,7 +37,7 @@ export function QueryItem({
   return (
     <AccordionItem
       value={q.id}
-      className="px-4 hover:bg-muted/10 transition-all"
+      className="px-4 hover:bg-muted/20 transition-all"
       key={replies.length}
     >
       <AccordionTrigger className="w-full hover:no-underline py-4 flex items-start gap-4 cursor-pointer">
@@ -55,9 +55,7 @@ export function QueryItem({
                 : "Date unknown"}
             </span>
           </div>
-          <h4 className="font-bold text-foreground leading-snug truncate mt-1">
-            {q.subject}
-          </h4>
+          <h4 className="font-bold leading-snug truncate mt-1">{q.subject}</h4>
         </div>
         <div className="self-center shrink-0 mr-2">
           {getStatusBadge(q.status)}
@@ -77,7 +75,7 @@ export function QueryItem({
                   : ""}
               </span>
             </div>
-            <p className="text-sm text-foreground leading-relaxed bg-muted/20 p-3 rounded-lg border border-border/40">
+            <p className="text-sm leading-relaxed bg-muted/20 p-3 rounded-lg border border-border/40">
               {q.message}
             </p>
           </div>
@@ -110,7 +108,7 @@ export function QueryItem({
               />
             </div>
           ) : (
-            <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/30 p-3 rounded-lg border border-border mt-1">
+            <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted/40 p-3 rounded-lg border border-border mt-1">
               <Clock className="w-4 h-4 shrink-0" />
               <span>
                 This ticket is closed/resolved and cannot receive further

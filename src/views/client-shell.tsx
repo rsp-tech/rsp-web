@@ -51,7 +51,7 @@ export const ClientShell = ({
         <section className="flex flex-col gap-6">
           <div className="flex items-center gap-2">
             <FolderOpen className="w-5 h-5 text-primary" />
-            <h2 className="text-2xl font-bold font-heading text-foreground">
+            <h2 className="text-2xl font-bold font-heading ">
               Explore Categories
             </h2>
           </div>
@@ -88,7 +88,7 @@ export const ClientShell = ({
         <span className="text-xs font-bold text-primary tracking-wider uppercase">
           Category
         </span>
-        <h1 className="text-3xl sm:text-4xl font-bold font-heading text-foreground tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-bold font-heading tracking-tight">
           {category.name}
         </h1>
       </div>
@@ -96,7 +96,7 @@ export const ClientShell = ({
       {/* Subcategories Section */}
       {subcategories.length > 0 && (
         <section className="flex flex-col gap-4">
-          <h2 className="text-xl font-bold font-heading text-foreground flex items-center gap-2">
+          <h2 className="text-xl font-bold font-heading flex items-center gap-2">
             <FolderOpen className="w-5 h-5 text-primary" />
             Subcategories
           </h2>
@@ -107,7 +107,7 @@ export const ClientShell = ({
       {/* Recordings Section */}
       {recordings.length > 0 && (
         <section className="flex flex-col gap-4">
-          <h2 className="text-xl font-bold font-heading text-foreground flex items-center gap-2">
+          <h2 className="text-xl font-bold font-heading flex items-center gap-2">
             <Music className="w-5 h-5 text-primary" />
             Discourses & Recordings
           </h2>

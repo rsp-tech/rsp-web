@@ -14,13 +14,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/search/searchable-select";
 import { Textarea } from "@/components/ui/textarea";
 
 const ASHRAMS = [
@@ -236,25 +230,13 @@ export function PersonalSettingsForm({
               >
                 Ashram / Status
               </Label>
-              <Select
+              <SearchableSelect
+                options={ASHRAMS}
                 value={ashram}
-                onValueChange={(val) => setAshram(val)}
-                disabled={hasPendingRequest}
-              >
-                <SelectTrigger
-                  id="ashram"
-                  className="h-9 w-full bg-card border-border text-foreground cursor-pointer"
-                >
-                  <SelectValue placeholder="Select Ashram" />
-                </SelectTrigger>
-                <SelectContent>
-                  {ASHRAMS.map((ash) => (
-                    <SelectItem key={ash.value} value={ash.value}>
-                      {ash.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                onChange={setAshram}
+                placeholder="Select Ashram"
+                className="h-9 bg-card cursor-pointer"
+              />
             </div>
           </div>
 
@@ -271,7 +253,7 @@ export function PersonalSettingsForm({
             <div className="flex flex-col gap-0.5">
               <Label
                 htmlFor="voice-leader"
-                className="text-xs font-semibold text-foreground cursor-pointer"
+                className="text-xs font-semibold cursor-pointer"
               >
                 I serve as a Community or VOICE Leader / Mentor
               </Label>
@@ -348,34 +330,18 @@ export function PersonalSettingsForm({
               >
                 Relationship with Mentor
               </Label>
-              <Select
+              <SearchableSelect
+                options={RELATIONSHIP_OPTIONS}
                 value={relSelect}
-                onValueChange={(val) => {
+                onChange={(val) => {
                   setRelSelect(val);
                   if (val !== "Other") {
                     setRelCustom("");
                   }
                 }}
-                disabled={hasPendingRequest}
-              >
-                <SelectTrigger
-                  id="authority-relationship"
-                  className="h-9 w-full bg-card border-border text-foreground cursor-pointer text-xs"
-                >
-                  <SelectValue placeholder="Select Relationship" />
-                </SelectTrigger>
-                <SelectContent>
-                  {RELATIONSHIP_OPTIONS.map((opt) => (
-                    <SelectItem
-                      key={opt.value}
-                      value={opt.value}
-                      className="text-xs"
-                    >
-                      {opt.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                placeholder="Select Relationship"
+                className="h-9 bg-card cursor-pointer"
+              />
 
               {relSelect === "Other" && (
                 <div className="mt-1.5 flex flex-col gap-1">

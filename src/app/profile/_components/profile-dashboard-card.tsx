@@ -39,7 +39,7 @@ export function ProfileDashboardCard({
             : user.email?.charAt(0).toUpperCase()}
         </div>
 
-        <h2 className="text-lg font-bold text-foreground">
+        <h2 className="text-lg font-bold ">
           {fullName || user.email?.split("@")[0] || "User"}
         </h2>
         <p className="text-xs text-muted-foreground mt-1 flex items-center gap-1">
@@ -67,7 +67,7 @@ export function ProfileDashboardCard({
               </span>
             )}
             {ashram && (
-              <span className="font-bold text-foreground bg-muted px-2.5 py-0.5 rounded-full capitalize">
+              <span className="font-bold bg-muted px-2.5 py-0.5 rounded-full capitalize">
                 {ashram}
               </span>
             )}
@@ -81,7 +81,7 @@ export function ProfileDashboardCard({
             <button
               type="button"
               onClick={onServicesClick}
-              className="font-bold text-foreground bg-muted hover:bg-primary/15 hover:text-primary transition-all px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer"
+              className="font-bold bg-muted hover:bg-primary/15 hover:text-primary transition-all px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer"
             >
               <ExternalLink className="w-2.5 h-2.5" />
             </button>
@@ -95,7 +95,7 @@ export function ProfileDashboardCard({
             <button
               type="button"
               onClick={onQueriesClick}
-              className="font-bold text-foreground bg-muted hover:bg-primary/15 hover:text-primary transition-all px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer"
+              className="font-bold bg-muted hover:bg-primary/15 hover:text-primary transition-all px-2.5 py-0.5 rounded-full flex items-center gap-1 cursor-pointer"
             >
               <ExternalLink className="w-2.5 h-2.5" />
             </button>

@@ -38,7 +38,7 @@ export function QueryList({
     return (
       <div className="text-center py-16 border border-dashed rounded-xl flex flex-col items-center gap-3">
         <MessageSquare className="w-10 h-10 text-muted-foreground opacity-60" />
-        <h3 className="font-bold text-foreground">No queries match</h3>
+        <h3 className="font-bold ">No queries match</h3>
         <p className="text-xs text-muted-foreground max-w-sm">
           We couldn't find any tickets matching your search filters. Try
           resetting your search terms or send a new request.
@@ -70,7 +70,7 @@ export function QueryList({
     <Accordion
       type="single"
       collapsible
-      className="w-full border border-border rounded-lg overflow-hidden bg-card/25 divide-y divide-border/40"
+      className="w-full border border-border rounded-lg overflow-hidden bg-background/50 divide-y divide-border/40"
       key={queries.length}
     >
       {queries.map((q) => (

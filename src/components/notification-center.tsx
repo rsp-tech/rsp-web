@@ -17,6 +17,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { useNotifications } from "@/hooks/use-notifications";
+import { cn } from "@/lib/utils";
 
 export function NotificationCenter() {
   const { notifications, isLoading, markAsRead } = useNotifications();
@@ -83,11 +84,12 @@ export function NotificationCenter() {
             notifications.map((notif) => (
               <div
                 key={notif.id}
-                className={`p-3.5 border rounded-xl flex gap-3 transition-all ${
+                className={cn(
+                  "p-3 border rounded-xl flex gap-3 transition-all",
                   notif.read
                     ? "bg-background border-border opacity-80"
-                    : "bg-primary/5 border-primary/20 hover:bg-primary/10 shadow-md"
-                }`}
+                    : "bg-primary/5 border-primary/20 hover:bg-primary/10 shadow-md",
+                )}
               >
                 <div className="mt-0.5">
                   <CircleAlert
@@ -96,7 +98,7 @@ export function NotificationCenter() {
                 </div>
                 <div className="flex-1 flex flex-col gap-0.5">
                   <div className="flex justify-between items-start gap-1">
-                    <h4 className="font-semibold text-sm text-foreground pr-4">
+                    <h4 className="font-semibold text-sm pr-4">
                       {notif.title}
                     </h4>
                     {!notif.read && (

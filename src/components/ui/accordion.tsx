@@ -56,6 +56,7 @@ function AccordionTrigger({
 function AccordionContent({
   className,
   children,
+  style,
   ...props
 }: React.ComponentProps<typeof AccordionPrimitive.Content>) {
   return (
@@ -65,10 +66,8 @@ function AccordionContent({
       {...props}
     >
       <div
-        className={cn(
-          "h-(--radix-accordion-content-height) pt-0 pb-2.5 [&_p:not(:last-child)]:mb-4",
-          className,
-        )}
+        className={cn("pt-0 pb-2.5 [&_p:not(:last-child)]:mb-4", className)}
+        style={{ height: "var(--radix-accordion-content-height)", ...style }}
       >
         {children}
       </div>

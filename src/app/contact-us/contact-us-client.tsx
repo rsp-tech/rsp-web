@@ -23,13 +23,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { SearchableSelect } from "@/components/search/searchable-select";
 import { Textarea } from "@/components/ui/textarea";
 import { QUERY_CATEGORIES } from "@/constants";
 import { getSupabaseClient } from "@/lib/supabase-browser";
@@ -103,7 +97,7 @@ export function ContactUsClient() {
   return (
     <div className="max-w-5xl mx-auto py-6 flex flex-col gap-8">
       <div className="flex flex-col gap-2 border-b border-border pb-6">
-        <h1 className="text-3xl sm:text-4xl font-bold font-heading text-foreground tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-bold font-heading tracking-tight">
           Contact Us
         </h1>
         <p className="text-muted-foreground text-sm">
@@ -129,7 +123,7 @@ export function ContactUsClient() {
               <div className="flex items-start gap-3">
                 <Mail className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <div className="flex flex-col">
-                  <span className="font-bold text-foreground">Email</span>
+                  <span className="font-bold ">Email</span>
                   <a
                     href="mailto:contact@radheshyamdas.com"
                     className="text-muted-foreground hover:text-primary transition-all text-xs"
@@ -142,7 +136,7 @@ export function ContactUsClient() {
               <div className="flex items-start gap-3">
                 <MapPin className="w-5 h-5 text-primary shrink-0 mt-0.5" />
                 <div className="flex flex-col">
-                  <span className="font-bold text-foreground">Address</span>
+                  <span className="font-bold ">Address</span>
                   <span className="text-muted-foreground text-xs leading-relaxed">
                     Voice Publication & Courses,
                     <br />
@@ -167,7 +161,7 @@ export function ContactUsClient() {
             </CardHeader>
             <CardContent>
               {session && (
-                <div className="mb-6 p-4 bg-primary/10 rounded-lg border border-primary/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-foreground">
+                <div className="mb-6 p-4 bg-primary/10 rounded-lg border border-primary/20 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs ">
                   <span className="font-semibold flex items-center gap-2">
                     <MessageSquare className="w-4 h-4 text-primary shrink-0" />
                     You are logged in. You can track status of your requests and
@@ -243,21 +237,13 @@ export function ContactUsClient() {
                   >
                     Topic / Category <span className="text-destructive">*</span>
                   </Label>
-                  <Select
+                  <SearchableSelect
+                    options={QUERY_CATEGORIES}
                     value={category}
-                    onValueChange={(val) => setCategory(val)}
-                  >
-                    <SelectTrigger className="h-9 w-full bg-muted border-border text-foreground cursor-pointer">
-                      <SelectValue placeholder="Select topic" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {QUERY_CATEGORIES.map((c) => (
-                        <SelectItem key={c.value} value={c.value}>
-                          {c.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                    onChange={setCategory}
+                    placeholder="Select topic"
+                    className="h-9 bg-muted"
+                  />
                 </div>
 
                 <div className="flex flex-col gap-1.5">
