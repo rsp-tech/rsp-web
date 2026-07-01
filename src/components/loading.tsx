@@ -13,12 +13,12 @@ export const Loading = ({ message }: { message?: string }) => {
           <div className="relative space-y-6">
             <div className="space-y-4">
               <p
-                className="text-2xl font-serif italic tracking-wide text-primary leading-relaxed animate-shimmer"
+                className="text-2xl font-serif italic tracking-wider text-primary leading-relaxed animate-shimmer"
                 style={{ "--shimmer-delay": "-150ms" } as CSSProperties}
               >
                 sarva-dharmān parityajya mām ekaṁ śaraṇaṁ vraja
               </p>
-              <p className="text-2xl font-serif italic tracking-wide text-primary leading-relaxed animate-shimmer">
+              <p className="text-2xl font-serif italic tracking-wider text-primary leading-relaxed animate-shimmer">
                 ahaṁ tvāṁ sarva-pāpebhyo mokṣayiṣyāmi mā śucaḥ
               </p>
             </div>
@@ -30,7 +30,7 @@ export const Loading = ({ message }: { message?: string }) => {
                   style={{ animation: "progress 2s infinite ease-in-out" }}
                 />
               </div>
-              <p className="text-xs font-medium uppercase tracking-widest text-muted-foreground opacity-60">
+              <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground opacity-60">
                 Bhagavad Gita 18.66
               </p>
             </div>

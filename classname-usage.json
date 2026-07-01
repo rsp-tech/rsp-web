@@ -18,9 +18,7 @@
       "src\\components\\mobile-drawer.tsx",
       "src\\components\\user-nav.tsx"
     ],
-    "src\\components\\ui\\dialog.tsx": [
-      "src\\components\\auth-modal.tsx"
-    ],
+    "src\\components\\ui\\dialog.tsx": ["src\\components\\auth-modal.tsx"],
     "src\\components\\ui\\input.tsx": [
       "src\\app\\contact-us\\contact-us-client.tsx",
       "src\\app\\profile\\_components\\personal-settings-form.tsx",
@@ -73,9 +71,7 @@
       "src\\components\\search\\date-picker.tsx",
       "src\\components\\search\\searchable-select.tsx"
     ],
-    "src\\components\\ui\\dropdown-menu.tsx": [
-      "src\\components\\user-nav.tsx"
-    ],
+    "src\\components\\ui\\dropdown-menu.tsx": ["src\\components\\user-nav.tsx"],
     "src\\components\\ui\\accordion.tsx": [
       "src\\app\\profile\\queries\\_components\\query-item.tsx",
       "src\\app\\profile\\queries\\_components\\query-list.tsx",
@@ -101,9 +97,7 @@
       "src\\app\\profile\\_components\\personal-settings-form.tsx",
       "src\\app\\profile\\queries\\_components\\query-reply-form.tsx"
     ],
-    "src\\components\\ui\\badge.tsx": [
-      "src\\app\\profile\\queries\\page.tsx"
-    ]
+    "src\\components\\ui\\badge.tsx": ["src\\app\\profile\\queries\\page.tsx"]
   },
   "data": [
     {
@@ -240,14 +234,14 @@
       "brotliBytesUpperLimit": 33
     },
     {
-      "className": "w-3.5",
+      "className": "w-3",
       "frequency": 32,
       "length": 5,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
     },
     {
-      "className": "h-3.5",
+      "className": "h-3",
       "frequency": 32,
       "length": 5,
       "uncompressedBytes": 0,

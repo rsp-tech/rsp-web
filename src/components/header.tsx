@@ -10,12 +10,13 @@ import { UserNav } from "./user-nav";
 export function Header() {
   return (
     <header
-      className="sticky w-full border-b border-border bg-background/50 px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4"
+      className="w-full border-b border-border bg-background/50 px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4"
       style={{
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",
         zIndex: 30,
         top: 0,
+        position: "sticky",
       }}
     >
       <div className="flex items-center gap-1 sm:gap-2">

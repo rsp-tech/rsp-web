@@ -44,19 +44,19 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
         >
           {rec.speakers && rec.speakers.length > 0 && (
             <span className="flex items-center gap-1">
-              <User className="w-3.5 h-3.5 text-muted-foreground opacity-80" />
+              <User className="w-3 h-3 text-muted-foreground opacity-80" />
               {rec.speakers.map((s) => s.name).join(", ")}
             </span>
           )}
           {rec.venue && (
             <span className="flex items-center gap-1">
-              <MapPin className="w-3.5 h-3.5 text-muted-foreground opacity-80" />
+              <MapPin className="w-3 h-3 text-muted-foreground opacity-80" />
               {rec.venue.name}
             </span>
           )}
           {rec.recorded_at && (
             <span className="flex items-center gap-1">
-              <Calendar className="w-3.5 h-3.5 text-muted-foreground opacity-80" />
+              <Calendar className="w-3 h-3 text-muted-foreground opacity-80" />
               {new Date(rec.recorded_at).toLocaleDateString()}
             </span>
           )}

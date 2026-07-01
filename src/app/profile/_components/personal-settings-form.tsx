@@ -191,7 +191,7 @@ export function PersonalSettingsForm({
                 Phone Number
               </Label>
               <div className="relative">
-                <Phone className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground opacity-60" />
+                <Phone className="absolute left-3 top-3 h-3 w-3 text-muted-foreground opacity-60" />
                 <Input
                   type="tel"
                   id="phone"
@@ -284,7 +284,7 @@ export function PersonalSettingsForm({
 
           <div className="border-t border-border/40 pt-4 mt-2 flex flex-col gap-3">
             <h3 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5">
-              <Shield className="w-3.5 h-3.5 text-primary" />
+              <Shield className="w-3 h-3 text-primary" />
               Spiritual Mentor / Guide Details
             </h3>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -366,9 +366,9 @@ export function PersonalSettingsForm({
             className="gap-1.5 cursor-pointer"
           >
             {updating ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              <Loader2 className="w-3 h-3 animate-spin" />
             ) : (
-              <Check className="w-3.5 h-3.5" />
+              <Check className="w-3 h-3" />
             )}
             <span>
               {hasPendingRequest

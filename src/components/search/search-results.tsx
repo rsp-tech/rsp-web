@@ -314,7 +314,7 @@ export function SearchResults({
                       <div className="text-xxs text-muted-foreground pl-6 flex items-center gap-1 font-medium truncate">
                         {mat.category && <span>{mat.category.name}</span>}
                         {mat.category && mat.recording && (
-                          <ChevronRight className="w-2.5 h-2.5 shrink-0" />
+                          <ChevronRight className="w-3 h-3 shrink-0" />
                         )}
                         {mat.recording && (
                           <span className="truncate">{mat.recording.name}</span>

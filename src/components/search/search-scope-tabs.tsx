@@ -27,21 +27,21 @@ export function SearchScopeTabs({
         style={{ borderBottomLeftRadius: 0, borderBottomRightRadius: 0 }}
       >
         <TabsTrigger value="full" className="flex-1 gap-1.5 text-xs py-1">
-          <Globe className="w-3.5 h-3.5" /> Full Search
+          <Globe className="w-3 h-3" /> Full Search
         </TabsTrigger>
         <TabsTrigger
           value="current"
           className="flex-1 gap-1.5 text-xs py-1 truncate"
           title={`Search directly under ${currentCategory.name}`}
         >
-          <Folder className="w-3.5 h-3.5" /> Current Page
+          <Folder className="w-3 h-3" /> Current Page
         </TabsTrigger>
         <TabsTrigger
           value="sub"
           className="flex-1 gap-1.5 text-xs py-1 truncate"
           title={`Search under ${currentCategory.name} and sub-categories`}
         >
-          <CornerDownRight className="w-3.5 h-3.5" /> Sub-categories
+          <CornerDownRight className="w-3 h-3" /> Sub-categories
         </TabsTrigger>
       </TabsList>
     </Tabs>

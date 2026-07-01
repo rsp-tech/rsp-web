@@ -37,7 +37,7 @@ export function UserNav() {
           onClick={() => setAuthOpen(true)}
           className="gap-1.5"
         >
-          <LogIn className="w-3.5 h-3.5" />
+          <LogIn className="w-3 h-3" />
           Login
         </Button>
         <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />

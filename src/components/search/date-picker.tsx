@@ -52,7 +52,7 @@ export function DateRangePicker({
             className,
           )}
         >
-          <CalendarIcon className="mr-2 h-3.5 w-3.5 shrink-0" />
+          <CalendarIcon className="mr-2 h-3 w-3 shrink-0" />
           <span className="truncate">
             {selectedRange?.from ? (
               selectedRange.to ? (

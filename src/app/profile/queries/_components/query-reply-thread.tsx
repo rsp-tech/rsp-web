@@ -15,7 +15,7 @@ export function QueryReplyThread({
   return (
     <div className="flex flex-col gap-3">
       <h5 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 px-1">
-        <MessageSquare className="w-3.5 h-3.5 text-primary" />
+        <MessageSquare className="w-3 h-3 text-primary" />
         <span>Conversation Thread ({replies.length})</span>
       </h5>
 

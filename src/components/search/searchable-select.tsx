@@ -66,7 +66,7 @@ export function SearchableSelect({
           <span className="truncate">
             {selectedOption ? selectedOption.label : placeholder}
           </span>
-          <ChevronsUpDown className="ml-2 h-3.5 w-3.5 shrink-0 opacity-60" />
+          <ChevronsUpDown className="ml-2 h-3 w-3 shrink-0 opacity-60" />
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -91,7 +91,7 @@ export function SearchableSelect({
                 >
                   <Check
                     className={cn(
-                      "mr-2 h-3.5 w-3.5 shrink-0",
+                      "mr-2 h-3 w-3 shrink-0",
                       value === option.value ? "opacity-100" : "opacity-0",
                     )}
                   />

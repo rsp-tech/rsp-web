@@ -110,7 +110,7 @@ export function NotificationCenter() {
                         title="Mark as read"
                         className="text-primary hover:bg-primary hover:text-primary-foreground"
                       >
-                        <Check className="w-3.5 h-3.5" />
+                        <Check className="w-3 h-3" />
                       </Button>
                     )}
                   </div>

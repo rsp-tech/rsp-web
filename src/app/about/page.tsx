@@ -33,8 +33,8 @@ const styles = {
 export default function About() {
   return (
     <div
-      className="max-w-7xl p-4 text-justify space-y-4 leading-relaxed text-lg"
-      style={{ margin: "auto" }}
+      className="max-w-7xl p-4 space-y-4 leading-relaxed text-lg"
+      style={{ margin: "auto", textAlign: "justify" }}
     >
       <h1 className="text-3xl sm:text-5xl font-bold font-heading tracking-tight leading-tight mb-4">
         Radheshyam Das, M. Tech., IIT, Mumbai

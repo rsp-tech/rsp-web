@@ -25,16 +25,16 @@ export function MaterialBadge({ mat, isHighlighted }: MaterialBadgeProps) {
 
   const getMaterialIcon = () => {
     if (isLink) {
-      return <ExternalLink className="w-3.5 h-3.5 text-info shrink-0" />;
+      return <ExternalLink className="w-3 h-3 shrink-0" />;
     }
     if (lowerName.includes("teacher")) {
-      return <GraduationCap className="w-3.5 h-3.5 text-success shrink-0" />;
+      return <GraduationCap className="w-3 h-3 text-success shrink-0" />;
     }
     if (lowerName.includes("student") || lowerName.includes("handout")) {
-      return <BookOpen className="w-3.5 h-3.5 text-primary shrink-0" />;
+      return <BookOpen className="w-3 h-3 text-primary shrink-0" />;
     }
     if (lowerUri.endsWith(".pdf") || lowerName.includes(".pdf")) {
-      return <FileText className="w-3.5 h-3.5 text-destructive shrink-0" />;
+      return <FileText className="w-3 h-3 text-destructive shrink-0" />;
     }
     if (
       lowerUri.endsWith(".ppt") ||
@@ -42,9 +42,9 @@ export function MaterialBadge({ mat, isHighlighted }: MaterialBadgeProps) {
       lowerName.includes(".ppt") ||
       lowerName.includes("ppt")
     ) {
-      return <Presentation className="w-3.5 h-3.5 text-primary shrink-0" />;
+      return <Presentation className="w-3 h-3 text-primary shrink-0" />;
     }
-    return <FileText className="w-3.5 h-3.5 text-muted-foreground shrink-0" />;
+    return <FileText className="w-3 h-3 text-muted-foreground shrink-0" />;
   };
 
   const href = isLink ? uri : getAssetUrl(uri);

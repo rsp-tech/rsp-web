@@ -70,12 +70,12 @@ export const VolunteerItem = ({
         >
           {isChecked ? (
             <>
-              <Trash2 className="w-3.5 h-3.5" />
+              <Trash2 className="w-3 h-3" />
               <span>Remove</span>
             </>
           ) : (
             <>
-              <Plus className="w-3.5 h-3.5" />
+              <Plus className="w-3 h-3" />
               <span>I'm Interested</span>
             </>
           )}

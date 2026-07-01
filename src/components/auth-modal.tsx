@@ -131,7 +131,8 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                 variant="ghost"
                 size="icon-sm"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-0.5 top-0.5 text-muted-foreground hover:"
+                className="absolute text-muted-foreground"
+                style={{ right: "0.125rem", top: "0.125rem" }}
               >
                 {showPassword ? (
                   <EyeOff className="w-4 h-4" />

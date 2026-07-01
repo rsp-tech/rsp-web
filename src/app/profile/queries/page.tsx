@@ -315,7 +315,7 @@ export default function UserQueriesPage() {
             className="gap-1.5 cursor-pointer"
           >
             <span>Get Involved</span>
-            <ExternalLink className="w-3.5 h-3.5" />
+            <ExternalLink className="w-3 h-3" />
           </Button>
         </CardFooter>
       </Card>

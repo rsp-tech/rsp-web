@@ -135,7 +135,7 @@ export function MobileDrawer() {
           {/* Theme Settings Section */}
           <div className="flex flex-col gap-3">
             <h3 className="text-xs font-bold uppercase tracking-wider text-muted-foreground opacity-80 flex items-center gap-1.5">
-              <Paintbrush className="w-3.5 h-3.5" />
+              <Paintbrush className="w-3 h-3" />
               Theme Settings
             </h3>
             <div className="pt-1">

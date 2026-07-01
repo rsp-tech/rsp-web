@@ -26,7 +26,7 @@ export const NotFoundState = ({
       <div className="relative w-full max-w-lg">
         {/* Shimmering Glassmorphic Card */}
         <div className="relative overflow-hidden rounded-2xl border border-border bg-card p-6 sm:p-8 shadow-md transition-all duration-200">
-          <div className="relative space-y-5 flex flex-col items-center">
+          <div className="relative space-y-6 flex flex-col items-center">
             {/* Pulsing Compass Icon */}
             <div
               className="relative flex items-center justify-center w-16 h-16 rounded-full bg-primary/10 text-primary"
@@ -38,27 +38,27 @@ export const NotFoundState = ({
 
             {/* Sacred Verse Panel */}
             <div className="space-y-4 max-w-md mx-auto">
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <p
-                  className="text-xl sm:text-2xl font-serif italic tracking-wide text-primary leading-relaxed animate-shimmer"
+                  className="text-xl sm:text-2xl font-serif italic tracking-wider text-primary leading-relaxed animate-shimmer"
                   style={{ "--shimmer-delay": "-150ms" } as CSSProperties}
                 >
                   tam eva śaraṇaṁ gaccha
                 </p>
                 <p
-                  className="text-xl sm:text-2xl font-serif italic tracking-wide text-primary leading-relaxed animate-shimmer"
+                  className="text-xl sm:text-2xl font-serif italic tracking-wider text-primary leading-relaxed animate-shimmer"
                   style={{ "--shimmer-delay": "-100ms" } as CSSProperties}
                 >
                   sarva-bhāvena bhārata
                 </p>
                 <p
-                  className="text-xl sm:text-2xl font-serif italic tracking-wide text-primary leading-relaxed animate-shimmer"
+                  className="text-xl sm:text-2xl font-serif italic tracking-wider text-primary leading-relaxed animate-shimmer"
                   style={{ "--shimmer-delay": "-50ms" } as CSSProperties}
                 >
                   tat-prasādāt parāṁ śāntiṁ
                 </p>
                 <p
-                  className="text-xl sm:text-2xl font-serif italic tracking-wide text-primary leading-relaxed animate-shimmer"
+                  className="text-xl sm:text-2xl font-serif italic tracking-wider text-primary leading-relaxed animate-shimmer"
                   style={{ "--shimmer-delay": "0ms" } as CSSProperties}
                 >
                   sthānaṁ prāpsyasi śāśvatam
@@ -70,7 +70,7 @@ export const NotFoundState = ({
                   className="bg-primary/20"
                   style={{ height: "1px", width: "6rem" }}
                 />
-                <span className="text-xs font-semibold uppercase tracking-widest text-muted-foreground opacity-60">
+                <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground opacity-60">
                   Bhagavad Gita 18.62
                 </span>
               </div>
