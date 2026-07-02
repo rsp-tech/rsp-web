@@ -215,7 +215,7 @@
   body {
     font-family: var(--font-sans), sans-serif;
     color: var(--foreground);
-    @apply bg-background transition-all duration-200;
+    @apply bg-background transition-colors duration-200;
   }
   html {
     font-family: var(--font-sans), sans-serif;

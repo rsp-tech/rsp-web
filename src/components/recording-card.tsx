@@ -26,7 +26,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
       data-recording-item
       onKeyDown={onKeyDown}
       className={cn(
-        "p-4 border rounded-2xl shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4 group focus:ring-1 focus:ring-primary focus:outline-hidden transition-all duration-200 ease-in-out",
+        "p-4 border rounded-2xl shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4 group focus:ring-1 focus:ring-primary focus:outline-hidden transition duration-200 ease-in-out",
         isHighlighted
           ? "border-primary bg-primary/5 ring-1 ring-primary"
           : "border-border bg-card hover:shadow-md",
@@ -34,7 +34,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
     >
       {/* Meta details */}
       <div className="flex-1 flex flex-col gap-2">
-        <h3 className="font-bold leading-snug group-hover:text-primary transition-all">
+        <h3 className="font-bold leading-snug group-hover:text-primary transition-colors">
           {rec.name}
         </h3>
 
@@ -102,7 +102,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
           <a
             href={getAssetUrl(rec.audio_id)}
             download
-            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-98 border border-border cursor-pointer"
+            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition duration-200 active:scale-98 border border-border cursor-pointer"
             title="Download Audio"
           >
             <FileDown className="w-4 h-4" />
@@ -115,7 +115,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
             href={`https://youtube.com/watch?v=${rec.yt_id}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition-all duration-200 active:scale-98 cursor-pointer"
+            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition duration-200 active:scale-98 cursor-pointer"
             title="Watch on YouTube"
           >
             <SiYoutube className="w-4 h-4" />

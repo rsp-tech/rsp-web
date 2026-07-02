@@ -53,25 +53,6 @@ export default function RootLayout({
         />
       </head>
       <body className="min-h-full flex flex-col">
-        {/* {process.env["NEXT_PUBLIC_CLARITY_ID"] && (
-          <Script
-            id="microsoft-clarity"
-            strategy="lazyOnload"
-            // biome-ignore lint/security/noDangerouslySetInnerHtml: analytics
-            dangerouslySetInnerHTML={{
-              __html: `
-        window.clarity = window.clarity || function() { (window.clarity.q = window.clarity.q || []).push(arguments) };
-        if (!document.getElementById('clarity-inject')) {
-          const t = document.createElement("script");
-          t.id = 'clarity-inject';
-          t.async = true;
-          t.src = "https://www.clarity.ms/tag/${process.env["NEXT_PUBLIC_CLARITY_ID"]}";
-          document.head.appendChild(t);
-        }
-      `,
-            }}
-          />
-        )} */}
         <Providers>
           <OfflineIndicator />
           <SyncTrigger />
