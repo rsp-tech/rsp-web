@@ -31,10 +31,10 @@ export const UserNavDropdownContent = ({
       <DropdownMenuLabel className="border-b border-border flex gap-3">
         <CurrentUserAvatar />
         <div className="flex flex-col gap-1">
-          <p className="text-sm font-medium leading-none whitespace-nowrap">
+          <p className="text-sm font-medium leading-none truncate">
             {getUserDisplayName(session.user)}
           </p>
-          <p className="text-xs text-muted-foreground truncate whitespace-nowrap">
+          <p className="text-xs text-muted-foreground truncate">
             {session.user.email}
           </p>
         </div>
