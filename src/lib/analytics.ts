@@ -1,4 +1,4 @@
-import { Properties } from "posthog-js";
+import type { Properties } from "posthog-js";
 
 export interface ContentProperties {
   slug: string;
