@@ -1,3 +1,5 @@
+import { Properties } from "posthog-js";
+
 export interface ContentProperties {
   slug: string;
   title: string;
@@ -35,9 +37,9 @@ const initPostHog = (ph: any) => {
  * Assures safe invocation by verifying environment is client-side and configuration keys exist.
  */
 
-export const trackEvent = (
+export const trackEvent = <T extends Properties>(
   name: string,
-  props?: Record<string, unknown>,
+  props?: T,
 ): Promise<void> | void => {
   if (typeof window === "undefined") {
     return;
