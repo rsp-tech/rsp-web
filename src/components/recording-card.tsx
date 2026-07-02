@@ -3,9 +3,9 @@
 import { Calendar, FileDown, Globe, MapPin, User } from "lucide-react";
 import { SiYoutube } from "react-icons/si";
 import { getAssetUrl } from "@/lib/storage";
+import { cn } from "@/lib/utils";
 import type { EnrichedRecording } from "@/types";
 import { MaterialBadge } from "./material-badge";
-import { cn } from "@/lib/utils";
 
 interface RecordingCardProps {
   rec: EnrichedRecording;

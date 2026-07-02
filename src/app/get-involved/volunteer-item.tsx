@@ -1,5 +1,6 @@
 import { Plus, Trash2 } from "lucide-react";
 import { useId } from "react";
+import { SearchableSelect } from "@/components/search/searchable-select";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,7 +9,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { SearchableSelect } from "@/components/search/searchable-select";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import type { Service } from "@/types";

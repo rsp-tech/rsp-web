@@ -1,9 +1,9 @@
 "use client";
 
 import { Search } from "lucide-react";
+import { SearchableSelect } from "@/components/search/searchable-select";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SearchableSelect } from "@/components/search/searchable-select";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { QUERY_CATEGORIES } from "@/constants";
 

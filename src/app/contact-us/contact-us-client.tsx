@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useId, useState } from "react";
 import { toast } from "sonner";
 import { useSession } from "@/components/providers";
+import { SearchableSelect } from "@/components/search/searchable-select";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -23,7 +24,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { SearchableSelect } from "@/components/search/searchable-select";
 import { Textarea } from "@/components/ui/textarea";
 import { QUERY_CATEGORIES } from "@/constants";
 import { getSupabaseClient } from "@/lib/supabase-browser";

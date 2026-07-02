@@ -18,9 +18,7 @@
       "src\\components\\mobile-drawer.tsx",
       "src\\components\\user-nav.tsx"
     ],
-    "src\\components\\ui\\dialog.tsx": [
-      "src\\components\\auth-modal.tsx"
-    ],
+    "src\\components\\ui\\dialog.tsx": ["src\\components\\auth-modal.tsx"],
     "src\\components\\ui\\input.tsx": [
       "src\\app\\contact-us\\contact-us-client.tsx",
       "src\\app\\profile\\_components\\personal-settings-form.tsx",
@@ -73,9 +71,7 @@
       "src\\app\\profile\\queries\\_components\\query-filters.tsx",
       "src\\components\\recording-sort-controls.tsx"
     ],
-    "src\\components\\ui\\dropdown-menu.tsx": [
-      "src\\components\\user-nav.tsx"
-    ],
+    "src\\components\\ui\\dropdown-menu.tsx": ["src\\components\\user-nav.tsx"],
     "src\\components\\ui\\tabs.tsx": [
       "src\\app\\profile\\queries\\_components\\query-filters.tsx",
       "src\\components\\search\\search-scope-tabs.tsx"
@@ -101,9 +97,7 @@
       "src\\app\\profile\\_components\\personal-settings-form.tsx",
       "src\\app\\profile\\queries\\_components\\query-reply-form.tsx"
     ],
-    "src\\components\\ui\\badge.tsx": [
-      "src\\app\\profile\\queries\\page.tsx"
-    ]
+    "src\\components\\ui\\badge.tsx": ["src\\app\\profile\\queries\\page.tsx"]
   },
   "data": [
     {
