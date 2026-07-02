@@ -1,21 +1,17 @@
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
-export const useOnlineStatus = () => {
-  const [isOnline, setIsOnline] = useState(true);
+const subscribe = (callback: () => void) => {
+  window.addEventListener("online", callback);
+  window.addEventListener("offline", callback);
 
-  useEffect(() => {
-    setIsOnline(navigator.onLine);
-
-    const handleOnline = () => setIsOnline(navigator.onLine);
-
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOnline);
-
-    return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOnline);
-    };
-  }, []);
-
-  return isOnline;
+  return () => {
+    window.removeEventListener("online", callback);
+    window.removeEventListener("offline", callback);
+  };
 };
+
+const getSnapshot = () => navigator.onLine;
+const getServerSnapshot = () => true; // Fallback for SSR/Next.js
+
+export const useOnlineStatus = (): boolean =>
+  useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
