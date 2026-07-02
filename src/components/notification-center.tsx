@@ -45,7 +45,7 @@ export function NotificationCenter() {
               </span>
             </>
           ) : (
-            <Bell className="w-5 h-5" />
+            <Bell className="w-5 h-5 text-muted-foreground" />
           )}
         </Button>
       </SheetTrigger>

@@ -1,18 +1,37 @@
 "use client";
 
+import { Bell } from "lucide-react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { MobileDrawer } from "./mobile-drawer";
-import { NotificationCenter } from "./notification-center";
-import { ThemeSelector } from "./theme-selector";
 import { Skeleton } from "./ui/skeleton";
-import { UserNav } from "./user-nav";
 
 const SearchBar = dynamic(
   () => import("./search-bar").then((mod) => mod.SearchBar),
   {
     ssr: false,
-    loading: () => <Skeleton className="w-full max-w-lg animate-shimmer" />,
+    loading: () => <Skeleton className="w-full h-9 max-w-lg animate-shimmer" />,
+  },
+);
+
+const MobileDrawer = dynamic(
+  () => import("./mobile-drawer").then((mod) => mod.MobileDrawer),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="w-8 h-8 md:hidden animate-shimmer" />,
+  },
+);
+
+const HeaderActions = dynamic(
+  () => import("./header-actions").then((mod) => mod.HeaderActions),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="flex items-center gap-3 shrink-0">
+        <Skeleton className="w-8 h-8 animate-shimmer" />
+        <Bell className="h-5 w-5 text-muted-foreground animate-shimmer" />
+        <Skeleton className="w-8 h-8 animate-shimmer rounded-full" />
+      </div>
+    ),
   },
 );
 
@@ -65,15 +84,7 @@ export function Header() {
       <SearchBar />
 
       {/* Actions */}
-      <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
-        <div className="hidden md:block">
-          <ThemeSelector />
-        </div>
-        <NotificationCenter />
-        <div className="hidden md:block">
-          <UserNav />
-        </div>
-      </div>
+      <HeaderActions />
     </header>
   );
 }
