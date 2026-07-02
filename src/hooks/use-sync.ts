@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { useSession } from "@/components/providers";
 import { QUERY_KEY, SYNC_INTERVAL, WORKER_MSG } from "@/constants";
 import { useOnlineStatus } from "@/hooks/use-online-status";
-import { getWorker, notifySearchWorker, useSearch } from "@/hooks/use-search";
+import { getWorker, notifySearchWorker } from "@/hooks/use-search";
 import type { SearchableTable, SyncResult } from "@/types";
 
 interface WorkerConfig {
@@ -105,7 +105,6 @@ const toRoleId = (value: unknown): number | undefined =>
 export const useSync = () => {
   const { session, isLoading } = useSession();
   const queryClient = useQueryClient();
-  useSearch(); // ensure search worker is initialized alongside sync
 
   const isOnline = useOnlineStatus();
 

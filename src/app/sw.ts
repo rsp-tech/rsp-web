@@ -22,12 +22,15 @@ declare const self: ServiceWorkerGlobalScope & {
 // Optimized Regex Matchers
 const STATIC_ASSET_REGEX = /^\/_next\/static\/|\.(js|css|woff2?|ttf)$/;
 const FORBIDDEN_STATIC_REGEX = /\/_next\/data|\.(json|mp3|wav|pdf)$/;
-const GENERAL_IMAGE_REGEX = /\.(png|jpe?g|webp|svg|ico)$/;
+const GENERAL_IMAGE_REGEX = /\.(png|jpe?g|webp|svg|ico|avif)$/;
 
 const CRITICAL_BRAND_IMAGES = [
   "/rsp.webp",
   "/icon-192x192.webp",
   "/icon-512x512.webp",
+  "/rsp.avif",
+  "/icon-192x192.avif",
+  "/icon-512x512.avif",
   "/favicon.ico",
 ];
 

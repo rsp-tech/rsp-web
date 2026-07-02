@@ -30,12 +30,10 @@ export default function RootLayout({
     <html
       lang="en"
       className={cn(geistSans.variable, "h-full")}
-      style={
-        {
-          "-webkit-font-smoothing": "antialiased",
-          "-moz-osx-font-smoothing": "grayscale",
-        } as CSSProperties
-      }
+      style={{
+        WebkitFontSmoothing: "antialiased",
+        MozOsxFontSmoothing: "grayscale",
+      }}
     >
       <head>
         <link

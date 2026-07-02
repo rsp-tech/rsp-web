@@ -7,6 +7,7 @@ vi.mock("posthog-js", () => {
   return {
     default: {
       capture: vi.fn(),
+      init: vi.fn(),
     },
   };
 });
@@ -46,12 +47,12 @@ describe("analytics utility", () => {
     expect(posthog.capture).not.toHaveBeenCalled();
   });
 
-  it("should fire events if client-side and NEXT_PUBLIC_POSTHOG_KEY is present", () => {
+  it("should fire events if client-side and NEXT_PUBLIC_POSTHOG_KEY is present", async () => {
     // biome-ignore lint/suspicious/noExplicitAny: Simulate client-side: window is defined
     global.window = {} as any;
     process.env["NEXT_PUBLIC_POSTHOG_KEY"] = "phc_test_key";
 
-    trackEvent("test_event", { foo: "bar" });
+    await trackEvent("test_event", { foo: "bar" });
 
     expect(posthog.capture).toHaveBeenCalledWith("test_event", { foo: "bar" });
   });

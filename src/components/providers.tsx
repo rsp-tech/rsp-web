@@ -3,10 +3,15 @@
 import type { Session } from "@supabase/supabase-js";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
-import { createContext, useContext, useEffect, useState } from "react";
+import {
+  createContext,
+  Suspense,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { getQueryClient } from "@/lib/query-client";
-import { getSupabaseClient } from "@/lib/supabase-browser";
-import { PHProvider } from "./posthog-provider";
+import { PageViewsTracker } from "./page-views-tracker";
 import { PwaRegister } from "./pwa-register";
 
 interface SessionContextType {
@@ -26,38 +31,55 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    const supabase = getSupabaseClient();
-    supabase.auth.getSession().then(({ data }) => {
-      setSession(data.session);
-      setIsLoading(false);
+    let active = true;
+    let subscription: { unsubscribe: () => void } | null = null;
+
+    import("@/lib/supabase-browser").then(({ getSupabaseClient }) => {
+      if (!active) return;
+      const supabase = getSupabaseClient();
+
+      supabase.auth.getSession().then(({ data }) => {
+        if (!active) return;
+        setSession(data.session);
+        setIsLoading(false);
+      });
+
+      // 2. Listen to real-time auth mutations (login, logout, token refresh)
+      const {
+        data: { subscription: sub },
+      } = supabase.auth.onAuthStateChange((_e, currentSession) => {
+        if (!active) return;
+        setSession(currentSession);
+        setIsLoading(false);
+      });
+
+      subscription = sub;
     });
 
-    // 2. Listen to real-time auth mutations (login, logout, token refresh)
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_e, currentSession) => {
-      setSession(currentSession);
-      setIsLoading(false);
-    });
-
-    return () => subscription.unsubscribe();
+    return () => {
+      active = false;
+      if (subscription) {
+        subscription.unsubscribe();
+      }
+    };
   }, []);
 
   return (
-    <PHProvider>
-      <ThemeProvider
-        attribute="class"
-        defaultTheme="monk"
-        themes={["clean", "monk", "dark"]}
-        disableTransitionOnChange
-      >
+    <ThemeProvider
+      attribute="class"
+      defaultTheme="monk"
+      themes={["clean", "monk", "dark"]}
+      disableTransitionOnChange
+    >
+      <Suspense>
         <SessionContext value={{ session, isLoading }}>
           <QueryClientProvider client={getQueryClient()}>
             <PwaRegister />
             {children}
+            <PageViewsTracker />
           </QueryClientProvider>
         </SessionContext>
-      </ThemeProvider>
-    </PHProvider>
+      </Suspense>
+    </ThemeProvider>
   );
 }
