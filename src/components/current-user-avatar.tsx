@@ -16,7 +16,7 @@ export const CurrentUserAvatar = () => {
 
   return isLoading ? (
     <Skeleton className="h-8 w-8 rounded-full" />
-  ) : !profileImage ? (
+  ) : profileImage ? (
     <img
       src={profileImage}
       alt=""
