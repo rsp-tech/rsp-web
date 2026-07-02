@@ -1,9 +1,16 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import { usePathname } from "next/navigation";
 import type { CategoryPageData } from "@/hooks/use-category-page";
-import { HomePageShell } from "./home-page-shell";
-import { CategoryPageShell } from "./category-page-shell";
+
+const HomePageShell = dynamic(() =>
+  import("./home-page-shell").then((mod) => mod.HomePageShell),
+);
+
+const CategoryPageShell = dynamic(() =>
+  import("./category-page-shell").then((mod) => mod.CategoryPageShell),
+);
 
 interface ClientShellProps {
   initialData?: CategoryPageData;
