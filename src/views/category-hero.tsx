@@ -4,7 +4,7 @@ export const CategoryHero = () => {
   return (
     <section className="relative rounded-2xl bg-linear-to-r from-primary/20 via-primary/5 to-transparent border border-primary/10 p-8 sm:p-12 overflow-hidden flex flex-col gap-4">
       <div
-        className="absolute pointer-events-none hidden md:block"
+        className="absolute pointer-events-none hidden md:flex"
         style={{ opacity: 0.1, width: "33.333%", right: 0, bottom: 0, top: 0 }}
       >
         <Compass className="w-full h-full text-primary" />

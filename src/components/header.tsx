@@ -55,7 +55,7 @@ export function Header() {
           href="/"
           className="flex items-center gap-1.5 sm:gap-2 hover:opacity-95 transition-all shrink-0"
         >
-          <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 ring-1 ring-primary/20">
+          <div className="w-8 h-8 rounded-full overflow-hidden shrink-0 ring-1 ring-primary/20 hidden md:flex">
             <picture>
               <source srcSet="/icon-192x192.avif" type="image/avif" />
               <img
