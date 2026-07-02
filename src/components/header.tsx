@@ -27,9 +27,9 @@ const HeaderActions = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex items-center gap-3 shrink-0">
-        <Skeleton className="w-8 h-8 animate-shimmer" />
+        <Skeleton className="w-8 h-8 animate-shimmer hidden md:flex" />
         <Bell className="h-5 w-5 text-muted-foreground animate-shimmer" />
-        <Skeleton className="w-8 h-8 animate-shimmer rounded-full" />
+        <Skeleton className="w-8 h-8 animate-shimmer rounded-full hidden md:flex" />
       </div>
     ),
   },
@@ -38,7 +38,7 @@ const HeaderActions = dynamic(
 export function Header() {
   return (
     <header
-      className="w-full border-b border-border bg-background/50 px-3 sm:px-4 py-2.5 sm:py-3 flex items-center justify-between gap-2 sm:gap-4"
+      className="w-full border-b border-border bg-background/50 px-3 sm:px-4 py-3 flex items-center justify-between gap-2 sm:gap-4"
       style={{
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",
