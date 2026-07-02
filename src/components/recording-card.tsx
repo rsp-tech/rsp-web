@@ -2,7 +2,7 @@
 
 import { Calendar, FileDown, Globe, MapPin, User } from "lucide-react";
 import { SiYoutube } from "react-icons/si";
-import { getAssetUrl } from "@/lib/storage";
+import { getAssetDownloadUrl } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 import type { EnrichedRecording } from "@/types";
 import { MaterialBadge } from "./material-badge";
@@ -100,8 +100,8 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
       <div className="flex items-center gap-2 self-stretch md:self-auto justify-end border-t md:border-none border-border pt-3 md:pt-0 shrink-0">
         {rec.audio_id && (
           <a
-            href={getAssetUrl(rec.audio_id)}
-            download
+            href={getAssetDownloadUrl(rec.audio_id)}
+            download={true}
             className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition duration-200 active:scale-98 border border-border cursor-pointer"
             title="Download Audio"
           >
