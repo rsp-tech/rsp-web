@@ -78,34 +78,22 @@ export function SearchBar() {
       <Popover open={showDropdown} onOpenChange={setShowDropdown}>
         <PopoverAnchor asChild>
           <div className="flex gap-2 items-center w-full">
-            <div className="flex-1">
-              <SearchInput
-                term={term}
-                onClick={(e) => e.stopPropagation()}
-                onChange={(val) => {
-                  setTerm(val);
-                  setShowDropdown(true);
-                }}
-                onFocus={() => setShowDropdown(true)}
-                searching={searching}
-                role="combobox"
-                aria-expanded={showDropdown}
-                aria-haspopup="dialog"
-              />
-            </div>
+            <SearchInput
+              term={term}
+              onChange={setTerm}
+              onFocus={() => setShowDropdown(true)}
+              searching={searching}
+              role="combobox"
+              aria-expanded={showDropdown}
+              aria-haspopup="dialog"
+            />
             {(term.trim() !== "" || showDropdown) && (
               <Button
                 id="search-filters-toggle"
                 type="button"
                 variant={showFilters ? "secondary" : "outline"}
                 size="sm"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setShowFilters(!showFilters);
-                  if (!showDropdown) {
-                    setShowDropdown(true);
-                  }
-                }}
+                onClick={() => setShowFilters(!showFilters)}
                 className="h-9 shrink-0 gap-1.5 cursor-pointer"
               >
                 <SlidersHorizontal className="w-3 h-3" />
@@ -130,7 +118,10 @@ export function SearchBar() {
             onOpenAutoFocus={(e) => e.preventDefault()}
             onInteractOutside={(e) => {
               const target = e.target as HTMLElement;
-              if (target.closest("#search-filters-toggle")) {
+              if (
+                target.closest("#search-filters-toggle") ||
+                target.closest("#search-input-container")
+              ) {
                 e.preventDefault();
               }
             }}

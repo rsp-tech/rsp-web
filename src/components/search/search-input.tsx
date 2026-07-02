@@ -15,19 +15,20 @@ export function SearchInput({
   term,
   onChange,
   searching,
-  onFocus,
   placeholder = "Search discourses, recordings, categories...",
   className,
   ...props
 }: SearchInputProps) {
   return (
-    <div className="relative flex items-center w-full">
+    <div
+      className="relative flex items-center w-full"
+      id="search-input-container"
+    >
       <Search className="absolute left-3 w-4 h-4 text-muted-foreground pointer-events-none" />
       <Input
         type="text"
         value={term}
         onChange={(e) => onChange(e.target.value)}
-        onFocus={onFocus}
         placeholder={placeholder}
         className="pl-9 pr-10 h-9 w-full bg-muted border-border focus-visible:border-primary focus-visible:ring-1 focus-visible:ring-primary focus-visible:ring-offset-0"
         {...props}

@@ -53,9 +53,7 @@ export function Header() {
       </div>
 
       {/* Search */}
-      <div className="flex-1 max-w-md">
-        <SearchBar />
-      </div>
+      <SearchBar />
 
       {/* Actions */}
       <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
