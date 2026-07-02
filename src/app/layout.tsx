@@ -1,16 +1,13 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
-import Script from "next/script";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
-import { OfflineIndicator } from "@/components/offline-indicator";
 import { PageTransition } from "@/components/page-transition";
 import { Providers } from "@/components/providers";
-import { SyncTrigger } from "@/components/sync-trigger";
-import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 import type { CSSProperties } from "react";
 import { cn } from "@/lib/utils";
+import { LayoutInitializers } from "@/components/layout-initializers";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -54,9 +51,7 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <Providers>
-          <OfflineIndicator />
-          <SyncTrigger />
-          <Toaster position="bottom-right" />
+          <LayoutInitializers />
           <Header />
           <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-6 flex flex-col">
             <PageTransition>{children}</PageTransition>
