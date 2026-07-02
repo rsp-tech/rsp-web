@@ -50,7 +50,10 @@ export function SearchBar() {
                 type="button"
                 variant={showFilters ? "secondary" : "outline"}
                 size="sm"
-                onClick={() => setShowFilters(!showFilters)}
+                onClick={() => {
+                  setShowFilters(!showFilters);
+                  setShowDropdown(true);
+                }}
                 className="h-9 shrink-0 gap-1.5 cursor-pointer"
               >
                 <SlidersHorizontal className="w-3 h-3" />
