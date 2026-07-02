@@ -17,8 +17,9 @@ const SearchBarDropdownContent = dynamic(
 );
 
 export function SearchBar() {
+  const searchBarState = useSearchBar();
   const { term, setTerm, searching, showDropdown, setShowDropdown, filters } =
-    useSearchBar();
+    searchBarState;
 
   const [showFilters, setShowFilters] = useState(false);
 
@@ -64,7 +65,11 @@ export function SearchBar() {
 
         {/* Dropdown content */}
         {showDropdown && (
-          <SearchBarDropdownContent {...{ hasActiveFilters, showFilters }} />
+          <SearchBarDropdownContent
+            showFilters={showFilters}
+            hasActiveFilters={hasActiveFilters}
+            {...searchBarState}
+          />
         )}
       </Popover>
     </div>

@@ -1,4 +1,4 @@
-import { useSearchBar } from "@/hooks/use-search-bar";
+import type { useSearchBar } from "@/hooks/use-search-bar";
 import { DateRangePicker } from "./search/date-picker";
 import { SearchResults } from "./search/search-results";
 import { SearchScopeTabs } from "./search/search-scope-tabs";
@@ -6,7 +6,8 @@ import { SearchableSelect } from "./search/searchable-select";
 import { Label } from "./ui/label";
 import { PopoverContent } from "./ui/popover";
 
-interface SearchBarDropdownContentProps {
+interface SearchBarDropdownContentProps
+  extends ReturnType<typeof useSearchBar> {
   showFilters: boolean;
   hasActiveFilters: boolean;
 }
@@ -14,22 +15,20 @@ interface SearchBarDropdownContentProps {
 export const SearchBarDropdownContent = ({
   showFilters,
   hasActiveFilters,
+  term,
+  scope,
+  setScope,
+  currentCategory,
+  results,
+  filters,
+  setFilters,
+  availableSpeakers,
+  availableLanguages,
+  availableVenues,
+  handleSelectCategory,
+  handleSelectRecording,
+  handleSelectMaterial,
 }: SearchBarDropdownContentProps) => {
-  const {
-    term,
-    scope,
-    setScope,
-    currentCategory,
-    results,
-    filters,
-    setFilters,
-    availableSpeakers,
-    availableLanguages,
-    availableVenues,
-    handleSelectCategory,
-    handleSelectRecording,
-    handleSelectMaterial,
-  } = useSearchBar();
   const handleResetFilters = () => {
     setFilters({
       speaker_ids: [],
