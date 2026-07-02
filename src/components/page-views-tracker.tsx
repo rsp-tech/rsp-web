@@ -15,7 +15,9 @@ export const PageViewsTracker = () => {
       if (searchParams?.toString()) {
         url = `${url}?${searchParams.toString()}`;
       }
-      trackEvent("$pageview", { $current_url: url });
+      setTimeout(() => {
+        trackEvent("$pageview", { $current_url: url });
+      }, 1500);
     }
   }, [pathname, searchParams]);
 

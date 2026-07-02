@@ -35,8 +35,10 @@ const initPostHog = (ph: any) => {
  * Assures safe invocation by verifying environment is client-side and configuration keys exist.
  */
 
-// biome-ignore lint/suspicious/noExplicitAny: ok for now
-export const trackEvent = (name: string, props?: Record<string, any>): Promise<void> | void => {
+export const trackEvent = (
+  name: string,
+  props?: Record<string, unknown>,
+): Promise<void> | void => {
   if (typeof window === "undefined") {
     return;
   }
@@ -54,5 +56,3 @@ export const trackEvent = (name: string, props?: Record<string, any>): Promise<v
       console.error("Failed to capture analytics event:", err);
     });
 };
-
-

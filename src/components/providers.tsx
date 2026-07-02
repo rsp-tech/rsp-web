@@ -2,6 +2,7 @@
 
 import type { Session } from "@supabase/supabase-js";
 import { QueryClientProvider } from "@tanstack/react-query";
+import dynamic from "next/dynamic";
 import { ThemeProvider } from "next-themes";
 import {
   createContext,
@@ -11,8 +12,12 @@ import {
   useState,
 } from "react";
 import { getQueryClient } from "@/lib/query-client";
-import { PageViewsTracker } from "./page-views-tracker";
+import { getSupabaseClient } from "@/lib/supabase-browser";
 import { PwaRegister } from "./pwa-register";
+
+const PageViewsTracker = dynamic(() =>
+  import("./page-views-tracker").then((mod) => mod.PageViewsTracker),
+);
 
 interface SessionContextType {
   session: Session | null;
@@ -31,37 +36,21 @@ export function Providers({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
-    let active = true;
-    let subscription: { unsubscribe: () => void } | null = null;
-
-    import("@/lib/supabase-browser").then(({ getSupabaseClient }) => {
-      if (!active) return;
-      const supabase = getSupabaseClient();
-
-      supabase.auth.getSession().then(({ data }) => {
-        if (!active) return;
-        setSession(data.session);
-        setIsLoading(false);
-      });
-
-      // 2. Listen to real-time auth mutations (login, logout, token refresh)
-      const {
-        data: { subscription: sub },
-      } = supabase.auth.onAuthStateChange((_e, currentSession) => {
-        if (!active) return;
-        setSession(currentSession);
-        setIsLoading(false);
-      });
-
-      subscription = sub;
+    const supabase = getSupabaseClient();
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setIsLoading(false);
     });
 
-    return () => {
-      active = false;
-      if (subscription) {
-        subscription.unsubscribe();
-      }
-    };
+    // 2. Listen to real-time auth mutations (login, logout, token refresh)
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_e, currentSession) => {
+      setSession(currentSession);
+      setIsLoading(false);
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   return (

@@ -5,7 +5,6 @@ import { Header } from "@/components/header";
 import { PageTransition } from "@/components/page-transition";
 import { Providers } from "@/components/providers";
 import "./globals.css";
-import type { CSSProperties } from "react";
 import { LayoutInitializers } from "@/components/layout-initializers";
 import { cn } from "@/lib/utils";
 
