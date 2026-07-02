@@ -1,11 +1,20 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { MobileDrawer } from "./mobile-drawer";
 import { NotificationCenter } from "./notification-center";
-import { SearchBar } from "./search-bar";
 import { ThemeSelector } from "./theme-selector";
+import { Skeleton } from "./ui/skeleton";
 import { UserNav } from "./user-nav";
+
+const SearchBar = dynamic(
+  () => import("./search-bar").then((mod) => mod.SearchBar),
+  {
+    ssr: false,
+    loading: () => <Skeleton className="w-full max-w-lg animate-shimmer" />,
+  },
+);
 
 export function Header() {
   return (
