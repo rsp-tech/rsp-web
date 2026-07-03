@@ -50,7 +50,10 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <Providers>
           <Header />
-          <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-6 flex flex-col">
+          <main
+            className="flex-1 w-full max-w-7xl mx-auto px-4 py-6 flex flex-col"
+            style={{ minHeight: "calc(100dvh - 60px)" }}
+          >
             <PageTransition>{children}</PageTransition>
           </main>
           <Footer />

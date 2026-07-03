@@ -36,7 +36,7 @@ export function AudioPlayerPanel() {
   if (isMinimized) {
     return (
       <div
-        className="fixed z-50 bg-background/50 border border-border shadow-md rounded-full flex items-center gap-2 p-1 select-none backdrop-blur-xs"
+        className="fixed z-50 bg-muted/50 border border-border shadow-md rounded-full flex items-center gap-2 p-1 select-none backdrop-blur-xs"
         style={{
           bottom: "24px",
           right: "24px",
@@ -89,7 +89,7 @@ export function AudioPlayerPanel() {
 
   return (
     <div
-      className="bg-background border-t border-border shadow-md w-full p-4 select-none z-50"
+      className="bg-muted border-t border-border shadow-md w-full p-4 select-none z-50"
       style={{
         bottom: 0,
         position: "sticky",
