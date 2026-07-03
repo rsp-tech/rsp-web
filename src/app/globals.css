@@ -69,24 +69,24 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
+  --background: oklch(72.802% 0.17192 57.259 / 0.2);
+  --foreground: oklch(0.18 0.04 45); /* Warm dark brown */
+  --card: oklch(0.99 0.01 75);
+  --card-foreground: oklch(0.18 0.04 45);
+  --popover: oklch(0.99 0.01 75);
+  --popover-foreground: oklch(0.18 0.04 45);
+  --primary: oklch(0.65 0.22 45); /* Saffron Orange */
+  --primary-foreground: oklch(0.99 0.01 75);
+  --secondary: oklch(0.93 0.04 70);
+  --secondary-foreground: oklch(0.65 0.22 45);
+  --muted: oklch(0.93 0.04 70);
+  --muted-foreground: oklch(0.45 0.08 55);
+  --accent: oklch(0.93 0.04 70);
+  --accent-foreground: oklch(0.65 0.22 45);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
+  --border: oklch(0.88 0.15 65);
+  --input: oklch(0.88 0.05 65);
+  --ring: oklch(0.65 0.22 45);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
   --chart-3: oklch(0.439 0 0);
@@ -107,7 +107,7 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  --shimmer-glow: rgba(255, 255, 255, 0.65);
+  --shimmer-glow: rgba(255, 255, 255, 0.7);
 }
 
 .clean {

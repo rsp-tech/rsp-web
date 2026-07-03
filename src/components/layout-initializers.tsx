@@ -21,11 +21,8 @@ const SyncTrigger = dynamic(
   { ssr: false },
 );
 
-const GlobalAudioPlayer = dynamic(
-  () =>
-    import("@/components/global-audio-player").then(
-      (mod) => mod.GlobalAudioPlayer,
-    ),
+const ProgressBar = dynamic(
+  () => import("@/components/progress-bar").then((mod) => mod.ProgressBar),
   { ssr: false },
 );
 
@@ -35,7 +32,7 @@ export function LayoutInitializers() {
       <OfflineIndicator />
       <SyncTrigger />
       <Toaster position="bottom-right" />
-      <GlobalAudioPlayer />
+      <ProgressBar />
     </>
   );
 }

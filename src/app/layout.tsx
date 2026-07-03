@@ -5,6 +5,7 @@ import { Header } from "@/components/header";
 import { PageTransition } from "@/components/page-transition";
 import { Providers } from "@/components/providers";
 import "./globals.css";
+import { GlobalAudioPlayer } from "@/components/global-audio-player";
 import { LayoutInitializers } from "@/components/layout-initializers";
 import { cn } from "@/lib/utils";
 
@@ -48,12 +49,13 @@ export default function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <Providers>
-          <LayoutInitializers />
           <Header />
           <main className="flex-1 w-full max-w-7xl mx-auto px-4 py-6 flex flex-col">
             <PageTransition>{children}</PageTransition>
           </main>
           <Footer />
+          <GlobalAudioPlayer />
+          <LayoutInitializers />
         </Providers>
       </body>
     </html>
