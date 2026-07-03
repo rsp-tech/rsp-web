@@ -1,7 +1,12 @@
+import { STORE } from "@/constants";
+import type { EnrichedRecording } from "@/types";
 import { enforceLRUWatermark, touchTrackMeta } from "./audio-idb-ledger";
+import { getDB } from "./idb";
 
 export interface AudioState {
   currentAudioId: string | null;
+  currentRecording: EnrichedRecording | null;
+  categoryPath: string | null;
   isPlaying: boolean;
   currentTime: number;
   duration: number;
@@ -13,6 +18,8 @@ type Listener = () => void;
 
 let state: AudioState = {
   currentAudioId: null,
+  currentRecording: null,
+  categoryPath: null,
   isPlaying: false,
   currentTime: 0,
   duration: 0,
@@ -65,7 +72,7 @@ export const audioEngine = {
 
   playTrack: async (
     audioId: string,
-    recId: string,
+    rec: EnrichedRecording,
     blob: Blob,
     maxCacheSizeMB: number,
   ) => {
@@ -79,7 +86,26 @@ export const audioEngine = {
 
     currentObjectUrl = URL.createObjectURL(blob);
 
-    state = { ...state, currentAudioId: audioId, currentTime: 0 };
+    let categoryPathVal: string | null = null;
+    try {
+      const db = await getDB();
+      if (db && rec.category_id) {
+        const cat = await db.get(STORE.CATEGORIES, rec.category_id);
+        if (cat) {
+          categoryPathVal = cat.url_path;
+        }
+      }
+    } catch (e) {
+      console.error("Failed to fetch category from IndexedDB:", e);
+    }
+
+    state = {
+      ...state,
+      currentAudioId: audioId,
+      currentRecording: rec,
+      categoryPath: categoryPathVal,
+      currentTime: 0,
+    };
     emit();
 
     audio.src = currentObjectUrl;
@@ -89,7 +115,7 @@ export const audioEngine = {
     await audio.play();
 
     // Update metadata asynchronously off the main thread path
-    await touchTrackMeta(audioId, recId, blob.size);
+    await touchTrackMeta(audioId, String(rec.id), blob.size);
     await enforceLRUWatermark(maxCacheSizeMB);
   },
 
@@ -98,6 +124,26 @@ export const audioEngine = {
     if (!state.currentAudioId) return;
     if (state.isPlaying) audio.pause();
     else audio.play().catch(console.error);
+  },
+
+  dismiss: () => {
+    const audio = getAudioElement();
+    audio.pause();
+    if (currentObjectUrl) {
+      URL.revokeObjectURL(currentObjectUrl);
+      currentObjectUrl = null;
+    }
+    audio.src = "";
+    state = {
+      ...state,
+      currentAudioId: null,
+      currentRecording: null,
+      categoryPath: null,
+      isPlaying: false,
+      currentTime: 0,
+      duration: 0,
+    };
+    emit();
   },
 
   seek: (time: number) => {

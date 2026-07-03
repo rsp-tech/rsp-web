@@ -9,16 +9,32 @@ export const useAudioPlayback = () => {
   const isPlaying = useSyncExternalStore(
     audioEngine.subscribe,
     () => audioEngine.getSnapshot().isPlaying,
+    () => false,
   );
 
   const currentAudioId = useSyncExternalStore(
     audioEngine.subscribe,
     () => audioEngine.getSnapshot().currentAudioId,
+    () => null,
+  );
+
+  const currentRecording = useSyncExternalStore(
+    audioEngine.subscribe,
+    () => audioEngine.getSnapshot().currentRecording,
+    () => null,
+  );
+
+  const categoryPath = useSyncExternalStore(
+    audioEngine.subscribe,
+    () => audioEngine.getSnapshot().categoryPath,
+    () => null,
   );
 
   return {
     isPlaying,
     currentAudioId,
+    currentRecording,
+    categoryPath,
     togglePlay: audioEngine.togglePlay,
   };
 };
@@ -31,11 +47,13 @@ export const useAudioTimeline = () => {
   const currentTime = useSyncExternalStore(
     audioEngine.subscribe,
     () => audioEngine.getSnapshot().currentTime,
+    () => 0,
   );
 
   const duration = useSyncExternalStore(
     audioEngine.subscribe,
     () => audioEngine.getSnapshot().duration,
+    () => 0,
   );
 
   return {
@@ -52,11 +70,13 @@ export const useAudioConfiguration = () => {
   const volume = useSyncExternalStore(
     audioEngine.subscribe,
     () => audioEngine.getSnapshot().volume,
+    () => 1,
   );
 
   const playbackRate = useSyncExternalStore(
     audioEngine.subscribe,
     () => audioEngine.getSnapshot().playbackRate,
+    () => 1,
   );
 
   return {

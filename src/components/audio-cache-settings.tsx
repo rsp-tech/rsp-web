@@ -210,7 +210,7 @@ export function AudioCacheSettings() {
                 key={entry.audioId}
                 className="p-3 border border-border bg-muted/5 rounded-xl flex items-center justify-between gap-3"
               >
-                <div className="min-w-0 flex-grow">
+                <div className="flex-grow">
                   <p className="font-bold text-xs truncate leading-snug">
                     {entry.name}
                   </p>
