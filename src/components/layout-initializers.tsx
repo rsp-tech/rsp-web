@@ -21,12 +21,21 @@ const SyncTrigger = dynamic(
   { ssr: false },
 );
 
+const GlobalAudioPlayer = dynamic(
+  () =>
+    import("@/components/global-audio-player").then(
+      (mod) => mod.GlobalAudioPlayer,
+    ),
+  { ssr: false },
+);
+
 export function LayoutInitializers() {
   return (
     <>
       <OfflineIndicator />
       <SyncTrigger />
       <Toaster position="bottom-right" />
+      <GlobalAudioPlayer />
     </>
   );
 }
