@@ -1,6 +1,7 @@
 "use client";
-import { useAudioTimeline } from "@/hooks/use-audio";
+
 import { Slider } from "@/components/ui/slider";
+import { useAudioTimeline } from "@/hooks/use-audio";
 
 const formatTime = (secs: number) => {
   if (Number.isNaN(secs)) return "0:00";
