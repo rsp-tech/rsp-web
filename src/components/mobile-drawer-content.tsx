@@ -1,6 +1,6 @@
 "use client";
 
-import { Home, LogIn, LogOut, Paintbrush, User } from "lucide-react";
+import { Home, LogIn, LogOut, Paintbrush, Settings, User } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -88,6 +88,15 @@ export const MobileDrawerContent = ({ setOpen }: MobileDrawerContentProps) => {
               <Button
                 variant="ghost"
                 size="sm"
+                className="justify-start p-0"
+                onClick={() => handleNavigate("/settings")}
+              >
+                <Settings className="w-4 h-4 text-muted-foreground" />
+                Cache Settings
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
                 className="p-0 justify-start text-destructive"
                 onClick={handleLogout}
               >
@@ -97,7 +106,7 @@ export const MobileDrawerContent = ({ setOpen }: MobileDrawerContentProps) => {
             </div>
           </div>
         ) : (
-          <div className="py-2">
+          <div className="py-2 flex flex-col gap-2">
             <Button
               type="button"
               size="sm"
@@ -106,6 +115,15 @@ export const MobileDrawerContent = ({ setOpen }: MobileDrawerContentProps) => {
             >
               <LogIn className="w-4 h-4" />
               Login / Register
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              className="justify-start p-0 w-full"
+              onClick={() => handleNavigate("/settings")}
+            >
+              <Settings className="w-4 h-4 text-muted-foreground" />
+              Cache Settings
             </Button>
           </div>
         )}

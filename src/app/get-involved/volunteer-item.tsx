@@ -40,9 +40,7 @@ export const VolunteerItem = ({
     <Card
       className={cn(
         "transition-all duration-200 border-2",
-        isChecked
-          ? "border-primary bg-primary/5 shadow-md"
-          : "border-border hover:border-border",
+        isChecked ? "border-primary bg-primary/5 shadow-md" : "border-border",
       )}
     >
       <CardHeader className="flex flex-row items-start justify-between gap-4 pb-2">

@@ -37,7 +37,7 @@ export function QueryItem({
   return (
     <AccordionItem
       value={q.id}
-      className="px-4 hover:bg-muted/20 transition-all"
+      className="px-4 hover:bg-accent transition-all"
       key={replies.length}
     >
       <AccordionTrigger className="w-full hover:no-underline py-4 flex items-start gap-4 cursor-pointer">

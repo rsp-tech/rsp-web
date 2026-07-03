@@ -156,7 +156,7 @@ export function SearchResults({
                       });
                       onSelectRecording(rec);
                     }}
-                    className="w-full text-left flex flex-col gap-1.5 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all border border-transparent hover:border-border/40 cursor-pointer opacity-0"
+                    className="w-full text-left flex flex-col gap-1.5 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all border border-transparent hover:border-border cursor-pointer opacity-0"
                     style={{
                       animation:
                         "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",

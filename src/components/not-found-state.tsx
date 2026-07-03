@@ -113,7 +113,7 @@ export const NotFoundState = ({
                 <Button
                   variant="ghost"
                   onClick={onRetry}
-                  className="flex items-center gap-2 text-muted-foreground hover:hover:bg-accent/50 transition-all"
+                  className="flex items-center gap-2 text-muted-foreground hover:bg-accent transition-all"
                 >
                   <RefreshCw className="w-4 h-4" />
                   Try Again

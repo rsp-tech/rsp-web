@@ -53,7 +53,7 @@ const nextConfig: NextConfig = {
           {
             key: "Content-Security-Policy",
             value:
-              "default-src 'self'; script-src 'self' 'unsafe-inline' https://*.posthog.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com; media-src 'self' https://r.mayankchaudhari.com; connect-src 'self' https://bfiyqzcnmkpczkmgounm.supabase.co wss://bfiyqzcnmkpczkmgounm.supabase.co https://*.posthog.com; font-src 'self' data:; frame-ancestors 'none'; object-src 'none';",
+              "default-src 'self'; script-src 'self' 'unsafe-inline' https://*.posthog.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com; media-src 'self' blob: https://r.mayankchaudhari.com; connect-src 'self' https://r.mayankchaudhari.com https://bfiyqzcnmkpczkmgounm.supabase.co wss://bfiyqzcnmkpczkmgounm.supabase.co https://rsp.mayankchaudhari.com; font-src 'self' data:; frame-ancestors 'none'; object-src 'none';",
           },
           {
             key: "Cross-Origin-Opener-Policy",

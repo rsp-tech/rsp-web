@@ -268,7 +268,7 @@ const main = async (): Promise<void> => {
         count: usage.count,
         components: Array.from(usage.components),
       }))
-      .sort((a, b) => b.count - a.count);
+      .sort((a, b) => a.className.localeCompare(b.className));
 
     console.log("🧪 Processing total dataset footprint calculations...");
 

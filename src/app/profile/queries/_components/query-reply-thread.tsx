@@ -42,6 +42,7 @@ export function QueryReplyThread({
                     ? "bg-primary/5 border-primary/20 self-start"
                     : "bg-muted/40 border-border self-end text-right"
                 }`}
+                style={isAdminReply ? {} : { textAlign: "right" }}
               >
                 <div
                   className={`flex items-center gap-2 text-xxs text-muted-foreground font-semibold ${
