@@ -8,7 +8,7 @@ import {
   GraduationCap,
   Presentation,
 } from "lucide-react";
-import { getAssetDownloadUrl } from "@/lib/storage";
+import { ASSET_BASE_URL } from "@/constants";
 import type { Material } from "@/types";
 
 interface MaterialBadgeProps {
@@ -47,14 +47,13 @@ export function MaterialBadge({ mat, isHighlighted }: MaterialBadgeProps) {
     return <FileText className="w-3 h-3 text-muted-foreground shrink-0" />;
   };
 
-  const href = isLink ? uri : getAssetDownloadUrl(uri);
   const extraProps = isLink
     ? { target: "_blank", rel: "noopener noreferrer" }
     : { download: true };
 
   return (
     <a
-      href={href}
+      href={`${isLink ? "" : ASSET_BASE_URL}${uri}`}
       {...extraProps}
       className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold transition-all border ${
         isHighlighted

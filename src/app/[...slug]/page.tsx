@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
+import { ASSET_BASE_URL } from "@/constants";
 import type { CategoryPageData } from "@/hooks/use-category-page";
 import {
   getLocalCategories,
   getLocalCategoryPageData,
 } from "@/lib/local-sync-data";
-import { getAssetUrl } from "@/lib/storage";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { slugToLabel } from "@/lib/utils";
 import type { Category } from "@/types";
@@ -175,7 +175,9 @@ export default async function CategoryPage({ params }: PageProps) {
             rec.languages && rec.languages.length > 0
               ? rec.languages.map((l) => l.name)
               : ["English"],
-          contentUrl: hasAudio ? getAssetUrl(rec.audio_id ?? "") : undefined,
+          contentUrl: hasAudio
+            ? `${ASSET_BASE_URL}${rec.audio_id ?? ""}`
+            : undefined,
           sameAs: hasYoutube
             ? `https://youtube.com/watch?v=${rec.yt_id}`
             : undefined,

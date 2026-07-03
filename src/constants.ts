@@ -10,12 +10,10 @@ export const SYNC_INTERVAL = Number.parseInt(
 export const SYNC_PAGE_SIZE = 1000;
 export const SYNC_CONCURRENCY = 4;
 
-export const ASSET_BAE_URL = process.env[
+export const ASSET_BASE_URL = process.env[
   "NEXT_PUBLIC_ASSET_BASE_URL"
 ] as string;
-export const ASSET_DOWNLOAD_BASE_URL = process.env[
-  "NEXT_PUBLIC_ASSET_DOWNLOAD_BASE_URL"
-] as string;
+export const AUDIO_BASE_URL = process.env["NEXT_PUBLIC_AUDIO_BASE_URL"];
 
 export const BACKUP_TOKEN = process.env["BACKUP_TOKEN"] as string;
 export const BACKUP_BASE_URL = process.env["BACKUP_BASE_URL"] as string;
