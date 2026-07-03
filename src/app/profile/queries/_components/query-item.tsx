@@ -41,7 +41,7 @@ export function QueryItem({
       key={replies.length}
     >
       <AccordionTrigger className="w-full hover:no-underline py-4 flex items-start gap-4 cursor-pointer">
-        <div className="flex flex-col gap-1 text-left flex-1 min-w-0 pr-4">
+        <div className="flex flex-col gap-1 text-left flex-1 pr-4">
           <div className="flex flex-wrap items-center gap-2">
             <span className="text-xxs font-bold text-primary uppercase tracking-wider bg-primary/5 px-2 py-0.5 rounded-md">
               {q.category === "RoleRequest" ? "Role Request" : q.category}

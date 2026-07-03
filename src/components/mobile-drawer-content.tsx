@@ -65,7 +65,7 @@ export const MobileDrawerContent = ({ setOpen }: MobileDrawerContentProps) => {
           <div className="flex flex-col gap-3">
             <div className="flex items-center gap-3 py-1">
               <CurrentUserAvatar />
-              <div className="flex flex-col min-w-0">
+              <div className="flex flex-col">
                 <span className="font-semibold text-sm truncate">
                   {getUserDisplayName(session.user)}
                 </span>

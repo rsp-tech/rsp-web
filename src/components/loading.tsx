@@ -25,8 +25,8 @@ export const Loading = ({ message }: { message?: string }) => {
 
             <div className="flex flex-col items-center gap-2">
               <div
-                className="w-32 overflow-hidden rounded-full bg-primary/10"
-                style={{ height: "0.25rem" }}
+                className="overflow-hidden rounded-full bg-primary/10"
+                style={{ height: "0.25rem", width: "8rem" }}
               >
                 <div
                   className="h-full w-full bg-primary"

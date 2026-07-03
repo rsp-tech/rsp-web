@@ -55,7 +55,7 @@ export function RecordingSortControls({
           value={sortBy}
           onChange={(value) => setSortBy(value as SortOption)}
           placeholder="Sort by"
-          className="w-32"
+          style={{ width: "8rem" }}
         />
 
         <Button
