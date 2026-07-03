@@ -1,17 +1,24 @@
 {
   "totalClasses": 406,
-  "timestamp": "2026-07-03T13:45:48.736Z",
-  "baselineCSSBytes": 63185,
-  "baselineBrotliBytes": 9509,
+  "timestamp": "2026-07-03T14:07:20.847Z",
+  "baselineCSSBytes": 63358,
+  "baselineBrotliBytes": 9530,
   "nextGeneratedCss": [
     {
-      "file": "95e2a094d4dc97ec.css",
-      "rawBytes": 66892,
-      "brotliBytes": 10123,
-      "gZipBytes": 11742
+      "file": "6098ec40b736e673.css",
+      "rawBytes": 67061,
+      "brotliBytes": 10120,
+      "gZipBytes": 11754
     }
   ],
   "primitiveUsage": {
+    "src\\components\\ui\\skeleton.tsx": [
+      "src\\components\\category-list.tsx",
+      "src\\components\\current-user-avatar.tsx",
+      "src\\components\\header.tsx",
+      "src\\components\\mobile-drawer-content.tsx",
+      "src\\components\\user-nav.tsx"
+    ],
     "src\\components\\ui\\button.tsx": [
       "src\\app\\contact-us\\contact-us-client.tsx",
       "src\\app\\get-involved\\get-involved-client.tsx",
@@ -39,20 +46,15 @@
       "src\\components\\ui\\sheet.tsx",
       "src\\components\\user-nav.tsx"
     ],
-    "src\\components\\ui\\dialog.tsx": ["src\\components\\auth-modal.tsx"],
+    "src\\components\\ui\\dialog.tsx": [
+      "src\\components\\auth-modal.tsx"
+    ],
     "src\\components\\ui\\input.tsx": [
       "src\\app\\contact-us\\contact-us-client.tsx",
       "src\\app\\profile\\_components\\personal-settings-form.tsx",
       "src\\app\\profile\\queries\\_components\\query-filters.tsx",
       "src\\components\\auth-modal.tsx",
       "src\\components\\search\\search-input.tsx"
-    ],
-    "src\\components\\ui\\skeleton.tsx": [
-      "src\\components\\category-list.tsx",
-      "src\\components\\current-user-avatar.tsx",
-      "src\\components\\header.tsx",
-      "src\\components\\mobile-drawer-content.tsx",
-      "src\\components\\user-nav.tsx"
     ],
     "src\\components\\ui\\sheet.tsx": [
       "src\\components\\mobile-drawer-content.tsx",
@@ -79,14 +81,14 @@
       "src\\components\\player\\timeline-slider.tsx",
       "src\\components\\player\\volume-controls.tsx"
     ],
+    "src\\components\\ui\\tabs.tsx": [
+      "src\\app\\profile\\queries\\_components\\query-filters.tsx",
+      "src\\components\\search\\search-scope-tabs.tsx"
+    ],
     "src\\components\\ui\\accordion.tsx": [
       "src\\app\\profile\\queries\\_components\\query-item.tsx",
       "src\\app\\profile\\queries\\_components\\query-list.tsx",
       "src\\components\\search\\search-results.tsx"
-    ],
-    "src\\components\\ui\\tabs.tsx": [
-      "src\\app\\profile\\queries\\_components\\query-filters.tsx",
-      "src\\components\\search\\search-scope-tabs.tsx"
     ],
     "src\\components\\ui\\command.tsx": [
       "src\\components\\search\\searchable-select.tsx"
@@ -110,7 +112,9 @@
       "src\\app\\profile\\_components\\personal-settings-form.tsx",
       "src\\app\\profile\\queries\\_components\\query-reply-form.tsx"
     ],
-    "src\\components\\ui\\badge.tsx": ["src\\app\\profile\\queries\\page.tsx"]
+    "src\\components\\ui\\badge.tsx": [
+      "src\\app\\profile\\queries\\page.tsx"
+    ]
   },
   "data": [
     {
@@ -199,21 +203,21 @@
     },
     {
       "className": "backdrop-blur-xs",
-      "frequency": 5,
+      "frequency": 4,
       "length": 16,
       "uncompressedBytes": 610,
       "brotliBytesUpperLimit": 135
     },
     {
       "className": "bg-background",
-      "frequency": 5,
+      "frequency": 6,
       "length": 13,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
     },
     {
       "className": "bg-background/50",
-      "frequency": 6,
+      "frequency": 5,
       "length": 16,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
@@ -227,7 +231,7 @@
     },
     {
       "className": "bg-card",
-      "frequency": 12,
+      "frequency": 13,
       "length": 7,
       "uncompressedBytes": 38,
       "brotliBytesUpperLimit": 38
@@ -346,7 +350,7 @@
     },
     {
       "className": "border",
-      "frequency": 45,
+      "frequency": 46,
       "length": 6,
       "uncompressedBytes": 61,
       "brotliBytesUpperLimit": 61
@@ -367,7 +371,7 @@
     },
     {
       "className": "border-border",
-      "frequency": 60,
+      "frequency": 61,
       "length": 13,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
@@ -794,7 +798,7 @@
     },
     {
       "className": "flex",
-      "frequency": 277,
+      "frequency": 279,
       "length": 4,
       "uncompressedBytes": 19,
       "brotliBytesUpperLimit": 23
@@ -808,7 +812,7 @@
     },
     {
       "className": "flex-col",
-      "frequency": 143,
+      "frequency": 144,
       "length": 8,
       "uncompressedBytes": 32,
       "brotliBytesUpperLimit": 33
@@ -948,7 +952,7 @@
     },
     {
       "className": "font-bold",
-      "frequency": 97,
+      "frequency": 98,
       "length": 9,
       "uncompressedBytes": 88,
       "brotliBytesUpperLimit": 57
@@ -969,7 +973,7 @@
     },
     {
       "className": "font-semibold",
-      "frequency": 23,
+      "frequency": 24,
       "length": 13,
       "uncompressedBytes": 100,
       "brotliBytesUpperLimit": 60
@@ -1018,14 +1022,14 @@
     },
     {
       "className": "gap-4",
-      "frequency": 29,
+      "frequency": 30,
       "length": 5,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40
     },
     {
       "className": "gap-6",
-      "frequency": 16,
+      "frequency": 17,
       "length": 5,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40
@@ -1046,14 +1050,14 @@
     },
     {
       "className": "grid",
-      "frequency": 12,
+      "frequency": 13,
       "length": 4,
       "uncompressedBytes": 19,
       "brotliBytesUpperLimit": 23
     },
     {
       "className": "grid-cols-1",
-      "frequency": 9,
+      "frequency": 10,
       "length": 11,
       "uncompressedBytes": 59,
       "brotliBytesUpperLimit": 56
@@ -1179,14 +1183,14 @@
     },
     {
       "className": "h-3",
-      "frequency": 52,
+      "frequency": 51,
       "length": 3,
       "uncompressedBytes": 37,
       "brotliBytesUpperLimit": 41
     },
     {
       "className": "h-4",
-      "frequency": 55,
+      "frequency": 56,
       "length": 3,
       "uncompressedBytes": 37,
       "brotliBytesUpperLimit": 41
@@ -1277,7 +1281,7 @@
     },
     {
       "className": "hover:bg-primary/20",
-      "frequency": 2,
+      "frequency": 3,
       "length": 19,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
@@ -1410,7 +1414,7 @@
     },
     {
       "className": "items-center",
-      "frequency": 120,
+      "frequency": 122,
       "length": 12,
       "uncompressedBytes": 33,
       "brotliBytesUpperLimit": 30
@@ -1424,14 +1428,14 @@
     },
     {
       "className": "justify-between",
-      "frequency": 22,
+      "frequency": 23,
       "length": 15,
       "uncompressedBytes": 47,
       "brotliBytesUpperLimit": 35
     },
     {
       "className": "justify-center",
-      "frequency": 24,
+      "frequency": 25,
       "length": 14,
       "uncompressedBytes": 39,
       "brotliBytesUpperLimit": 31
@@ -1494,14 +1498,14 @@
     },
     {
       "className": "lg:col-span-1",
-      "frequency": 2,
+      "frequency": 3,
       "length": 13,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
     },
     {
       "className": "lg:col-span-2",
-      "frequency": 2,
+      "frequency": 3,
       "length": 13,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
@@ -1515,7 +1519,7 @@
     },
     {
       "className": "lg:grid-cols-3",
-      "frequency": 2,
+      "frequency": 3,
       "length": 14,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0
@@ -1543,7 +1547,7 @@
     },
     {
       "className": "max-h-75",
-      "frequency": 3,
+      "frequency": 2,
       "length": 8,
       "uncompressedBytes": 47,
       "brotliBytesUpperLimit": 51
@@ -1557,7 +1561,7 @@
     },
     {
       "className": "max-w-2xl",
-      "frequency": 5,
+      "frequency": 4,
       "length": 9,
       "uncompressedBytes": 42,
       "brotliBytesUpperLimit": 41
@@ -1571,7 +1575,7 @@
     },
     {
       "className": "max-w-5xl",
-      "frequency": 3,
+      "frequency": 4,
       "length": 9,
       "uncompressedBytes": 42,
       "brotliBytesUpperLimit": 41
@@ -1907,7 +1911,7 @@
     },
     {
       "className": "opacity-80",
-      "frequency": 29,
+      "frequency": 30,
       "length": 10,
       "uncompressedBytes": 23,
       "brotliBytesUpperLimit": 27
@@ -1977,14 +1981,14 @@
     },
     {
       "className": "p-1",
-      "frequency": 8,
+      "frequency": 7,
       "length": 3,
       "uncompressedBytes": 28,
       "brotliBytesUpperLimit": 32
     },
     {
       "className": "p-2",
-      "frequency": 7,
+      "frequency": 8,
       "length": 3,
       "uncompressedBytes": 38,
       "brotliBytesUpperLimit": 42
@@ -2005,7 +2009,7 @@
     },
     {
       "className": "p-4",
-      "frequency": 14,
+      "frequency": 15,
       "length": 3,
       "uncompressedBytes": 38,
       "brotliBytesUpperLimit": 42
@@ -2026,14 +2030,14 @@
     },
     {
       "className": "pb-1",
-      "frequency": 2,
+      "frequency": 1,
       "length": 4,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 32
     },
     {
       "className": "pb-2",
-      "frequency": 5,
+      "frequency": 6,
       "length": 4,
       "uncompressedBytes": 46,
       "brotliBytesUpperLimit": 50
@@ -2138,7 +2142,7 @@
     },
     {
       "className": "pt-2",
-      "frequency": 10,
+      "frequency": 9,
       "length": 4,
       "uncompressedBytes": 43,
       "brotliBytesUpperLimit": 47
@@ -2250,7 +2254,7 @@
     },
     {
       "className": "py-16",
-      "frequency": 5,
+      "frequency": 6,
       "length": 5,
       "uncompressedBytes": 47,
       "brotliBytesUpperLimit": 51
@@ -2285,7 +2289,7 @@
     },
     {
       "className": "py-6",
-      "frequency": 8,
+      "frequency": 7,
       "length": 4,
       "uncompressedBytes": 45,
       "brotliBytesUpperLimit": 48
@@ -2355,7 +2359,7 @@
     },
     {
       "className": "rounded-2xl",
-      "frequency": 8,
+      "frequency": 9,
       "length": 11,
       "uncompressedBytes": 53,
       "brotliBytesUpperLimit": 57
@@ -2425,7 +2429,7 @@
     },
     {
       "className": "shadow-md",
-      "frequency": 20,
+      "frequency": 21,
       "length": 9,
       "uncompressedBytes": 254,
       "brotliBytesUpperLimit": 106
@@ -2677,7 +2681,7 @@
     },
     {
       "className": "text-muted-foreground",
-      "frequency": 137,
+      "frequency": 138,
       "length": 21,
       "uncompressedBytes": 53,
       "brotliBytesUpperLimit": 47
@@ -2691,7 +2695,7 @@
     },
     {
       "className": "text-primary",
-      "frequency": 52,
+      "frequency": 53,
       "length": 12,
       "uncompressedBytes": 35,
       "brotliBytesUpperLimit": 35
@@ -2705,7 +2709,7 @@
     },
     {
       "className": "text-sm",
-      "frequency": 46,
+      "frequency": 47,
       "length": 7,
       "uncompressedBytes": 92,
       "brotliBytesUpperLimit": 56
@@ -2754,7 +2758,7 @@
     },
     {
       "className": "text-xxs",
-      "frequency": 34,
+      "frequency": 35,
       "length": 8,
       "uncompressedBytes": 65,
       "brotliBytesUpperLimit": 55
@@ -2831,7 +2835,7 @@
     },
     {
       "className": "transition-colors",
-      "frequency": 6,
+      "frequency": 8,
       "length": 17,
       "uncompressedBytes": 335,
       "brotliBytesUpperLimit": 131
@@ -2887,14 +2891,14 @@
     },
     {
       "className": "w-3",
-      "frequency": 50,
+      "frequency": 49,
       "length": 3,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40
     },
     {
       "className": "w-4",
-      "frequency": 54,
+      "frequency": 55,
       "length": 3,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40
@@ -2929,7 +2933,7 @@
     },
     {
       "className": "w-full",
-      "frequency": 52,
+      "frequency": 53,
       "length": 6,
       "uncompressedBytes": 19,
       "brotliBytesUpperLimit": 23
