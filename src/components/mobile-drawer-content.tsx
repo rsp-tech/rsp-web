@@ -147,11 +147,12 @@ export const MobileDrawerContent = ({ setOpen }: MobileDrawerContentProps) => {
         <Link
           href="/"
           className="hover:text-primary transition-all flex items-center gap-1.5"
+          onClick={() => setOpen(false)}
         >
           <Home className="size-4" />
           <span>Go to Home</span>
         </Link>
-        <NavLinks />
+        <NavLinks onItemClick={() => setOpen(false)} />
       </div>
       <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
     </SheetContent>

@@ -56,13 +56,18 @@ const navLinks: {
   },
 ];
 
-export const NavLinks = () =>
+interface NavLinksProps {
+  onItemClick?: () => void;
+}
+
+export const NavLinks = ({ onItemClick }: NavLinksProps) =>
   navLinks.map(({ href, Icon, iconColorClass, title }) => (
     <Link
       key={href}
       href={href}
       className="hover:text-primary transition-all flex items-center gap-1.5"
       aria-label={title}
+      onClick={onItemClick}
       {...(href.startsWith("http")
         ? { target: "_blank", rel: "noopener noreferrer" }
         : {})}
