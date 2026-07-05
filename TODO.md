@@ -1,10 +1,14 @@
 # Release Requirements
 
+- analyze and fix supabase over connections
+- Move images to drive lh3.googleusercontent.com/d/
+- Play youtube video in place
+
+# Clean up
+
+- reuse recording components
+
 # Feature Parity
-
-# Future (May be)
-
-- Companion extension to handle local files etc.
 
 # Analytics
 
