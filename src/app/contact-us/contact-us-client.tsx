@@ -171,7 +171,7 @@ export function ContactUsClient() {
                     size="sm"
                     variant="link"
                     className="h-auto p-0 font-bold gap-1 text-primary hover:text-primary/80 self-start sm:self-center shrink-0 cursor-pointer"
-                    onClick={() => router.push("/profile/queries")}
+                    onClick={() => router.push("/queries")}
                   >
                     <span>View Queries</span>
                     <ExternalLink className="w-3 h-3" />

@@ -134,7 +134,7 @@ export default function ProfilePage() {
             ashram={profile?.ashram || ""}
             roleId={profile?.role_id}
             onServicesClick={() => router.push("/get-involved")}
-            onQueriesClick={() => router.push("/profile/queries")}
+            onQueriesClick={() => router.push("/queries")}
           />
         </div>
 

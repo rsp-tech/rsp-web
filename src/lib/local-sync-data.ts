@@ -98,6 +98,12 @@ export async function getLocalCategoryPageData(
   }
 
   const categories = cachedCategories || [];
+  if (!urlPath) {
+    return {
+      subcategories: categories.filter((c: Category) => c.path === ""),
+      recordings: [],
+    };
+  }
   const category = categories.find((c) => c.url_path === urlPath);
   if (!category) return null;
 

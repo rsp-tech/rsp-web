@@ -1,12 +1,6 @@
 /// <reference lib="webworker" />
 
-import type {
-  PrecacheEntry,
-  RouteHandlerCallbackOptions,
-  RouteMatchCallbackOptions,
-  RuntimeCaching,
-  SerwistPlugin,
-} from "serwist";
+import type { PrecacheEntry, RuntimeCaching, SerwistPlugin } from "serwist";
 import {
   CacheFirst,
   NetworkOnly,
@@ -32,6 +26,15 @@ const CRITICAL_BRAND_IMAGES = [
   "/icon-192x192.avif",
   "/icon-512x512.avif",
   "/favicon.ico",
+];
+
+const STRUCTURAL_PATHS = [
+  "/about",
+  "/contact-us",
+  "/get-involved",
+  "/profile",
+  "/settings",
+  "/queries",
 ];
 
 // Concurrency-optimized eviction engine
@@ -63,7 +66,29 @@ const limitCacheItemsPlugin = (maxItems: number): SerwistPlugin => ({
 
 const runtimeCaching: RuntimeCaching[] = [
   {
-    // 1. Static Assets (Scripts, Styles, Fonts)
+    // 1. Next.js Client-Side Component Stream & Prefetch Interceptor
+    matcher: ({ request, url }) =>
+      url.origin === self.location.origin &&
+      (url.searchParams.has("_rsc") ||
+        request.headers.get("RSC") === "1" ||
+        url.pathname.includes("/_next/data/")),
+    handler: new StaleWhileRevalidate({
+      cacheName: "next-rsc-payloads",
+      plugins: [
+        limitCacheItemsPlugin(40),
+        {
+          // Prevents long network timeouts when navigation prefetch elements hang offline
+          requestWillFetch: async ({ request }) => {
+            const controller = new AbortController();
+            setTimeout(() => controller.abort(), 1000);
+            return new Request(request, { signal: controller.signal });
+          },
+        },
+      ],
+    }),
+  },
+  {
+    // 2. Static Assets (Scripts, Styles, Fonts)
     matcher: ({ request, url }) =>
       url.origin === self.location.origin &&
       STATIC_ASSET_REGEX.test(url.pathname) &&
@@ -75,7 +100,7 @@ const runtimeCaching: RuntimeCaching[] = [
     }),
   },
   {
-    // 2. Critical Branding Assets (Force Cache-First for Offline/PWA)
+    // 3. Critical Branding Assets (Force Cache-First for Offline/PWA)
     matcher: ({ url }) => CRITICAL_BRAND_IMAGES.includes(url.pathname),
     handler: new CacheFirst({
       cacheName: "brand-assets",
@@ -83,7 +108,7 @@ const runtimeCaching: RuntimeCaching[] = [
     }),
   },
   {
-    // 3. General Images (Network Only - Relies on native browser HTTP Cache-Control)
+    // 4. General Images (Network Only - Relies on native browser HTTP Cache-Control)
     matcher: ({ url }) => GENERAL_IMAGE_REGEX.test(url.pathname),
     handler: new NetworkOnly(),
   },
@@ -93,21 +118,23 @@ const serwist = new Serwist({
   precacheEntries: self.__SW_MANIFEST,
   skipWaiting: true,
   clientsClaim: true,
-  navigationPreload: true,
+  navigationPreload: false,
   runtimeCaching,
 });
 
-// App Shell fallback strategy for navigation requests
+// App Shell Router mapping strategy for document requests
 const navigationRoute = new Route(
-  ({ request }: RouteMatchCallbackOptions) => request.mode === "navigate",
-  async ({ request }: RouteHandlerCallbackOptions) => {
-    try {
-      return await fetch(request);
-    } catch (error) {
-      const cached = await serwist.matchPrecache("/");
-      if (cached) return cached;
-      throw error;
+  ({ request }) => request.mode === "navigate",
+  async ({ request }) => {
+    const url = new URL(request.url);
+
+    // Structural client shells served directly out of precache
+    if (STRUCTURAL_PATHS.includes(url.pathname)) {
+      return (await serwist.matchPrecache(url.pathname)) || Response.error();
     }
+
+    // Rewrite all categories/slug views instantly to the main cached layout shell
+    return (await serwist.matchPrecache("/")) || Response.error();
   },
 );
 
