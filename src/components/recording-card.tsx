@@ -14,11 +14,13 @@ import {
 import { useEffect, useState } from "react";
 import { SiYoutube } from "react-icons/si";
 import { useAudioPlayback } from "@/hooks/use-audio";
+import { useVideo } from "@/hooks/use-video";
 import { audioEngine } from "@/lib/audio-engine";
 import { getAssetUrl, getAudioUrl } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 import type { EnrichedRecording } from "@/types";
 import { MaterialBadge } from "./material-badge";
+import { Button } from "./ui/button";
 
 interface RecordingCardProps {
   rec: EnrichedRecording;
@@ -33,6 +35,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
   const { isPlaying, currentAudioId } = useAudioPlayback();
   const [isCached, setIsCached] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { setYt } = useVideo();
 
   // Async dynamic cache checking on initial mount without thread block
   useEffect(() => {
@@ -179,7 +182,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
               type="button"
               onClick={handlePlayClick}
               disabled={isLoading}
-              className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition duration-200 active:scale-98 border border-border cursor-pointer disabled:opacity-60"
+              className="inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition duration-200 active:scale-98 border border-border cursor-pointer disabled:opacity-60"
               title={
                 isLoading
                   ? "Loading..."
@@ -210,26 +213,25 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
             <button
               type="button"
               onClick={handleDownload}
-              className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition duration-200 active:scale-98 border border-border cursor-pointer"
+              className="inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition duration-200 active:scale-98 border border-border cursor-pointer"
               title="Download Audio"
             >
               <FileDown className="w-4 h-4" />
-              <span>Download</span>
+              <span className="hidden md:flex">Download</span>
             </button>
           </>
         )}
 
         {rec.yt_id && (
-          <a
-            href={`https://youtube.com/watch?v=${rec.yt_id}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex-1 md:flex-initial inline-flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition duration-200 active:scale-98 cursor-pointer"
+          <Button
+            type="button"
+            className="inline-flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition duration-200 active:scale-98 cursor-pointer"
             title="Watch on YouTube"
+            onClick={() => setYt(rec.yt_id ?? "", rec.name)}
           >
             <SiYoutube className="w-4 h-4" />
-            <span>YouTube</span>
-          </a>
+            <span className="hidden md:flex">YouTube</span>
+          </Button>
         )}
       </div>
     </div>

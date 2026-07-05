@@ -16,6 +16,11 @@ const OfflineIndicator = dynamic(
   { ssr: false },
 );
 
+const VideoPlayer = dynamic(
+  () => import("@/components/video-player").then((mod) => mod.VideoPlayer),
+  { ssr: false },
+);
+
 const SyncTrigger = dynamic(
   () => import("@/components/sync-trigger").then((mod) => mod.SyncTrigger),
   { ssr: false },
@@ -33,6 +38,7 @@ export function LayoutInitializers() {
       <SyncTrigger />
       <Toaster position="bottom-right" />
       <ProgressBar />
+      <VideoPlayer />
     </>
   );
 }

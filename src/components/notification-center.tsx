@@ -39,7 +39,10 @@ export function NotificationCenter() {
                 className="w-5 h-5 text-primary"
                 style={{ animation: "bounce 1s infinite" }}
               />
-              <span className="absolute top-1 right-1 flex h-2 w-2">
+              <span
+                className="absolute flex h-2 w-2"
+                style={{ top: "0.25rem", right: "0.25rem" }}
+              >
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-80" />
                 <span className="relative inline-flex rounded-full h-2 w-2 bg-primary" />
               </span>

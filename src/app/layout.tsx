@@ -47,7 +47,6 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link rel="preconnect" href="https://www.youtube-nocookie.com" />
-        <link rel="dns-prefetch" href="https://www.youtube-nocookie.com" />
       </head>
       <body className="min-h-full flex flex-col">
         <Providers>

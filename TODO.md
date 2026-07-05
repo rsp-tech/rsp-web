@@ -1,9 +1,9 @@
 # Release Requirements
 
-- optimize offline
+- [x] optimize offline
+- [x] Play youtube video in place
 - analyze and fix supabase over connections
 - Move images to drive lh3.googleusercontent.com/d/
-- Play youtube video in place
 
 # Clean up
 
