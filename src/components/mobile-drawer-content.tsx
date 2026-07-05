@@ -39,7 +39,7 @@ export const MobileDrawerContent = ({ setOpen }: MobileDrawerContentProps) => {
   return (
     <SheetContent
       side="left"
-      className="p-6 flex flex-col gap-6"
+      className="p-6 flex flex-col gap-6 h-full overflow-y-auto"
       style={{ width: "17.5rem" }}
     >
       <SheetHeader className="p-0 border-b border-border pb-4 text-left">

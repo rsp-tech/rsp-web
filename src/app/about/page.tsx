@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ArticleTracker } from "@/components/analytics/article-tracker";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 
 export const metadata: Metadata = {
   title: "About HG Radheshyam Das | Credentials, Biography & Voice Outreach",
@@ -31,10 +32,16 @@ const styles = {
 };
 
 export default function About() {
+  const isMobile = useIsMobile();
+
   return (
     <div
       className="max-w-7xl p-4 space-y-4 leading-relaxed text-lg"
-      style={{ margin: "auto", textAlign: "justify" }}
+      style={{
+        margin: "auto",
+        textAlign: "justify",
+        overflowWrap: "break-word",
+      }}
     >
       <h1 className="text-3xl sm:text-5xl font-bold font-heading tracking-tight leading-tight mb-4">
         Radheshyam Das, M. Tech., IIT, Mumbai
@@ -47,7 +54,18 @@ export default function About() {
             alt="His Grace Radheshyam Das, M. Tech., IIT, Mumbai"
             width={256}
             height={320}
-            className="float-right ml-4 my-2"
+            className="rounded-xl border border-border"
+            style={
+              isMobile
+                ? {
+                    width: "100%",
+                    margin: "0.5rem auto",
+                  }
+                : {
+                    float: "right",
+                    margin: "0.5rem 0 0.5rem 1rem",
+                  }
+            }
             loading="eager"
             fetchPriority="high"
           />
@@ -192,13 +210,29 @@ export default function About() {
         youth leaders and strategy planners and mentors, BLISS (Brahmacari
         Leaders Inspiring Spiritual Sanga) and Vrinda programs for Brahmacaris,
         BVVA for Teenagers, BHAKTAAVALI for USA mentors and his personal online
-        and offline classes for all. His youtube channel
-        (https://www.youtube.com/@RadheshyamDasDevotionalvideos) and his website
-        ([www.radheshyamdas.com](http://www.radheshyamdas.com)) are well
-        utilized by devotee leaders for direction, guidance, inspiration and
-        wisdom in practicing KC and preaching KC vigorously, through which he
-        reaches out to the hearts and lives of those who like his model – live
-        and preach faithfully as per SP’s teachings.
+        and offline classes for all. His
+        <a
+          href="https://www.youtube.com/@RadheshyamDasDevotionalvideos"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary hover:underline"
+          style={{ wordBreak: "break-all" }}
+        >
+          YouTube channel
+        </a>
+        and his website (
+        <a
+          href="http://radheshyamdas.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary hover:underline"
+        >
+          radheshyamdas.com
+        </a>
+        ) are well utilized by devotee leaders for direction, guidance,
+        inspiration and wisdom in practicing KC and preaching KC vigorously,
+        through which he reaches out to the hearts and lives of those who like
+        his model – live and preach faithfully as per SP’s teachings.
       </p>
       <p>
         Radheshyam das stays half the month in Pune and spends one week/month in
