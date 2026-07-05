@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { ArticleTracker } from "@/components/analytics/article-tracker";
-import { useIsMobile } from "@/hooks/use-is-mobile";
+import { RSPPhoto } from "./photo";
 
 export const metadata: Metadata = {
   title: "About HG Radheshyam Das | Credentials, Biography & Voice Outreach",
@@ -32,8 +32,6 @@ const styles = {
 };
 
 export default function About() {
-  const isMobile = useIsMobile();
-
   return (
     <div
       className="max-w-7xl p-4 space-y-4 leading-relaxed text-lg"
@@ -47,29 +45,7 @@ export default function About() {
         Radheshyam Das, M. Tech., IIT, Mumbai
       </h1>
       <p>
-        <picture>
-          <source srcSet="/rsp.avif" type="image/avif" />
-          <img
-            src="/rsp.webp"
-            alt="His Grace Radheshyam Das, M. Tech., IIT, Mumbai"
-            width={256}
-            height={320}
-            className="rounded-xl border border-border"
-            style={
-              isMobile
-                ? {
-                    width: "100%",
-                    margin: "0.5rem auto",
-                  }
-                : {
-                    float: "right",
-                    margin: "0.5rem 0 0.5rem 1rem",
-                  }
-            }
-            loading="eager"
-            fetchPriority="high"
-          />
-        </picture>
+        <RSPPhoto />
         Radheshyam das, born in a town close to Madurai, Tamil Nadu South India
         in a devout brahman family where he got exposure to Vedic chants of
         Brahmans regularly visiting homes for religious events, which fascinated

@@ -1,3 +1,5 @@
+"use client";
+
 import { useSyncExternalStore } from "react";
 
 const MOBILE_W_BREAKPOINT = 768;
