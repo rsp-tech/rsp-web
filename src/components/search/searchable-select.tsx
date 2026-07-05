@@ -62,6 +62,7 @@ export function SearchableSelect({
             "w-full justify-between h-8 text-xs bg-background border-border text-left",
             className,
           )}
+          style={style}
         >
           <span className="truncate">
             {selectedOption ? selectedOption.label : placeholder}

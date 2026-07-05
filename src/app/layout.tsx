@@ -46,6 +46,8 @@ export default function RootLayout({
           href={process.env["NEXT_PUBLIC_POSTHOG_HOST"]}
           crossOrigin="anonymous"
         />
+        <link rel="preconnect" href="https://www.youtube-nocookie.com" />
+        <link rel="dns-prefetch" href="https://www.youtube-nocookie.com" />
       </head>
       <body className="min-h-full flex flex-col">
         <Providers>
