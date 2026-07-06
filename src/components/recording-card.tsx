@@ -1,16 +1,6 @@
 "use client";
 
-import {
-  Calendar,
-  Check,
-  FileDown,
-  Globe,
-  Loader2,
-  MapPin,
-  Pause,
-  Play,
-  User,
-} from "lucide-react";
+import { Check, FileDown, Loader2, Pause, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SiYoutube } from "react-icons/si";
 import { useAudioPlayback } from "@/hooks/use-audio";
@@ -19,7 +9,7 @@ import { audioEngine } from "@/lib/audio-engine";
 import { getAssetUrl, getAudioUrl } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 import type { EnrichedRecording } from "@/types";
-import { MaterialBadge } from "./material-badge";
+import { RecordingMeta } from "./recording-meta";
 import { Button } from "./ui/button";
 
 interface RecordingCardProps {
@@ -110,69 +100,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
           : "border-border bg-card hover:shadow-md",
       )}
     >
-      {/* Meta details */}
-      <div className="flex-1 flex flex-col gap-2">
-        <h3 className="font-bold leading-snug group-hover:text-primary transition-colors">
-          {rec.name}
-        </h3>
-
-        <div
-          className="flex flex-wrap items-center text-xs text-muted-foreground font-medium"
-          style={{ columnGap: "1rem", rowGap: "0.375rem" }}
-        >
-          {rec.speakers && rec.speakers.length > 0 && (
-            <span className="flex items-center gap-1">
-              <User className="w-3 h-3 text-muted-foreground opacity-80" />
-              {rec.speakers.map((s) => s.name).join(", ")}
-            </span>
-          )}
-          {rec.venue && (
-            <span className="flex items-center gap-1">
-              <MapPin className="w-3 h-3 text-muted-foreground opacity-80" />
-              {rec.venue.name}
-            </span>
-          )}
-          {rec.recorded_at && (
-            <span className="flex items-center gap-1">
-              <Calendar className="w-3 h-3 text-muted-foreground opacity-80" />
-              {new Date(rec.recorded_at).toLocaleDateString()}
-            </span>
-          )}
-          {rec.languages.length > 0 && (
-            <span className="flex items-center gap-1">
-              <Globe className="w-3 h-3 text-muted-foreground opacity-80" />
-              {rec.languages
-                .map((l) =>
-                  l.name === l.native_name
-                    ? l.name
-                    : `${l.name} (${l.native_name})`,
-                )
-                .join(", ")}
-            </span>
-          )}
-        </div>
-
-        {/* Materials Downloads List */}
-        {rec.materials && rec.materials.length > 0 && (
-          <div className="mt-2 pt-2 border-t border-border flex flex-col gap-1.5">
-            <span className="text-xxs font-bold tracking-wider uppercase text-muted-foreground">
-              Supporting Materials ({rec.materials.length})
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {rec.materials.map((mat) => {
-                const isMaterialHighlighted = m != null && Number(m) === mat.id;
-                return (
-                  <MaterialBadge
-                    key={mat.id}
-                    mat={mat}
-                    isHighlighted={isMaterialHighlighted}
-                  />
-                );
-              })}
-            </div>
-          </div>
-        )}
-      </div>
+      <RecordingMeta {...{ rec, m }} />
 
       {/* Media Links / Actions */}
       <div className="flex items-center gap-2 self-stretch md:self-auto justify-end border-t md:border-none border-border pt-3 md:pt-0 shrink-0">

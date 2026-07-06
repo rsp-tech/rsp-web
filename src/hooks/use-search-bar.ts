@@ -2,10 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import type {
-  EnrichedMaterialSearchResult,
-  EnrichedRecordingSearchResult,
-} from "@/components/search/search-results";
+import type { EnrichedMaterialSearchResult } from "@/components/search/search-results";
 import type { SearchScope } from "@/components/search-bar";
 import { INDEX, STORE } from "@/constants";
 import { useSearch } from "@/hooks/use-search";
@@ -15,20 +12,17 @@ import { categoryPath } from "@/lib/utils";
 import type {
   Category,
   CategorySearchDocument,
-  Language,
+  EnrichedRecording,
   MaterialSearchDocument,
   Recording,
   RecordingSearchDocument,
   RecordingSearchFilters,
-  Speaker,
-  Venue,
 } from "@/types";
 import { useCategories } from "./use-categories";
-import { useMetadata } from "./use-metadata";
 
 interface FilteredHits {
   categories: Category[];
-  recordings: EnrichedRecordingSearchResult[];
+  recordings: EnrichedRecording[];
   materials: EnrichedMaterialSearchResult[];
 }
 
@@ -37,11 +31,6 @@ export function useSearchBar() {
   const pathname = usePathname();
   const { searchAll } = useSearch();
   const { data: allCategories = [] } = useCategories();
-  const {
-    speakers: availableSpeakers,
-    languages: availableLanguages,
-    venues: availableVenues,
-  } = useMetadata();
 
   const [term, setTerm] = useState("");
   const [scope, setScope] = useState<SearchScope>("full");
@@ -154,28 +143,10 @@ export function useSearchBar() {
           await Promise.all(recIds.map((id) => db.get(STORE.RECORDINGS, id)))
         ).filter((r): r is Recording => r !== undefined);
 
-        const speakerMap = new Map<number, Speaker>(
-          availableSpeakers.map((s) => [s.id, s]),
-        );
-        const venueMap = new Map<number, Venue>(
-          availableVenues.map((v) => [v.id, v]),
-        );
-        const langMap = new Map<number, Language>(
-          availableLanguages.map((l) => [l.id, l]),
-        );
-
-        const enrichedRecordings: EnrichedRecordingSearchResult[] =
-          fullRecs.map((rec) => ({
-            ...rec,
-            speakers: (rec.speaker_ids ?? [])
-              .map((id) => speakerMap.get(id))
-              .filter((s): s is Speaker => !!s),
-            venue: rec.venues_id ? (venueMap.get(rec.venues_id) ?? null) : null,
-            languages: (rec.lang_ids ?? [])
-              .map((id) => langMap.get(id))
-              .filter((l): l is Language => !!l),
-            category: catMap.get(rec.category_id) ?? null,
-          }));
+        const enrichedRecordings: EnrichedRecording[] = fullRecs.map((rec) => ({
+          ...rec,
+          category: catMap.get(rec.category_id) ?? null,
+        }));
 
         // Fetch materials with associated recording and category details
         const enrichedMaterials: EnrichedMaterialSearchResult[] =
@@ -225,17 +196,7 @@ export function useSearchBar() {
     }, 250);
 
     return () => clearTimeout(delayDebounce);
-  }, [
-    term,
-    scope,
-    currentCategory,
-    filters,
-    searchAll,
-    allCategories,
-    availableSpeakers,
-    availableLanguages,
-    availableVenues,
-  ]);
+  }, [term, scope, currentCategory, filters, searchAll, allCategories]);
 
   const handleSelectCategory = (cat: Category) => {
     router.push(`/${categoryPath(cat.url_path)}`);
@@ -281,9 +242,6 @@ export function useSearchBar() {
     setShowDropdown,
     filters,
     setFilters,
-    availableSpeakers,
-    availableLanguages,
-    availableVenues,
     handleSelectCategory,
     handleSelectRecording,
     handleSelectMaterial,

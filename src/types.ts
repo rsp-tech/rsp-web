@@ -80,12 +80,8 @@ export type QueryReplyWithUser = QueryReply & {
 };
 
 export interface EnrichedRecording extends Recording {
-  speakers: Speaker[];
-  venue: Venue | null;
-  event: Event | null;
-  languages: Language[];
-  content_type: ContentType | null;
-  materials: Material[];
+  materials?: Material[];
+  category?: Category | null;
 }
 
 export type SearchableTable = "recordings" | "categories" | "materials";

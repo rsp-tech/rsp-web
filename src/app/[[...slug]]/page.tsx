@@ -220,12 +220,12 @@ const generateJsonLdData = async (slug?: string[]) => {
             "@type": "CreativeWork",
             name: rec.name,
             datePublished: rec.recorded_at || undefined,
-            inLanguage: rec.languages?.length
-              ? rec.languages.map((l) => l.name)
-              : ["English"],
-            contentLocation: rec.venue?.name
-              ? { "@type": "Place", name: rec.venue.name }
-              : undefined,
+            // inLanguage: rec.languages?.length
+            //   ? rec.languages.map((l) => l.name)
+            //   : ["English"],
+            // contentLocation: rec.venue?.name
+            //   ? { "@type": "Place", name: rec.venue.name }
+            //   : undefined,
             associatedMedia: mediaArray.length > 0 ? mediaArray : undefined,
           },
         };

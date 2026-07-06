@@ -5,6 +5,7 @@ import { SearchScopeTabs } from "./search/search-scope-tabs";
 import { SearchableSelect } from "./search/searchable-select";
 import { Label } from "./ui/label";
 import { PopoverContent } from "./ui/popover";
+import { useMetadata } from "@/hooks/use-metadata";
 
 interface SearchBarDropdownContentProps
   extends ReturnType<typeof useSearchBar> {
@@ -22,13 +23,11 @@ export const SearchBarDropdownContent = ({
   results,
   filters,
   setFilters,
-  availableSpeakers,
-  availableLanguages,
-  availableVenues,
   handleSelectCategory,
   handleSelectRecording,
   handleSelectMaterial,
 }: SearchBarDropdownContentProps) => {
+  const { speakers, languages, venues } = useMetadata();
   const handleResetFilters = () => {
     setFilters({
       speaker_ids: [],
@@ -39,17 +38,17 @@ export const SearchBarDropdownContent = ({
     });
   };
 
-  const speakerOptions = availableSpeakers.map((s) => ({
+  const speakerOptions = speakers.map((s) => ({
     value: String(s.id),
     label: s.name,
   }));
 
-  const languageOptions = availableLanguages.map((l) => ({
+  const languageOptions = languages.map((l) => ({
     value: String(l.id),
     label: l.name === l.native_name ? l.name : `${l.name} (${l.native_name})`,
   }));
 
-  const venueOptions = availableVenues.map((v) => ({
+  const venueOptions = venues.map((v) => ({
     value: String(v.id),
     label: v.name,
   }));

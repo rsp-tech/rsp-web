@@ -10,11 +10,13 @@ import { ControlBtns } from "./player/control-btns";
 import { PlayPauseButton } from "./player/play-pause-button";
 import { TimelineSlider } from "./player/timeline-slider";
 import { Button } from "./ui/button";
+import { useSpeakers } from "@/hooks/use-metadata";
 
 export function AudioPlayerPanel() {
   const { currentRecording, categoryPath: categoryPathVal } =
     useAudioPlayback();
   const [isMinimized, setIsMinimized] = useState(false);
+  const { data } = useSpeakers();
 
   // Sync isMinimized with sessionStorage for persistent layout across route switches
   useEffect(() => {
@@ -78,8 +80,9 @@ export function AudioPlayerPanel() {
 
   const title = currentRecording?.name || "Active Recording";
   const speakers =
-    currentRecording?.speakers?.map((s) => s.name).join(", ") ||
-    "Spiritual Discourse";
+    currentRecording?.speaker_ids
+      ?.map((id) => data?.find((s) => s.id === id)?.name)
+      .join(", ") || "Spiritual Discourse";
 
   // Resolve navigation path
   const path = categoryPathVal ? categoryPath(categoryPathVal) : "";

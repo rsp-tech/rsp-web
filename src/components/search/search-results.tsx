@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  Calendar,
-  ChevronRight,
-  FileText,
-  Globe,
-  MapPin,
-  Music,
-  User,
-} from "lucide-react";
+import { ChevronRight, FileText, Music } from "lucide-react";
 import { useEffect, useRef } from "react";
 import {
   Accordion,
@@ -19,21 +11,8 @@ import {
 import { trackEvent } from "@/lib/analytics";
 import { getCategoryImageUrl } from "@/lib/storage";
 import { categoryPath } from "@/lib/utils";
-import type {
-  Category,
-  Language,
-  Material,
-  Recording,
-  Speaker,
-  Venue,
-} from "@/types";
-
-export interface EnrichedRecordingSearchResult extends Recording {
-  speakers: Speaker[];
-  venue: Venue | null;
-  languages: Language[];
-  category: Category | null;
-}
+import type { Category, EnrichedRecording, Material, Recording } from "@/types";
+import { RecordingMeta } from "../recording-meta";
 
 export interface EnrichedMaterialSearchResult extends Material {
   recording: Recording | null;
@@ -42,7 +21,7 @@ export interface EnrichedMaterialSearchResult extends Material {
 
 interface SearchResultsProps {
   categories: Category[];
-  recordings: EnrichedRecordingSearchResult[];
+  recordings: EnrichedRecording[];
   materials: EnrichedMaterialSearchResult[];
   onSelectCategory: (cat: Category) => void;
   onSelectRecording: (rec: Recording) => void;
@@ -156,62 +135,27 @@ export function SearchResults({
                       });
                       onSelectRecording(rec);
                     }}
-                    className="w-full text-left flex flex-col gap-1.5 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all border border-transparent hover:border-border cursor-pointer opacity-0"
+                    className="relative w-full text-left flex gap-2 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all border border-transparent hover:border-border cursor-pointer opacity-0"
                     style={{
                       animation:
                         "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
                       animationDelay: `${idx * 50}ms`,
                     }}
                   >
-                    <div className="flex items-start justify-between gap-2 w-full">
-                      <div className="flex items-center gap-2">
-                        <Music className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                        <span className="font-semibold leading-snug line-clamp-2">
-                          {rec.name}
-                        </span>
-                      </div>
-                      {rec.category && (
-                        <span
-                          className="text-xxs bg-primary/10 text-primary px-1.5 py-0.5 rounded-md font-medium shrink-0 truncate"
-                          style={{ maxWidth: "6rem" }}
-                        >
-                          {rec.category.name}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="flex flex-wrap items-center gap-3 text-xxs text-muted-foreground pl-6 font-medium">
-                      {rec.speakers.length > 0 && (
-                        <span className="flex items-center gap-1">
-                          <User className="w-3 h-3 text-muted-foreground opacity-80" />
-                          {rec.speakers.map((s) => s.name).join(", ")}
-                        </span>
-                      )}
-                      {rec.venue && (
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-muted-foreground opacity-80" />
-                          {rec.venue.name}
-                        </span>
-                      )}
-                      {rec.recorded_at && (
-                        <span className="flex items-center gap-1">
-                          <Calendar className="w-3 h-3 text-muted-foreground opacity-80" />
-                          {new Date(rec.recorded_at).toLocaleDateString()}
-                        </span>
-                      )}
-                      {rec.languages.length > 0 && (
-                        <span className="flex items-center gap-1">
-                          <Globe className="w-3 h-3 text-muted-foreground opacity-80" />
-                          {rec.languages
-                            .map((l) =>
-                              l.name === l.native_name
-                                ? l.name
-                                : `${l.name} (${l.native_name})`,
-                            )
-                            .join(", ")}
-                        </span>
-                      )}
-                    </div>
+                    <Music className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                    <RecordingMeta rec={rec} sm />
+                    {rec.category && (
+                      <span
+                        className="absolute text-xxs bg-primary/10 text-primary px-1.5 py-0.5 rounded-md font-medium shrink-0 truncate"
+                        style={{
+                          maxWidth: "6rem",
+                          top: "0.5rem",
+                          right: "0.5rem",
+                        }}
+                      >
+                        {rec.category.name}
+                      </span>
+                    )}
                   </button>
                 ))}
               </div>
