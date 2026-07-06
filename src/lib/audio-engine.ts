@@ -74,7 +74,7 @@ export const audioEngine = {
     audioId: string,
     rec: EnrichedRecording,
     blob: Blob,
-    maxCacheSizeMB: number,
+    maxCacheSizeMB?: number,
   ) => {
     const audio = getAudioElement();
     audio.pause();
@@ -115,7 +115,7 @@ export const audioEngine = {
     await audio.play();
 
     // Update metadata asynchronously off the main thread path
-    await touchTrackMeta(audioId, String(rec.id), blob.size);
+    await touchTrackMeta(audioId, rec.id, blob.size);
     await enforceLRUWatermark(maxCacheSizeMB);
   },
 

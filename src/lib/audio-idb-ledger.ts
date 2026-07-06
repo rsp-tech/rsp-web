@@ -1,89 +1,52 @@
-export interface AudioMeta {
-  audioId: string;
-  recId: string;
-  sizeBytes: number;
-  lastAccessed: number;
-}
+import { AUDIO_CACHE_NAME, STORE } from "@/constants";
+import type { AudioCacheLedgerEntry } from "@/types";
+import { getAudioCacheSettings } from "../hooks/use-audio-cache";
+import { getDB } from "./idb";
 
-const DB_NAME = "audio_metadata_db";
-const STORE_NAME = "cache_ledger";
-const DB_VERSION = 1;
-const CACHE_NAME = "rsp-audio-cache";
-
-const openLedgerDB = (): Promise<IDBDatabase> => {
-  return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
-
-    request.onupgradeneeded = () => {
-      const db = request.result;
-      if (!db.objectStoreNames.contains(STORE_NAME)) {
-        const store = db.createObjectStore(STORE_NAME, { keyPath: "audioId" });
-        store.createIndex("by_timestamp", "lastAccessed", { unique: false });
-      }
-    };
-
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
-};
+const STORE_NAME = STORE.CACHE_LEDGER;
 
 export const touchTrackMeta = async (
   audioId: string,
-  recId: string,
-  sizeBytes: number,
+  recId: number,
+  size: number,
 ): Promise<void> => {
-  const db = await openLedgerDB();
-  return new Promise((resolve, reject) => {
-    const transaction = db.transaction(STORE_NAME, "readwrite");
-    const store = transaction.objectStore(STORE_NAME);
-
-    const record: AudioMeta = {
-      audioId,
-      recId,
-      sizeBytes,
-      lastAccessed: Date.now(),
-    };
-
-    store.put(record);
-    transaction.oncomplete = () => resolve();
-    transaction.onerror = () => reject(transaction.error);
-  });
+  const db = await getDB();
+  const tx = db?.transaction(STORE_NAME, "readwrite");
+  const entry: AudioCacheLedgerEntry = {
+    id: audioId,
+    recId,
+    size,
+    accessedAt: Date.now(),
+  };
+  tx?.store.put(entry);
+  await tx?.done;
 };
 
-export const enforceLRUWatermark = async (limitMB: number): Promise<void> => {
-  const db = await openLedgerDB();
-  const limitBytes = limitMB * 1024 * 1024;
+export const enforceLRUWatermark = async (limitMB?: number): Promise<void> => {
+  const db = await getDB();
+  const limit = limitMB ?? getAudioCacheSettings().maxCacheSizeMB;
+  const limitBytes = limit * 1024 * 1024;
 
-  const entries = await new Promise<AudioMeta[]>((resolve, reject) => {
-    const transaction = db.transaction(STORE_NAME, "readonly");
-    const store = transaction.objectStore(STORE_NAME);
-    const index = store.index("by_timestamp");
-    const request = index.getAll();
+  const entries = ((await db?.getAll(STORE_NAME)) ??
+    []) as AudioCacheLedgerEntry[];
 
-    request.onsuccess = () => resolve(request.result as AudioMeta[]);
-    request.onerror = () => reject(request.error);
-  });
-
-  let currentSize = entries.reduce((acc, curr) => acc + curr.sizeBytes, 0);
+  // Sort oldest first (lowest timestamp) for Least Recently Used eviction
+  entries.sort((a, b) => a.accessedAt - b.accessedAt);
+  let currentSize = entries.reduce((acc, curr) => acc + curr.size, 0);
   if (currentSize <= limitBytes) return;
 
   const targetSize = limitBytes * 0.8; // 80% Low Watermark Headroom
-  const cache = await caches.open(CACHE_NAME);
+  const cache = await caches.open(AUDIO_CACHE_NAME);
 
+  const tx = db?.transaction(STORE_NAME, "readwrite");
   for (const entry of entries) {
     if (currentSize <= targetSize) break;
 
     // Delete both from Browser Cache Storage and our Metadata database
-    await cache.delete(entry.audioId);
+    await cache.delete(entry.id);
 
-    await new Promise<void>((resolve, reject) => {
-      const transaction = db.transaction(STORE_NAME, "readwrite");
-      const store = transaction.objectStore(STORE_NAME);
-      const request = store.delete(entry.audioId);
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(request.error);
-    });
+    await tx?.store.delete(entry.id);
 
-    currentSize -= entry.sizeBytes;
+    currentSize -= entry.size;
   }
 };

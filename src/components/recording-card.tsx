@@ -62,8 +62,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
         }
 
         const blob = await response.blob();
-        // Fallback setting limit set to 1GB standard execution balance
-        await audioEngine.playTrack(rec.audio_id, rec, blob, 1024);
+        await audioEngine.playTrack(rec.audio_id, rec, blob);
       } catch (err) {
         console.error("Failed handling execution stream setup", err);
       } finally {

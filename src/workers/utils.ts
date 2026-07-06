@@ -69,7 +69,8 @@ export const getTablesToSync = async (
     .filter(
       (table) =>
         !table.endsWith("_meta") &&
-        (!supaSyncMeta[table] || idbSyncMeta[table] !== supaSyncMeta[table]),
+        table !== STORE.CACHE_LEDGER &&
+        idbSyncMeta[table] !== supaSyncMeta[table],
     )
     .map((table) => ({
       table,

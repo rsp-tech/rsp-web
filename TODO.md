@@ -2,8 +2,9 @@
 
 - [x] optimize offline
 - [x] Play youtube video in place
-- analyze and fix supabase over connections
-- Move images to drive lh3.googleusercontent.com/d/
+- [x] analyze and fix supabase over connections
+- [ ] Move images to drive lh3.googleusercontent.com/d/
+  - skipped as 429 rate limited
 
 # Clean up
 

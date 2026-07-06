@@ -1,3 +1,4 @@
+import { useMetadata } from "@/hooks/use-metadata";
 import type { useSearchBar } from "@/hooks/use-search-bar";
 import { DateRangePicker } from "./search/date-picker";
 import { SearchResults } from "./search/search-results";
@@ -5,7 +6,6 @@ import { SearchScopeTabs } from "./search/search-scope-tabs";
 import { SearchableSelect } from "./search/searchable-select";
 import { Label } from "./ui/label";
 import { PopoverContent } from "./ui/popover";
-import { useMetadata } from "@/hooks/use-metadata";
 
 interface SearchBarDropdownContentProps
   extends ReturnType<typeof useSearchBar> {
