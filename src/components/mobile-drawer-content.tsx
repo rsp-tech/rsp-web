@@ -88,15 +88,6 @@ export const MobileDrawerContent = ({ setOpen }: MobileDrawerContentProps) => {
               <Button
                 variant="ghost"
                 size="sm"
-                className="justify-start p-0"
-                onClick={() => handleNavigate("/settings")}
-              >
-                <Settings className="w-4 h-4 text-muted-foreground" />
-                Cache Settings
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
                 className="p-0 justify-start text-destructive"
                 onClick={handleLogout}
               >
@@ -106,26 +97,15 @@ export const MobileDrawerContent = ({ setOpen }: MobileDrawerContentProps) => {
             </div>
           </div>
         ) : (
-          <div className="py-2 flex flex-col gap-2">
-            <Button
-              type="button"
-              size="sm"
-              onClick={() => setAuthOpen(true)}
-              className="w-full gap-2 justify-center"
-            >
-              <LogIn className="w-4 h-4" />
-              Login / Register
-            </Button>
-            <Button
-              variant="ghost"
-              size="sm"
-              className="justify-start p-0 w-full"
-              onClick={() => handleNavigate("/settings")}
-            >
-              <Settings className="w-4 h-4 text-muted-foreground" />
-              Cache Settings
-            </Button>
-          </div>
+          <Button
+            type="button"
+            size="sm"
+            onClick={() => setAuthOpen(true)}
+            className="w-full gap-2 justify-center"
+          >
+            <LogIn className="w-4 h-4" />
+            Login / Register
+          </Button>
         )}
       </div>
 
@@ -152,6 +132,16 @@ export const MobileDrawerContent = ({ setOpen }: MobileDrawerContentProps) => {
           <Home className="size-4" />
           <span>Go to Home</span>
         </Link>
+
+        <Button
+          variant="ghost"
+          size="sm"
+          className="justify-start p-0"
+          onClick={() => handleNavigate("/settings")}
+        >
+          <Settings className="w-4 h-4 text-muted-foreground" />
+          Settings
+        </Button>
         <NavLinks onItemClick={() => setOpen(false)} />
       </div>
       <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />

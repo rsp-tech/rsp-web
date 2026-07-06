@@ -152,3 +152,10 @@ export interface SyncResult {
 
 export type UserProfile = DB_TABLE<"users">;
 export type UserEditRequest = DB_TABLE<"user_edit_requests">;
+
+export interface AudioCacheLedgerEntry {
+  id: string; // audio_id
+  recId: number;
+  accessedAt: number;
+  size: number;
+}

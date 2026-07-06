@@ -4,13 +4,13 @@ import { ExternalLink, Maximize2, Music, X } from "lucide-react";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { useAudioPlayback } from "@/hooks/use-audio";
+import { useSpeakers } from "@/hooks/use-metadata";
 import { audioEngine } from "@/lib/audio-engine";
 import { categoryPath } from "@/lib/utils";
 import { ControlBtns } from "./player/control-btns";
 import { PlayPauseButton } from "./player/play-pause-button";
 import { TimelineSlider } from "./player/timeline-slider";
 import { Button } from "./ui/button";
-import { useSpeakers } from "@/hooks/use-metadata";
 
 export function AudioPlayerPanel() {
   const { currentRecording, categoryPath: categoryPathVal } =

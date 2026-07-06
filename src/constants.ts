@@ -40,6 +40,7 @@ export const STORE = {
   FEATURED_ITEMS: "featured_items",
   SYNC_META: "sync_meta",
   ROLE_META: "role_meta",
+  CACHE_LEDGER: "cache_ledger",
 } as const;
 
 export const ROLE_SYNCED_TABLES = [
@@ -212,6 +213,7 @@ export const QUERY_KEY = {
   VENUES: "venues",
   USER_PROFILE: "user-profile",
   USER_PENDING_REQUEST: "user-pending-request",
+  AUDIO_CACHE_LIST: "audio-cache-list",
 } as const;
 
 // Search
@@ -231,3 +233,5 @@ export const QUERY_CATEGORIES = [
   { value: "courses", label: "Online Certified Courses" },
   { value: "services", label: "Service Related Queries" },
 ];
+
+export const AUDIO_CACHE_NAME = "rsp-audio-cache";
