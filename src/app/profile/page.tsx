@@ -147,7 +147,7 @@ export default function ProfilePage() {
                 <p className="font-semibold">Update Request Pending Approval</p>
                 <p className="text-xs opacity-80">
                   You submitted a settings request on{" "}
-                  <span className="font-medium">
+                  <span className="font-medium" suppressHydrationWarning>
                     {pendingRequest.requested_at
                       ? new Date(
                           pendingRequest.requested_at,

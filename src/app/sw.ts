@@ -3,6 +3,7 @@
 import type { PrecacheEntry, RuntimeCaching, SerwistPlugin } from "serwist";
 import {
   CacheFirst,
+  NetworkFirst,
   NetworkOnly,
   Route,
   Serwist,
@@ -13,9 +14,8 @@ declare const self: ServiceWorkerGlobalScope & {
   __SW_MANIFEST: (PrecacheEntry | string)[] | undefined;
 };
 
-// Optimized Regex Matchers
+// Optimized Regex Matchers for Next.js App Router Structure
 const STATIC_ASSET_REGEX = /^\/_next\/static\/|\.(js|css|woff2?|ttf)$/;
-const FORBIDDEN_STATIC_REGEX = /\/_next\/data|\.(json|mp3|wav|pdf)$/;
 const GENERAL_IMAGE_REGEX = /\.(png|jpe?g|webp|svg|ico|avif)$/;
 
 const CRITICAL_BRAND_IMAGES = [
@@ -37,7 +37,7 @@ const STRUCTURAL_PATHS = [
   "/queries",
 ];
 
-// Concurrency-optimized eviction engine
+// Thread-safe eviction engine preventing execution races
 const trimCache = async (
   cacheName: string,
   maxItems: number,
@@ -46,15 +46,14 @@ const trimCache = async (
     const cache = await caches.open(cacheName);
     const keys = await cache.keys();
 
-    if (keys.length > maxItems) {
-      const deletePromises = keys
-        .slice(0, keys.length - maxItems)
-        .map((key) => cache.delete(key));
+    if (keys.length <= maxItems) return;
 
-      await Promise.all(deletePromises);
-    }
+    const targets = keys.slice(0, keys.length - maxItems);
+    await Promise.all(
+      targets.map((key) => cache.delete(key).catch(() => false)),
+    );
   } catch (error) {
-    console.error(`Failed to trim cache ${cacheName}:`, error);
+    console.error(`[SW] Failed to trim cache ${cacheName}:`, error);
   }
 };
 
@@ -66,33 +65,23 @@ const limitCacheItemsPlugin = (maxItems: number): SerwistPlugin => ({
 
 const runtimeCaching: RuntimeCaching[] = [
   {
-    // 1. Next.js Client-Side Component Stream & Prefetch Interceptor
+    // 1. Next.js Client-Side Component Stream Interceptor (RSC & Prefetches)
     matcher: ({ request, url }) =>
       url.origin === self.location.origin &&
-      (url.searchParams.has("_rsc") ||
-        request.headers.get("RSC") === "1" ||
-        url.pathname.includes("/_next/data/")),
-    handler: new StaleWhileRevalidate({
+      request.mode !== "navigate" &&
+      (url.searchParams.has("_rsc") || request.headers.get("RSC") === "1"),
+    handler: new NetworkFirst({
       cacheName: "next-rsc-payloads",
-      plugins: [
-        limitCacheItemsPlugin(40),
-        {
-          // Prevents long network timeouts when navigation prefetch elements hang offline
-          requestWillFetch: async ({ request }) => {
-            const controller = new AbortController();
-            setTimeout(() => controller.abort(), 1000);
-            return new Request(request, { signal: controller.signal });
-          },
-        },
-      ],
+      networkTimeoutSeconds: 1,
+      plugins: [limitCacheItemsPlugin(40)],
     }),
   },
   {
-    // 2. Static Assets (Scripts, Styles, Fonts)
+    // 2. Static Assets & Dynamic Chunks (JS, CSS, Fonts)
+    // Targets Next.js immutable build output securely.
     matcher: ({ request, url }) =>
       url.origin === self.location.origin &&
       STATIC_ASSET_REGEX.test(url.pathname) &&
-      !FORBIDDEN_STATIC_REGEX.test(url.pathname) &&
       request.headers.get("RSC") !== "1",
     handler: new StaleWhileRevalidate({
       cacheName: "static-assets",
@@ -100,7 +89,7 @@ const runtimeCaching: RuntimeCaching[] = [
     }),
   },
   {
-    // 3. Critical Branding Assets (Force Cache-First for Offline/PWA)
+    // 3. Critical Branding Assets
     matcher: ({ url }) => CRITICAL_BRAND_IMAGES.includes(url.pathname),
     handler: new CacheFirst({
       cacheName: "brand-assets",
@@ -108,7 +97,7 @@ const runtimeCaching: RuntimeCaching[] = [
     }),
   },
   {
-    // 4. General Images (Network Only - Relies on native browser HTTP Cache-Control)
+    // 4. General Media & Content Images
     matcher: ({ url }) => GENERAL_IMAGE_REGEX.test(url.pathname),
     handler: new NetworkOnly(),
   },
@@ -128,12 +117,10 @@ const navigationRoute = new Route(
   async ({ request }) => {
     const url = new URL(request.url);
 
-    // Structural client shells served directly out of precache
     if (STRUCTURAL_PATHS.includes(url.pathname)) {
       return (await serwist.matchPrecache(url.pathname)) || Response.error();
     }
 
-    // Rewrite all categories/slug views instantly to the main cached layout shell
     return (await serwist.matchPrecache("/")) || Response.error();
   },
 );

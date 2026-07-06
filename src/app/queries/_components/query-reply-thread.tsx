@@ -55,7 +55,7 @@ export function QueryReplyThread({
                     {replierName}
                   </span>
                   <span>•</span>
-                  <span>
+                  <span suppressHydrationWarning>
                     {reply.created_at
                       ? new Date(reply.created_at).toLocaleString(undefined, {
                           dateStyle: "short",

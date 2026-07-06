@@ -88,6 +88,7 @@ export const AudioCacheList = () => {
             <div
               className="text-xxs text-muted-foreground flex gap-1 p-1 rounded-md bg-muted"
               title={`last accessed on ${new Date(entry.accessedAt).toLocaleString()}`}
+              suppressHydrationWarning
             >
               <ClockFading className="w-3 h-3" />{" "}
               {new Date(entry.accessedAt).toLocaleDateString()}

@@ -84,7 +84,7 @@ export const RecordingMeta = ({ rec, m, sm, showLink }: RecordingMetaProps) => {
                 </span>
               ),
               rec.recorded_at && (
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1" suppressHydrationWarning>
                   <Calendar className="w-3 h-3 text-muted-foreground opacity-80" />
                   {new Date(rec.recorded_at).toLocaleDateString()}
                 </span>
