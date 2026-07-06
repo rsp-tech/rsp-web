@@ -190,6 +190,63 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       ),
     );
 
+    // Sync browser caches with IndexedDB STORE.CACHE_LEDGER
+    if (typeof self.caches !== "undefined") {
+      try {
+        const cache = await self.caches.open("rsp-audio-cache");
+        const keys = await cache.keys();
+        for (const req of keys) {
+          const audioId = new URL(req.url).pathname.split("/").pop() || "";
+          if (!audioId) continue;
+
+          // Check if it already exists in the ledger
+          const ledgerEntry = await db.get(STORE.CACHE_LEDGER, audioId);
+          if (!ledgerEntry) {
+            // Find corresponding recording in STORE.RECORDINGS where audio_id === audioId
+            const tx = db.transaction(STORE.RECORDINGS, "readonly");
+            let cursor = await tx.store.openCursor();
+            let recId: number | null = null;
+            while (cursor) {
+              if (cursor.value.audio_id === audioId) {
+                recId = cursor.value.id;
+                break;
+              }
+              cursor = await cursor.continue();
+            }
+
+            if (recId !== null) {
+              // Fetch cache response to get the size
+              const cachedResponse = await cache.match(req);
+              let size = 0;
+              if (cachedResponse) {
+                const contentLength =
+                  cachedResponse.headers.get("content-length");
+                if (contentLength) {
+                  size = parseInt(contentLength, 10);
+                } else {
+                  const blob = await cachedResponse.clone().blob();
+                  size = blob.size;
+                }
+              }
+
+              // Put entry in the ledger
+              await db.put(STORE.CACHE_LEDGER, {
+                id: audioId,
+                recId,
+                accessedAt: Date.now(),
+                size,
+              });
+            }
+          }
+        }
+      } catch (cacheErr) {
+        console.error(
+          "Failed to sync cache ledger entries in worker:",
+          cacheErr,
+        );
+      }
+    }
+
     postMessage({
       type: WORKER_MSG.SUCCESS,
       ...(await toSyncResult(

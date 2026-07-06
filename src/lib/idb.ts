@@ -1,6 +1,7 @@
 import { type IDBPDatabase, openDB } from "idb";
 import { DB_NAME, DB_VERSION, INDEX, STORE } from "@/constants";
 import type {
+  AudioCacheLedgerEntry,
   Category,
   ContentType,
   Event,
@@ -96,6 +97,10 @@ export interface RSP_IDB {
     key: string;
     value: string;
   };
+  [STORE.CACHE_LEDGER]: {
+    key: string;
+    value: AudioCacheLedgerEntry;
+  };
 }
 
 let dbPromise: Promise<IDBPDatabase<RSP_IDB>> | null = null;
@@ -158,6 +163,10 @@ const IDB_SCHEMA: Record<
     keyPath: "id",
   },
   [STORE.ROLE_META]: {},
+  [STORE.CACHE_LEDGER]: {
+    keyPath: "id",
+    // indexes: [{ name: INDEX.BY_ACCESSED_AT, keyPath: "accessedAt" }],
+  },
 };
 
 export const getDB = () => {

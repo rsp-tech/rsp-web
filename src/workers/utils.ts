@@ -20,7 +20,7 @@ type SyncMetaRow = {
 
 type SyncMetaMap = Record<string, string>;
 type TableName = (typeof STORE)[keyof typeof STORE];
-type SyncTable = Exclude<TableName, "sync_meta" | "role_meta">;
+type SyncTable = Exclude<TableName, "sync_meta" | "role_meta" | "cache_ledger">;
 type SyncRow = RSP_IDB[SyncTable]["value"] & {
   created_at?: string | null;
   id: number | string;
