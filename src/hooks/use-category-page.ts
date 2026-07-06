@@ -15,32 +15,6 @@ export interface CategoryPageData {
   redirectTo?: string;
 }
 
-type NumberKeyStore = {
-  [StoreName in keyof RSP_IDB]: RSP_IDB[StoreName]["key"] extends number
-    ? StoreName
-    : never;
-}[keyof RSP_IDB];
-
-const fetchSelected = async <StoreName extends NumberKeyStore>(
-  db: IDBPDatabase<RSP_IDB>,
-  storeName: StoreName,
-  ids: Set<number>,
-): Promise<Map<number, RSP_IDB[StoreName]["value"]>> => {
-  const tx = db.transaction(storeName, "readonly");
-  const store = tx.store;
-  const resultMap = new Map<number, RSP_IDB[StoreName]["value"]>();
-
-  const promises = Array.from(ids).map((id) =>
-    store.get(id).then((val) => {
-      if (val) resultMap.set(id, val);
-    }),
-  );
-
-  await Promise.all([...promises, tx.done]);
-
-  return resultMap;
-};
-
 const fetchTargetedMaterials = async (
   db: IDBPDatabase<RSP_IDB>,
   recordingIds: number[],
@@ -142,46 +116,12 @@ const loadCategoryPage = async (
     return { category, subcategories, recordings: [] };
   }
 
-  const speakerIds = new Set<number>();
-  const venueIds = new Set<number>();
-  const eventIds = new Set<number>();
-  const langIds = new Set<number>();
-  const typeIds = new Set<number>();
   const recordingIds = recordings.map((r) => r.id);
 
-  recordings.forEach((rec) => {
-    rec.speaker_ids?.forEach((id: number) => {
-      speakerIds.add(id);
-    });
-    rec.lang_ids?.forEach((id: number) => {
-      langIds.add(id);
-    });
-    if (rec.venues_id) venueIds.add(rec.venues_id);
-    if (rec.event_id) eventIds.add(rec.event_id);
-    if (rec.type_id) typeIds.add(rec.type_id);
-  });
-
-  const [speakerMap, venueMap, eventMap, langMap, ctMap, materialsMap] =
-    await Promise.all([
-      fetchSelected(db, STORE.SPEAKERS, speakerIds),
-      fetchSelected(db, STORE.VENUES, venueIds),
-      fetchSelected(db, STORE.EVENTS, eventIds),
-      fetchSelected(db, STORE.LANGUAGES, langIds),
-      fetchSelected(db, STORE.CONTENT_TYPES, typeIds),
-      fetchTargetedMaterials(db, recordingIds),
-    ]);
+  const materialsMap = await fetchTargetedMaterials(db, recordingIds);
 
   const enriched: EnrichedRecording[] = recordings.map((rec) => ({
     ...rec,
-    speakers: (rec.speaker_ids ?? []).flatMap(
-      (id: number) => speakerMap.get(id) ?? [],
-    ),
-    venue: rec.venues_id != null ? (venueMap.get(rec.venues_id) ?? null) : null,
-    event: rec.event_id != null ? (eventMap.get(rec.event_id) ?? null) : null,
-    languages: (rec.lang_ids ?? []).flatMap(
-      (id: number) => langMap.get(id) ?? [],
-    ),
-    content_type: rec.type_id != null ? (ctMap.get(rec.type_id) ?? null) : null,
     materials: materialsMap.get(rec.id) ?? [],
   }));
 

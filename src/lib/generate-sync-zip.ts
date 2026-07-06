@@ -10,7 +10,7 @@ interface SyncState {
   tables: Record<string, string>;
 }
 
-const runGenerateSyncJson = async () => {
+const runGenerateSyncZip = async () => {
   try {
     await fs.mkdir(PUBLIC_DIR, { recursive: true });
   } catch {}
@@ -119,11 +119,11 @@ const runGenerateSyncJson = async () => {
 };
 
 let syncPromise: Promise<void> | null = null;
-export const generateSyncJson = async () => {
+export const generateSyncZip = async () => {
   if (!syncPromise) {
     syncPromise = (async () => {
       try {
-        await runGenerateSyncJson();
+        await runGenerateSyncZip();
       } catch (err) {
         console.error("Error generating sync JSON - ", err);
         syncPromise = null;
