@@ -4,7 +4,8 @@ import { twMerge } from "tailwind-merge";
 
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export const categoryPath = (urlPath: string) => urlPath.replaceAll(".", "/");
+export const categoryPath = (urlPath: string) =>
+  urlPath.replaceAll(".", "/").replaceAll("_", "-");
 
 export const slugToLabel = (slug: string) =>
   slug
