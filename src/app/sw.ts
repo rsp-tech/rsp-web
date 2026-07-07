@@ -1,8 +1,9 @@
 /// <reference lib="webworker" />
 
-import type { PrecacheEntry, RuntimeCaching, SerwistPlugin } from "serwist";
+import type { PrecacheEntry, RuntimeCaching } from "serwist";
 import {
   CacheFirst,
+  ExpirationPlugin,
   NetworkFirst,
   NetworkOnly,
   Route,
@@ -14,92 +15,79 @@ declare const self: ServiceWorkerGlobalScope & {
   __SW_MANIFEST: (PrecacheEntry | string)[] | undefined;
 };
 
-// Optimized Regex Matchers for Next.js App Router Structure
-const STATIC_ASSET_REGEX = /^\/_next\/static\/|\.(js|css|woff2?|ttf)$/;
+// Immutable Next.js build assets only.
+const STATIC_ASSET_REGEX = /^\/_next\/static\//;
 const GENERAL_IMAGE_REGEX = /\.(png|jpe?g|webp|svg|ico|avif)$/;
 
 const CRITICAL_BRAND_IMAGES = [
   "/rsp.webp",
-  "/icon-192x192.webp",
-  "/icon-512x512.webp",
   "/rsp.avif",
+  "/icon-192x192.webp",
   "/icon-192x192.avif",
+  "/icon-512x512.webp",
   "/icon-512x512.avif",
   "/favicon.ico",
 ];
 
 const STRUCTURAL_PATHS = [
+  "/",
   "/about",
   "/contact-us",
   "/get-involved",
   "/profile",
   "/settings",
   "/queries",
-  "/sitemap.xml",
 ];
-
-// Thread-safe eviction engine preventing execution races
-const trimCache = async (
-  cacheName: string,
-  maxItems: number,
-): Promise<void> => {
-  try {
-    const cache = await caches.open(cacheName);
-    const keys = await cache.keys();
-
-    if (keys.length <= maxItems) return;
-
-    const targets = keys.slice(0, keys.length - maxItems);
-    await Promise.all(
-      targets.map((key) => cache.delete(key).catch(() => false)),
-    );
-  } catch (error) {
-    console.error(`[SW] Failed to trim cache ${cacheName}:`, error);
-  }
-};
-
-const limitCacheItemsPlugin = (maxItems: number): SerwistPlugin => ({
-  cacheDidUpdate: async ({ cacheName }) => {
-    await trimCache(cacheName, maxItems);
-  },
-});
 
 const runtimeCaching: RuntimeCaching[] = [
   {
-    // 1. Next.js Client-Side Component Stream Interceptor (RSC & Prefetches)
+    // Next.js RSC payloads & client-side prefetches.
     matcher: ({ request, url }) =>
       url.origin === self.location.origin &&
       request.mode !== "navigate" &&
       (url.searchParams.has("_rsc") || request.headers.get("RSC") === "1"),
     handler: new NetworkFirst({
       cacheName: "next-rsc-payloads",
-      networkTimeoutSeconds: 1,
-      plugins: [limitCacheItemsPlugin(40)],
+      networkTimeoutSeconds: 2,
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 60,
+          maxAgeFrom: "last-used",
+        }),
+      ],
     }),
   },
   {
-    // 2. Static Assets & Dynamic Chunks (JS, CSS, Fonts)
-    // Targets Next.js immutable build output securely.
+    // Fingerprinted Next.js assets.
     matcher: ({ request, url }) =>
       url.origin === self.location.origin &&
       STATIC_ASSET_REGEX.test(url.pathname) &&
       request.headers.get("RSC") !== "1",
     handler: new StaleWhileRevalidate({
       cacheName: "static-assets",
-      plugins: [limitCacheItemsPlugin(50)],
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: 80,
+        }),
+      ],
     }),
   },
   {
-    // 3. Critical Branding Assets
+    // Critical branding assets.
     matcher: ({ url }) => CRITICAL_BRAND_IMAGES.includes(url.pathname),
     handler: new CacheFirst({
       cacheName: "brand-assets",
-      plugins: [limitCacheItemsPlugin(CRITICAL_BRAND_IMAGES.length * 2)],
+      plugins: [
+        new ExpirationPlugin({
+          maxEntries: CRITICAL_BRAND_IMAGES.length * 2,
+        }),
+      ],
     }),
   },
   {
-    // 4. General Media & Content Images
-    matcher: ({ url }) => GENERAL_IMAGE_REGEX.test(url.pathname),
+    // General content images are always fetched from the network - we already have cache-control headers.
+    matcher: ({ url }) =>
+      GENERAL_IMAGE_REGEX.test(url.pathname) || url.pathname === "/sitemap.xml",
     handler: new NetworkOnly(),
   },
 ];
@@ -112,17 +100,31 @@ const serwist = new Serwist({
   runtimeCaching,
 });
 
-// App Shell Router mapping strategy for document requests
 const navigationRoute = new Route(
   ({ request }) => request.mode === "navigate",
   async ({ request }) => {
-    const url = new URL(request.url);
+    const { pathname } = new URL(request.url);
 
-    if (STRUCTURAL_PATHS.includes(url.pathname)) {
-      return (await serwist.matchPrecache(url.pathname)) || Response.error();
+    try {
+      // Dedicated SSG/ISR pages.
+      if (STRUCTURAL_PATHS.includes(pathname)) {
+        return (
+          (await serwist.matchPrecache(pathname)) ?? (await fetch(request))
+        );
+      }
+
+      /**
+       * Dynamic [[...slug]] pages intentionally share the root app shell.
+       *
+       * The server renders metadata and JSON-LD for SEO, while the page
+       * content itself is restored from IndexedDB after hydration based on
+       * the current URL. Serving "/" here enables offline navigation without
+       * precaching every possible category page.
+       */
+      return (await serwist.matchPrecache("/")) ?? (await fetch(request));
+    } catch {
+      return fetch(request);
     }
-
-    return (await serwist.matchPrecache("/")) || Response.error();
   },
 );
 
