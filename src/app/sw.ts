@@ -35,6 +35,7 @@ const STRUCTURAL_PATHS = [
   "/profile",
   "/settings",
   "/queries",
+  "/sitemap.xml",
 ];
 
 // Thread-safe eviction engine preventing execution races
