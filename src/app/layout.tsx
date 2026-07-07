@@ -27,7 +27,9 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  await generateSyncZip();
+  if (process.env["NEXT_PHASE"] === "phase-production-build") {
+    await generateSyncZip();
+  }
   return (
     <html
       lang="en"
