@@ -2,16 +2,11 @@ import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { ASSET_BASE_URL } from "@/constants";
 import type { CategoryPageData } from "@/hooks/use-category-page";
-import {
-  getLocalCategories,
-  getLocalCategoryPageData,
-} from "@/lib/local-sync-data";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { slugToLabel } from "@/lib/utils";
-import type { Category } from "@/types";
 import { ClientShell } from "@/views/client-shell";
 
-export const revalidate = 28800; // 8 hours (3 times a day)
+export const revalidate = 604800; // One week - fallback if on demand revalidation failed
 export const dynamicParams = true;
 
 interface PageProps {
@@ -42,16 +37,6 @@ const homePageMetadata: Metadata = {
 };
 
 const getCategoryDetails = async (urlPath: string) => {
-  const isLocalSource = process.env["NEXT_PHASE"] === "phase-production-build";
-  if (isLocalSource) {
-    try {
-      const categories = await getLocalCategories();
-      return categories.find((c: Category) => c.url_path === urlPath) || null;
-    } catch (e) {
-      console.error("Failed to load local categories:", e);
-      return null;
-    }
-  }
   const { data } = await getSupabaseServerClient()
     .from("categories")
     .select("name, img_id")
@@ -98,18 +83,11 @@ const generateJsonLdData = async (slug?: string[]) => {
 
   const urlPath = slug?.join(".").replace(/-/g, "_") ?? "";
 
-  const isLocalSource = process.env["NEXT_PHASE"] === "phase-production-build";
-  let rpcData: CategoryPageData | null = null;
-
-  if (isLocalSource) {
-    rpcData = await getLocalCategoryPageData(urlPath);
-  } else {
-    const { data } = await getSupabaseServerClient().rpc(
-      "get_category_page_data",
-      { p_url_path: urlPath },
-    );
-    rpcData = data as unknown as CategoryPageData;
-  }
+  const { data } = await getSupabaseServerClient().rpc(
+    "get_category_page_data",
+    { p_url_path: urlPath },
+  );
+  const rpcData = data as unknown as CategoryPageData;
 
   if (rpcData?.redirectTo) redirect(rpcData.redirectTo);
   const { category, recordings = [], subcategories = [] } = rpcData ?? {};

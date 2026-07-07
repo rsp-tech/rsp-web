@@ -46,7 +46,10 @@ export function QueryItem({
             <span className="text-xxs font-bold text-primary uppercase tracking-wider bg-primary/5 px-2 py-0.5 rounded-md">
               {q.category === "RoleRequest" ? "Role Request" : q.category}
             </span>
-            <span className="text-xxs text-muted-foreground flex items-center gap-1" suppressHydrationWarning>
+            <span
+              className="text-xxs text-muted-foreground flex items-center gap-1"
+              suppressHydrationWarning
+            >
               <Clock className="w-3 h-3" />
               {q.created_at
                 ? new Date(q.created_at).toLocaleDateString(undefined, {
