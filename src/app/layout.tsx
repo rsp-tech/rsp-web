@@ -7,7 +7,6 @@ import { Providers } from "@/components/providers";
 import "./globals.css";
 import { GlobalAudioPlayer } from "@/components/global-audio-player";
 import { LayoutInitializers } from "@/components/layout-initializers";
-import { generateSyncZip } from "@/lib/generate-sync-zip";
 import { cn } from "@/lib/utils";
 
 const geistSans = Geist({
@@ -27,9 +26,6 @@ export const metadata: Metadata = {
 export default async function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
-  if (process.env["NEXT_PHASE"] === "phase-production-build") {
-    await generateSyncZip();
-  }
   return (
     <html
       lang="en"

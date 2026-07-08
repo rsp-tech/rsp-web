@@ -15,9 +15,6 @@ export const ASSET_BASE_URL = process.env[
 ] as string;
 export const AUDIO_BASE_URL = process.env["NEXT_PUBLIC_AUDIO_BASE_URL"];
 
-export const BACKUP_TOKEN = process.env["BACKUP_TOKEN"] as string;
-export const SYNC_ZIP_URL = process.env["SYNC_ZIP_URL"] as string;
-
 // IndexedDB
 export const DB_NAME = "rsp";
 export const DB_VERSION = 1;
