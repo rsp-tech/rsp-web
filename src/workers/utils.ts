@@ -244,7 +244,7 @@ export const loadStaticZipSeeds = async (
   db: IDBPDatabase<RSP_IDB>,
   origin: string,
 ): Promise<boolean> => {
-  const zipRes = await fetch(`${origin}/sync.zip`);
+  const zipRes = await fetch(`${origin}/api/sync`);
   if (!zipRes.ok) return false;
 
   const unzipped = unzipSync(new Uint8Array(await zipRes.arrayBuffer()));

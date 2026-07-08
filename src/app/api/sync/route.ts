@@ -1,36 +1,64 @@
-import { BACKUP_TOKEN, SYNC_ZIP_URL } from "@/constants";
-
 export const revalidate = 604800; // 1 week
 
-if (!BACKUP_TOKEN || !SYNC_ZIP_URL) {
-  throw new Error("Missing backup configuration");
+const BACKUP_TOKEN = process.env["BACKUP_TOKEN"];
+const SYNC_ENDPOINT = process.env["SYNC_ENDPOINT"];
+const SYNC_RESOURCE = process.env["SYNC_RESOURCE"];
+
+if (!BACKUP_TOKEN) {
+  throw new Error("Missing BACKUP_TOKEN");
+}
+
+if (!SYNC_ENDPOINT) {
+  throw new Error("Missing SYNC_ENDPOINT");
+}
+
+if (!SYNC_RESOURCE) {
+  throw new Error("Missing BACKUP_FILE");
 }
 
 export const GET = async () => {
   try {
-    const zipRes = await fetch(SYNC_ZIP_URL, {
+    const assetId = await fetch(SYNC_ENDPOINT, {
       headers: {
-        Authorization: `token ${BACKUP_TOKEN}`,
+        Authorization: `Bearer ${BACKUP_TOKEN}`,
       },
-    });
+    })
+      .then((res) => res.json())
+      .then(
+        ({ assets }) =>
+          assets.find(
+            (a: { id: number; name: string }) => a.name === SYNC_RESOURCE,
+          ).id,
+      );
 
-    if (!zipRes.ok) {
-      return new Response("Failed to fetch backup", {
-        status: zipRes.status,
+    const assetRes = await fetch(
+      `${SYNC_ENDPOINT.split("tags")[0]}assets/${assetId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${BACKUP_TOKEN}`,
+          Accept: "application/octet-stream",
+        },
+        redirect: "follow",
+      },
+    );
+
+    if (!assetRes.ok) {
+      console.error(await assetRes.text());
+
+      return new Response("Failed to download backup", {
+        status: assetRes.status,
       });
     }
 
-    const headers = new Headers(zipRes.headers);
+    const headers = new Headers(assetRes.headers);
 
-    if (!headers.has("Content-Disposition")) {
-      headers.set("Content-Disposition", 'attachment; filename="sync.zip"');
-    }
-
-    return new Response(zipRes.body, {
-      status: zipRes.status,
+    return new Response(assetRes.body, {
+      status: assetRes.status,
       headers,
     });
-  } catch {
+  } catch (error) {
+    console.error(error);
+
     return new Response("Failed to fetch backup", {
       status: 502,
     });

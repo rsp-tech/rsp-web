@@ -17,7 +17,7 @@ declare const self: ServiceWorkerGlobalScope & {
 
 // Immutable Next.js build assets only.
 const STATIC_ASSET_REGEX = /^\/_next\/static\//;
-const NETWORK_ONLY_REGEX = /\.(png|jpe?g|webp|svg|ico|avif|zip|xml)$/;
+const NETWORK_ONLY_REGEX = /^\/api|\.(png|jpe?g|webp|svg|ico|avif|zip|xml)$/;
 
 const CRITICAL_BRAND_IMAGES = [
   "/rsp.webp",
@@ -85,7 +85,7 @@ const runtimeCaching: RuntimeCaching[] = [
     }),
   },
   {
-    // General content images are always fetched from the network - we already have cache-control headers.
+    // General content images/xml/zip and api routes are always fetched from the network - we already have cache-control headers.
     matcher: ({ url }) => NETWORK_ONLY_REGEX.test(url.pathname),
     handler: new NetworkOnly(),
   },

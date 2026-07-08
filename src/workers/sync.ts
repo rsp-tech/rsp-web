@@ -105,7 +105,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       try {
         postMessage({
           type: WORKER_MSG.PROGRESS,
-          message: "Downloading database seed...",
+          message: "seeding database...",
         });
 
         const loaded = await loadStaticZipSeeds(db, self.location.origin);
