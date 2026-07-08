@@ -4,7 +4,7 @@ export const SUPABASE_PUBLISHABLE_KEY = process.env[
   "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY"
 ] as string;
 export const SYNC_INTERVAL = Number.parseInt(
-  process.env["NEXT_PUBLIC_SYNC_INTERVAL"] || "300000",
+  process.env["NEXT_PUBLIC_SYNC_INTERVAL"] || "3600_000", // 1 hour
   10,
 ); // 5 min default
 export const SYNC_PAGE_SIZE = 1000;
