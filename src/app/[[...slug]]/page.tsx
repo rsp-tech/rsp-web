@@ -17,7 +17,11 @@ const homePageMetadata: Metadata = {
   title: "HG Radheshyamdas Spiritual Discourses | Home",
   description:
     "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by HG Radheshyamdas.",
-  alternates: { canonical: "https://radheshyamdas.com" },
+  alternates: {
+    canonical:
+      process.env["VERCEL_PROJECT_PRODUCTION_URL"] ||
+      "https://radheshyamdas.com",
+  },
   openGraph: {
     title: "HG Radheshyamdas Spiritual Discourses",
     description:
