@@ -29,6 +29,7 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn(geistSans.variable, "h-full")}
       style={{
         WebkitFontSmoothing: "antialiased",
