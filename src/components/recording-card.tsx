@@ -73,8 +73,22 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
 
   const handleDownload = async () => {
     if (!rec.audio_id) return;
-    const url = getAssetUrl(rec.audio_id);
     const fileName = `${rec.name.replace(/[/\\?%*:|"<>\s]/g, "_")}.mp3`;
+
+    let url = getAssetUrl(rec.audio_id);
+    let objectUrl: string | null = null;
+
+    try {
+      const cache = await caches.open(CACHE_NAME);
+      const matched = await cache.match(rec.audio_id);
+      if (matched) {
+        const blob = await matched.blob();
+        objectUrl = URL.createObjectURL(blob);
+        url = objectUrl;
+      }
+    } catch (err) {
+      console.error("Failed to read audio from cache for download:", err);
+    }
 
     const a = document.createElement("a");
     a.href = url;
@@ -82,6 +96,10 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
+
+    if (objectUrl) {
+      setTimeout(() => URL.revokeObjectURL(objectUrl), 100);
+    }
   };
 
   return (
