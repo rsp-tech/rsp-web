@@ -72,7 +72,7 @@ export function Header() {
           </div>
           <div className="hidden sm:flex flex-col">
             <span className="font-bold text-sm font-heading leading-tight ">
-              HG Radheshyamdas
+              HG Radheshyam Das
             </span>
             <span className="text-xxs text-muted-foreground font-semibold leading-none">
               Spiritual Discourses
