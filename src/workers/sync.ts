@@ -111,8 +111,10 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
         const loaded = await loadStaticZipSeeds(db, self.location.origin);
         if (loaded) {
           postMessage({
-            type: WORKER_MSG.PROGRESS,
-            message: "Database seed loaded successfully.",
+            type: WORKER_MSG.SUCCESS,
+            changedCategoryPaths: ["*"],
+            changedIds: {},
+            rebuildSearchIndex: true,
           });
         }
       } catch (zipErr) {
