@@ -35,7 +35,7 @@ export const RecordingList = ({
           element.scrollIntoView({ behavior: "smooth", block: "center" });
           element.focus();
         }
-      }, 100);
+      }, 150);
       return () => clearTimeout(timer);
     }
   }, [isPending, q]);
@@ -91,6 +91,7 @@ export const RecordingList = ({
 
       {sortedRecordings.map((rec, idx) => (
         <div
+          id={`recording-${rec.id}`}
           key={rec.id}
           className="opacity-0"
           style={{

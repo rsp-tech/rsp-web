@@ -105,7 +105,6 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: handled for custom list focus/navigation
     <div
-      id={`recording-${rec.id}`}
       // biome-ignore lint/a11y/noNoninteractiveTabindex: handled for custom list focus/navigation
       tabIndex={0}
       data-recording-item
