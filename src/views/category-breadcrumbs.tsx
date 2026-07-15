@@ -13,7 +13,11 @@ export const CategoryBreadcrumbs = ({
 }) => {
   return (
     <nav className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground opacity-80 overflow-x-auto whitespace-nowrap py-1">
-      <Link href="/" className="hover:transition-all flex items-center gap-1">
+      <Link
+        href="/"
+        className="hover:transition-all flex items-center gap-1"
+        prefetch={false}
+      >
         <Home className="w-3 h-3" />
         <span>Home</span>
       </Link>

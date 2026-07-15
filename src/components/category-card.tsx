@@ -22,6 +22,7 @@ export const CategoryCard = ({
     <Link
       href={href}
       onKeyDown={onKeyDown}
+      prefetch={false}
       data-category-item
       className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-md hover:shadow-md focus:ring-1 focus:ring-primary focus:outline-hidden transition duration-200 active:scale-98 cursor-pointer"
       style={{ height: "15rem" }}

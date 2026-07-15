@@ -112,6 +112,7 @@ export function AudioPlayerPanel() {
               href={href}
               className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors cursor-pointer rounded-md p-1 hover:bg-accent shrink-0"
               title="Navigate to recording details"
+              prefetch={false}
             >
               <ExternalLink className="w-3 h-3" />
             </Link>
