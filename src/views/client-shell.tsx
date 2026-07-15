@@ -21,7 +21,7 @@ export const ClientShell = ({
   const pathname = usePathname();
   const slug = pathname.split("/").filter(Boolean);
   const { data, isPending, error, refetch } = useCategoryPage(
-    slug,
+    pathname,
     initialData,
   );
 

@@ -8,7 +8,7 @@ import { INDEX, STORE } from "@/constants";
 import { useSearch } from "@/hooks/use-search";
 import { trackEvent } from "@/lib/analytics";
 import { getDB } from "@/lib/idb";
-import { categoryPath } from "@/lib/utils";
+import { categoryPath, pathToUrlPath } from "@/lib/utils";
 import type {
   Category,
   CategorySearchDocument,
@@ -71,7 +71,7 @@ export function useSearchBar() {
       const cat = await db.getFromIndex(
         STORE.CATEGORIES,
         INDEX.BY_URL,
-        slug.join("."),
+        pathToUrlPath(slug),
       );
       setCurrentCategory(cat ?? null);
     };

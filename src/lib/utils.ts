@@ -44,3 +44,15 @@ export const sortByOrderInd =
   (direction: 1 | -1 = 1) =>
   (a: { order_ind?: number | null }, b: { order_ind?: number | null }) =>
     direction * ((a.order_ind ?? 0) - (b.order_ind ?? 0));
+
+/**
+ * Converts a pathname (string or array of slug segments) to a DB urlPath (dot-separated, ltree format).
+ * E.g., "/spiritual-discourses/bg" -> "spiritual_discourses.bg"
+ * E.g., ["spiritual-discourses", "bg"] -> "spiritual_discourses.bg"
+ */
+export const pathToUrlPath = (path: string | string[]): string => {
+  const segments = Array.isArray(path)
+    ? path
+    : path.split("/").filter(Boolean);
+  return segments.join(".").replace(/-/g, "_");
+};

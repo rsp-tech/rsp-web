@@ -100,42 +100,49 @@ export const fetchTableWatermark = async (
   return typeof data?.[0]?.updated_at === "string" ? data[0].updated_at : null;
 };
 
-interface UpdateChangedMetaProps {
+interface WriteRowsConfig {
+  db: IDBPDatabase<RSP_IDB>;
   table: SyncTable;
-  changedCategoryMeta: ChangedCategoryMeta;
+  rows: SyncRow[];
   changedIds: SyncChangedIds;
-  row: SyncRow;
+  changedCategoryMeta: ChangedCategoryMeta;
 }
 
-const updateChangedMeta = ({
+const writeRowsToStore = async ({
+  db,
   table,
-  changedCategoryMeta,
+  rows,
   changedIds,
-  row,
-}: UpdateChangedMetaProps) => {
-  switch (table) {
-    case STORE.CATEGORIES:
-      changedIds.categories.push(row.id as number);
-      changedCategoryMeta.changedCategories[row.id as number] =
-        row.url_path as string;
-      changedCategoryMeta.bubbledChangeCategoryIds.add(
-        Number(row.path?.split(".").pop()),
-      );
-      break;
-    case STORE.RECORDINGS:
-      changedIds.recordings.push(row.id as number);
-      changedCategoryMeta.changedRecordings[row.id as number] =
-        row.category_id as number;
-      changedCategoryMeta.bubbledChangeCategoryIds.add(
-        row.category_id as number,
-      );
-      break;
-    case STORE.MATERIALS:
-      changedIds.materials.push(row.id as number);
-      changedCategoryMeta.bubbledChangeRecordingIds.add(
-        row.recording_id as number,
-      );
+  changedCategoryMeta,
+}: WriteRowsConfig): Promise<void> => {
+  const tx = db.transaction(table, "readwrite");
+  for (const row of rows) {
+    tx.store.put(row);
+    switch (table) {
+      case STORE.CATEGORIES:
+        changedIds.categories.push(row.id as number);
+        changedCategoryMeta.changedCategories[row.id as number] =
+          row.url_path as string;
+        changedCategoryMeta.bubbledChangeCategoryIds.add(
+          Number(row.path?.split(".").pop()),
+        );
+        break;
+      case STORE.RECORDINGS:
+        changedIds.recordings.push(row.id as number);
+        changedCategoryMeta.changedRecordings[row.id as number] =
+          row.category_id as number;
+        changedCategoryMeta.bubbledChangeCategoryIds.add(
+          row.category_id as number,
+        );
+        break;
+      case STORE.MATERIALS:
+        changedIds.materials.push(row.id as number);
+        changedCategoryMeta.bubbledChangeRecordingIds.add(
+          row.recording_id as number,
+        );
+    }
   }
+  await tx.done;
 };
 
 export const syncTableForRole = async ({
@@ -164,13 +171,13 @@ export const syncTableForRole = async ({
     if (!data?.length) break;
 
     const rows = data as unknown as SyncRow[];
-    const tx = db.transaction(table, "readwrite");
-
-    for (const row of rows) {
-      tx.store.put(row);
-      updateChangedMeta({ table, changedCategoryMeta, changedIds, row });
-    }
-    await tx.done;
+    await writeRowsToStore({
+      db,
+      table,
+      rows,
+      changedIds,
+      changedCategoryMeta,
+    });
 
     if (rows.length < SYNC_PAGE_SIZE) break;
     from += SYNC_PAGE_SIZE;
@@ -217,14 +224,14 @@ export const syncTable = async ({
     if (!data?.length) break;
 
     const rows = data as unknown as SyncRow[];
-    const tx = db.transaction(table, "readwrite");
-
-    for (const row of rows) {
-      tx.store.put(row);
-      changedRows++;
-      updateChangedMeta({ table, changedCategoryMeta, changedIds, row });
-    }
-    await tx.done;
+    await writeRowsToStore({
+      db,
+      table,
+      rows,
+      changedIds,
+      changedCategoryMeta,
+    });
+    changedRows += rows.length;
 
     if (rows.length < SYNC_PAGE_SIZE) break;
     from += SYNC_PAGE_SIZE;

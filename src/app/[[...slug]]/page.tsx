@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { ASSET_BASE_URL } from "@/constants";
 import type { CategoryPageData } from "@/hooks/use-category-page";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
-import { slugToLabel } from "@/lib/utils";
+import { pathToUrlPath, slugToLabel } from "@/lib/utils";
 import { ClientShell } from "@/views/client-shell";
 
 export const revalidate = 604800; // One week - fallback if on demand revalidation failed
@@ -54,7 +54,7 @@ export const generateMetadata = async ({
   const { slug } = await params;
   if (!slug?.length) return homePageMetadata;
 
-  const urlPath = slug.join(".").replace(/-/g, "_");
+  const urlPath = pathToUrlPath(slug);
   const category = await getCategoryDetails(urlPath);
 
   const title = category?.name
@@ -83,7 +83,7 @@ export const generateMetadata = async ({
 const generateJsonLdData = async (slug?: string[]) => {
   if (process.env.NODE_ENV === "development") return { structuredData: [] };
 
-  const urlPath = slug?.join(".").replace(/-/g, "_") ?? "";
+  const urlPath = pathToUrlPath(slug ?? []);
 
   const { data } = await getSupabaseServerClient().rpc(
     "get_category_page_data",

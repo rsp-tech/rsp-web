@@ -5,7 +5,7 @@ import type { IDBPDatabase } from "idb";
 import { INDEX, QUERY_KEY, STORE } from "@/constants";
 import { getDB, type RSP_IDB } from "@/lib/idb";
 import { getSupabaseClient } from "@/lib/supabase-browser";
-import { sortByOrderInd } from "@/lib/utils";
+import { pathToUrlPath, sortByOrderInd } from "@/lib/utils";
 import type { Category, EnrichedRecording, Material, Recording } from "@/types";
 
 export interface CategoryPageData {
@@ -129,10 +129,10 @@ const loadCategoryPage = async (
 };
 
 export const useCategoryPage = (
-  slug: string[],
+  pathname: string,
   initialData?: CategoryPageData,
 ) => {
-  const urlPath = slug.join(".").replace(/-/g, "_");
+  const urlPath = pathToUrlPath(pathname);
 
   // Verify that the initial data matches the current URL route.
   // If the service worker falls back to "/" shell when offline, the initial data of "/" (root categories)
