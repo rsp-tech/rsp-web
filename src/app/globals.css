@@ -68,7 +68,8 @@
   }
 }
 
-:root, .monk {
+:root,
+.monk {
   --background: oklch(72.802% 0.17192 57.259 / 0.2);
   --foreground: oklch(0.18 0.04 45); /* Warm dark brown */
   --card: oklch(0.99 0.01 75);
@@ -130,7 +131,6 @@
   --ring: oklch(0.62 0.2 45);
   --shimmer-glow: rgba(255, 255, 255, 0.65);
 }
-
 
 .dark {
   --background: oklch(0.145 0 0);

@@ -51,8 +51,6 @@ export const sortByOrderInd =
  * E.g., ["spiritual-discourses", "bg"] -> "spiritual_discourses.bg"
  */
 export const pathToUrlPath = (path: string | string[]): string => {
-  const segments = Array.isArray(path)
-    ? path
-    : path.split("/").filter(Boolean);
+  const segments = Array.isArray(path) ? path : path.split("/").filter(Boolean);
   return segments.join(".").replace(/-/g, "_");
 };
