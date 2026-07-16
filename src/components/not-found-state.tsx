@@ -103,7 +103,7 @@ export const NotFoundState = ({
               <Button
                 variant="default"
                 onClick={() => router.push("/")}
-                className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary/90 shadow-md shadow-primary/10 transition-all"
+                className="flex items-center gap-2 bg-primary text-primary-foreground hover:bg-primary shadow-md shadow-primary/10 transition-all"
               >
                 <Home className="w-4 h-4" />
                 Return Home

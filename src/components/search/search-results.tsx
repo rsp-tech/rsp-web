@@ -146,11 +146,12 @@ export function SearchResults({
                     <RecordingMeta rec={rec} sm />
                     {rec.category && (
                       <span
-                        className="absolute text-xxs bg-primary/10 text-primary px-1.5 py-0.5 rounded-md font-medium shrink-0 truncate"
+                        className="absolute text-xxs italic bg-primary px-1.5 rounded-full font-medium shrink-0"
                         style={{
-                          maxWidth: "6rem",
-                          top: "0.5rem",
-                          right: "0.5rem",
+                          top: "-0.1rem",
+                          right: "-0.1rem",
+                          opacity: 0.8,
+                          color: "white",
                         }}
                       >
                         {rec.category.name}
