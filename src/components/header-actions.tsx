@@ -19,6 +19,7 @@ export const HeaderActions = () => (
           "cursor-pointer text-muted-foreground hover:text-primary transition-colors",
         )}
         title="Settings"
+        prefetch={false}
       >
         <Settings className="w-5 h-5" />
       </Link>

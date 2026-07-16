@@ -67,6 +67,7 @@ export const NavLinks = ({ onItemClick }: NavLinksProps) =>
       href={href}
       className="hover:text-primary transition-all flex items-center gap-1.5"
       aria-label={title}
+      prefetch={false}
       onClick={onItemClick}
       {...(href.startsWith("http")
         ? { target: "_blank", rel: "noopener noreferrer" }

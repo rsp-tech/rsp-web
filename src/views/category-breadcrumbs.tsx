@@ -25,6 +25,7 @@ export const CategoryBreadcrumbs = ({
         <div key={crumb.href} className="flex items-center gap-1.5">
           <ChevronRight className="w-3 h-3 text-muted-foreground opacity-60 shrink-0" />
           <Link
+            prefetch={false}
             href={crumb.href}
             className={`hover:transition-all ${
               idx === breadcrumbs.length - 1 ? "font-bold" : ""

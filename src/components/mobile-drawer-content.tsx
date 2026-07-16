@@ -128,6 +128,7 @@ export const MobileDrawerContent = ({ setOpen }: MobileDrawerContentProps) => {
           href="/"
           className="hover:text-primary transition-all flex items-center gap-1.5"
           onClick={() => setOpen(false)}
+          prefetch={false}
         >
           <Home className="size-4" />
           <span>Go to Home</span>
