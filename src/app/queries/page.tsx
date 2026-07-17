@@ -66,7 +66,7 @@ export default function UserQueriesPage() {
                 .from("query_replies")
                 .select("*, users(name, email)")
                 .in("query_id", queryIds)
-                .order("created_at", { ascending: true });
+                .order("updated_at", { ascending: true });
 
               if (repliesError) throw repliesError;
 

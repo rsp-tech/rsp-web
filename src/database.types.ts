@@ -65,14 +65,35 @@ export type Database = {
           updated_at: string | null;
         };
         Insert: {
-          id?: never;
+          id?: number;
           name: string;
           updated_at?: string | null;
         };
         Update: {
-          id?: never;
+          id?: number;
           name?: string;
           updated_at?: string | null;
+        };
+        Relationships: [];
+      };
+      deleted_records: {
+        Row: {
+          id: number;
+          record_id: string;
+          table_name: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: never;
+          record_id: string;
+          table_name: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: never;
+          record_id?: string;
+          table_name?: string;
+          updated_at?: string;
         };
         Relationships: [];
       };
@@ -235,13 +256,13 @@ export type Database = {
           updated_at: string | null;
         };
         Insert: {
-          id?: never;
+          id?: number;
           name: string;
           native_name?: string | null;
           updated_at?: string | null;
         };
         Update: {
-          id?: never;
+          id?: number;
           name?: string;
           native_name?: string | null;
           updated_at?: string | null;
@@ -318,24 +339,24 @@ export type Database = {
       };
       query_replies: {
         Row: {
-          created_at: string | null;
           id: string;
           message: string;
           query_id: string;
+          updated_at: string | null;
           user_id: string | null;
         };
         Insert: {
-          created_at?: string | null;
           id?: string;
           message: string;
           query_id: string;
+          updated_at?: string | null;
           user_id?: string | null;
         };
         Update: {
-          created_at?: string | null;
           id?: string;
           message?: string;
           query_id?: string;
+          updated_at?: string | null;
           user_id?: string | null;
         };
         Relationships: [
@@ -496,12 +517,12 @@ export type Database = {
           updated_at: string | null;
         };
         Insert: {
-          id?: never;
+          id?: number;
           name: string;
           updated_at?: string | null;
         };
         Update: {
-          id?: never;
+          id?: number;
           name?: string;
           updated_at?: string | null;
         };
@@ -776,6 +797,7 @@ export type Database = {
           service_id: number | null;
           started_at: string | null;
           status: string | null;
+          updated_at: string | null;
           user_id: string | null;
         };
         Insert: {
@@ -787,6 +809,7 @@ export type Database = {
           service_id?: number | null;
           started_at?: string | null;
           status?: string | null;
+          updated_at?: string | null;
           user_id?: string | null;
         };
         Update: {
@@ -798,6 +821,7 @@ export type Database = {
           service_id?: number | null;
           started_at?: string | null;
           status?: string | null;
+          updated_at?: string | null;
           user_id?: string | null;
         };
         Relationships: [
@@ -872,23 +896,29 @@ export type Database = {
       user_service_interests: {
         Row: {
           created_at: string | null;
+          id: string;
           level: string | null;
           notes: string | null;
           service_id: number;
+          updated_at: string | null;
           user_id: string;
         };
         Insert: {
           created_at?: string | null;
+          id?: string;
           level?: string | null;
           notes?: string | null;
           service_id: number;
+          updated_at?: string | null;
           user_id: string;
         };
         Update: {
           created_at?: string | null;
+          id?: string;
           level?: string | null;
           notes?: string | null;
           service_id?: number;
+          updated_at?: string | null;
           user_id?: string;
         };
         Relationships: [
@@ -996,6 +1026,7 @@ export type Database = {
       get_category_page_data: { Args: { p_url_path: string }; Returns: Json };
       is_admin: { Args: never; Returns: boolean };
       my_role: { Args: never; Returns: number };
+      reset_prod_sequences: { Args: never; Returns: string };
     };
     Enums: {
       [_ in never]: never;
