@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { unzipSync } from "fflate";
 import type { IDBPDatabase } from "idb";
 import {
+  ROLE_SYNCED_TABLES,
   SEARCH_LOOKUP_TABLES,
   STORE,
   SYNC_COLUMNS,
@@ -145,43 +146,34 @@ const writeRowsToStore = async ({
   await tx.done;
 };
 
-export const syncTableForRole = async ({
-  supabase,
-  db,
-  table,
-  roleId,
-  changedIds,
-  changedCategoryMeta,
-}: SyncTableConfig & { roleId: number }): Promise<void> => {
-  const highWatermark = await fetchTableWatermark(supabase, table);
-  if (!highWatermark) return;
+export const loadStaticZipSeedsForRole = async (
+  db: IDBPDatabase<RSP_IDB>,
+  origin: string,
+  roleId: number,
+  accessToken: string,
+) => {
+  const zipRes = await fetch(`${origin}/api/sync/${roleId}`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  if (!zipRes.ok) return false;
+  const unzipped = unzipSync(new Uint8Array(await zipRes.arrayBuffer()));
+  const txs: Promise<void>[] = [];
+  for (const table of ROLE_SYNCED_TABLES) {
+    const records = parseCSVTable<RSP_IDB[SyncTable]["value"]>(unzipped, table);
+    if (records.length === 0) continue;
 
-  let from = 0;
-  while (true) {
-    const { data, error } = await supabase
-      .from(table)
-      .select(SYNC_COLUMNS[table])
-      .contains("allowed_roles", [roleId])
-      .lte("updated_at", highWatermark)
-      .order("updated_at", { ascending: true })
-      .order("id", { ascending: true })
-      .range(from, from + SYNC_PAGE_SIZE);
-
-    if (error) throw new Error(`${table} role-sync failed: ${error.message}`);
-    if (!data?.length) break;
-
-    const rows = data as unknown as SyncRow[];
-    await writeRowsToStore({
-      db,
-      table,
-      rows,
-      changedIds,
-      changedCategoryMeta,
-    });
-
-    if (rows.length < SYNC_PAGE_SIZE) break;
-    from += SYNC_PAGE_SIZE;
+    const tx = db.transaction(table, "readwrite");
+    for (const record of records) {
+      tx.store.put(record);
+    }
+    txs.push(tx.done);
   }
+
+  await Promise.all(txs);
+  return true;
 };
 
 export const syncTable = async ({

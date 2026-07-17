@@ -2,7 +2,6 @@ import type { IDBPDatabase } from "idb";
 import {
   INVALIDATE_ALL_THRESHOLD,
   META_KEY,
-  ROLE_SYNCED_TABLES,
   STORE,
   SYNC_CONCURRENCY,
   WORKER_MSG,
@@ -15,8 +14,8 @@ import {
   type ChangedCategoryMeta,
   getTablesToSync,
   loadStaticZipSeeds,
+  loadStaticZipSeedsForRole,
   syncTable,
-  syncTableForRole,
 } from "./utils";
 
 type WorkerMessage = {
@@ -84,6 +83,13 @@ const toSyncResult = async (
   };
 };
 
+const SEED_LOAD_SUCCESS_PAYLOAD = {
+  type: WORKER_MSG.SUCCESS,
+  changedCategoryPaths: ["*"],
+  changedIds: {},
+  rebuildSearchIndex: true,
+};
+
 self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
   const { type, accessToken, roleId, isPublic } = event.data;
   if (type !== WORKER_MSG.START_SYNC) return;
@@ -101,6 +107,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
 
     // Optimize first-time sync by loading pre-compiled static ZIP database seed
     const idbSyncMetaCount = await db.count(STORE.SYNC_META);
+
     if (idbSyncMetaCount === 0) {
       try {
         postMessage({
@@ -110,12 +117,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
 
         const loaded = await loadStaticZipSeeds(db, self.location.origin);
         if (loaded) {
-          postMessage({
-            type: WORKER_MSG.SUCCESS,
-            changedCategoryPaths: ["*"],
-            changedIds: {},
-            rebuildSearchIndex: true,
-          });
+          postMessage(SEED_LOAD_SUCCESS_PAYLOAD);
         }
       } catch (zipErr) {
         // Fallback silently to normal Supabase sync if static files fail
@@ -149,41 +151,43 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       await db.put(STORE.ROLE_META, nextRole, META_KEY.SYNC_ROLE);
     }
 
-    const commonSyncTableConfig = {
-      supabase,
-      db,
-      changedIds,
-      changedCategoryMeta,
-    };
-
     if (
       (!hasStoredRole || storedRole !== nextRole) &&
       !isPublic &&
       roleId !== undefined
     ) {
-      const syncLookup = Object.fromEntries(
-        tablesToSync.map((t) => [t.table, t]),
-      );
-      await Promise.all(
-        ROLE_SYNCED_TABLES.map((table) =>
-          limit(() =>
-            syncTableForRole({
-              ...commonSyncTableConfig,
-              table,
-              roleId,
-              lastSync: syncLookup[table]?.lastSync,
-            }),
-          ),
-        ),
-      );
-      await db.put(STORE.ROLE_META, nextRole, META_KEY.SYNC_ROLE);
+      try {
+        postMessage({
+          type: WORKER_MSG.PROGRESS,
+          message: "seeding database for role...",
+        });
+        const loaded = await loadStaticZipSeedsForRole(
+          db,
+          self.location.origin,
+          roleId,
+          accessToken,
+        );
+        if (loaded) {
+          postMessage(SEED_LOAD_SUCCESS_PAYLOAD);
+          await db.put(STORE.ROLE_META, nextRole, META_KEY.SYNC_ROLE);
+        }
+      } catch (zipErr) {
+        // Fallback silently to normal Supabase sync if static files fail
+        console.error(
+          "Static sync ZIP seed for role failed, falling back to dynamic Supabase sync:",
+          zipErr,
+        );
+      }
     }
 
     const lookupTableChanges = await Promise.all(
       tablesToSync.map(({ table, idbLastSync, lastSync }) =>
         limit(() =>
           syncTable({
-            ...commonSyncTableConfig,
+            supabase,
+            db,
+            changedIds,
+            changedCategoryMeta,
             table,
             idbLastSync,
             lastSync,
