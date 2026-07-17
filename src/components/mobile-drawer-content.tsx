@@ -28,7 +28,6 @@ export const MobileDrawerContent = ({ setOpen }: MobileDrawerContentProps) => {
     const supabase = getSupabaseClient();
     await supabase.auth.signOut();
     setOpen(false);
-    router.refresh();
   };
 
   const handleNavigate = (path: string) => {
