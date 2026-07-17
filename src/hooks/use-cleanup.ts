@@ -1,7 +1,8 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useSession } from "@/components/providers";
-import { WORKER_MSG } from "@/constants";
-import { terminateSearchWorker } from "@/hooks/use-search";
+import { QUERY_KEY, WORKER_MSG } from "@/constants";
+import { rebuildSearchIndex, terminateSearchWorker } from "@/hooks/use-search";
 
 const toRoleId = (value: unknown): number | undefined =>
   typeof value === "number" && Number.isInteger(value) ? value : undefined;
@@ -9,6 +10,7 @@ const toRoleId = (value: unknown): number | undefined =>
 export const useCleanup = () => {
   const { session, isLoading } = useSession();
   const role = toRoleId(session?.user.app_metadata["role_id"]);
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (isLoading) return;
@@ -18,6 +20,13 @@ export const useCleanup = () => {
     worker.onmessage = (event: MessageEvent) => {
       if (event.data.type === WORKER_MSG.SUCCESS) {
         terminateSearchWorker();
+        queryClient.invalidateQueries({
+          queryKey: [QUERY_KEY.ALL_CATEGORIES],
+        });
+        queryClient.invalidateQueries({
+          queryKey: [QUERY_KEY.CATEGORY_PAGE],
+        });
+        rebuildSearchIndex(queryClient);
       }
       worker.terminate();
     };
@@ -26,5 +35,5 @@ export const useCleanup = () => {
     };
 
     return () => worker.terminate();
-  }, [isLoading, role]);
+  }, [isLoading, role, queryClient]);
 };

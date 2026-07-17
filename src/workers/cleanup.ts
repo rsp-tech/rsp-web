@@ -71,6 +71,10 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
     await Promise.all(TABLES.map((t) => cleanupTable(db, t, role)));
     await db.put(STORE.ROLE_META, nextRole, META_KEY.CLEANUP_ROLE);
 
+    if (!nextRole) {
+      await db.put(STORE.ROLE_META, null, META_KEY.SYNC_ROLE);
+    }
+
     postMessage({ type: WORKER_MSG.SUCCESS });
   } catch (err) {
     postMessage({

@@ -1,5 +1,6 @@
+import type { QueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect } from "react";
-import { STORE, WORKER_MSG } from "@/constants";
+import { QUERY_KEY, STORE, WORKER_MSG } from "@/constants";
 import type {
   RecordingSearchFilters,
   SearchableTable,
@@ -32,7 +33,7 @@ const resolveReadyWaiters = () => {
   while (readyWaiters.length > 0) readyWaiters.shift()?.resolve();
 };
 
-export const getWorker = (): Worker => {
+const getWorker = (): Worker => {
   if (workerInstance) return workerInstance;
 
   workerInstance = new Worker(new URL("@/workers/search.ts", import.meta.url), {
@@ -67,6 +68,19 @@ export const getWorker = (): Worker => {
 
   workerInstance.postMessage({ type: WORKER_MSG.BUILD_INDEX });
   return workerInstance;
+};
+
+export const rebuildSearchIndex = (queryClient: QueryClient) => {
+  getWorker().postMessage({ type: WORKER_MSG.BUILD_INDEX });
+  queryClient.invalidateQueries({
+    queryKey: [QUERY_KEY.SPEAKERS],
+  });
+  queryClient.invalidateQueries({
+    queryKey: [QUERY_KEY.LANGUAGES],
+  });
+  queryClient.invalidateQueries({
+    queryKey: [QUERY_KEY.VENUES],
+  });
 };
 
 export const terminateSearchWorker = () => {

@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { useSession } from "@/components/providers";
 import { QUERY_KEY, SYNC_INTERVAL, WORKER_MSG } from "@/constants";
 import { useOnlineStatus } from "@/hooks/use-online-status";
-import { getWorker, notifySearchWorker } from "@/hooks/use-search";
+import { notifySearchWorker, rebuildSearchIndex } from "@/hooks/use-search";
 import type { SearchableTable, SyncResult } from "@/types";
 
 interface WorkerConfig {
@@ -61,16 +61,7 @@ const runSync = ({
         }
 
         if (result.rebuildSearchIndex) {
-          getWorker().postMessage({ type: WORKER_MSG.BUILD_INDEX });
-          queryClient.invalidateQueries({
-            queryKey: [QUERY_KEY.SPEAKERS],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [QUERY_KEY.LANGUAGES],
-          });
-          queryClient.invalidateQueries({
-            queryKey: [QUERY_KEY.VENUES],
-          });
+          rebuildSearchIndex(queryClient);
         } else {
           for (const table of [
             "recordings",

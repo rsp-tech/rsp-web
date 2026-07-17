@@ -146,7 +146,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
     const nextRole = roleId ?? null;
     const storedRole = await db.get(STORE.ROLE_META, META_KEY.SYNC_ROLE);
 
-    const hasStoredRole = storedRole !== undefined;
+    const hasStoredRole = !!storedRole;
     if (!hasStoredRole) {
       await db.put(STORE.ROLE_META, nextRole, META_KEY.SYNC_ROLE);
     }
@@ -178,6 +178,8 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
           zipErr,
         );
       }
+    } else if (isPublic) {
+      await db.put(STORE.ROLE_META, null, META_KEY.SYNC_ROLE);
     }
 
     const lookupTableChanges = await Promise.all(
