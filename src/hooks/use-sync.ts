@@ -10,6 +10,7 @@ import { useSession } from "@/components/providers";
 import { QUERY_KEY, SYNC_INTERVAL, WORKER_MSG } from "@/constants";
 import { useOnlineStatus } from "@/hooks/use-online-status";
 import { notifySearchWorker, rebuildSearchIndex } from "@/hooks/use-search";
+import { toRoleId } from "@/lib/utils";
 import type { SearchableTable, SyncResult } from "@/types";
 
 interface WorkerConfig {
@@ -89,9 +90,6 @@ const runSync = ({
       reject(e);
     };
   });
-
-const toRoleId = (value: unknown): number | undefined =>
-  typeof value === "number" && Number.isInteger(value) ? value : undefined;
 
 export const useSync = () => {
   const { session, isLoading } = useSession();

@@ -54,3 +54,6 @@ export const pathToUrlPath = (path: string | string[]): string => {
   const segments = Array.isArray(path) ? path : path.split("/").filter(Boolean);
   return segments.join(".").replace(/-/g, "_");
 };
+
+export const toRoleId = (value: unknown): number | undefined =>
+  typeof value === "number" && Number.isInteger(value) ? value : undefined;

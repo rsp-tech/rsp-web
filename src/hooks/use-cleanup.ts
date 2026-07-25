@@ -3,9 +3,7 @@ import { useEffect } from "react";
 import { useSession } from "@/components/providers";
 import { QUERY_KEY, WORKER_MSG } from "@/constants";
 import { rebuildSearchIndex, terminateSearchWorker } from "@/hooks/use-search";
-
-const toRoleId = (value: unknown): number | undefined =>
-  typeof value === "number" && Number.isInteger(value) ? value : undefined;
+import { toRoleId } from "@/lib/utils";
 
 export const useCleanup = () => {
   const { session, isLoading } = useSession();

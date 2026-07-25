@@ -7,6 +7,7 @@ import { useSession } from "@/components/providers";
 import { QUERY_KEY } from "@/constants";
 import { useOnlineStatus } from "@/hooks/use-online-status";
 import { getSupabaseClient } from "@/lib/supabase-browser";
+import { toRoleId } from "@/lib/utils";
 
 export const useNotificationListener = () => {
   const { session, isLoading: sessionLoading } = useSession();
@@ -14,8 +15,11 @@ export const useNotificationListener = () => {
   const userId = session?.user?.id;
   const isOnline = useOnlineStatus();
 
+  const roleId = toRoleId(session?.user?.app_metadata?.["role_id"]);
+  const isAdmin = roleId === 1;
+
   useEffect(() => {
-    if (sessionLoading || !isOnline) return;
+    if (sessionLoading || !isOnline || !isAdmin) return;
 
     // Request permission for browser notifications on first user interaction
     const requestPermissionOnInteraction = () => {
@@ -103,5 +107,5 @@ export const useNotificationListener = () => {
       window.removeEventListener("keydown", requestPermissionOnInteraction);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [userId, sessionLoading, queryClient, isOnline]);
+  }, [userId, sessionLoading, queryClient, isOnline, isAdmin]);
 };
