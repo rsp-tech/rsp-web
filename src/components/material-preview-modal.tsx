@@ -53,7 +53,6 @@ export function getMaterialDirectUrl(mat: Material): string {
 
 export const MaterialPreviewModal = () => {
   const { material, closePreview } = useMaterialPreview();
-
   const isMobile = useIsMobile();
   const [iframeLoading, setIframeLoading] = useState(true);
 
@@ -82,7 +81,7 @@ export const MaterialPreviewModal = () => {
   return (
     <Dialog open={!!material} onOpenChange={(open) => !open && closePreview()}>
       <DialogContent
-        className="p-0 overflow-hidden border border-border bg-background shadow-2xl"
+        className="p-0 overflow-hidden border border-border bg-background shadow-md"
         showCloseButton={false}
         style={{
           maxWidth: isMobile ? "calc(100vw - 1rem)" : "56rem",
@@ -90,9 +89,10 @@ export const MaterialPreviewModal = () => {
           gap: 0,
         }}
       >
-        <DialogHeader className="flex justify-between items-center p-3 sm:px-4 border-b border-border bg-muted/40">
+        <DialogHeader className="flex justify-between items-center p-3 sm:px-4 border-b border-border bg-muted">
           <DialogTitle
-            className="font-bold text-sm sm:text-base truncate max-w-[60%] sm:max-w-[70%] text-foreground"
+            className="font-bold text-sm truncate"
+            style={{ maxWidth: isMobile ? "60%" : "70%" }}
             title={material.name}
           >
             {material.name}
@@ -131,9 +131,12 @@ export const MaterialPreviewModal = () => {
           </div>
         </DialogHeader>
 
-        <div className="relative w-full h-[75vh] sm:h-[80vh] bg-muted/20 flex items-center justify-center">
+        <div
+          className="relative w-full bg-muted flex items-center justify-center"
+          style={{ height: isMobile ? "75vh" : "80vh" }}
+        >
           {iframeLoading && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/80 z-10">
+            <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-background/50 backdrop-blur-xs z-10">
               <Loader2 className="w-8 h-8 text-primary animate-spin" />
               <span className="text-xs text-muted-foreground font-medium">
                 Loading material preview...
@@ -143,7 +146,7 @@ export const MaterialPreviewModal = () => {
           <iframe
             src={iframeSrc}
             title={material.name}
-            className="w-full h-full border-0 z-0"
+            className="absolute inset-0 w-full h-full z-50 bg-transparent"
             onLoad={() => setIframeLoading(false)}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
