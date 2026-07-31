@@ -21,6 +21,14 @@ const VideoPlayer = dynamic(
   { ssr: false },
 );
 
+const MaterialPreviewModal = dynamic(
+  () =>
+    import("@/components/material-preview-modal").then(
+      (mod) => mod.MaterialPreviewModal,
+    ),
+  { ssr: false },
+);
+
 const SyncTrigger = dynamic(
   () => import("@/components/sync-trigger").then((mod) => mod.SyncTrigger),
   { ssr: false },
@@ -39,6 +47,7 @@ export function LayoutInitializers() {
       <Toaster position="bottom-right" />
       <ProgressBar />
       <VideoPlayer />
+      <MaterialPreviewModal />
     </>
   );
 }
