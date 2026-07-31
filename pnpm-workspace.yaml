@@ -2,4 +2,6 @@ ignoredBuiltDependencies:
   - sharp
   - unrs-resolver
 onlyBuiltDependencies:
+  - '@parcel/watcher'
+  - core-js
   - msw

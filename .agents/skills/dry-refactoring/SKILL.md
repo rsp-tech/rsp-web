@@ -12,7 +12,7 @@ Guided workflow to eliminate copy-paste duplication in source code. Use after ru
 First, run jscpd to identify duplications:
 
 ```bash
-npx jscpd --reporters ai <path>
+pnpm.cmd exec jscpd --reporters ai <path>
 ```
 
 See the **[jscpd](../jscpd/SKILL.md)** skill for full option reference.
