@@ -146,6 +146,26 @@ const writeRowsToStore = async ({
   await tx.done;
 };
 
+const writeUnzippedTablesToDb = async (
+  db: IDBPDatabase<RSP_IDB>,
+  unzipped: ReturnType<typeof unzipSync>,
+  tables: readonly SyncTable[],
+) => {
+  const txs: Promise<void>[] = [];
+  for (const table of tables) {
+    const records = parseCSVTable<RSP_IDB[SyncTable]["value"]>(unzipped, table);
+    if (records.length === 0) continue;
+
+    const tx = db.transaction(table, "readwrite");
+    for (const record of records) {
+      tx.store.put(record);
+    }
+    txs.push(tx.done);
+  }
+
+  await Promise.all(txs);
+};
+
 export const loadStaticZipSeedsForRole = async (
   db: IDBPDatabase<RSP_IDB>,
   origin: string,
@@ -160,19 +180,7 @@ export const loadStaticZipSeedsForRole = async (
   });
   if (!zipRes.ok) return false;
   const unzipped = unzipSync(new Uint8Array(await zipRes.arrayBuffer()));
-  const txs: Promise<void>[] = [];
-  for (const table of ROLE_SYNCED_TABLES) {
-    const records = parseCSVTable<RSP_IDB[SyncTable]["value"]>(unzipped, table);
-    if (records.length === 0) continue;
-
-    const tx = db.transaction(table, "readwrite");
-    for (const record of records) {
-      tx.store.put(record);
-    }
-    txs.push(tx.done);
-  }
-
-  await Promise.all(txs);
+  await writeUnzippedTablesToDb(db, unzipped, ROLE_SYNCED_TABLES);
   return true;
 };
 
@@ -257,21 +265,8 @@ export const loadStaticZipSeeds = async (
     new TextDecoder().decode(syncStateBytes),
   ) as Record<string, string>;
 
-  const txs: Promise<void>[] = [];
   const tables = Object.keys(SYNC_COLUMNS) as SyncTable[];
-
-  for (const table of tables) {
-    const records = parseCSVTable<RSP_IDB[SyncTable]["value"]>(unzipped, table);
-    if (records.length === 0) continue;
-
-    const tx = db.transaction(table, "readwrite");
-    for (const record of records) {
-      tx.store.put(record);
-    }
-    txs.push(tx.done);
-  }
-
-  await Promise.all(txs);
+  await writeUnzippedTablesToDb(db, unzipped, tables);
 
   // Write updated_at watermarks to sync_meta
   const syncMetaTx = db.transaction(STORE.SYNC_META, "readwrite");

@@ -1,0 +1,8 @@
+{
+  "ignore": [
+    "**/database.types.ts",
+    "**/node_modules/**",
+    "**/.next/**",
+    "**/pnpm-lock.yaml"
+  ]
+}
