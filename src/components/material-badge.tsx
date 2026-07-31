@@ -10,6 +10,12 @@ import {
   Presentation,
 } from "lucide-react";
 import { getMaterialDirectUrl } from "@/components/material-preview-modal";
+import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useMaterialPreview } from "@/hooks/use-material-preview";
 import { cn } from "@/lib/utils";
 import type { Material } from "@/types";
@@ -66,37 +72,53 @@ export function MaterialBadge({ mat, isHighlighted }: MaterialBadgeProps) {
   return (
     <div
       className={cn(
-        "inline-flex items-center gap-1 rounded-md text-xs font-semibold transition-all border group overflow-hidden",
+        "inline-flex items-center rounded-md border group overflow-hidden",
         isHighlighted
-          ? "bg-primary/25 text-primary border-primary ring-1 ring-primary"
-          : "bg-muted hover:bg-primary/10 border-border",
+          ? "border-primary bg-primary/20 ring-1 ring-primary"
+          : "border-border bg-muted hover:bg-primary/10",
       )}
     >
-      <button
-        type="button"
-        onClick={handlePreviewClick}
-        className="inline-flex items-center gap-1.5 px-2 py-1 text-left hover:text-primary transition-colors cursor-pointer"
-        title={`Preview ${name} in iframe modal`}
-      >
-        {getMaterialIcon()}
-        <span className="truncate max-w-[8.5rem]">{name}</span>
-        <Eye className="w-3 h-3 text-primary opacity-80 group-hover:opacity-100 shrink-0" />
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={handlePreviewClick}
+            className="font-semibold text-xs h-6 px-2 gap-1"
+          >
+            {getMaterialIcon()}
+            <span className="truncate" style={{ maxWidth: "8.5rem" }}>
+              {name}
+            </span>
+            <Eye className="w-3 h-3 text-primary shrink-0" />
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="top">
+          Preview &ldquo;{name}&rdquo; in iframe viewer
+        </TooltipContent>
+      </Tooltip>
 
-      <button
-        type="button"
-        onClick={handleDirectDownload}
-        className="px-1.5 py-1 text-muted-foreground hover:text-foreground hover:bg-accent/60 transition-colors border-l border-border/60 shrink-0 cursor-pointer"
-        title={
-          isLink ? "Open directly in new tab" : "Download / View file directly"
-        }
-      >
-        {isLink ? (
-          <ExternalLink className="w-3 h-3" />
-        ) : (
-          <FileDown className="w-3 h-3" />
-        )}
-      </button>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            onClick={handleDirectDownload}
+            className="h-6 w-6 p-0 border-border hover:bg-accent shrink-0"
+          >
+            {isLink ? (
+              <ExternalLink className="w-3 h-3 text-muted-foreground" />
+            ) : (
+              <FileDown className="w-3 h-3 text-muted-foreground" />
+            )}
+          </Button>
+        </TooltipTrigger>
+        <TooltipContent side="top">
+          {isLink ? `Open ${name} in new tab` : `Download ${name} directly`}
+        </TooltipContent>
+      </Tooltip>
     </div>
   );
 }
