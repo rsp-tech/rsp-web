@@ -12,6 +12,9 @@ export const NUMERIC_FIELDS = [
   "section_id",
   "entity_id",
   "order_ind",
+  "role_id",
+  "service_id",
+  "requested_role_id",
 ];
 
 export type CastValueType = number | boolean | number[] | string | null;
@@ -23,8 +26,20 @@ export const castValue = (
 ): CastValueType => {
   if (val === undefined || val === null) return null;
 
-  // Special case: redirects ID is a string path (e.g. "/some-path")
-  if (tableName === STORE.REDIRECTS && fieldName === "id") {
+  // Special case: string IDs for redirects and user tables
+  if (
+    (
+      [
+        STORE.REDIRECTS,
+        STORE.USERS,
+        STORE.USER_QUERIES,
+        STORE.QUERY_REPLIES,
+        STORE.USER_EDIT_REQUESTS,
+        STORE.USER_SERVICE_INTERESTS,
+      ] as string[]
+    ).includes(tableName) &&
+    fieldName === "id"
+  ) {
     return val;
   }
 
@@ -56,17 +71,19 @@ export const castValue = (
   return val;
 };
 
-export function parseCSVTable<T>(
+export const toCSVRows = (
   unzipped: Record<string, Uint8Array>,
   tableName: string,
-): T[] {
+): string[][] => {
   const fileBytes = unzipped[`${tableName}.csv`];
   if (!fileBytes) return [];
 
   const csvStr = new TextDecoder().decode(fileBytes);
   const parsed = Papa.parse<string[]>(csvStr, { skipEmptyLines: "greedy" });
-  const rows = parsed.data;
+  return parsed.data;
+};
 
+export const parseCSVTable = <T>(rows: string[][], tableName: string): T[] => {
   if (!rows || rows.length <= 1) return [];
 
   const header = rows[0].map((h) => h.trim());
@@ -91,4 +108,4 @@ export function parseCSVTable<T>(
   }
 
   return results;
-}
+};

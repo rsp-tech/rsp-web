@@ -17,9 +17,8 @@ export const AUDIO_BASE_URL = process.env["NEXT_PUBLIC_AUDIO_BASE_URL"];
 
 // IndexedDB
 export const DB_NAME = "rsp";
-export const DB_VERSION = 1;
+export const DB_VERSION = 2;
 
-// Store names
 export const STORE = {
   CATEGORIES: "categories",
   RECORDINGS: "recordings",
@@ -38,6 +37,11 @@ export const STORE = {
   SYNC_META: "sync_meta",
   ROLE_META: "role_meta",
   CACHE_LEDGER: "cache_ledger",
+  USERS: "users",
+  USER_EDIT_REQUESTS: "user_edit_requests",
+  USER_SERVICE_INTERESTS: "user_service_interests",
+  USER_QUERIES: "user_queries",
+  QUERY_REPLIES: "query_replies",
 } as const;
 
 export const ROLE_SYNCED_TABLES = [
@@ -162,6 +166,79 @@ export const SYNC_COLUMNS = {
     order_ind,
     section_id
   `,
+
+  users: `
+    id,
+    email,
+    name,
+    avatar_url,
+    ashram,
+    temple,
+    purpose,
+    authority_name,
+    authority_relationship,
+    authority_email,
+    status,
+    role_id,
+    phone,
+    created_at,
+    updated_at
+  `,
+
+  user_edit_requests: `
+    id,
+    user_id,
+    requested_role_id,
+    name,
+    ashram,
+    temple,
+    purpose,
+    authority_name,
+    authority_relationship,
+    authority_email,
+    phone,
+    status,
+    reason,
+    review_comment,
+    requested_at,
+    reviewed_at,
+    reviewed_by,
+    actor_type,
+    actor_id,
+    created_at,
+    updated_at
+  `,
+
+  user_service_interests: `
+    id,
+    user_id,
+    service_id,
+    level,
+    notes,
+    created_at,
+    updated_at
+  `,
+
+  user_queries: `
+    id,
+    user_id,
+    guest_email,
+    guest_name,
+    subject,
+    message,
+    category,
+    status,
+    created_at,
+    updated_at
+  `,
+
+  query_replies: `
+    id,
+    query_id,
+    user_id,
+    message,
+    updated_at
+  `,
 } as const;
 
 // Index names
@@ -171,6 +248,7 @@ export const INDEX = {
   BY_CATEGORY_ID: "by-category_id",
   BY_RECORDING_ID: "by-recording_id",
   BY_SECTION_ID: "by-section_id",
+  BY_QUERY_ID: "by-query_id",
 } as const;
 
 // Metadata keys
@@ -203,13 +281,10 @@ export const WORKER_MSG = {
 export const QUERY_KEY = {
   CATEGORY_PAGE: "category-page",
   ALL_CATEGORIES: "categories",
-  NOTIFICATIONS: "notifications",
   SYNC: "sync",
   SPEAKERS: "speakers",
   LANGUAGES: "languages",
   VENUES: "venues",
-  USER_PROFILE: "user-profile",
-  USER_PENDING_REQUEST: "user-pending-request",
   AUDIO_CACHE_LIST: "audio-cache-list",
 } as const;
 
