@@ -3,7 +3,7 @@
 - [x] optimize offline
 - [x] Play youtube video in place
 - [x] analyze and fix supabase over connections
-- [ ] Move images to drive lh3.googleusercontent.com/d/
+- [-] Move images to drive lh3.googleusercontent.com/d/
   - skipped as 429 rate limited
 - [x] cached route for sync table
 - [x] optimize split chunks
