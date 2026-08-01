@@ -3,7 +3,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { ExternalLink, MessageSquare, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Loading } from "@/components/loading";
 import { useSession } from "@/components/providers";
@@ -17,9 +17,10 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { QUERY_KEY, STORE } from "@/constants";
+import { STORE } from "@/constants";
 import { useUserQueriesAndReplies } from "@/hooks/use-user-queries-and-replies";
 import { getDB } from "@/lib/idb";
+import { sendRealtimeBroadcast } from "@/lib/realtime-utils";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { QueryFilters } from "./_components/query-filters";
 import { QueryList } from "./_components/query-list";
@@ -35,22 +36,6 @@ export default function UserQueriesPage() {
   );
   const queries = qData?.queries || [];
   const replies = qData?.replies || {};
-
-  // Realtime subscription - active only when on this page
-  useEffect(() => {
-    if (!session?.user?.id) return;
-    const supabase = getSupabaseClient();
-    const channel = supabase.channel(`user-channel-${session.user.id}`);
-    channel
-      .on("broadcast", { event: "sync" }, () => {
-        queryClient.invalidateQueries({ queryKey: [QUERY_KEY.SYNC] });
-      })
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [session?.user?.id, queryClient]);
 
   // Search & Filter state
   const [searchTerm, setSearchTerm] = useState("");
@@ -99,24 +84,11 @@ export default function UserQueriesPage() {
         queryKey: [STORE.USER_QUERIES, session.user.id],
       });
 
-      // 3. Broadcast sync notification to the admin who last replied
-      const lastAdminReply = replies[queryId]?.findLast(
-        (r) => r.user_id !== session.user.id,
-      );
-      const adminId = lastAdminReply?.user_id;
-      if (adminId) {
-        const channel = supabase.channel(`user-channel-${adminId}`);
-        channel.subscribe(async (status) => {
-          if (status === "SUBSCRIBED") {
-            await channel.send({
-              type: "broadcast",
-              event: "sync",
-              payload: { table: "query_replies" },
-            });
-            supabase.removeChannel(channel);
-          }
-        });
-      }
+      // 3. Broadcast sync notification to the admin channel
+
+      sendRealtimeBroadcast("admin-channel", "sync", {
+        tables: [STORE.QUERY_REPLIES, STORE.USER_QUERIES],
+      });
 
       toast.success("Reply sent successfully!");
 

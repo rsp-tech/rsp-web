@@ -6,6 +6,7 @@ import { STORE } from "@/constants";
 import { useUserPendingRequestIdb } from "@/hooks/use-user-pending-request-idb";
 import { useUserProfileIdb } from "@/hooks/use-user-profile-idb";
 import { getDB } from "@/lib/idb";
+import { sendRealtimeBroadcast } from "@/lib/realtime-utils";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 
 export const useUserProfile = () => {
@@ -79,6 +80,9 @@ export const useSubmitProfileUpdate = () => {
       if (session?.user?.id) {
         queryClient.invalidateQueries({
           queryKey: [STORE.USER_EDIT_REQUESTS, session.user.id],
+        });
+        sendRealtimeBroadcast("admin-channel", "sync", {
+          tables: [STORE.USER_EDIT_REQUESTS],
         });
       }
     },

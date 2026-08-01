@@ -18,6 +18,7 @@ interface WorkerConfig {
   roleId?: number;
   isPublic?: boolean;
   userId?: string;
+  targetTables?: string[];
 }
 
 type SyncWorkerMessage =
@@ -25,7 +26,7 @@ type SyncWorkerMessage =
   | { type: typeof WORKER_MSG.ERROR; message: string }
   | { type: typeof WORKER_MSG.PROGRESS; message: string };
 
-const runSync = ({
+export const runSync = ({
   queryClient,
   ...config
 }: WorkerConfig & {
@@ -62,7 +63,9 @@ const runSync = ({
             const hasInterests = changedTables.includes(
               STORE.USER_SERVICE_INTERESTS,
             );
-            const hasRequests = changedTables.includes(STORE.USER_EDIT_REQUESTS);
+            const hasRequests = changedTables.includes(
+              STORE.USER_EDIT_REQUESTS,
+            );
             const hasUsers = changedTables.includes(STORE.USERS);
             const hasRecordings = changedTables.includes(STORE.RECORDINGS);
 

@@ -16,6 +16,7 @@ import {
   getTablesToSync,
   loadStaticZipSeeds,
   loadStaticZipSeedsForRole,
+  type SyncTable,
   syncTable,
 } from "./utils";
 
@@ -26,6 +27,7 @@ type WorkerMessage = {
   accessToken: string;
   roleId?: number;
   isPublic?: boolean;
+  targetTables?: SyncTable[];
 };
 
 const toSyncResult = async (
@@ -96,7 +98,7 @@ const SEED_LOAD_SUCCESS_PAYLOAD = {
 };
 
 self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
-  const { type, accessToken, roleId, isPublic } = event.data;
+  const { type, accessToken, roleId, isPublic, targetTables } = event.data;
   if (type !== WORKER_MSG.START_SYNC) return;
 
   try {
@@ -133,7 +135,18 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       }
     }
 
-    const tablesToSync = await getTablesToSync(db, self.location.origin);
+    const tablesToSync = targetTables?.length
+      ? await Promise.all(
+          targetTables.map(async (table) => {
+            const idbMeta = await db.get(STORE.SYNC_META, table);
+            return {
+              table,
+              lastSync: undefined,
+              idbLastSync: idbMeta?.updated_at,
+            };
+          }),
+        )
+      : await getTablesToSync(db, self.location.origin);
 
     const limit = createLimiter(SYNC_CONCURRENCY);
     const changedCategoryMeta: ChangedCategoryMeta = {

@@ -28,6 +28,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { QUERY_CATEGORIES, STORE } from "@/constants";
 import { getDB } from "@/lib/idb";
+import { sendRealtimeBroadcast } from "@/lib/realtime-utils";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { getUserDisplayName } from "@/lib/utils";
 
@@ -82,6 +83,11 @@ export function ContactUsClient() {
         .single();
 
       if (error) throw error;
+
+      // Broadcast sync notification to the admin channel (guest queries should also notify admins)
+      sendRealtimeBroadcast("admin-channel", "sync", {
+        tables: [STORE.USER_QUERIES],
+      });
 
       if (session?.user?.id && data) {
         const db = await getDB();
