@@ -10,7 +10,7 @@
 
 # Clean up
 
-- reuse recording components
+- [x] reuse recording components
 
 # Feature Parity
 
