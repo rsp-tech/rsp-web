@@ -1,3 +1,6 @@
+import { unstable_cache } from "next/cache";
+import Papa from "papaparse";
+
 const BACKUP_TOKEN = process.env["BACKUP_TOKEN"];
 const SYNC_ENDPOINT = process.env["SYNC_ENDPOINT"];
 
@@ -44,3 +47,26 @@ export const fetchBackupAsset = async (targetResource: string) => {
     headers,
   });
 };
+
+// Cached function to load GitHub CSV backups (1 hour revalidation)
+export const getCachedGitHubCSV = unstable_cache(
+  async (table: string): Promise<string[][]> => {
+    const url = `https://raw.githubusercontent.com/rsp-tech/rsp-supa-backup/refs/heads/main/supabase-backup/${table}.csv`;
+    const res = await fetch(url, {
+      headers: {
+        Authorization: `Bearer ${BACKUP_TOKEN}`,
+      },
+    });
+    if (!res.ok) {
+      console.error(`Failed to fetch CSV for ${table}:`, res.statusText);
+      return [];
+    }
+    const csvText = await res.text();
+    const parsed = Papa.parse<string[]>(csvText, {
+      skipEmptyLines: true,
+    });
+    return parsed.data;
+  },
+  ["csv-backup"],
+  { revalidate: 14400 },
+);

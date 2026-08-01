@@ -2,6 +2,7 @@ import type { IDBPDatabase } from "idb";
 import {
   INVALIDATE_ALL_THRESHOLD,
   META_KEY,
+  SEARCH_LOOKUP_TABLES,
   STORE,
   SYNC_CONCURRENCY,
   WORKER_MSG,
@@ -31,8 +32,11 @@ const toSyncResult = async (
   db: IDBPDatabase<RSP_IDB>,
   changedCategoryMeta: ChangedCategoryMeta,
   changedIds: SyncChangedIds,
-  rebuildSearchIndex: boolean,
+  changedTables: string[],
 ): Promise<SyncResult> => {
+  const rebuildSearchIndex = changedTables.some((table) =>
+    (SEARCH_LOOKUP_TABLES as readonly string[]).includes(table),
+  );
   const {
     changedCategories,
     changedRecordings,
@@ -79,6 +83,7 @@ const toSyncResult = async (
       categories: Array.from(new Set(changedIds.categories ?? [])),
       materials: Array.from(new Set(changedIds.materials ?? [])),
     },
+    changedTables,
     rebuildSearchIndex,
   };
 };
@@ -182,21 +187,23 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       await db.put(STORE.ROLE_META, null, META_KEY.SYNC_ROLE);
     }
 
-    const lookupTableChanges = await Promise.all(
-      tablesToSync.map(({ table, idbLastSync, lastSync }) =>
-        limit(() =>
-          syncTable({
-            supabase,
-            db,
-            changedIds,
-            changedCategoryMeta,
-            table,
-            idbLastSync,
-            lastSync,
-          }),
+    const changedTables = (
+      await Promise.all(
+        tablesToSync.map(({ table, idbLastSync, lastSync }) =>
+          limit(() =>
+            syncTable({
+              supabase,
+              db,
+              changedIds,
+              changedCategoryMeta,
+              table,
+              idbLastSync,
+              lastSync,
+            }),
+          ),
         ),
-      ),
-    );
+      )
+    ).filter((table): table is string => Boolean(table));
 
     // Sync browser caches with IndexedDB STORE.CACHE_LEDGER
     if (typeof self.caches !== "undefined") {
@@ -261,7 +268,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
         db,
         changedCategoryMeta,
         changedIds,
-        lookupTableChanges.some(Boolean),
+        changedTables,
       )),
     });
   } catch (err) {

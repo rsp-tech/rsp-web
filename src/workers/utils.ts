@@ -3,14 +3,13 @@ import { unzipSync } from "fflate";
 import type { IDBPDatabase } from "idb";
 import {
   ROLE_SYNCED_TABLES,
-  SEARCH_LOOKUP_TABLES,
   STORE,
   SYNC_COLUMNS,
   SYNC_PAGE_SIZE,
 } from "@/constants";
 import type { Database } from "@/database.types";
 import type { RSP_IDB } from "@/lib/idb";
-import { parseCSVTable } from "@/lib/sync-utils";
+import { parseCSVTable, toCSVRows } from "@/lib/sync-utils";
 import type { SyncChangedIds } from "@/types";
 
 type SupabaseProdClient = SupabaseClient<Database, "prod", "prod">;
@@ -155,7 +154,10 @@ const writeUnzippedTablesToDb = async (
 ) => {
   const txs: Promise<void>[] = [];
   for (const table of tables) {
-    const records = parseCSVTable<RSP_IDB[SyncTable]["value"]>(unzipped, table);
+    const records = parseCSVTable<RSP_IDB[SyncTable]["value"]>(
+      toCSVRows(unzipped, table),
+      table,
+    );
     if (records.length === 0) continue;
 
     const tx = db.transaction(table, "readwrite");
@@ -183,6 +185,32 @@ export const loadStaticZipSeedsForRole = async (
   if (!zipRes.ok) return false;
   const unzipped = unzipSync(new Uint8Array(await zipRes.arrayBuffer()));
   await writeUnzippedTablesToDb(db, unzipped, ROLE_SYNCED_TABLES);
+
+  // Fetch user-specific tables from the new JSON endpoint and write to IndexedDB
+  const userRes = await fetch(`${origin}/api/sync/user`, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+  });
+  if (!userRes.ok) return false;
+  const payload = await userRes.json();
+  const txs: Promise<void>[] = [];
+
+  for (const [table, rows] of Object.entries(
+    payload as Record<string, string[][]>,
+  )) {
+    if (!rows?.length) continue;
+
+    const records = parseCSVTable<RSP_IDB[SyncTable]["value"]>(rows, table);
+    const tx = db.transaction(table as keyof RSP_IDB, "readwrite");
+    for (const record of records) {
+      tx.store.put(record);
+    }
+    txs.push(tx.done);
+  }
+  await Promise.all(txs);
+
   return true;
 };
 
@@ -194,7 +222,7 @@ export const syncTable = async ({
   idbLastSync,
   lastSync,
   changedCategoryMeta,
-}: SyncTableConfig): Promise<boolean> => {
+}: SyncTableConfig): Promise<string | boolean> => {
   const highWatermark =
     lastSync || (await fetchTableWatermark(supabase, table));
 
@@ -241,12 +269,7 @@ export const syncTable = async ({
 
   await db.put(STORE.SYNC_META, { id: table, updated_at: highWatermark });
 
-  return (
-    changedRows > 0 &&
-    SEARCH_LOOKUP_TABLES.includes(
-      table as (typeof SEARCH_LOOKUP_TABLES)[number],
-    )
-  );
+  return changedRows > 0 ? table : false;
 };
 
 export const loadStaticZipSeeds = async (
