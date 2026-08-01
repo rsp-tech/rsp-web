@@ -18,7 +18,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { QUERY_KEY, STORE } from "@/constants";
-import { useUserQueriesAndReplies } from "@/hooks/use-queries-idb";
+import { useUserQueriesAndReplies } from "@/hooks/use-user-queries-and-replies";
 import { getDB } from "@/lib/idb";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { QueryFilters } from "./_components/query-filters";

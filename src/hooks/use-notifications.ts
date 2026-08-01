@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/components/providers";
-import { STORE } from "@/constants";
+import { LOCAL_STORAGE, STORE } from "@/constants";
 import { getDB } from "@/lib/idb";
 
 export interface AppNotification {
@@ -13,7 +13,7 @@ export interface AppNotification {
   created_at: string;
 }
 
-const READ_IDS_KEY = "read-notif-ids";
+const READ_IDS_KEY = LOCAL_STORAGE.READ_NOTIFICATIONS;
 
 const getReadIds = (): string[] => {
   if (typeof window === "undefined") return [];

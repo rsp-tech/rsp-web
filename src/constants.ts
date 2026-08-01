@@ -255,6 +255,12 @@ export const INDEX = {
 export const META_KEY = {
   CLEANUP_ROLE: "cleanup_role",
   SYNC_ROLE: "sync_role",
+  CLEANUP_USER_ID: "cleanup_user_id",
+} as const;
+
+export const LOCAL_STORAGE = {
+  READ_NOTIFICATIONS: "read-notif-ids",
+  CLEANUP_USER_ID: "cleanup_user_id",
 } as const;
 
 // Worker message types

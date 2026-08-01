@@ -12,6 +12,14 @@ const TABLES: CleanupTable[] = [
   STORE.MATERIALS,
 ];
 
+const USER_SPECIFIC_TABLES: (keyof RSP_IDB)[] = [
+  STORE.USERS,
+  STORE.USER_EDIT_REQUESTS,
+  STORE.USER_SERVICE_INTERESTS,
+  STORE.USER_QUERIES,
+  STORE.QUERY_REPLIES,
+];
+
 const isAllowed = (
   allowedRoles: number[],
   roleId: number | undefined,
@@ -36,10 +44,11 @@ const cleanupTable = async (
 type WorkerMessage = {
   type: typeof WORKER_MSG.START_CLEANUP;
   role: number | undefined;
+  userId: string | null;
 };
 
 self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
-  const { type, role } = event.data;
+  const { type, role, userId } = event.data;
   if (type !== WORKER_MSG.START_CLEANUP) return;
 
   try {
@@ -53,29 +62,56 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
     }
 
     const nextRole = role ?? null;
+    const nextUserId = userId ?? null;
+
+    // 1. Get stored metadata
     const hasStoredRole =
       (await db.getKey(STORE.ROLE_META, META_KEY.CLEANUP_ROLE)) !== undefined;
     const storedRole = await db.get(STORE.ROLE_META, META_KEY.CLEANUP_ROLE);
 
-    if (!hasStoredRole) {
-      await db.put(STORE.ROLE_META, nextRole, META_KEY.CLEANUP_ROLE);
-      postMessage({ type: WORKER_MSG.SKIPPED, reason: "No previous role" });
+    const hasStoredUserId =
+      (await db.getKey(STORE.ROLE_META, META_KEY.CLEANUP_USER_ID)) !==
+      undefined;
+    const storedUserId = await db.get(
+      STORE.ROLE_META,
+      META_KEY.CLEANUP_USER_ID,
+    );
+
+    // Save initial state if not present (e.g. first run of database)
+    if (!hasStoredRole && !hasStoredUserId) {
+      await Promise.all([
+        db.put(STORE.ROLE_META, nextRole, META_KEY.CLEANUP_ROLE),
+        db.put(STORE.ROLE_META, nextUserId, META_KEY.CLEANUP_USER_ID),
+      ]);
+      postMessage({ type: WORKER_MSG.SKIPPED, reason: "No previous state" });
       return;
     }
 
-    if (storedRole === nextRole) {
-      postMessage({ type: WORKER_MSG.SKIPPED, reason: "Roles are same" });
-      return;
+    // 2. User shift cleanup (logout, login, or different user)
+    if (storedUserId !== nextUserId) {
+      await Promise.all(USER_SPECIFIC_TABLES.map((t) => db.clear(t)));
     }
 
-    await Promise.all(TABLES.map((t) => cleanupTable(db, t, role)));
-    await db.put(STORE.ROLE_META, nextRole, META_KEY.CLEANUP_ROLE);
+    // 3. Role-based cleanup (role changes)
+    if (storedRole !== nextRole) {
+      await Promise.all(TABLES.map((t) => cleanupTable(db, t, role)));
+    }
+
+    // 4. Update metadata
+    await Promise.all([
+      db.put(STORE.ROLE_META, nextRole, META_KEY.CLEANUP_ROLE),
+      db.put(STORE.ROLE_META, nextUserId, META_KEY.CLEANUP_USER_ID),
+    ]);
 
     if (!nextRole) {
       await db.put(STORE.ROLE_META, null, META_KEY.SYNC_ROLE);
     }
 
-    postMessage({ type: WORKER_MSG.SUCCESS });
+    postMessage({
+      type: WORKER_MSG.SUCCESS,
+      clearedUser: storedUserId !== nextUserId,
+      clearedRole: storedRole !== nextRole,
+    });
   } catch (err) {
     postMessage({
       type: WORKER_MSG.ERROR,

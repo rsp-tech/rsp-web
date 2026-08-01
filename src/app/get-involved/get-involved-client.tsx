@@ -9,7 +9,7 @@ import { Loading } from "@/components/loading";
 import { useSession } from "@/components/providers";
 import { Button } from "@/components/ui/button";
 import { STORE } from "@/constants";
-import { useUserServiceInterests } from "@/hooks/use-queries-idb";
+import { useUserServiceInterests } from "@/hooks/use-user-service-interests";
 import { getDB } from "@/lib/idb";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import type { Service, UserServiceInterest } from "@/types";

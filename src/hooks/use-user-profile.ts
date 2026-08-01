@@ -3,10 +3,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/components/providers";
 import { STORE } from "@/constants";
-import {
-  useUserPendingRequestIdb,
-  useUserProfileIdb,
-} from "@/hooks/use-queries-idb";
+import { useUserPendingRequestIdb } from "@/hooks/use-user-pending-request-idb";
+import { useUserProfileIdb } from "@/hooks/use-user-profile-idb";
 import { getDB } from "@/lib/idb";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 
