@@ -1,41 +1,16 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { OfflineIndicator } from "@/components/offline-indicator";
+import { ProgressBar } from "@/components/progress-bar";
+import { SyncTrigger } from "@/components/sync-trigger";
+import { Toaster } from "@/components/ui/sonner";
 
-// These are now safely deferred on the client side
-const Toaster = dynamic(
-  () => import("@/components/ui/sonner").then((mod) => mod.Toaster),
-  { ssr: false },
-);
-
-const OfflineIndicator = dynamic(
+const MediaPreviewModal = dynamic(
   () =>
-    import("@/components/offline-indicator").then(
-      (mod) => mod.OfflineIndicator,
+    import("@/components/media-preview-modal").then(
+      (mod) => mod.MediaPreviewModal,
     ),
-  { ssr: false },
-);
-
-const VideoPlayer = dynamic(
-  () => import("@/components/video-player").then((mod) => mod.VideoPlayer),
-  { ssr: false },
-);
-
-const MaterialPreviewModal = dynamic(
-  () =>
-    import("@/components/material-preview-modal").then(
-      (mod) => mod.MaterialPreviewModal,
-    ),
-  { ssr: false },
-);
-
-const SyncTrigger = dynamic(
-  () => import("@/components/sync-trigger").then((mod) => mod.SyncTrigger),
-  { ssr: false },
-);
-
-const ProgressBar = dynamic(
-  () => import("@/components/progress-bar").then((mod) => mod.ProgressBar),
   { ssr: false },
 );
 
@@ -46,8 +21,7 @@ export function LayoutInitializers() {
       <SyncTrigger />
       <Toaster position="bottom-right" />
       <ProgressBar />
-      <VideoPlayer />
-      <MaterialPreviewModal />
+      <MediaPreviewModal />
     </>
   );
 }

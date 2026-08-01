@@ -2,7 +2,6 @@
 
 import type { Session } from "@supabase/supabase-js";
 import { QueryClientProvider } from "@tanstack/react-query";
-import dynamic from "next/dynamic";
 import { ThemeProvider } from "next-themes";
 import {
   createContext,
@@ -13,11 +12,8 @@ import {
 } from "react";
 import { getQueryClient } from "@/lib/query-client";
 import { getSupabaseClient } from "@/lib/supabase-browser";
+import { PageViewsTracker } from "./page-views-tracker";
 import { PwaRegister } from "./pwa-register";
-
-const PageViewsTracker = dynamic(() =>
-  import("./page-views-tracker").then((mod) => mod.PageViewsTracker),
-);
 
 interface SessionContextType {
   session: Session | null;

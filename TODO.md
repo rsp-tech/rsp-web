@@ -6,7 +6,7 @@
 - [ ] Move images to drive lh3.googleusercontent.com/d/
   - skipped as 429 rate limited
 - [x] cached route for sync table
-- [ ] optimize split chunks
+- [x] optimize split chunks
 
 # Clean up
 

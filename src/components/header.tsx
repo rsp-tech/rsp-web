@@ -1,39 +1,9 @@
 "use client";
 
-import { Bell } from "lucide-react";
-import dynamic from "next/dynamic";
 import Link from "next/link";
-import { Skeleton } from "./ui/skeleton";
-
-const SearchBar = dynamic(
-  () => import("./search-bar").then((mod) => mod.SearchBar),
-  {
-    ssr: false,
-    loading: () => <Skeleton className="w-full h-9 max-w-lg animate-shimmer" />,
-  },
-);
-
-const MobileDrawer = dynamic(
-  () => import("./mobile-drawer").then((mod) => mod.MobileDrawer),
-  {
-    ssr: false,
-    loading: () => <Skeleton className="w-8 h-8 md:hidden animate-shimmer" />,
-  },
-);
-
-const HeaderActions = dynamic(
-  () => import("./header-actions").then((mod) => mod.HeaderActions),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="flex items-center gap-3 shrink-0">
-        <Skeleton className="w-8 h-8 animate-shimmer hidden md:flex" />
-        <Bell className="h-5 w-5 text-muted-foreground animate-shimmer" />
-        <Skeleton className="w-8 h-8 animate-shimmer rounded-full hidden md:flex" />
-      </div>
-    ),
-  },
-);
+import { HeaderActions } from "./header-actions";
+import { MobileDrawer } from "./mobile-drawer";
+import { SearchBar } from "./search-bar";
 
 export function Header() {
   return (
