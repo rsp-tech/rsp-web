@@ -37,7 +37,7 @@ const runSync = ({
       if (e.data.type === WORKER_MSG.SUCCESS) {
         worker.terminate();
         const result = e.data;
-        const { changedCategoryPaths } = result;
+        const { changedCategoryPaths, changedTables } = result;
 
         toast.success("Sync complete!", {
           id: "sync-status",
@@ -47,6 +47,13 @@ const runSync = ({
           queryClient.invalidateQueries({
             queryKey: [QUERY_KEY.ALL_CATEGORIES],
           });
+        }
+
+        // Dynamically invalidate query keys for updated tables
+        if (changedTables) {
+          for (const table of changedTables) {
+            queryClient.invalidateQueries({ queryKey: [table] });
+          }
         }
 
         if (changedCategoryPaths.includes("*")) {

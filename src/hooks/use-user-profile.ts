@@ -1,55 +1,21 @@
 "use client";
 
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/components/providers";
-import { QUERY_KEY } from "@/constants";
+import { STORE } from "@/constants";
+import {
+  useUserPendingRequestIdb,
+  useUserProfileIdb,
+} from "@/hooks/use-queries-idb";
+import { getDB } from "@/lib/idb";
 import { getSupabaseClient } from "@/lib/supabase-browser";
-import type { UserEditRequest, UserProfile } from "@/types";
 
 export const useUserProfile = () => {
   const { session, isLoading: sessionLoading } = useSession();
   const userId = session?.user?.id;
 
-  const profileQuery = useQuery({
-    queryKey: [QUERY_KEY.USER_PROFILE, userId],
-    queryFn: async (): Promise<UserProfile | null> => {
-      if (!userId) return null;
-      const supabase = getSupabaseClient();
-      const { data, error } = await supabase
-        .from("users")
-        .select("*")
-        .eq("id", userId)
-        .single();
-
-      if (error) {
-        console.error("Error fetching user profile:", error);
-        throw error;
-      }
-      return data;
-    },
-    enabled: !sessionLoading && !!userId,
-  });
-
-  const pendingRequestQuery = useQuery({
-    queryKey: [QUERY_KEY.USER_PENDING_REQUEST, userId],
-    queryFn: async (): Promise<UserEditRequest | null> => {
-      if (!userId) return null;
-      const supabase = getSupabaseClient();
-      const { data, error } = await supabase
-        .from("user_edit_requests")
-        .select("*")
-        .eq("user_id", userId)
-        .eq("status", "pending")
-        .maybeSingle();
-
-      if (error) {
-        console.error("Error fetching pending request:", error);
-        throw error;
-      }
-      return data;
-    },
-    enabled: !sessionLoading && !!userId,
-  });
+  const profileQuery = useUserProfileIdb(userId);
+  const pendingRequestQuery = useUserPendingRequestIdb(userId);
 
   return {
     profile: profileQuery.data ?? null,
@@ -102,12 +68,19 @@ export const useSubmitProfileUpdate = () => {
         .single();
 
       if (error) throw error;
+
+      // 1. Save to IndexedDB immediately
+      const db = await getDB();
+      if (db) {
+        await db.put(STORE.USER_EDIT_REQUESTS, data);
+      }
+
       return data;
     },
     onSuccess: () => {
       if (session?.user?.id) {
         queryClient.invalidateQueries({
-          queryKey: [QUERY_KEY.USER_PENDING_REQUEST, session.user.id],
+          queryKey: [STORE.USER_EDIT_REQUESTS, session.user.id],
         });
       }
     },
