@@ -52,19 +52,21 @@ const toUpdatedAtMap = (rows: SyncMetaRow[]): SyncMetaMap =>
 
 export const getTablesToSync = async (
   db: IDBPDatabase<RSP_IDB>,
-  supabase: SupabaseProdClient,
+  origin: string,
 ) => {
-  const [idbRows, supaResult] = await Promise.all([
+  const [idbRows, supaMetaRes] = await Promise.all([
     db.getAll(STORE.SYNC_META),
-    supabase.from(STORE.SYNC_META).select("id, updated_at"),
+    fetch(`${origin}/api/sync/meta`),
   ]);
 
-  if (supaResult.error) {
-    throw new Error(supaResult.error.message);
+  if (!supaMetaRes.ok) {
+    throw new Error(`Failed to fetch sync_meta: ${supaMetaRes.statusText}`);
   }
 
+  const supaSyncMetaRows = (await supaMetaRes.json()) as SyncMetaRow[];
+
   const idbSyncMeta = toUpdatedAtMap(idbRows);
-  const supaSyncMeta = toUpdatedAtMap(supaResult.data ?? []);
+  const supaSyncMeta = toUpdatedAtMap(supaSyncMetaRows);
 
   return Object.values(STORE)
     .filter(

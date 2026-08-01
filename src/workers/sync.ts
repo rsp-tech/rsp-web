@@ -128,7 +128,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       }
     }
 
-    const tablesToSync = await getTablesToSync(db, supabase);
+    const tablesToSync = await getTablesToSync(db, self.location.origin);
 
     const limit = createLimiter(SYNC_CONCURRENCY);
     const changedCategoryMeta: ChangedCategoryMeta = {

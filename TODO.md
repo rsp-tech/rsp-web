@@ -5,7 +5,7 @@
 - [x] analyze and fix supabase over connections
 - [ ] Move images to drive lh3.googleusercontent.com/d/
   - skipped as 429 rate limited
-- [ ] cached route for sync table
+- [x] cached route for sync table
 - [ ] optimize split chunks
 
 # Clean up
