@@ -57,7 +57,7 @@ export function SearchBar() {
                 className="h-9 shrink-0 gap-1.5 cursor-pointer"
               >
                 <SlidersHorizontal className="w-3 h-3" />
-                <span className="hidden sm:inline">Filters</span>
+                <span className="hidden md:flex">Filters</span>
                 {hasActiveFilters && (
                   <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
                 )}

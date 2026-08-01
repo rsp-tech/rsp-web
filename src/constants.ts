@@ -236,7 +236,7 @@ export const AUDIO_CACHE_NAME = "rsp-audio-cache";
 export const PHILOSOPHICAL_CONCEPTS = [
   "Bhakti — Path of Devotion",
   "Atma — Immutable Spirit",
-  "Sravanam — Hearing Sacred Sound",
+  "Śravanam — Hearing Sacred Sound",
   "Jnana — Transcendent Knowledge",
   "Sadhana — Daily Spiritual Practice",
   "Chant & Be Happy",

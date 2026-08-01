@@ -1,10 +1,14 @@
 import { Calendar, ExternalLink, Globe, MapPin, User } from "lucide-react";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { PHILOSOPHICAL_CONCEPTS } from "@/constants";
 import { useCategories } from "@/hooks/use-categories";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import { useMetadata } from "@/hooks/use-metadata";
 import { categoryPath, cn } from "@/lib/utils";
 import type { EnrichedRecording } from "@/types";
 import { MaterialBadge } from "./material-badge";
+import { MaterialsPopover } from "./materials-popover";
 import { Skeleton } from "./ui/skeleton";
 
 interface RecordingMetaProps {
@@ -16,6 +20,8 @@ interface RecordingMetaProps {
 
 export const RecordingMeta = ({ rec, m, sm, showLink }: RecordingMetaProps) => {
   const { speakers, languages, venues, isPending } = useMetadata();
+  const isMobile = useIsMobile();
+  const nMaterialPills = isMobile ? 1 : 2;
   const { data: categories } = useCategories();
   const rec_speakers =
     rec.speaker_ids
@@ -31,15 +37,24 @@ export const RecordingMeta = ({ rec, m, sm, showLink }: RecordingMetaProps) => {
     ? `/${categoryPath(categories?.find((c) => c?.id === rec.category_id)?.url_path ?? "")}?q=${rec.id}`
     : "";
 
+  const materials = rec.materials ?? [];
+  const concept =
+    PHILOSOPHICAL_CONCEPTS[Math.abs(rec.id) % PHILOSOPHICAL_CONCEPTS.length];
+
   return (
     <div className={cn("flex-1 flex flex-col", sm ? "gap-1" : "gap-2")}>
       <h3
         className={cn(
-          "leading-snug group-hover:text-primary transition-colors flex items-center",
-          sm ? "font-semibold" : "font-bold",
+          "leading-snug group-hover:text-primary transition-colors flex items-center justify-between gap-2 truncate font-bold text-sm",
+          sm && "font-semibold",
         )}
       >
-        {rec.name}
+        <span
+          className="truncate"
+          style={{ maxWidth: isMobile ? "calc(100vw - 4rem)" : "28rem" }}
+        >
+          {rec.name}
+        </span>
         {href && (
           <Link
             href={href}
@@ -54,12 +69,10 @@ export const RecordingMeta = ({ rec, m, sm, showLink }: RecordingMetaProps) => {
 
       <div
         className={cn(
-          "flex flex-wrap items-center text-muted-foreground font-medium",
+          "flex items-center gap-2 text-muted-foreground font-medium truncate overflow-hidden",
           sm ? "text-xxs" : "text-xs",
         )}
         style={{
-          columnGap: "1rem",
-          rowGap: "0.375rem",
           marginLeft: sm ? "-1.5rem" : undefined,
         }}
       >
@@ -102,14 +115,16 @@ export const RecordingMeta = ({ rec, m, sm, showLink }: RecordingMetaProps) => {
             ]}
       </div>
 
-      {/* Materials Downloads List */}
-      {!!rec.materials?.length && (
-        <div className="mt-2 pt-2 border-t border-border flex flex-col gap-1.5">
-          <span className="text-xxs font-bold tracking-wider uppercase text-muted-foreground">
-            Supporting Materials ({rec.materials.length})
-          </span>
-          <div className="flex flex-wrap gap-2">
-            {rec.materials.map((mat) => {
+      {/* Materials Row / Philosophical Concept Pill */}
+      <div
+        className="pt-2 border-t border-border flex items-center gap-1.5 overflow-hidden"
+        style={{
+          ...(sm || showLink ? { display: "none" } : {}),
+        }}
+      >
+        {materials.length > 0 ? (
+          <>
+            {materials.slice(0, nMaterialPills).map((mat) => {
               const isMaterialHighlighted = m != null && Number(m) === mat.id;
               return (
                 <MaterialBadge
@@ -119,9 +134,29 @@ export const RecordingMeta = ({ rec, m, sm, showLink }: RecordingMetaProps) => {
                 />
               );
             })}
-          </div>
-        </div>
-      )}
+            {materials.length > nMaterialPills && (
+              <MaterialsPopover
+                materials={materials}
+                m={m}
+                trigger={
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="text-xxs font-semibold h-6 px-2 shrink-0 cursor-pointer"
+                  >
+                    +{materials.length - nMaterialPills} more
+                  </Button>
+                }
+              />
+            )}
+          </>
+        ) : (
+          <span className="text-xxs font-medium italic text-muted-foreground bg-muted border border-dashed border-border px-2 py-0.5 rounded-md truncate">
+            ✨ {concept}
+          </span>
+        )}
+      </div>
     </div>
   );
 };

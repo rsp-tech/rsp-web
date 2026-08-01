@@ -1,10 +1,11 @@
 "use client";
 
-import { FolderOpen, Music } from "lucide-react";
+import { FolderOpen } from "lucide-react";
 import { redirect, usePathname } from "next/navigation";
 import { CategoryList } from "@/components/category-list";
+import { Loading } from "@/components/loading";
 import { NotFoundState } from "@/components/not-found-state";
-import { RecordingList } from "@/components/recording-list";
+import { RecordingsSection } from "@/components/recordings-section";
 import {
   type CategoryPageData,
   useCategoryPage,
@@ -29,6 +30,12 @@ export const ClientShell = ({
     redirect(data.redirectTo);
   }
 
+  if (isPending) return <Loading />;
+
+  if (error) {
+    return <NotFoundState onRetry={() => refetch()} message={error?.message} />;
+  }
+
   if (slug.length === 0) {
     return (
       <div className="flex flex-col py-4" style={{ gap: "2.5rem" }}>
@@ -47,15 +54,13 @@ export const ClientShell = ({
             categories={data?.subcategories.filter(
               (c) => c.url_path !== "trash",
             )}
-            isLoading={isPending}
-            error={error}
           />
         </section>
       </div>
     );
   }
 
-  if (error || !data?.category) {
+  if (!data?.category) {
     return <NotFoundState onRetry={() => refetch()} />;
   }
 
@@ -87,20 +92,12 @@ export const ClientShell = ({
             <FolderOpen className="w-5 h-5 text-primary" />
             Subcategories
           </h2>
-          <CategoryList categories={subcategories} isLoading={isPending} />
+          <CategoryList categories={subcategories} />
         </section>
       )}
 
       {/* Recordings Section */}
-      {recordings.length > 0 && (
-        <section className="flex flex-col gap-4">
-          <h2 className="text-xl font-bold font-heading flex items-center gap-2">
-            <Music className="w-5 h-5 text-primary" />
-            Discourses & Recordings
-          </h2>
-          <RecordingList {...{ recordings, isPending, category }} />
-        </section>
-      )}
+      {recordings.length > 0 && <RecordingsSection {...{ recordings }} />}
     </div>
   );
 };

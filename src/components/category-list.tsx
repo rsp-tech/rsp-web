@@ -1,46 +1,40 @@
 import { CategoryCard } from "@/components/category-card";
-import { Skeleton } from "@/components/ui/skeleton";
+import { sortByOrderInd } from "@/lib/utils";
 import type { Category } from "@/types";
 
 interface CategoryListProps {
   categories: Category[] | undefined;
-  isLoading: boolean;
-  error?: unknown;
   onCardKeyDown?: React.KeyboardEventHandler<HTMLAnchorElement>;
 }
 
-export const CategoryList = ({
-  categories,
-  isLoading,
-  error,
-}: CategoryListProps) => {
-  if (isLoading && !categories?.length) {
-    return (
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {Array.from({ length: 8 }).map((_, i) => (
-          <Skeleton
-            // biome-ignore lint/suspicious/noArrayIndexKey: ok for skeleton
-            key={i}
-            className="rounded-2xl opacity-0"
-            style={{
-              animation: "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
-              animationDelay: `${i * 100}ms`,
-              height: "12rem",
-            }}
-          />
-        ))}
-      </div>
-    );
-  }
+// Keyboard navigation for subcategories
+const handleCategoryKeyDown = (e: React.KeyboardEvent<HTMLAnchorElement>) => {
+  const cards = Array.from(
+    document.querySelectorAll<HTMLElement>("[data-category-item]"),
+  );
+  const index = cards.indexOf(e.currentTarget);
+  if (index === -1) return;
 
-  if (error) {
-    return (
-      <div className="p-4 bg-destructive/10 text-destructive border border-destructive/20 rounded-xl text-sm font-medium">
-        Could not load categories. Please try refreshing.
-      </div>
+  if (e.key === "Tab" && !e.shiftKey) {
+    const firstRec = document.querySelector<HTMLElement>(
+      "[data-recording-item]",
     );
+    if (firstRec) {
+      e.preventDefault();
+      firstRec.focus();
+    }
+  } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
+    e.preventDefault();
+    const next = (index + 1) % cards.length;
+    cards[next]?.focus();
+  } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
+    e.preventDefault();
+    const prev = (index - 1 + cards.length) % cards.length;
+    cards[prev]?.focus();
   }
+};
 
+export const CategoryList = ({ categories }: CategoryListProps) => {
   if (!categories?.length) {
     return (
       <div className="p-8 text-center text-muted-foreground border border-dashed border-border rounded-2xl text-sm">
@@ -49,38 +43,7 @@ export const CategoryList = ({
     );
   }
 
-  // Keyboard navigation for subcategories
-  const handleCategoryKeyDown = (e: React.KeyboardEvent<HTMLAnchorElement>) => {
-    const cards = Array.from(
-      document.querySelectorAll<HTMLElement>("[data-category-item]"),
-    );
-    const index = cards.indexOf(e.currentTarget);
-    if (index === -1) return;
-
-    if (e.key === "Tab" && !e.shiftKey) {
-      const firstRec = document.querySelector<HTMLElement>(
-        "[data-recording-item]",
-      );
-      if (firstRec) {
-        e.preventDefault();
-        firstRec.focus();
-      }
-    } else if (e.key === "ArrowDown" || e.key === "ArrowRight") {
-      e.preventDefault();
-      const next = (index + 1) % cards.length;
-      cards[next]?.focus();
-    } else if (e.key === "ArrowUp" || e.key === "ArrowLeft") {
-      e.preventDefault();
-      const prev = (index - 1 + cards.length) % cards.length;
-      cards[prev]?.focus();
-    }
-  };
-
-  categories.sort((a, b) =>
-    a.order_ind !== null && b.order_ind !== null
-      ? a.order_ind - b.order_ind
-      : 0,
-  );
+  categories.sort(sortByOrderInd());
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 md:gap-8 lg:gap-12 lg:pb-4">

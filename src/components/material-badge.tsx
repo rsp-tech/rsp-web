@@ -9,7 +9,6 @@ import {
   GraduationCap,
   Presentation,
 } from "lucide-react";
-import { getMaterialDirectUrl } from "@/components/material-preview-modal";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -17,6 +16,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useMaterialPreview } from "@/hooks/use-material-preview";
+import { getAssetUrl } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 import type { Material } from "@/types";
 
@@ -29,10 +29,8 @@ export function MaterialBadge({ mat, isHighlighted }: MaterialBadgeProps) {
   const { name, uri } = mat;
   const { openPreview } = useMaterialPreview();
   const lowerName = name.toLowerCase();
-  const lowerUri = (uri || "").toLowerCase();
 
-  const isLink = /^https?:\/\//.test(lowerUri);
-  const directUrl = getMaterialDirectUrl(mat);
+  const isLink = /^https?:\/\//.test((uri || "").toLowerCase());
 
   const getMaterialIcon = () => {
     if (isLink) {
@@ -44,7 +42,7 @@ export function MaterialBadge({ mat, isHighlighted }: MaterialBadgeProps) {
     if (lowerName.includes("student") || lowerName.includes("handout")) {
       return <BookOpen className="w-3 h-3 text-primary shrink-0" />;
     }
-    if (lowerUri.endsWith(".ppt") || lowerName.includes("ppt")) {
+    if (lowerName.includes("ppt")) {
       return <Presentation className="w-3 h-3 text-primary shrink-0" />;
     }
     return <FileText className="w-3 h-3 text-muted-foreground shrink-0" />;
@@ -57,16 +55,7 @@ export function MaterialBadge({ mat, isHighlighted }: MaterialBadgeProps) {
 
   const handleDirectDownload = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (isLink || /^[\w-]{10,}$/.test(uri || "")) {
-      window.open(directUrl, "_blank", "noopener,noreferrer");
-    } else {
-      const a = document.createElement("a");
-      a.href = directUrl;
-      a.download = name;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
+    window.open(getAssetUrl(uri), "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -94,9 +83,7 @@ export function MaterialBadge({ mat, isHighlighted }: MaterialBadgeProps) {
             <Eye className="w-3 h-3 text-primary shrink-0" />
           </Button>
         </TooltipTrigger>
-        <TooltipContent side="top">
-          Preview &ldquo;{name}&rdquo; in iframe viewer
-        </TooltipContent>
+        <TooltipContent side="top">Preview &ldquo;{name}&rdquo;</TooltipContent>
       </Tooltip>
 
       <Tooltip>

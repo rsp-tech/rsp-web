@@ -38,7 +38,7 @@ export function SearchInput({
           <button
             type="button"
             onClick={() => onChange("")}
-            className="p-0.5 hover:bg-muted-foreground/10 rounded-md transition-all cursor-pointer"
+            className="p-1 hover:bg-muted-foreground/10 rounded-full transition-all cursor-pointer"
             aria-label="Clear search"
           >
             <X className="w-3 h-3 text-muted-foreground" />

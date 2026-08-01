@@ -20,6 +20,7 @@ interface RecordingCardProps {
 }
 
 const CACHE_NAME = "rsp-audio-cache";
+export const CARD_HEIGHT = 136; // Exported for virtualization estimateSize
 
 export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
   const { isPlaying, currentAudioId } = useAudioPlayback();
@@ -110,7 +111,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
       data-recording-item
       onKeyDown={onKeyDown}
       className={cn(
-        "p-4 border rounded-2xl shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-4 group focus:ring-1 focus:ring-primary focus:outline-hidden transition duration-200 ease-in-out",
+        "p-4 border rounded-2xl shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-2 group focus:ring-1 focus:ring-primary focus:outline-hidden transition duration-200 ease-in-out",
         isHighlighted
           ? "border-primary bg-primary/5 ring-1 ring-primary"
           : "border-border bg-card hover:shadow-md",
@@ -119,14 +120,16 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
       <RecordingMeta {...{ rec, m }} />
 
       {/* Media Links / Actions */}
-      <div className="flex items-center gap-2 self-stretch md:self-auto justify-end border-t md:border-none border-border pt-3 md:pt-0 shrink-0">
+      <div className="flex items-center gap-2 self-stretch md:self-auto justify-end border-t md:border-none border-border pt-2 md:pt-0 shrink-0">
         {rec.audio_id && (
           <>
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="sm"
               onClick={handlePlayClick}
               disabled={isLoading}
-              className="inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition duration-200 active:scale-98 border border-border cursor-pointer disabled:opacity-60"
+              className="font-bold text-xs cursor-pointer"
               title={
                 isLoading
                   ? "Loading..."
@@ -152,24 +155,28 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
               {isCached && !isLoading && (
                 <Check className="w-3 h-3 text-success shrink-0" />
               )}
-            </button>
+            </Button>
 
-            <button
+            <Button
               type="button"
+              variant="outline"
+              size="sm"
               onClick={handleDownload}
-              className="inline-flex items-center justify-center gap-1.5 bg-muted hover:bg-primary hover:text-primary-foreground px-3.5 py-2 rounded-xl text-xs font-bold transition duration-200 active:scale-98 border border-border cursor-pointer"
+              className="font-bold text-xs cursor-pointer"
               title="Download Audio"
             >
               <FileDown className="w-4 h-4" />
               <span className="hidden md:flex">Download</span>
-            </button>
+            </Button>
           </>
         )}
 
         {rec.yt_id && (
           <Button
             type="button"
-            className="inline-flex items-center justify-center gap-1.5 bg-red-600 hover:bg-red-700 text-white px-3.5 py-2 rounded-xl text-xs font-bold transition duration-200 active:scale-98 cursor-pointer"
+            variant="destructive"
+            size="sm"
+            className="font-bold text-xs cursor-pointer bg-red-600 hover:bg-red-700 text-white border-transparent"
             title="Watch on YouTube"
             onClick={() => setYt(rec.yt_id ?? "", rec.name)}
           >
