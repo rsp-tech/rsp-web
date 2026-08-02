@@ -2,6 +2,7 @@ import type { IDBPDatabase } from "idb";
 import {
   INVALIDATE_ALL_THRESHOLD,
   META_KEY,
+  SEARCH_LOOKUP_TABLES,
   STORE,
   SYNC_CONCURRENCY,
   WORKER_MSG,
@@ -15,6 +16,7 @@ import {
   getTablesToSync,
   loadStaticZipSeeds,
   loadStaticZipSeedsForRole,
+  type SyncTable,
   syncTable,
 } from "./utils";
 
@@ -25,14 +27,18 @@ type WorkerMessage = {
   accessToken: string;
   roleId?: number;
   isPublic?: boolean;
+  targetTables?: SyncTable[];
 };
 
 const toSyncResult = async (
   db: IDBPDatabase<RSP_IDB>,
   changedCategoryMeta: ChangedCategoryMeta,
   changedIds: SyncChangedIds,
-  rebuildSearchIndex: boolean,
+  changedTables: string[],
 ): Promise<SyncResult> => {
+  const rebuildSearchIndex = changedTables.some((table) =>
+    (SEARCH_LOOKUP_TABLES as readonly string[]).includes(table),
+  );
   const {
     changedCategories,
     changedRecordings,
@@ -79,6 +85,7 @@ const toSyncResult = async (
       categories: Array.from(new Set(changedIds.categories ?? [])),
       materials: Array.from(new Set(changedIds.materials ?? [])),
     },
+    changedTables,
     rebuildSearchIndex,
   };
 };
@@ -91,7 +98,7 @@ const SEED_LOAD_SUCCESS_PAYLOAD = {
 };
 
 self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
-  const { type, accessToken, roleId, isPublic } = event.data;
+  const { type, accessToken, roleId, isPublic, targetTables } = event.data;
   if (type !== WORKER_MSG.START_SYNC) return;
 
   try {
@@ -128,7 +135,18 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       }
     }
 
-    const tablesToSync = await getTablesToSync(db, self.location.origin);
+    const tablesToSync = targetTables?.length
+      ? await Promise.all(
+          targetTables.map(async (table) => {
+            const idbMeta = await db.get(STORE.SYNC_META, table);
+            return {
+              table,
+              lastSync: undefined,
+              idbLastSync: idbMeta?.updated_at,
+            };
+          }),
+        )
+      : await getTablesToSync(db, self.location.origin);
 
     const limit = createLimiter(SYNC_CONCURRENCY);
     const changedCategoryMeta: ChangedCategoryMeta = {
@@ -182,21 +200,23 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       await db.put(STORE.ROLE_META, null, META_KEY.SYNC_ROLE);
     }
 
-    const lookupTableChanges = await Promise.all(
-      tablesToSync.map(({ table, idbLastSync, lastSync }) =>
-        limit(() =>
-          syncTable({
-            supabase,
-            db,
-            changedIds,
-            changedCategoryMeta,
-            table,
-            idbLastSync,
-            lastSync,
-          }),
+    const changedTables = (
+      await Promise.all(
+        tablesToSync.map(({ table, idbLastSync, lastSync }) =>
+          limit(() =>
+            syncTable({
+              supabase,
+              db,
+              changedIds,
+              changedCategoryMeta,
+              table,
+              idbLastSync,
+              lastSync,
+            }),
+          ),
         ),
-      ),
-    );
+      )
+    ).filter((table): table is string => Boolean(table));
 
     // Sync browser caches with IndexedDB STORE.CACHE_LEDGER
     if (typeof self.caches !== "undefined") {
@@ -261,7 +281,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
         db,
         changedCategoryMeta,
         changedIds,
-        lookupTableChanges.some(Boolean),
+        changedTables,
       )),
     });
   } catch (err) {

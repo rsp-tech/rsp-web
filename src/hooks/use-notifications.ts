@@ -2,8 +2,8 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/components/providers";
-import { QUERY_KEY } from "@/constants";
-import { getSupabaseClient } from "@/lib/supabase-browser";
+import { LOCAL_STORAGE, STORE } from "@/constants";
+import { getDB } from "@/lib/idb";
 
 export interface AppNotification {
   id: string;
@@ -13,9 +13,10 @@ export interface AppNotification {
   created_at: string;
 }
 
-const READ_IDS_KEY = "read-notif-ids";
+const READ_IDS_KEY = LOCAL_STORAGE.READ_NOTIFICATIONS;
 
 const getReadIds = (): string[] => {
+  if (typeof window === "undefined") return [];
   try {
     return JSON.parse(localStorage.getItem(READ_IDS_KEY) || "[]");
   } catch {
@@ -24,68 +25,99 @@ const getReadIds = (): string[] => {
 };
 
 const addReadId = (id: string) => {
+  if (typeof window === "undefined") return;
   const ids = getReadIds();
   if (!ids.includes(id)) {
     localStorage.setItem(READ_IDS_KEY, JSON.stringify([...ids, id]));
   }
 };
 
-const toAppNotification = (
-  row: {
-    id: string;
-    title: string;
-    message: string;
-    created_at: string | null;
-  },
-  read = false,
-): AppNotification => ({
-  id: row.id,
-  title: row.title,
-  message: row.message,
-  read,
-  created_at: row.created_at ?? new Date().toISOString(),
-});
-
 const fetchNotifications = async (
   sessionUserId: string | undefined,
 ): Promise<AppNotification[]> => {
-  const supabase = getSupabaseClient();
-  let list: AppNotification[] = [];
+  const db = await getDB();
+  if (!db) return [];
 
-  const { data: publicNotifs, error: pubErr } = await supabase
-    .from("notifications")
-    .select("*")
-    .eq("target_type", "all")
-    .order("created_at", { ascending: false });
+  const list: AppNotification[] = [];
+  const readIds = getReadIds();
 
-  if (!pubErr && publicNotifs) {
-    list = publicNotifs.map((n) => toAppNotification(n));
-  }
-
+  // 1. Check user queries & replies for "Query Replied"
   if (sessionUserId) {
-    const { data: userNotifs, error: userErr } = await supabase
-      .from("user_notifications")
-      .select("*")
-      .eq("user_id", sessionUserId)
-      .order("created_at", { ascending: false });
+    const queries = await db.getAll(STORE.USER_QUERIES);
+    const userQueries = queries.filter((q) => q.user_id === sessionUserId);
+    const queryIds = userQueries.map((q) => q.id);
 
-    if (!userErr && userNotifs) {
-      list = [
-        ...userNotifs.map((un) => toAppNotification(un, un.read ?? false)),
-        ...list,
-      ];
+    if (queryIds.length > 0) {
+      const allReplies = await db.getAll(STORE.QUERY_REPLIES);
+      const userReplies = allReplies.filter(
+        (r) => queryIds.includes(r.query_id) && r.user_id !== sessionUserId,
+      );
+
+      for (const reply of userReplies) {
+        const notifId = `reply-${reply.id}`;
+        const querySubject =
+          userQueries.find((q) => q.id === reply.query_id)?.subject || "";
+        list.push({
+          id: notifId,
+          title: "New Reply on Ticket",
+          message: `A new reply has been posted on your ticket "${querySubject}".`,
+          read: readIds.includes(notifId),
+          created_at: reply.updated_at || new Date().toISOString(),
+        });
+      }
+    }
+
+    // 2. Check profile update request status for "Profile Approved/Rejected"
+    const requests = await db.getAll(STORE.USER_EDIT_REQUESTS);
+    const userRequests = requests.filter(
+      (r) => r.user_id === sessionUserId && r.status !== "pending",
+    );
+
+    for (const req of userRequests) {
+      const notifId = `profile-${req.id}-${req.status}`;
+      const msg =
+        req.status === "approved"
+          ? "Your profile update request has been approved."
+          : `Your profile update request has been rejected.${req.review_comment ? ` Reason: ${req.review_comment}` : ""}`;
+      list.push({
+        id: notifId,
+        title: "Profile Request Update",
+        message: msg,
+        read: readIds.includes(notifId),
+        created_at:
+          req.reviewed_at || req.updated_at || new Date().toISOString(),
+      });
     }
   }
 
+  // 3. Check recordings for "New Content Added" (last 7 days)
+  const recordings = await db.getAll(STORE.RECORDINGS);
+  const sevenDaysAgo = new Date();
+  sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
+
+  const newRecordings = recordings.filter((rec) => {
+    if (!rec.recorded_at) return false;
+    return new Date(rec.recorded_at) >= sevenDaysAgo;
+  });
+
+  for (const rec of newRecordings) {
+    const notifId = `recording-${rec.id}`;
+    list.push({
+      id: notifId,
+      title: "New Recording Added",
+      message: `"${rec.name}" has been added recently.`,
+      read: readIds.includes(notifId),
+      created_at: rec.recorded_at || new Date().toISOString(),
+    });
+  }
+
+  // Sort by date descending
   list.sort(
     (a, b) =>
       new Date(b.created_at).getTime() - new Date(a.created_at).getTime(),
   );
 
-  const readIds = getReadIds();
-  return list.map((item) =>
-    readIds.includes(item.id) ? { ...item, read: true } : item,
-  );
+  return list;
 };
 
 export const useNotifications = () => {
@@ -94,32 +126,18 @@ export const useNotifications = () => {
   const userId = session?.user?.id;
 
   const query = useQuery({
-    queryKey: [QUERY_KEY.NOTIFICATIONS, userId],
+    queryKey: [STORE.USERS, "notifications"],
     queryFn: () => fetchNotifications(userId),
     enabled: !sessionLoading,
   });
 
   const markAsRead = useMutation({
     mutationFn: async (id: string) => {
-      if (userId) {
-        const { data } = await getSupabaseClient()
-          .from("user_notifications")
-          .select("id")
-          .eq("id", id)
-          .single();
-
-        if (data) {
-          await getSupabaseClient()
-            .from("user_notifications")
-            .update({ read: true })
-            .eq("id", id);
-        }
-      }
       addReadId(id);
     },
     onSuccess: () =>
       queryClient.invalidateQueries({
-        queryKey: [QUERY_KEY.NOTIFICATIONS, userId],
+        queryKey: [STORE.USERS, userId, "notifications"],
       }),
   });
 

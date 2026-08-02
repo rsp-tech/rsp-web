@@ -7,7 +7,7 @@ import {
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useSession } from "@/components/providers";
-import { QUERY_KEY, SYNC_INTERVAL, WORKER_MSG } from "@/constants";
+import { QUERY_KEY, STORE, SYNC_INTERVAL, WORKER_MSG } from "@/constants";
 import { useOnlineStatus } from "@/hooks/use-online-status";
 import { notifySearchWorker, rebuildSearchIndex } from "@/hooks/use-search";
 import { toRoleId } from "@/lib/utils";
@@ -17,6 +17,8 @@ interface WorkerConfig {
   accessToken: string;
   roleId?: number;
   isPublic?: boolean;
+  userId?: string;
+  targetTables?: string[];
 }
 
 type SyncWorkerMessage =
@@ -24,7 +26,7 @@ type SyncWorkerMessage =
   | { type: typeof WORKER_MSG.ERROR; message: string }
   | { type: typeof WORKER_MSG.PROGRESS; message: string };
 
-const runSync = ({
+export const runSync = ({
   queryClient,
   ...config
 }: WorkerConfig & {
@@ -37,7 +39,7 @@ const runSync = ({
       if (e.data.type === WORKER_MSG.SUCCESS) {
         worker.terminate();
         const result = e.data;
-        const { changedCategoryPaths } = result;
+        const { changedCategoryPaths, changedTables } = result;
 
         toast.success("Sync complete!", {
           id: "sync-status",
@@ -47,6 +49,53 @@ const runSync = ({
           queryClient.invalidateQueries({
             queryKey: [QUERY_KEY.ALL_CATEGORIES],
           });
+        }
+
+        // Dynamically invalidate query keys for updated tables
+        if (changedTables) {
+          for (const table of changedTables) {
+            queryClient.invalidateQueries({ queryKey: [table] });
+          }
+
+          if (config.userId) {
+            const hasQueries = changedTables.includes(STORE.USER_QUERIES);
+            const hasReplies = changedTables.includes(STORE.QUERY_REPLIES);
+            const hasInterests = changedTables.includes(
+              STORE.USER_SERVICE_INTERESTS,
+            );
+            const hasRequests = changedTables.includes(
+              STORE.USER_EDIT_REQUESTS,
+            );
+            const hasUsers = changedTables.includes(STORE.USERS);
+            const hasRecordings = changedTables.includes(STORE.RECORDINGS);
+
+            if (hasQueries || hasReplies) {
+              queryClient.invalidateQueries({
+                queryKey: [STORE.USER_QUERIES, config.userId],
+              });
+            }
+            if (hasInterests) {
+              queryClient.invalidateQueries({
+                queryKey: [STORE.USER_SERVICE_INTERESTS, config.userId],
+              });
+            }
+            if (hasRequests) {
+              queryClient.invalidateQueries({
+                queryKey: [STORE.USER_EDIT_REQUESTS, config.userId],
+              });
+            }
+            if (hasUsers) {
+              queryClient.invalidateQueries({
+                queryKey: [STORE.USERS, config.userId],
+              });
+            }
+            // Invalidate notifications when relevant tables update
+            if (hasReplies || hasRequests || hasRecordings) {
+              queryClient.invalidateQueries({
+                queryKey: [STORE.USERS, config.userId, "notifications"],
+              });
+            }
+          }
         }
 
         if (changedCategoryPaths.includes("*")) {
@@ -65,12 +114,12 @@ const runSync = ({
           rebuildSearchIndex(queryClient);
         } else {
           for (const table of [
-            "recordings",
-            "categories",
-            "materials",
-          ] satisfies SearchableTable[]) {
+            STORE.RECORDINGS,
+            STORE.CATEGORIES,
+            STORE.MATERIALS,
+          ] as const) {
             const ids = result.changedIds[table];
-            if (ids?.length) notifySearchWorker(table, ids);
+            if (ids?.length) notifySearchWorker(table as SearchableTable, ids);
           }
         }
 
@@ -107,6 +156,7 @@ export const useSync = () => {
     roleId,
     isPublic,
     queryClient,
+    userId: session?.user?.id,
   };
   return useQuery({
     queryKey: [QUERY_KEY.SYNC, roleId],

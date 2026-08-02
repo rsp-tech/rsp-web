@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import {
   AlertCircle,
   ExternalLink,
@@ -25,12 +26,15 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { QUERY_CATEGORIES } from "@/constants";
+import { QUERY_CATEGORIES, STORE } from "@/constants";
+import { getDB } from "@/lib/idb";
+import { sendRealtimeBroadcast } from "@/lib/realtime-utils";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { getUserDisplayName } from "@/lib/utils";
 
 export function ContactUsClient() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { session } = useSession();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -65,16 +69,35 @@ export function ContactUsClient() {
     const supabase = getSupabaseClient();
 
     try {
-      const { error } = await supabase.from("user_queries").insert({
-        guest_name: session ? null : name,
-        guest_email: session ? null : email,
-        user_id: session?.user?.id ?? null,
-        category,
-        subject,
-        message,
-      });
+      const { data, error } = await supabase
+        .from("user_queries")
+        .insert({
+          guest_name: session ? null : name,
+          guest_email: session ? null : email,
+          user_id: session?.user?.id ?? null,
+          category,
+          subject,
+          message,
+        })
+        .select()
+        .single();
 
       if (error) throw error;
+
+      // Broadcast sync notification to the admin channel (guest queries should also notify admins)
+      sendRealtimeBroadcast("admin-channel", "sync", {
+        tables: [STORE.USER_QUERIES],
+      });
+
+      if (session?.user?.id && data) {
+        const db = await getDB();
+        if (db) {
+          await db.put(STORE.USER_QUERIES, data);
+        }
+        queryClient.invalidateQueries({
+          queryKey: [STORE.USER_QUERIES, session.user.id],
+        });
+      }
 
       toast.success(
         session

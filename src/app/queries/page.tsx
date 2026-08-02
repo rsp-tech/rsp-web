@@ -1,8 +1,9 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { ExternalLink, MessageSquare, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { toast } from "sonner";
 import { Loading } from "@/components/loading";
 import { useSession } from "@/components/providers";
@@ -16,19 +17,25 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { STORE } from "@/constants";
+import { useUserQueriesAndReplies } from "@/hooks/use-user-queries-and-replies";
+import { getDB } from "@/lib/idb";
+import { sendRealtimeBroadcast } from "@/lib/realtime-utils";
 import { getSupabaseClient } from "@/lib/supabase-browser";
-import type { QueryReplyWithUser, UserQuery } from "@/types";
 import { QueryFilters } from "./_components/query-filters";
 import { QueryList } from "./_components/query-list";
 
 export default function UserQueriesPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const { session, isLoading: sessionLoading } = useSession();
-  const [queries, setQueries] = useState<UserQuery[]>([]);
-  const [replies, setReplies] = useState<Record<string, QueryReplyWithUser[]>>(
-    {},
+
+  // Load queries and replies from IndexedDB
+  const { data: qData, isLoading: queriesLoading } = useUserQueriesAndReplies(
+    session?.user?.id,
   );
-  const [_loading, setLoading] = useState(true);
+  const queries = qData?.queries || [];
+  const replies = qData?.replies || {};
 
   // Search & Filter state
   const [searchTerm, setSearchTerm] = useState("");
@@ -39,61 +46,6 @@ export default function UserQueriesPage() {
   const [replyTexts, setReplyTexts] = useState<Record<string, string>>({});
   const [sendingReply, setSendingReply] = useState<string | null>(null);
   const [submitErrors, setSubmitErrors] = useState<Record<string, string>>({});
-
-  useEffect(() => {
-    if (session?.user) {
-      const fetchQueriesAndReplies = async () => {
-        setLoading(true);
-        try {
-          const supabase = getSupabaseClient();
-
-          // 1. Fetch user queries
-          const { data: queriesData, error: queriesError } = await supabase
-            .from("user_queries")
-            .select("*")
-            .eq("user_id", session.user.id)
-            .order("created_at", { ascending: false });
-
-          if (queriesError) throw queriesError;
-
-          if (queriesData) {
-            setQueries(queriesData);
-
-            // 2. Fetch replies for these queries if there are any
-            const queryIds = queriesData.map((q) => q.id);
-            if (queryIds.length > 0) {
-              const { data: repliesData, error: repliesError } = await supabase
-                .from("query_replies")
-                .select("*, users(name, email)")
-                .in("query_id", queryIds)
-                .order("updated_at", { ascending: true });
-
-              if (repliesError) throw repliesError;
-
-              if (repliesData) {
-                const repliesMap: Record<string, QueryReplyWithUser[]> = {};
-                for (const reply of repliesData) {
-                  if (!repliesMap[reply.query_id]) {
-                    repliesMap[reply.query_id] = [];
-                  }
-                  repliesMap[reply.query_id].push(
-                    reply as unknown as QueryReplyWithUser,
-                  );
-                }
-                setReplies(repliesMap);
-              }
-            }
-          }
-        } catch (e) {
-          console.error("Error fetching queries and replies:", e);
-          toast.error("Failed to load query messages.");
-        } finally {
-          setLoading(false);
-        }
-      };
-      fetchQueriesAndReplies();
-    }
-  }, [session]);
 
   const handleSendReply = async (queryId: string) => {
     if (!session?.user) return;
@@ -120,14 +72,25 @@ export default function UserQueriesPage() {
 
       if (error) throw error;
 
-      toast.success("Reply sent successfully!");
+      // 1. Write the new reply to IndexedDB immediately
+      const db = await getDB();
+      if (db) {
+        const { users: _, ...replyRow } = data;
+        await db.put(STORE.QUERY_REPLIES, replyRow);
+      }
 
-      const newReply = data as unknown as QueryReplyWithUser;
-      const currentReplies = replies[queryId] || [];
-      setReplies({
-        ...replies,
-        [queryId]: [...currentReplies, newReply],
+      // 2. Invalidate the query to trigger a reload from IndexedDB
+      queryClient.invalidateQueries({
+        queryKey: [STORE.USER_QUERIES, session.user.id],
       });
+
+      // 3. Broadcast sync notification to the admin channel
+
+      sendRealtimeBroadcast("admin-channel", "sync", {
+        tables: [STORE.QUERY_REPLIES, STORE.USER_QUERIES],
+      });
+
+      toast.success("Reply sent successfully!");
 
       setReplyTexts({
         ...replyTexts,
@@ -160,7 +123,7 @@ export default function UserQueriesPage() {
     setStatusFilter("all");
   };
 
-  if (sessionLoading) {
+  if (sessionLoading || queriesLoading) {
     return <Loading message="Loading your query dashboard..." />;
   }
 

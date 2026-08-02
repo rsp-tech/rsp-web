@@ -1,5 +1,6 @@
 "use client";
 
+import { useQueryClient } from "@tanstack/react-query";
 import { Heart, Loader2, LogIn, Save } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -8,6 +9,7 @@ import { Loading } from "@/components/loading";
 import { useSession } from "@/components/providers";
 import { Button } from "@/components/ui/button";
 import { STORE } from "@/constants";
+import { useUserServiceInterests } from "@/hooks/use-user-service-interests";
 import { getDB } from "@/lib/idb";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import type { Service, UserServiceInterest } from "@/types";
@@ -20,6 +22,7 @@ interface ServiceInterest {
 }
 
 export function GetInvolvedClient() {
+  const queryClient = useQueryClient();
   const { session, isLoading: sessionLoading } = useSession();
   const [services, setServices] = useState<Service[]>([]);
   const [interests, setInterests] = useState<Map<number, ServiceInterest>>(
@@ -32,7 +35,10 @@ export function GetInvolvedClient() {
   const [saving, setSaving] = useState(false);
   const [authOpen, setAuthOpen] = useState(false);
 
-  // Load services and user interests
+  const { data: userInterestsData, isLoading: interestsLoading } =
+    useUserServiceInterests(session?.user?.id);
+
+  // Load services
   useEffect(() => {
     async function loadData() {
       try {
@@ -44,27 +50,6 @@ export function GetInvolvedClient() {
           (a, b) => (a.order_ind ?? 0) - (b.order_ind ?? 0),
         );
         setServices(sorted);
-
-        if (session?.user) {
-          const supabase = getSupabaseClient();
-          const { data, error } = await supabase
-            .from("user_service_interests")
-            .select("service_id, level, notes")
-            .eq("user_id", session.user.id);
-
-          if (error) throw error;
-
-          const interestMap = new Map<number, ServiceInterest>();
-          for (const item of data || []) {
-            interestMap.set(item.service_id, {
-              service_id: item.service_id,
-              level: item.level ?? "curious",
-              notes: item.notes ?? "",
-            });
-          }
-          setInterests(new Map(interestMap));
-          setInitialInterests(new Map(interestMap));
-        }
       } catch (err) {
         console.error(err);
         toast.error("Failed to load volunteering opportunities data.");
@@ -73,7 +58,23 @@ export function GetInvolvedClient() {
       }
     }
     loadData();
-  }, [session]);
+  }, []);
+
+  // Update initial interests state when hook data resolves
+  useEffect(() => {
+    if (userInterestsData) {
+      const interestMap = new Map<number, ServiceInterest>();
+      for (const item of userInterestsData) {
+        interestMap.set(item.service_id, {
+          service_id: item.service_id,
+          level: item.level ?? "curious",
+          notes: item.notes ?? "",
+        });
+      }
+      setInterests(new Map(interestMap));
+      setInitialInterests(new Map(interestMap));
+    }
+  }, [userInterestsData]);
 
   const handleToggleInterest = (serviceId: number) => {
     const next = new Map(interests);
@@ -131,6 +132,8 @@ export function GetInvolvedClient() {
         }
       }
 
+      const db = await getDB();
+
       // Execute deletes
       if (toDelete.length > 0) {
         const { error: deleteError } = await supabase
@@ -140,16 +143,41 @@ export function GetInvolvedClient() {
           .in("service_id", toDelete);
 
         if (deleteError) throw deleteError;
+
+        if (db) {
+          const allInterests = await db.getAll(STORE.USER_SERVICE_INTERESTS);
+          const targetIds = allInterests
+            .filter(
+              (item) =>
+                item.user_id === session.user.id &&
+                toDelete.includes(item.service_id),
+            )
+            .map((item) => item.id);
+          for (const targetId of targetIds) {
+            await db.delete(STORE.USER_SERVICE_INTERESTS, targetId);
+          }
+        }
       }
 
       // Execute upserts
       if (toUpsert.length > 0) {
-        const { error: upsertError } = await supabase
+        const { data: upsertData, error: upsertError } = await supabase
           .from("user_service_interests")
-          .upsert(toUpsert);
+          .upsert(toUpsert)
+          .select();
 
         if (upsertError) throw upsertError;
+
+        if (db && upsertData) {
+          for (const row of upsertData) {
+            await db.put(STORE.USER_SERVICE_INTERESTS, row);
+          }
+        }
       }
+
+      queryClient.invalidateQueries({
+        queryKey: [STORE.USER_SERVICE_INTERESTS, session.user.id],
+      });
 
       setInitialInterests(new Map(interests));
       toast.success("Volunteering interests saved successfully!");
@@ -164,7 +192,7 @@ export function GetInvolvedClient() {
     }
   };
 
-  if (sessionLoading || loading) {
+  if (sessionLoading || loading || interestsLoading) {
     return <Loading message="Loading volunteering opportunities..." />;
   }
 

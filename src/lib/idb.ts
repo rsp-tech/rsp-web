@@ -11,10 +11,15 @@ import type {
   FeaturedSection,
   Language,
   Material,
+  QueryReply,
   Recording,
   Redirect,
   Service,
   Speaker,
+  UserEditRequest,
+  UserProfile,
+  UserQuery,
+  UserServiceInterest,
   Venue,
 } from "@/types";
 
@@ -88,6 +93,29 @@ export interface RSP_IDB {
     key: number;
     value: FeaturedItem;
     indexes: { [INDEX.BY_SECTION_ID]: number };
+  };
+  users: {
+    key: string;
+    value: UserProfile;
+  };
+  user_edit_requests: {
+    key: string;
+    value: UserEditRequest;
+  };
+  user_service_interests: {
+    key: string;
+    value: UserServiceInterest;
+  };
+  user_queries: {
+    key: string;
+    value: UserQuery;
+  };
+  query_replies: {
+    key: string;
+    value: QueryReply;
+    indexes: {
+      [INDEX.BY_QUERY_ID]: string;
+    };
   };
   sync_meta: {
     key: StoreName;
@@ -166,6 +194,22 @@ const IDB_SCHEMA: Record<
   [STORE.CACHE_LEDGER]: {
     keyPath: "id",
     // indexes: [{ name: INDEX.BY_ACCESSED_AT, keyPath: "accessedAt" }],
+  },
+  [STORE.USERS]: {
+    keyPath: "id",
+  },
+  [STORE.USER_EDIT_REQUESTS]: {
+    keyPath: "id",
+  },
+  [STORE.USER_SERVICE_INTERESTS]: {
+    keyPath: "id",
+  },
+  [STORE.USER_QUERIES]: {
+    keyPath: "id",
+  },
+  [STORE.QUERY_REPLIES]: {
+    keyPath: "id",
+    indexes: [{ name: INDEX.BY_QUERY_ID, keyPath: "query_id" }],
   },
 };
 

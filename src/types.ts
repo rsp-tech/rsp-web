@@ -32,31 +32,6 @@ export type Redirect = Tables<"redirects">;
 export type Service = Tables<"services">;
 export type UserServiceInterest = Tables<"user_service_interests", "Insert">;
 
-export type Notification = {
-  id: string;
-  title: string;
-  message: string;
-  target_type: "all" | "roles" | "users";
-  target_roles: number[] | null;
-  target_users: string[] | null;
-  created_at: string;
-};
-
-export type UserNotification = {
-  id: string;
-  user_id: string;
-  notification_id: string | null;
-  title: string;
-  message: string;
-  read: boolean;
-  created_at: string;
-};
-
-export type NotificationPayload = {
-  title?: string;
-  message?: string;
-};
-
 export interface RecordingMaterialMetadata {
   id: string;
   fileName: string;
@@ -148,6 +123,7 @@ export interface SyncResult {
   changedCategoryPaths: string[];
   changedIds: SyncChangedIds;
   rebuildSearchIndex: boolean;
+  changedTables: string[];
 }
 
 export type UserProfile = DB_TABLE<"users">;
