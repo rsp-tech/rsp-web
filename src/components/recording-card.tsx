@@ -20,7 +20,6 @@ interface RecordingCardProps {
 }
 
 const CACHE_NAME = "rsp-audio-cache";
-export const CARD_HEIGHT = 136; // Exported for virtualization estimateSize
 
 export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
   const { isPlaying, currentAudioId } = useAudioPlayback();

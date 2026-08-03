@@ -6,8 +6,6 @@ import { RecordingCard } from "./recording-card";
 export interface RecordingCardsProps {
   sortedRecordings: EnrichedRecording[];
 }
-// const CARD_GAP = 12;
-// const ITEM_TOTAL_HEIGHT = CARD_HEIGHT + CARD_GAP;
 
 // Keyboard navigation for recordings
 const handleRecordingKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
