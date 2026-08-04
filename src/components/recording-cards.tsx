@@ -46,20 +46,26 @@ export const RecordingCards = ({ sortedRecordings }: RecordingCardsProps) => {
   useEffect(() => {
     if (!q) return;
 
-    const timer = setTimeout(() => {
+    let timer: NodeJS.Timeout;
+    const animFrame = requestAnimationFrame(() => {
       const element = document.getElementById(`recording-${q}`);
-
       if (!element) return;
+      const scrollToEl = () => {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+        element.focus();
+      };
 
-      element.scrollIntoView({
-        behavior: "smooth",
-        block: "center",
-      });
+      scrollToEl();
+      timer = setTimeout(scrollToEl, 150);
+    });
 
-      element.focus();
-    }, 150);
-
-    return () => clearTimeout(timer);
+    return () => {
+      animFrame && cancelAnimationFrame(animFrame);
+      timer && clearTimeout(timer);
+    };
   }, [q]);
 
   return sortedRecordings.map((rec, idx) => {
