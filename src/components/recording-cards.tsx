@@ -1,13 +1,16 @@
 import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import type { EnrichedRecording } from "@/types";
 import { RecordingCard } from "./recording-card";
 
 export interface RecordingCardsProps {
   sortedRecordings: EnrichedRecording[];
 }
-// const CARD_GAP = 12;
-// const ITEM_TOTAL_HEIGHT = CARD_HEIGHT + CARD_GAP;
+
+const STAGGER_START_OFFSET = 10;
+const MAX_ANIMATED_ITEMS = 30;
+const STAGGER_MULTIPLIER = 40;
+const MAX_DELAY_MS = 250;
 
 // Keyboard navigation for recordings
 const handleRecordingKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
@@ -19,12 +22,10 @@ const handleRecordingKeyDown = (e: React.KeyboardEvent<HTMLDivElement>) => {
 
   if (e.key === "ArrowDown") {
     e.preventDefault();
-    const next = (index + 1) % recs.length;
-    recs[next]?.focus();
+    recs[(index + 1) % recs.length]?.focus();
   } else if (e.key === "ArrowUp") {
     e.preventDefault();
-    const prev = (index - 1 + recs.length) % recs.length;
-    recs[prev]?.focus();
+    recs[(index - 1 + recs.length) % recs.length]?.focus();
   }
 };
 
@@ -34,32 +35,62 @@ export const RecordingCards = ({ sortedRecordings }: RecordingCardsProps) => {
   const q = searchParams.get("q");
   const m = searchParams.get("m");
 
-  // Autoscroll to selected recording via TanStack Virtualizer index scroll
+  const [animationStartIndex, animationEndIndex] = useMemo(() => {
+    const targetRecId = Number(q);
+    const targetIndex = sortedRecordings.findIndex((r) => r.id === targetRecId);
+    const animationStartIndex =
+      targetIndex === -1 ? 0 : Math.max(0, targetIndex - STAGGER_START_OFFSET);
+    return [animationStartIndex, animationStartIndex + MAX_ANIMATED_ITEMS];
+  }, [sortedRecordings, q]);
+
   useEffect(() => {
-    if (q) {
-      // Delay slightly to allow rendering to complete
-      const timer = setTimeout(() => {
-        const element = document.getElementById(`recording-${q}`);
-        if (element) {
-          element.scrollIntoView({ behavior: "smooth", block: "center" });
-          element.focus();
-        }
-      }, 150);
-      return () => clearTimeout(timer);
-    }
+    if (!q) return;
+
+    let timer: NodeJS.Timeout;
+    const animFrame = requestAnimationFrame(() => {
+      const element = document.getElementById(`recording-${q}`);
+      if (!element) return;
+      const scrollToEl = () => {
+        element.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+        element.focus();
+      };
+
+      scrollToEl();
+      timer = setTimeout(scrollToEl, 150);
+    });
+
+    return () => {
+      animFrame && cancelAnimationFrame(animFrame);
+      timer && clearTimeout(timer);
+    };
   }, [q]);
 
-  return sortedRecordings.map((rec, idx) => (
-    <div
-      id={`recording-${rec.id}`}
-      key={rec.id}
-      className="opacity-0"
-      style={{
-        animation: "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
-        animationDelay: `${idx * 50}ms`,
-      }}
-    >
-      <RecordingCard rec={rec} q={q} m={m} onKeyDown={handleRecordingKeyDown} />
-    </div>
-  ));
+  return sortedRecordings.map((rec, idx) => {
+    const shouldAnimate = idx >= animationStartIndex && idx < animationEndIndex;
+
+    return (
+      <div
+        id={`recording-${rec.id}`}
+        key={rec.id}
+        className={shouldAnimate ? "opacity-0" : undefined}
+        style={
+          shouldAnimate
+            ? {
+                animation:
+                  "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                animationDelay: `${Math.min(
+                  Math.sqrt(idx - animationStartIndex) * STAGGER_MULTIPLIER,
+                  MAX_DELAY_MS,
+                )}ms`,
+              }
+            : undefined
+        }
+      >
+        <RecordingCard {...{ rec, q, m }} onKeyDown={handleRecordingKeyDown} />
+      </div>
+    );
+  });
 };
