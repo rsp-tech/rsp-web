@@ -68,11 +68,13 @@ export interface RecordingSearchDocument {
   speaker_names: string;
   languages: string;
   venue_name: string;
+  event_name: string;
   date: number;
   speaker_ids: number[];
   category_id: number;
   lang_ids: number[];
   venues_id: number;
+  event_id: number;
 }
 
 export interface CategorySearchDocument {
@@ -101,8 +103,16 @@ export interface RecordingSearchFilters {
   speaker_ids?: number[];
   lang_ids?: number[];
   venues_id?: number;
+  event_id?: number;
   date_start?: string;
   date_end?: string;
+}
+
+export interface DeletedRecord {
+  id: number;
+  table_name: string;
+  record_id: string;
+  updated_at?: string;
 }
 
 export interface SearchPayload {

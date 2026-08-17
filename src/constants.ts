@@ -42,6 +42,7 @@ export const STORE = {
   USER_SERVICE_INTERESTS: "user_service_interests",
   USER_QUERIES: "user_queries",
   QUERY_REPLIES: "query_replies",
+  DELETED_RECORDS: "deleted_records",
 } as const;
 
 export const ROLE_SYNCED_TABLES = [
@@ -239,6 +240,12 @@ export const SYNC_COLUMNS = {
     message,
     updated_at
   `,
+
+  deleted_records: `
+    id,
+    table_name,
+    record_id
+  `,
 } as const;
 
 // Index names
@@ -291,6 +298,7 @@ export const QUERY_KEY = {
   SPEAKERS: "speakers",
   LANGUAGES: "languages",
   VENUES: "venues",
+  EVENTS: "events",
   AUDIO_CACHE_LIST: "audio-cache-list",
 } as const;
 
@@ -299,6 +307,7 @@ export const SEARCH_LIMIT = 15;
 export const SEARCH_TOLERANCE = 1;
 export const SEARCH_BOOST_NAME = 2.0;
 export const SEARCH_BOOST_SPEAKER = 1.5;
+export const SEARCH_BOOST_EVENT = 1.2;
 export const INVALIDATE_ALL_THRESHOLD = 10;
 
 export const QUERY_CATEGORIES = [

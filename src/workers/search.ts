@@ -8,6 +8,7 @@ import {
   type WhereCondition,
 } from "@orama/orama";
 import {
+  SEARCH_BOOST_EVENT,
   SEARCH_BOOST_NAME,
   SEARCH_BOOST_SPEAKER,
   SEARCH_LIMIT,
@@ -20,6 +21,7 @@ import { errorMessage } from "@/lib/utils";
 import type {
   Category,
   CategorySearchDocument,
+  Event,
   Language,
   Material,
   MaterialSearchDocument,
@@ -38,11 +40,13 @@ const recordingsSchema = {
   speaker_names: "string",
   languages: "string",
   venue_name: "string",
+  event_name: "string",
   date: "number",
   speaker_ids: "enum[]",
   category_id: "number",
   lang_ids: "enum[]",
   venues_id: "number",
+  event_id: "number",
 } as const;
 
 const categoriesSchema = {
@@ -70,6 +74,7 @@ interface LookupMaps {
   speakers: Map<number, string>;
   languages: Map<number, string>;
   venues: Map<number, string>;
+  events: Map<number, string>;
 }
 
 interface SearchEngine {
@@ -100,6 +105,7 @@ const mapRecording = (
 ): RecordingSearchDocument => {
   const speakerIds = compactNumbers(recording.speaker_ids);
   const venueId = recording.venues_id ?? 0;
+  const eventId = recording.event_id ?? 0;
   const recordingTs = Date.parse(recording.recorded_at ?? "");
   return {
     id: String(recording.id),
@@ -111,11 +117,13 @@ const mapRecording = (
     languages:
       recording.lang_ids?.map((id) => maps.languages.get(id)).join(", ") ?? "",
     venue_name: maps.venues.get(venueId) ?? "",
+    event_name: maps.events.get(eventId) ?? "",
     date: Number.isFinite(recordingTs) ? recordingTs : 0,
     speaker_ids: speakerIds,
     category_id: recording.category_id,
     lang_ids: compactNumbers(recording.lang_ids),
     venues_id: venueId,
+    event_id: eventId,
   };
 };
 
@@ -141,10 +149,11 @@ const loadLookupMaps = async (): Promise<LookupMaps> => {
   const db = await getDB();
   if (!db) throw new Error("IndexedDB unavailable");
 
-  const [speakers, venues, languages] = await Promise.all([
+  const [speakers, venues, languages, events] = await Promise.all([
     db.getAll(STORE.SPEAKERS),
     db.getAll(STORE.VENUES),
     db.getAll(STORE.LANGUAGES),
+    db.getAll(STORE.EVENTS),
   ]);
 
   return {
@@ -156,6 +165,7 @@ const loadLookupMaps = async (): Promise<LookupMaps> => {
         l.name === l.native_name ? `${l.name} (${l.native_name})` : l.name,
       ]),
     ),
+    events: new Map(events.map((e: Event) => [e.id, e.short_name || e.name])),
   };
 };
 
@@ -232,7 +242,12 @@ const updateDocs = async (
   const lookupMaps =
     table === STORE.RECORDINGS
       ? await loadLookupMaps()
-      : { speakers: new Map(), venues: new Map(), languages: new Map() };
+      : {
+          speakers: new Map(),
+          venues: new Map(),
+          languages: new Map(),
+          events: new Map(),
+        };
 
   const recCatIdMap =
     table === STORE.MATERIALS
@@ -290,6 +305,9 @@ const toRecordingWhere = (
   if (filters.venues_id !== undefined)
     clauses.push({ venues_id: { eq: filters.venues_id } });
 
+  if (filters.event_id !== undefined)
+    clauses.push({ event_id: { eq: filters.event_id } });
+
   if (filters.speaker_ids?.length) {
     clauses.push({ speaker_ids: { containsAll: filters.speaker_ids } });
   }
@@ -328,10 +346,17 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
             currentEngine.recordingsDb,
             {
               term,
-              properties: ["name", "speaker_names", "venue_name", "languages"],
+              properties: [
+                "name",
+                "speaker_names",
+                "venue_name",
+                "event_name",
+                "languages",
+              ],
               boost: {
                 name: SEARCH_BOOST_NAME,
                 speaker_names: SEARCH_BOOST_SPEAKER,
+                event_name: SEARCH_BOOST_EVENT,
               },
               where: recordingWhere,
               limit: recordingLimit,

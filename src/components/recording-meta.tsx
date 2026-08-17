@@ -1,4 +1,11 @@
-import { Calendar, ExternalLink, Globe, MapPin, User } from "lucide-react";
+import {
+  Calendar,
+  ExternalLink,
+  Globe,
+  MapPin,
+  Sparkles,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { PHILOSOPHICAL_CONCEPTS } from "@/constants";
@@ -10,6 +17,7 @@ import type { EnrichedRecording } from "@/types";
 import { MaterialBadge } from "./material-badge";
 import { MaterialsPopover } from "./materials-popover";
 import { Skeleton } from "./ui/skeleton";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 interface RecordingMetaProps {
   rec: EnrichedRecording;
@@ -19,7 +27,7 @@ interface RecordingMetaProps {
 }
 
 export const RecordingMeta = ({ rec, m, sm, showLink }: RecordingMetaProps) => {
-  const { speakers, languages, venues, isPending } = useMetadata();
+  const { speakers, languages, venues, events, isPending } = useMetadata();
   const isMobile = useIsMobile();
   const nMaterialPills = isMobile ? 1 : 2;
   const { data: categories } = useCategories();
@@ -32,6 +40,8 @@ export const RecordingMeta = ({ rec, m, sm, showLink }: RecordingMetaProps) => {
       ?.map((id) => languages.find((l) => l.id === id)?.name)
       .join(", ") ?? "";
   const venue = venues.find((v) => v.id === rec.venues_id)?.name ?? "";
+  const matchedEvent = events.find((e) => e.id === rec.event_id);
+  const eventName = matchedEvent?.short_name || matchedEvent?.name || "";
 
   const href = showLink
     ? `/${categoryPath(categories?.find((c) => c?.id === rec.category_id)?.url_path ?? "")}?q=${rec.id}`
@@ -86,28 +96,42 @@ export const RecordingMeta = ({ rec, m, sm, showLink }: RecordingMetaProps) => {
             ))
           : [
               rec_speakers && (
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1" key="speaker">
                   <User className="w-3 h-3 text-muted-foreground opacity-80" />
                   {rec_speakers}
                 </span>
               ),
               venue && (
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1" key="venue">
                   <MapPin className="w-3 h-3 text-muted-foreground opacity-80" />
                   {venue}
                 </span>
+              ),
+              eventName && (
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <span className="flex items-center gap-1" key="event">
+                      <Sparkles className="w-3 h-3 text-muted-foreground opacity-80" />
+                      {eventName}
+                    </span>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">
+                    {matchedEvent?.name}
+                  </TooltipContent>
+                </Tooltip>
               ),
               rec.recorded_at && (
                 <span
                   className="flex items-center gap-1"
                   suppressHydrationWarning
+                  key="date"
                 >
                   <Calendar className="w-3 h-3 text-muted-foreground opacity-80" />
                   {new Date(rec.recorded_at).toLocaleDateString()}
                 </span>
               ),
               rec_languages && (
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1" key="lang">
                   <Globe className="w-3 h-3 text-muted-foreground opacity-80" />
                   {rec_languages}
                 </span>
