@@ -14,7 +14,7 @@ if (!SYNC_RESOURCE) {
 
 export const GET = async (
   request: NextRequest,
-  ctx: RouteContext<"/api/sync/[id]">,
+  ctx: { params: Promise<{ id: string }> },
 ) => {
   try {
     const authHeader = request.headers.get("Authorization");

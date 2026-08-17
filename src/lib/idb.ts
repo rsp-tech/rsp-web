@@ -4,6 +4,7 @@ import type {
   AudioCacheLedgerEntry,
   Category,
   ContentType,
+  DeletedRecord,
   Event,
   Faq,
   FaqCategory,
@@ -117,6 +118,10 @@ export interface RSP_IDB {
       [INDEX.BY_QUERY_ID]: string;
     };
   };
+  [STORE.DELETED_RECORDS]: {
+    key: number;
+    value: DeletedRecord;
+  };
   sync_meta: {
     key: StoreName;
     value: { id: string; updated_at: string };
@@ -210,6 +215,9 @@ const IDB_SCHEMA: Record<
   [STORE.QUERY_REPLIES]: {
     keyPath: "id",
     indexes: [{ name: INDEX.BY_QUERY_ID, keyPath: "query_id" }],
+  },
+  [STORE.DELETED_RECORDS]: {
+    keyPath: "id",
   },
 };
 

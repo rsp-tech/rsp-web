@@ -113,6 +113,81 @@ interface WriteRowsConfig {
   changedCategoryMeta: ChangedCategoryMeta;
 }
 
+const STRING_KEY_TABLES = new Set<string>([
+  STORE.REDIRECTS,
+  STORE.USERS,
+  STORE.USER_EDIT_REQUESTS,
+  STORE.USER_SERVICE_INTERESTS,
+  STORE.USER_QUERIES,
+  STORE.QUERY_REPLIES,
+]);
+
+export const parseRecordKey = (
+  table: string,
+  recordId: string,
+): number | string => {
+  if (STRING_KEY_TABLES.has(table)) {
+    return recordId;
+  }
+  const numericId = Number(recordId);
+  return Number.isFinite(numericId) ? numericId : recordId;
+};
+
+export const applyDeletedRecords = async (
+  db: IDBPDatabase<RSP_IDB>,
+  deletedRows: { table_name: string; record_id: string }[],
+  changedIds: SyncChangedIds,
+  changedCategoryMeta: ChangedCategoryMeta,
+): Promise<void> => {
+  for (const del of deletedRows) {
+    const { table_name, record_id } = del;
+    if (!table_name || !record_id) continue;
+    const targetStore = table_name as keyof RSP_IDB;
+    if (!db.objectStoreNames.contains(targetStore)) continue;
+
+    const parsedKey = parseRecordKey(table_name, record_id);
+    const numId = typeof parsedKey === "number" ? parsedKey : Number(record_id);
+
+    if (table_name === STORE.RECORDINGS && Number.isFinite(numId)) {
+      const existing = (await db.get(STORE.RECORDINGS, numId)) as
+        | { category_id?: number }
+        | undefined;
+      if (existing?.category_id) {
+        changedCategoryMeta.changedRecordings[numId] = existing.category_id;
+        changedCategoryMeta.bubbledChangeCategoryIds.add(existing.category_id);
+      }
+      changedIds.recordings.push(numId);
+    } else if (table_name === STORE.CATEGORIES && Number.isFinite(numId)) {
+      const existing = (await db.get(STORE.CATEGORIES, numId)) as
+        | { url_path?: string; path?: string }
+        | undefined;
+      if (existing) {
+        changedCategoryMeta.changedCategories[numId] = existing.url_path ?? "";
+        if (existing.path) {
+          changedCategoryMeta.bubbledChangeCategoryIds.add(
+            Number(existing.path.split(".").pop()),
+          );
+        }
+      }
+      changedIds.categories.push(numId);
+    } else if (table_name === STORE.MATERIALS && Number.isFinite(numId)) {
+      const existing = (await db.get(STORE.MATERIALS, numId)) as
+        | { recording_id?: number }
+        | undefined;
+      if (existing?.recording_id) {
+        changedCategoryMeta.bubbledChangeRecordingIds.add(
+          existing.recording_id,
+        );
+      }
+      changedIds.materials.push(numId);
+    }
+
+    const tx = db.transaction(targetStore, "readwrite");
+    await tx.store.delete(parsedKey);
+    await tx.done;
+  }
+};
+
 const writeRowsToStore = async ({
   db,
   table,
@@ -157,6 +232,7 @@ const writeUnzippedTablesToDb = async (
 ) => {
   const txs: Promise<void>[] = [];
   for (const table of tables) {
+    if (table === STORE.DELETED_RECORDS) continue;
     const records = parseCSVTable<RSP_IDB[SyncTable]["value"]>(
       toCSVRows(unzipped, table),
       table,
@@ -257,13 +333,22 @@ export const syncTable = async ({
     if (!data?.length) break;
 
     const rows = data as unknown as SyncRow[];
-    await writeRowsToStore({
-      db,
-      table,
-      rows,
-      changedIds,
-      changedCategoryMeta,
-    });
+    if (table === STORE.DELETED_RECORDS) {
+      await applyDeletedRecords(
+        db,
+        rows as unknown as { table_name: string; record_id: string }[],
+        changedIds,
+        changedCategoryMeta,
+      );
+    } else {
+      await writeRowsToStore({
+        db,
+        table,
+        rows,
+        changedIds,
+        changedCategoryMeta,
+      });
+    }
     changedRows += rows.length;
 
     if (rows.length < SYNC_PAGE_SIZE) break;
@@ -295,6 +380,27 @@ export const loadStaticZipSeeds = async (
 
   const tables = Object.keys(SYNC_COLUMNS) as SyncTable[];
   await writeUnzippedTablesToDb(db, unzipped, tables);
+
+  const deletedRecordsBytes = unzipped["deleted_records.csv"];
+  if (deletedRecordsBytes) {
+    const deletedRecords = parseCSVTable<{
+      table_name: string;
+      record_id: string;
+    }>(toCSVRows(unzipped, "deleted_records"), "deleted_records");
+    if (deletedRecords.length > 0) {
+      await applyDeletedRecords(
+        db,
+        deletedRecords,
+        { categories: [], recordings: [], materials: [] },
+        {
+          changedCategories: {},
+          bubbledChangeCategoryIds: new Set(),
+          changedRecordings: {},
+          bubbledChangeRecordingIds: new Set(),
+        },
+      );
+    }
+  }
 
   // Write updated_at watermarks to sync_meta
   const syncMetaTx = db.transaction(STORE.SYNC_META, "readwrite");
