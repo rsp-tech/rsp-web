@@ -378,36 +378,21 @@ export const loadStaticZipSeeds = async (
     new TextDecoder().decode(syncStateBytes),
   ) as Record<string, string>;
 
-  const tables = Object.keys(SYNC_COLUMNS) as SyncTable[];
+  const tables = (Object.keys(SYNC_COLUMNS) as SyncTable[]).filter(
+    (t) => t !== STORE.DELETED_RECORDS,
+  );
   await writeUnzippedTablesToDb(db, unzipped, tables);
-
-  const deletedRecordsBytes = unzipped["deleted_records.csv"];
-  if (deletedRecordsBytes) {
-    const deletedRecords = parseCSVTable<{
-      table_name: string;
-      record_id: string;
-    }>(toCSVRows(unzipped, "deleted_records"), "deleted_records");
-    if (deletedRecords.length > 0) {
-      await applyDeletedRecords(
-        db,
-        deletedRecords,
-        { categories: [], recordings: [], materials: [] },
-        {
-          changedCategories: {},
-          bubbledChangeCategoryIds: new Set(),
-          changedRecordings: {},
-          bubbledChangeRecordingIds: new Set(),
-        },
-      );
-    }
-  }
 
   // Write updated_at watermarks to sync_meta
   const syncMetaTx = db.transaction(STORE.SYNC_META, "readwrite");
   for (const [table, lastUpdated] of Object.entries(syncState)) {
-    if (tables.includes(table as SyncTable) && lastUpdated) {
+    if (
+      ((tables as readonly string[]).includes(table) ||
+        table === STORE.DELETED_RECORDS) &&
+      lastUpdated
+    ) {
       syncMetaTx.store.put({
-        id: table as SyncTable,
+        id: table,
         updated_at: lastUpdated,
       });
     }
