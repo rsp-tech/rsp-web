@@ -45,6 +45,7 @@ export type FeaturedSection = Tables<"featured_sections">;
 export type FeaturedItem = Tables<"featured_items">;
 export type UserQuery = DB_TABLE<"user_queries">;
 export type QueryReply = DB_TABLE<"query_replies">;
+export type DeletedRecord = DB_TABLE<"deleted_records">;
 
 export type UserQueryWithUser = UserQuery & {
   users: { name: string | null; email: string } | null;
@@ -106,13 +107,6 @@ export interface RecordingSearchFilters {
   event_id?: number;
   date_start?: string;
   date_end?: string;
-}
-
-export interface DeletedRecord {
-  id: number;
-  table_name: string;
-  record_id: string;
-  updated_at?: string;
 }
 
 export interface SearchPayload {
