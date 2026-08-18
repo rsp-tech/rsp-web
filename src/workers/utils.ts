@@ -11,7 +11,13 @@ import {
 import type { Database } from "@/database.types";
 import type { RSP_IDB } from "@/lib/idb";
 import { parseCSVTable, toCSVRows } from "@/lib/sync-utils";
-import type { Category, DeletedRecord, Material, Recording, SyncChangedIds } from "@/types";
+import type {
+  Category,
+  DeletedRecord,
+  Material,
+  Recording,
+  SyncChangedIds,
+} from "@/types";
 
 type SupabaseProdClient = SupabaseClient<Database, "prod", "prod">;
 type SyncMetaRow = {
@@ -86,10 +92,10 @@ export const getTablesToSync = async (
       lastSync: supaSyncMeta[table],
       idbLastSync: idbSyncMeta[table],
     })) as {
-      table: SyncTable;
-      lastSync: string | undefined;
-      idbLastSync: string | undefined;
-    }[];
+    table: SyncTable;
+    lastSync: string | undefined;
+    idbLastSync: string | undefined;
+  }[];
 };
 
 export const fetchTableWatermark = async (
@@ -128,9 +134,7 @@ const parseRecordKey = (
   return Number.isSafeInteger(numericId) ? numericId : undefined;
 };
 
-const parseCategoryIdFromPath = (
-  path?: string,
-): number | undefined => {
+const parseCategoryIdFromPath = (path?: string): number | undefined => {
   if (!path) return;
   const categoryId = Number(path.split(".").pop());
   return Number.isSafeInteger(categoryId) ? categoryId : undefined;
@@ -171,13 +175,10 @@ export const applyDeletedRecords = async (
 
       case STORE.CATEGORIES: {
         if (typeof key !== "number") break;
-        const existing = (await tx.store.get(key)) as
-          | Category
-          | undefined;
+        const existing = (await tx.store.get(key)) as Category | undefined;
 
         if (existing) {
-          changedCategoryMeta.changedCategories[key] =
-            existing.url_path ?? "";
+          changedCategoryMeta.changedCategories[key] = existing.url_path ?? "";
 
           const categoryId = parseCategoryIdFromPath(existing.path);
 
