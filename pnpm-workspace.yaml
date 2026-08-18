@@ -9,3 +9,5 @@ onlyBuiltDependencies:
   - '@parcel/watcher'
   - core-js
   - msw
+overrides:
+  typescript: "^6.0.3"
