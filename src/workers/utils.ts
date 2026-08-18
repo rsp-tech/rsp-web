@@ -4,6 +4,7 @@ import type { IDBPDatabase } from "idb";
 import {
   ROLE_SYNCED_TABLES,
   STORE,
+  STRING_KEY_TABLES,
   SYNC_COLUMNS,
   SYNC_PAGE_SIZE,
 } from "@/constants";
@@ -112,15 +113,6 @@ interface WriteRowsConfig {
   changedIds: SyncChangedIds;
   changedCategoryMeta: ChangedCategoryMeta;
 }
-
-const STRING_KEY_TABLES = new Set<string>([
-  STORE.REDIRECTS,
-  STORE.USERS,
-  STORE.USER_EDIT_REQUESTS,
-  STORE.USER_SERVICE_INTERESTS,
-  STORE.USER_QUERIES,
-  STORE.QUERY_REPLIES,
-]);
 
 export const parseRecordKey = (
   table: string,

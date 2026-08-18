@@ -1,5 +1,5 @@
 import Papa from "papaparse";
-import { STORE } from "@/constants";
+import { STRING_KEY_TABLES } from "@/constants";
 
 export const NUMERIC_FIELDS = [
   "id",
@@ -27,19 +27,7 @@ export const castValue = (
   if (val === undefined || val === null) return null;
 
   // Special case: string IDs for redirects and user tables
-  if (
-    (
-      [
-        STORE.REDIRECTS,
-        STORE.USERS,
-        STORE.USER_QUERIES,
-        STORE.QUERY_REPLIES,
-        STORE.USER_EDIT_REQUESTS,
-        STORE.USER_SERVICE_INTERESTS,
-      ] as string[]
-    ).includes(tableName) &&
-    fieldName === "id"
-  ) {
+  if (STRING_KEY_TABLES.has(tableName) && fieldName === "id") {
     return val;
   }
 
