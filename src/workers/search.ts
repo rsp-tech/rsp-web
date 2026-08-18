@@ -165,7 +165,9 @@ const loadLookupMaps = async (): Promise<LookupMaps> => {
         l.name === l.native_name ? `${l.name} (${l.native_name})` : l.name,
       ]),
     ),
-    events: new Map(events.map((e: Event) => [e.id, e.short_name || e.name])),
+    events: new Map(
+      events.map((e: Event) => [e.id, `${e.short_name} ${e.name}`]),
+    ),
   };
 };
 
