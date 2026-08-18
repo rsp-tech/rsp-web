@@ -4,7 +4,6 @@ import type {
   AudioCacheLedgerEntry,
   Category,
   ContentType,
-  DeletedRecord,
   Event,
   Faq,
   FaqCategory,
@@ -24,7 +23,7 @@ import type {
   Venue,
 } from "@/types";
 
-type StoreName = (typeof STORE)[keyof typeof STORE];
+type StoreName = Exclude<(typeof STORE)[keyof typeof STORE], "deleted_records">;
 
 export interface RSP_IDB {
   categories: {
@@ -117,10 +116,6 @@ export interface RSP_IDB {
     indexes: {
       [INDEX.BY_QUERY_ID]: string;
     };
-  };
-  [STORE.DELETED_RECORDS]: {
-    key: number;
-    value: DeletedRecord;
   };
   sync_meta: {
     key: StoreName;
@@ -215,9 +210,6 @@ const IDB_SCHEMA: Record<
   [STORE.QUERY_REPLIES]: {
     keyPath: "id",
     indexes: [{ name: INDEX.BY_QUERY_ID, keyPath: "query_id" }],
-  },
-  [STORE.DELETED_RECORDS]: {
-    keyPath: "id",
   },
 };
 

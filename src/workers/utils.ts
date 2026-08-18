@@ -11,7 +11,7 @@ import {
 import type { Database } from "@/database.types";
 import type { RSP_IDB } from "@/lib/idb";
 import { parseCSVTable, toCSVRows } from "@/lib/sync-utils";
-import type { SyncChangedIds } from "@/types";
+import type { Category, DeletedRecord, Material, Recording, SyncChangedIds } from "@/types";
 
 type SupabaseProdClient = SupabaseClient<Database, "prod", "prod">;
 type SyncMetaRow = {
@@ -21,13 +21,16 @@ type SyncMetaRow = {
 
 type SyncMetaMap = Record<string, string>;
 type TableName = (typeof STORE)[keyof typeof STORE];
+export type IDBTable = Exclude<
+  TableName,
+  "sync_meta" | "role_meta" | "cache_ledger" | "deleted_records"
+>;
 export type SyncTable = Exclude<
   TableName,
   "sync_meta" | "role_meta" | "cache_ledger"
 >;
-type SyncRow = RSP_IDB[SyncTable]["value"] & {
+type SyncRow = (RSP_IDB[IDBTable]["value"] | DeletedRecord) & {
   created_at?: string | null;
-  id: number | string;
   category_id?: number;
   recording_id?: number;
   url_path?: string;
@@ -83,10 +86,10 @@ export const getTablesToSync = async (
       lastSync: supaSyncMeta[table],
       idbLastSync: idbSyncMeta[table],
     })) as {
-    table: SyncTable;
-    lastSync: string | undefined;
-    idbLastSync: string | undefined;
-  }[];
+      table: SyncTable;
+      lastSync: string | undefined;
+      idbLastSync: string | undefined;
+    }[];
 };
 
 export const fetchTableWatermark = async (
@@ -108,74 +111,101 @@ export const fetchTableWatermark = async (
 
 interface WriteRowsConfig {
   db: IDBPDatabase<RSP_IDB>;
-  table: SyncTable;
+  table: IDBTable;
   rows: SyncRow[];
   changedIds: SyncChangedIds;
   changedCategoryMeta: ChangedCategoryMeta;
 }
 
-export const parseRecordKey = (
+const parseRecordKey = (
   table: string,
   recordId: string,
-): number | string => {
+): number | string | undefined => {
   if (STRING_KEY_TABLES.has(table)) {
     return recordId;
   }
   const numericId = Number(recordId);
-  return Number.isFinite(numericId) ? numericId : recordId;
+  return Number.isSafeInteger(numericId) ? numericId : undefined;
+};
+
+const parseCategoryIdFromPath = (
+  path?: string,
+): number | undefined => {
+  if (!path) return;
+  const categoryId = Number(path.split(".").pop());
+  return Number.isSafeInteger(categoryId) ? categoryId : undefined;
 };
 
 export const applyDeletedRecords = async (
   db: IDBPDatabase<RSP_IDB>,
-  deletedRows: { table_name: string; record_id: string }[],
+  deletedRows: DeletedRecord[],
   changedIds: SyncChangedIds,
   changedCategoryMeta: ChangedCategoryMeta,
 ): Promise<void> => {
-  for (const del of deletedRows) {
-    const { table_name, record_id } = del;
+  for (const { table_name, record_id } of deletedRows) {
     if (!table_name || !record_id) continue;
     const targetStore = table_name as keyof RSP_IDB;
     if (!db.objectStoreNames.contains(targetStore)) continue;
 
-    const parsedKey = parseRecordKey(table_name, record_id);
-    const numId = typeof parsedKey === "number" ? parsedKey : Number(record_id);
+    const key = parseRecordKey(table_name, record_id);
 
-    if (table_name === STORE.RECORDINGS && Number.isFinite(numId)) {
-      const existing = (await db.get(STORE.RECORDINGS, numId)) as
-        | { category_id?: number }
-        | undefined;
-      if (existing?.category_id) {
-        changedCategoryMeta.changedRecordings[numId] = existing.category_id;
-        changedCategoryMeta.bubbledChangeCategoryIds.add(existing.category_id);
-      }
-      changedIds.recordings.push(numId);
-    } else if (table_name === STORE.CATEGORIES && Number.isFinite(numId)) {
-      const existing = (await db.get(STORE.CATEGORIES, numId)) as
-        | { url_path?: string; path?: string }
-        | undefined;
-      if (existing) {
-        changedCategoryMeta.changedCategories[numId] = existing.url_path ?? "";
-        if (existing.path) {
-          changedCategoryMeta.bubbledChangeCategoryIds.add(
-            Number(existing.path.split(".").pop()),
-          );
-        }
-      }
-      changedIds.categories.push(numId);
-    } else if (table_name === STORE.MATERIALS && Number.isFinite(numId)) {
-      const existing = (await db.get(STORE.MATERIALS, numId)) as
-        | { recording_id?: number }
-        | undefined;
-      if (existing?.recording_id) {
-        changedCategoryMeta.bubbledChangeRecordingIds.add(
-          existing.recording_id,
-        );
-      }
-      changedIds.materials.push(numId);
-    }
+    if (key === undefined || key === "") continue;
 
     const tx = db.transaction(targetStore, "readwrite");
-    await tx.store.delete(parsedKey);
+
+    switch (table_name) {
+      case STORE.RECORDINGS: {
+        if (typeof key !== "number") break;
+        const existing = (await tx.store.get(key)) as Recording | undefined;
+
+        if (existing?.category_id) {
+          changedCategoryMeta.changedRecordings[key] = existing.category_id;
+          changedCategoryMeta.bubbledChangeCategoryIds.add(
+            existing.category_id,
+          );
+        }
+
+        changedIds.recordings.push(key);
+        break;
+      }
+
+      case STORE.CATEGORIES: {
+        if (typeof key !== "number") break;
+        const existing = (await tx.store.get(key)) as
+          | Category
+          | undefined;
+
+        if (existing) {
+          changedCategoryMeta.changedCategories[key] =
+            existing.url_path ?? "";
+
+          const categoryId = parseCategoryIdFromPath(existing.path);
+
+          if (categoryId !== undefined) {
+            changedCategoryMeta.bubbledChangeCategoryIds.add(categoryId);
+          }
+        }
+
+        changedIds.categories.push(key);
+        break;
+      }
+
+      case STORE.MATERIALS: {
+        if (typeof key !== "number") break;
+        const existing = (await tx.store.get(key)) as Material | undefined;
+
+        if (existing?.recording_id != null) {
+          changedCategoryMeta.bubbledChangeRecordingIds.add(
+            existing.recording_id,
+          );
+        }
+
+        changedIds.materials.push(key);
+        break;
+      }
+    }
+
+    await tx.store.delete(key);
     await tx.done;
   }
 };
@@ -225,7 +255,7 @@ const writeUnzippedTablesToDb = async (
   const txs: Promise<void>[] = [];
   for (const table of tables) {
     if (table === STORE.DELETED_RECORDS) continue;
-    const records = parseCSVTable<RSP_IDB[SyncTable]["value"]>(
+    const records = parseCSVTable<RSP_IDB[IDBTable]["value"]>(
       toCSVRows(unzipped, table),
       table,
     );
@@ -271,10 +301,10 @@ export const loadStaticZipSeedsForRole = async (
   for (const [table, rows] of Object.entries(
     payload as Record<string, string[][]>,
   )) {
-    if (!rows?.length) continue;
+    if (!rows?.length || table === STORE.DELETED_RECORDS) continue;
 
-    const records = parseCSVTable<RSP_IDB[SyncTable]["value"]>(rows, table);
-    const tx = db.transaction(table as keyof RSP_IDB, "readwrite");
+    const records = parseCSVTable<RSP_IDB[IDBTable]["value"]>(rows, table);
+    const tx = db.transaction(table, "readwrite");
     for (const record of records) {
       tx.store.put(record);
     }
@@ -328,7 +358,7 @@ export const syncTable = async ({
     if (table === STORE.DELETED_RECORDS) {
       await applyDeletedRecords(
         db,
-        rows as unknown as { table_name: string; record_id: string }[],
+        rows as DeletedRecord[],
         changedIds,
         changedCategoryMeta,
       );
