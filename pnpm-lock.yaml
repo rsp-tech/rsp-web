@@ -4,6 +4,9 @@ settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
 
+overrides:
+  typescript: ^6.0.3
+
 importers:
 
   .:
@@ -1555,7 +1558,7 @@ packages:
     resolution: {integrity: sha512-U2UkA9BjdpniZkXDIG6NQRBEbXccRvqewzL3hfNEQERvM2bL6ezKvsVF9359akUWP8BxV950Kkq9LKGFmOR8Uw==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      typescript: '>=5.0.0'
+      typescript: ^6.0.3
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -1567,7 +1570,7 @@ packages:
       '@serwist/cli': ^9.5.12
       next: '>=14.0.0'
       react: '>=18.0.0'
-      typescript: '>=5.0.0'
+      typescript: ^6.0.3
     peerDependenciesMeta:
       '@serwist/cli':
         optional: true
@@ -1586,7 +1589,7 @@ packages:
     resolution: {integrity: sha512-+a5Fap7wVR4oN5jg1GxVNbWW+xUv3LO7UWYfg2D8PkJZiTCcX8PwkcmdzMGVr39dyOtIMTSAANw0af1zMjVbOA==}
     engines: {node: '>=18.0.0'}
     peerDependencies:
-      typescript: '>=5.0.0'
+      typescript: ^6.0.3
       webpack: 4.4.0 || ^5.9.0
     peerDependenciesMeta:
       typescript:
@@ -1597,7 +1600,7 @@ packages:
   '@serwist/window@9.5.12':
     resolution: {integrity: sha512-+fjApJme34qfwdGE2kLT8sFx+xWO+a15477MN/B/b1v4HOWBmARuA9C2xGFBCT77XzCrzQ/2DxcDePZsqEYOlw==}
     peerDependencies:
-      typescript: '>=5.0.0'
+      typescript: ^6.0.3
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -2064,7 +2067,7 @@ packages:
     resolution: {integrity: sha512-gtTZxTDau1wL7Y7zifc2dd8jHSK/k6BTx/2Xp/BpdlAdnlYWFVt7qhJqgwi7637yRwRQ3qL4ZidbB4I8tA5VOg==}
     engines: {node: '>=14'}
     peerDependencies:
-      typescript: '>=4.9.5'
+      typescript: ^6.0.3
     peerDependenciesMeta:
       typescript:
         optional: true
@@ -3151,7 +3154,7 @@ packages:
   serwist@9.5.12:
     resolution: {integrity: sha512-PwREKJrSb3ja40XJyBntPOm7okcYZJCJPd++jUVz8tzxY1VYO9dyKSm0MimZ8LtUk0pIUTN0q2cfGe7R0wQsaQ==}
     peerDependencies:
-      typescript: '>=5.0.0'
+      typescript: ^6.0.3
     peerDependenciesMeta:
       typescript:
         optional: true
