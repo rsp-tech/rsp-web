@@ -10,7 +10,7 @@ import {
 import { getDB, type RSP_IDB } from "@/lib/idb";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { createLimiter, errorMessage } from "@/lib/utils";
-import type { SyncChangedIds, SyncResult } from "@/types";
+import type { SyncChangedIds, SyncNewAdditions, SyncResult } from "@/types";
 import {
   type ChangedCategoryMeta,
   getTablesToSync,
@@ -35,6 +35,7 @@ const toSyncResult = async (
   changedCategoryMeta: ChangedCategoryMeta,
   changedIds: SyncChangedIds,
   changedTables: string[],
+  newAdditions: SyncNewAdditions,
 ): Promise<SyncResult> => {
   const rebuildSearchIndex = changedTables.some((table) =>
     (SEARCH_LOOKUP_TABLES as readonly string[]).includes(table),
@@ -70,13 +71,13 @@ const toSyncResult = async (
     bubbledChangeCategoryIds.size > INVALIDATE_ALL_THRESHOLD
       ? ["*"]
       : await Promise.all(
-          Array.from(bubbledChangeCategoryIds).map(async (id) =>
-            id
-              ? (changedCategories[id] ??
-                (await db.get(STORE.CATEGORIES, id))?.url_path)
-              : "~",
-          ),
-        );
+        Array.from(bubbledChangeCategoryIds).map(async (id) =>
+          id
+            ? (changedCategories[id] ??
+              (await db.get(STORE.CATEGORIES, id))?.url_path)
+            : "~",
+        ),
+      );
 
   return {
     changedCategoryPaths,
@@ -84,6 +85,13 @@ const toSyncResult = async (
       recordings: Array.from(new Set(changedIds.recordings ?? [])),
       categories: Array.from(new Set(changedIds.categories ?? [])),
       materials: Array.from(new Set(changedIds.materials ?? [])),
+    },
+    newAdditions: {
+      recordings: Array.from(new Set(newAdditions.recordings)),
+      materials: Array.from(new Set(newAdditions.materials)),
+      categories: Array.from(new Set(newAdditions.categories)),
+      replies: Array.from(new Set(newAdditions.replies)),
+      requests: Array.from(new Set(newAdditions.requests)),
     },
     changedTables,
     rebuildSearchIndex,
@@ -137,15 +145,15 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
 
     const tablesToSync = targetTables?.length
       ? await Promise.all(
-          targetTables.map(async (table) => {
-            const idbMeta = await db.get(STORE.SYNC_META, table);
-            return {
-              table,
-              lastSync: undefined,
-              idbLastSync: idbMeta?.updated_at,
-            };
-          }),
-        )
+        targetTables.map(async (table) => {
+          const idbMeta = await db.get(STORE.SYNC_META, table);
+          return {
+            table,
+            lastSync: undefined,
+            idbLastSync: idbMeta?.updated_at,
+          };
+        }),
+      )
       : await getTablesToSync(db, self.location.origin);
 
     const limit = createLimiter(SYNC_CONCURRENCY);
@@ -159,6 +167,13 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       categories: [],
       recordings: [],
       materials: [],
+    };
+    const newAdditions: SyncNewAdditions = {
+      recordings: [],
+      materials: [],
+      categories: [],
+      replies: [],
+      requests: [],
     };
 
     const nextRole = roleId ?? null;
@@ -209,6 +224,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
               db,
               changedIds,
               changedCategoryMeta,
+              newAdditions,
               table,
               idbLastSync,
               lastSync,
@@ -282,6 +298,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
         changedCategoryMeta,
         changedIds,
         changedTables,
+        newAdditions,
       )),
     });
   } catch (err) {

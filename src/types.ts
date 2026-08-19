@@ -123,11 +123,46 @@ export interface SearchResult {
 
 export type SyncChangedIds = Record<SearchableTable, number[]>;
 
+export interface SyncNewAdditions {
+  recordings: number[];
+  materials: number[];
+  categories: number[];
+  replies: string[];
+  requests: string[];
+}
+
 export interface SyncResult {
   changedCategoryPaths: string[];
   changedIds: SyncChangedIds;
+  newAdditions: SyncNewAdditions;
   rebuildSearchIndex: boolean;
   changedTables: string[];
+}
+
+export interface NotificationGroup {
+  id: string;
+  type: "recordings" | "materials" | "categories" | "replies" | "requests";
+  timestamp: string;
+  itemIds: (number | string)[];
+  readItemIds: (number | string)[];
+}
+
+export interface ResolvedNotificationItem {
+  id: number | string;
+  title: string;
+  subtitle?: string;
+  url: string;
+  timestamp: string;
+  read: boolean;
+}
+
+export interface ResolvedNotificationGroup {
+  id: string;
+  type: NotificationGroup["type"];
+  title: string;
+  timestamp: string;
+  unreadCount: number;
+  items: ResolvedNotificationItem[];
 }
 
 export type UserProfile = DB_TABLE<"users">;

@@ -8,10 +8,11 @@ import {
 import { toast } from "sonner";
 import { useSession } from "@/components/providers";
 import { QUERY_KEY, STORE, SYNC_INTERVAL, WORKER_MSG } from "@/constants";
+import { addSyncNotifications } from "@/hooks/use-notifications";
 import { useOnlineStatus } from "@/hooks/use-online-status";
 import { notifySearchWorker, rebuildSearchIndex } from "@/hooks/use-search";
 import { toRoleId } from "@/lib/utils";
-import type { SearchableTable, SyncResult } from "@/types";
+import type { SearchableTable, SyncNewAdditions, SyncResult } from "@/types";
 
 interface WorkerConfig {
   accessToken: string;
@@ -89,13 +90,14 @@ export const runSync = ({
                 queryKey: [STORE.USERS, config.userId],
               });
             }
-            // Invalidate notifications when relevant tables update
-            if (hasReplies || hasRequests || hasRecordings) {
-              queryClient.invalidateQueries({
-                queryKey: [STORE.USERS, config.userId, "notifications"],
-              });
-            }
           }
+        }
+
+        if (Object.keys(result.newAdditions).some((key) => result.newAdditions[key as keyof SyncNewAdditions].length > 0)) {
+          addSyncNotifications(result.newAdditions, config.userId);
+          queryClient.invalidateQueries({
+            queryKey: [STORE.USERS, "notifications"],
+          });
         }
 
         if (changedCategoryPaths.includes("*")) {

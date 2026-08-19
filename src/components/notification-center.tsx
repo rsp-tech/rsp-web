@@ -3,11 +3,24 @@
 import {
   Bell,
   BellRing,
-  Check,
-  CircleAlert,
+  CheckCheck,
+  FileText,
+  Folder,
   Inbox,
   Loader2,
+  MessageSquare,
+  Music,
+  Trash2,
+  UserCheck,
 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -18,13 +31,49 @@ import {
 } from "@/components/ui/sheet";
 import { useNotifications } from "@/hooks/use-notifications";
 import { cn } from "@/lib/utils";
+import type { ResolvedNotificationGroup } from "@/types";
 
-export function NotificationCenter() {
-  const { notifications, isLoading, markAsRead } = useNotifications();
-  const unreadCount = notifications.filter((n) => !n.read).length;
+const getGroupIcon = (type: ResolvedNotificationGroup["type"]) => {
+  switch (type) {
+    case "recordings":
+      return Music;
+    case "materials":
+      return FileText;
+    case "categories":
+      return Folder;
+    case "replies":
+      return MessageSquare;
+    case "requests":
+      return UserCheck;
+    default:
+      return Bell;
+  }
+};
+
+export const NotificationCenter = () => {
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const {
+    groups,
+    unreadCount,
+    isLoading,
+    markItemAsRead,
+    markAllAsRead,
+    clearAll,
+  } = useNotifications();
+
+  const handleItemClick = (
+    groupId: string,
+    itemId: number | string,
+    url: string,
+  ) => {
+    markItemAsRead(groupId, itemId);
+    setOpen(false);
+    router.push(url);
+  };
 
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger asChild>
         <Button
           type="button"
@@ -53,9 +102,12 @@ export function NotificationCenter() {
         </Button>
       </SheetTrigger>
 
-      <SheetContent side="right">
-        <SheetHeader className="border-b border-border pb-4">
-          <SheetTitle className="flex items-center gap-2 text-lg font-bold">
+      <SheetContent
+        side="right"
+        className="flex flex-col w-full sm:max-w-md p-0"
+      >
+        <SheetHeader className="border-b border-border p-4 flex flex-row items-center justify-between">
+          <SheetTitle className="flex items-center gap-2 font-bold">
             <Bell className="w-5 h-5 text-primary" />
             Notifications
             {unreadCount > 0 && (
@@ -64,6 +116,33 @@ export function NotificationCenter() {
               </span>
             )}
           </SheetTitle>
+
+          {groups.length > 0 && (
+            <div className="flex items-center gap-1 mr-2">
+              {unreadCount > 0 && (
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-sm"
+                  onClick={() => markAllAsRead()}
+                  title="Mark all as read"
+                  className="text-muted-foreground hover:text-primary"
+                >
+                  <CheckCheck className="w-4 h-4" />
+                </Button>
+              )}
+              <Button
+                type="button"
+                variant="ghost"
+                size="icon-sm"
+                onClick={() => clearAll()}
+                title="Clear all notifications"
+                className="text-muted-foreground hover:text-destructive"
+              >
+                <Trash2 className="w-4 h-4" />
+              </Button>
+            </div>
+          )}
         </SheetHeader>
 
         <div className="flex-1 overflow-y-auto p-4 flex flex-col gap-3">
@@ -72,66 +151,113 @@ export function NotificationCenter() {
               <Loader2 className="w-6 h-6 text-primary animate-spin" />
               <p className="text-xs font-medium">Loading notifications...</p>
             </div>
-          ) : notifications.length === 0 ? (
+          ) : groups.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 text-muted-foreground gap-3">
               <div className="p-3 bg-muted rounded-full">
                 <Inbox className="w-6 h-6 text-muted-foreground opacity-80" />
               </div>
               <p className="text-sm font-medium">All caught up!</p>
               <p className="text-xs text-center px-4">
-                No new notifications available. We'll alert you when there is an
-                update.
+                No new notifications available. We'll alert you when new items
+                are synced.
               </p>
             </div>
           ) : (
-            notifications.map((notif) => (
-              <div
-                key={notif.id}
-                className={cn(
-                  "p-3 border rounded-xl flex gap-3 transition-all",
-                  notif.read
-                    ? "bg-background border-border opacity-80"
-                    : "bg-primary/5 border-primary/20 hover:bg-primary/10 shadow-md",
-                )}
-              >
-                <div className="mt-0.5">
-                  <CircleAlert
-                    className={`w-4 h-4 ${notif.read ? "text-muted-foreground" : "text-primary"}`}
-                  />
-                </div>
-                <div className="flex-1 flex flex-col gap-1">
-                  <div className="flex justify-between items-start gap-1">
-                    <h4 className="font-semibold text-sm pr-4">
-                      {notif.title}
-                    </h4>
-                    {!notif.read && (
-                      <Button
-                        type="button"
-                        variant="ghost"
-                        size="icon-xs"
-                        onClick={() => markAsRead(notif.id)}
-                        title="Mark as read"
-                        className="text-primary hover:bg-primary hover:text-primary-foreground"
-                      >
-                        <Check className="w-3 h-3" />
-                      </Button>
+            <Accordion
+              type="multiple"
+              defaultValue={groups.map((g) => g.id)}
+              className="w-full space-y-4"
+            >
+              {groups.map((group) => {
+                const GroupIcon = getGroupIcon(group.type);
+                const hasUnread = group.unreadCount > 0;
+
+                return (
+                  <AccordionItem
+                    key={group.id}
+                    value={group.id}
+                    className={cn(
+                      "border rounded-xl px-3 transition-colors overflow-hidden",
+                      hasUnread
+                        ? "bg-primary/5 border-primary/20"
+                        : "bg-card border-border/40",
                     )}
-                  </div>
-                  <p className="text-xs text-muted-foreground leading-relaxed">
-                    {notif.message}
-                  </p>
-                  <span
-                    className="text-xxs text-muted-foreground opacity-60 mt-1 font-medium"
-                    suppressHydrationWarning
                   >
-                    {new Date(notif.created_at).toLocaleString()}
-                  </span>
-                </div>
-              </div>
-            ))
+                    <AccordionTrigger className="hover:no-underline py-3">
+                      <div className="flex items-center gap-2.5 text-left flex-1 pr-4">
+                        <div
+                          className={cn(
+                            "p-2 rounded-lg shrink-0",
+                            hasUnread
+                              ? "bg-primary text-primary-foreground"
+                              : "bg-muted text-muted-foreground",
+                          )}
+                        >
+                          <GroupIcon className="w-4 h-4" />
+                        </div>
+                        <div className="flex-1">
+                          <div className="flex items-center gap-2">
+                            <h4 className="font-semibold text-sm truncate">
+                              {group.title}
+                            </h4>
+                            {hasUnread && (
+                              <span className="shrink-0 px-1.5 py-0.5 text-xxs font-bold bg-primary text-primary-foreground rounded-full">
+                                {group.unreadCount} new
+                              </span>
+                            )}
+                          </div>
+                          <span
+                            className="text-xxs text-muted-foreground opacity-60"
+                            suppressHydrationWarning
+                          >
+                            {new Date(group.timestamp).toLocaleString()}
+                          </span>
+                        </div>
+                      </div>
+                    </AccordionTrigger>
+
+                    <AccordionContent className="pt-1 pb-3 space-y-2">
+                      {group.items.map((item) => (
+                        <button
+                          key={item.id}
+                          type="button"
+                          onClick={() =>
+                            handleItemClick(group.id, item.id, item.url)
+                          }
+                          className={cn(
+                            "w-full text-left p-2.5 rounded-lg border transition-all flex items-center justify-between gap-2 group",
+                            item.read
+                              ? "bg-background/50 border-border/40 hover:bg-muted opacity-80"
+                              : "bg-background border-primary/20 hover:border-border hover:bg-primary/20 shadow-md",
+                          )}
+                        >
+                          <div className="flex-1">
+                            <p className="text-xs font-semibold truncate group-hover:text-primary transition-colors">
+                              {item.title}
+                            </p>
+                            {item.subtitle && (
+                              <p className="text-xxs text-muted-foreground truncate mt-0.5">
+                                {item.subtitle}
+                              </p>
+                            )}
+                          </div>
+
+                          {!item.read && (
+                            <span
+                              className="h-2 w-2 rounded-full bg-primary shrink-0"
+                              title="Unread"
+                            />
+                          )}
+                        </button>
+                      ))}
+                    </AccordionContent>
+                  </AccordionItem>
+                );
+              })}
+            </Accordion>
           )}
         </div>
       </SheetContent>
     </Sheet>
   );
-}
+};

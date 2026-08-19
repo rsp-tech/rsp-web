@@ -109,9 +109,9 @@ export const MediaPreviewModal = () => {
           gap: 0,
         }}
       >
-        <DialogHeader className="flex justify-between items-center p-2 sm:p-3 sm:px-4 border-b border-border bg-muted">
+        <DialogHeader className="flex justify-between items-center p-2 sm:px-4 border-b border-border bg-muted">
           <DialogTitle
-            className="font-bold text-sm truncate sm:px-2"
+            className="font-bold text-sm truncate sm:px-4"
             style={{ maxWidth: isMobile ? "60%" : "70%" }}
             title={title}
           >
@@ -156,8 +156,9 @@ export const MediaPreviewModal = () => {
         </DialogHeader>
 
         <div
-          className="relative w-full bg-black flex items-center justify-center p-1"
+          className="relative w-full flex items-center justify-center p-1"
           style={{
+            background: 'black',
             aspectRatio: isVideo ? "16/9" : undefined,
             height: isVideo ? undefined : isMobile ? "75vh" : "80vh",
           }}

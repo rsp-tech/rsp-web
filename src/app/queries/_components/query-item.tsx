@@ -34,6 +34,11 @@ export function QueryItem({
   getStatusBadge,
   submitError,
 }: QueryItemProps) {
+  const timeStamp = q.created_at
+    ? new Date(q.created_at).toLocaleDateString(undefined, {
+      dateStyle: "medium",
+    })
+    : null;
   return (
     <AccordionItem
       value={q.id}
@@ -46,17 +51,15 @@ export function QueryItem({
             <span className="text-xxs font-bold text-primary uppercase tracking-wider bg-primary/5 px-2 py-0.5 rounded-md">
               {q.category === "RoleRequest" ? "Role Request" : q.category}
             </span>
-            <span
-              className="text-xxs text-muted-foreground flex items-center gap-1"
-              suppressHydrationWarning
-            >
-              <Clock className="w-3 h-3" />
-              {q.created_at
-                ? new Date(q.created_at).toLocaleDateString(undefined, {
-                    dateStyle: "medium",
-                  })
-                : "Date unknown"}
-            </span>
+            {timeStamp && (
+              <span
+                className="text-xxs text-muted-foreground flex items-center gap-1"
+                suppressHydrationWarning
+              >
+                <Clock className="w-3 h-3" />
+                {timeStamp}
+              </span>
+            )}
           </div>
           <h4 className="font-bold leading-snug truncate mt-1">{q.subject}</h4>
         </div>
@@ -70,13 +73,7 @@ export function QueryItem({
           <div className="bg-card border border-border rounded-lg p-4 flex flex-col gap-2">
             <div className="flex items-center justify-between text-xs text-muted-foreground">
               <span className="font-bold">Original Message</span>
-              <span suppressHydrationWarning>
-                {q.created_at
-                  ? new Date(q.created_at).toLocaleTimeString(undefined, {
-                      timeStyle: "short",
-                    })
-                  : ""}
-              </span>
+              {timeStamp && <span suppressHydrationWarning>{timeStamp}</span>}
             </div>
             <p className="text-sm leading-relaxed bg-muted/20 p-3 rounded-lg border border-border/40">
               {q.message}

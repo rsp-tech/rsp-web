@@ -17,6 +17,7 @@ import type {
   Material,
   Recording,
   SyncChangedIds,
+  SyncNewAdditions,
 } from "@/types";
 
 type SupabaseProdClient = SupabaseClient<Database, "prod", "prod">;
@@ -55,6 +56,7 @@ export interface SyncTableConfig {
   table: SyncTable;
   changedIds: SyncChangedIds;
   changedCategoryMeta: ChangedCategoryMeta;
+  newAdditions: SyncNewAdditions;
   idbLastSync?: string;
   lastSync?: string;
 }
@@ -92,10 +94,10 @@ export const getTablesToSync = async (
       lastSync: supaSyncMeta[table],
       idbLastSync: idbSyncMeta[table],
     })) as {
-    table: SyncTable;
-    lastSync: string | undefined;
-    idbLastSync: string | undefined;
-  }[];
+      table: SyncTable;
+      lastSync: string | undefined;
+      idbLastSync: string | undefined;
+    }[];
 };
 
 export const fetchTableWatermark = async (
@@ -121,6 +123,8 @@ interface WriteRowsConfig {
   rows: SyncRow[];
   changedIds: SyncChangedIds;
   changedCategoryMeta: ChangedCategoryMeta;
+  newAdditions: SyncNewAdditions;
+  idbLastSync?: string;
 }
 
 const parseRecordKey = (
@@ -152,7 +156,6 @@ export const applyDeletedRecords = async (
     if (!db.objectStoreNames.contains(targetStore)) continue;
 
     const key = parseRecordKey(table_name, record_id);
-
     if (key === undefined || key === "") continue;
 
     const tx = db.transaction(targetStore, "readwrite");
@@ -181,7 +184,6 @@ export const applyDeletedRecords = async (
           changedCategoryMeta.changedCategories[key] = existing.url_path ?? "";
 
           const categoryId = parseCategoryIdFromPath(existing.path);
-
           if (categoryId !== undefined) {
             changedCategoryMeta.bubbledChangeCategoryIds.add(categoryId);
           }
@@ -217,10 +219,19 @@ const writeRowsToStore = async ({
   rows,
   changedIds,
   changedCategoryMeta,
+  newAdditions,
+  idbLastSync,
 }: WriteRowsConfig): Promise<void> => {
   const tx = db.transaction(table, "readwrite");
+  const isIncrementalSync = Boolean(idbLastSync);
+
   for (const row of rows) {
-    tx.store.put(row);
+    const key = STRING_KEY_TABLES.has(table) ? String(row.id) : Number(row.id);
+    const existing = isIncrementalSync ? await tx.store.get(key) : true;
+    const isNew = isIncrementalSync && !existing;
+
+    await tx.store.put(row);
+
     switch (table) {
       case STORE.CATEGORIES:
         changedIds.categories.push(row.id as number);
@@ -229,6 +240,9 @@ const writeRowsToStore = async ({
         changedCategoryMeta.bubbledChangeCategoryIds.add(
           Number(row.path?.split(".").pop()),
         );
+        if (isNew && newAdditions) {
+          newAdditions.categories.push(row.id as number);
+        }
         break;
       case STORE.RECORDINGS:
         changedIds.recordings.push(row.id as number);
@@ -237,12 +251,29 @@ const writeRowsToStore = async ({
         changedCategoryMeta.bubbledChangeCategoryIds.add(
           row.category_id as number,
         );
+        if (isNew && newAdditions) {
+          newAdditions.recordings.push(row.id as number);
+        }
         break;
       case STORE.MATERIALS:
         changedIds.materials.push(row.id as number);
         changedCategoryMeta.bubbledChangeRecordingIds.add(
           row.recording_id as number,
         );
+        if (isNew && newAdditions) {
+          newAdditions.materials.push(row.id as number);
+        }
+        break;
+      case STORE.QUERY_REPLIES:
+        if (isNew && newAdditions) {
+          newAdditions.replies.push(String(row.id));
+        }
+        break;
+      case STORE.USER_EDIT_REQUESTS:
+        if (isNew && newAdditions) {
+          newAdditions.requests.push(String(row.id));
+        }
+        break;
     }
   }
   await tx.done;
@@ -324,6 +355,7 @@ export const syncTable = async ({
   idbLastSync,
   lastSync,
   changedCategoryMeta,
+  newAdditions,
 }: SyncTableConfig): Promise<string | boolean> => {
   const highWatermark =
     lastSync || (await fetchTableWatermark(supabase, table));
@@ -366,10 +398,12 @@ export const syncTable = async ({
     } else {
       await writeRowsToStore({
         db,
-        table,
-        rows,
+        table: table as IDBTable,
+        rows: rows as RSP_IDB[IDBTable]["value"][],
         changedIds,
         changedCategoryMeta,
+        newAdditions,
+        idbLastSync,
       });
     }
     changedRows += rows.length;

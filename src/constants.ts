@@ -137,7 +137,6 @@ export const SYNC_COLUMNS = {
 
   services: `
     id,
-    created_at,
     description,
     is_public,
     name,
@@ -191,7 +190,6 @@ export const SYNC_COLUMNS = {
     status,
     role_id,
     phone,
-    created_at,
     updated_at
   `,
 
@@ -215,7 +213,6 @@ export const SYNC_COLUMNS = {
     reviewed_by,
     actor_type,
     actor_id,
-    created_at,
     updated_at
   `,
 
@@ -225,7 +222,6 @@ export const SYNC_COLUMNS = {
     service_id,
     level,
     notes,
-    created_at,
     updated_at
   `,
 
@@ -276,6 +272,7 @@ export const META_KEY = {
 
 export const LOCAL_STORAGE = {
   READ_NOTIFICATIONS: "read-notif-ids",
+  NOTIFICATION_GROUPS: "rsp_notification_groups",
   CLEANUP_USER_ID: "cleanup_user_id",
 } as const;
 
