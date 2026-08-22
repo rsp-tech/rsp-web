@@ -1,14 +1,10 @@
 import { unstable_cache } from "next/cache";
 import { NextResponse } from "next/server";
-import {
-  CACHE_KEY,
-  CACHE_TAG,
-  REVALIDATE_8_HOURS,
-} from "@/app/api/constants";
+import { CACHE_TAG, REVALIDATE_24_HOURS } from "@/app/api/constants";
 import { STORE } from "@/constants";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
-export const revalidate = 28800; // 8 hours
+export const revalidate = 86400; // 24 hours
 
 const getCachedSyncMeta = unstable_cache(
   async () => {
@@ -23,9 +19,9 @@ const getCachedSyncMeta = unstable_cache(
 
     return data;
   },
-  [CACHE_KEY.SYNC_META],
+  [CACHE_TAG.SYNC_META],
   {
-    revalidate: REVALIDATE_8_HOURS,
+    revalidate: REVALIDATE_24_HOURS,
     tags: [CACHE_TAG.SYNC_META],
   },
 );
@@ -36,7 +32,7 @@ export const GET = async () => {
     return NextResponse.json(data, {
       headers: {
         "Cache-Control":
-          "public, max-age=28800, s-maxage=28800, stale-while-revalidate=86400",
+          "public, max-age=86400, s-maxage=86400, stale-while-revalidate=86400",
       },
     });
   } catch (error) {

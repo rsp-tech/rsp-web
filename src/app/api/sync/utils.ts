@@ -1,9 +1,9 @@
 import { unstable_cache } from "next/cache";
 import Papa from "papaparse";
 import {
-  CACHE_KEY,
+  CACHE_TAG,
   CSV_ENDPOINT,
-  REVALIDATE_4_HOURS,
+  REVALIDATE_24_HOURS,
 } from "@/app/api/constants";
 
 const BACKUP_TOKEN = process.env["BACKUP_TOKEN"];
@@ -22,6 +22,10 @@ export const fetchBackupAsset = async (targetResource: string) => {
     headers: {
       Authorization: `Bearer ${BACKUP_TOKEN}`,
     },
+    next: {
+      tags: [CACHE_TAG.BACKUP_RESOURCES],
+      revalidate: REVALIDATE_24_HOURS,
+    },
   })
     .then((res) => res.json())
     .then(
@@ -35,6 +39,10 @@ export const fetchBackupAsset = async (targetResource: string) => {
     headers: {
       Authorization: `Bearer ${BACKUP_TOKEN}`,
       Accept: "application/octet-stream",
+    },
+    next: {
+      tags: [CACHE_TAG.BACKUP_RESOURCES],
+      revalidate: REVALIDATE_24_HOURS,
     },
     redirect: "follow",
   });
@@ -53,25 +61,35 @@ export const fetchBackupAsset = async (targetResource: string) => {
   });
 };
 
-// Cached function to load GitHub CSV backups
-export const getCachedGitHubCSV = unstable_cache(
+// Cached function to load backup CSV tables (Next.js automatically adds `table` arg to the cache key)
+export const getCachedCSV = unstable_cache(
   async (table: string): Promise<string[][]> => {
+    if (!CSV_ENDPOINT) {
+      console.error("Missing CSV_ENDPOINT environment variable");
+      return [];
+    }
+
     const url = `${CSV_ENDPOINT}/${table}.csv`;
     const res = await fetch(url, {
       headers: {
         Authorization: `Bearer ${BACKUP_TOKEN}`,
       },
     });
+
     if (!res.ok) {
       console.error(`Failed to fetch CSV for ${table}:`, res.statusText);
       return [];
     }
+
     const csvText = await res.text();
     const parsed = Papa.parse<string[]>(csvText, {
       skipEmptyLines: true,
     });
     return parsed.data;
   },
-  [CACHE_KEY.CSV_BACKUP],
-  { revalidate: REVALIDATE_4_HOURS },
+  [CACHE_TAG.BACKUP_RESOURCES],
+  {
+    revalidate: REVALIDATE_24_HOURS,
+    tags: [CACHE_TAG.BACKUP_RESOURCES],
+  },
 );

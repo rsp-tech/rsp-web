@@ -1,54 +1,23 @@
-import { jwtVerify } from "jose";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 import { API_PATH, CACHE_TAG } from "@/app/api/constants";
-
-const JWT_SECRET = process.env["JWT_SECRET"];
-const JWT_ISSUER = process.env["JWT_ISSUER"];
-const JWT_AUDIENCE = process.env["JWT_AUDIENCE"];
+import { verifyRevalidateAuth } from "./auth";
 
 export const POST = async (req: NextRequest) => {
-  if (!JWT_SECRET || !JWT_ISSUER || !JWT_AUDIENCE) {
-    return NextResponse.json(
-      { error: "Missing JWT environment variables" },
-      { status: 500 },
-    );
-  }
+  const authError = await verifyRevalidateAuth(req);
+  if (authError) return authError;
 
-  const authHeader = req.headers.get("authorization");
-
-  if (!authHeader?.startsWith("Bearer ")) {
-    return NextResponse.json(
-      { error: "Missing Bearer token" },
-      { status: 401 },
-    );
-  }
-
-  try {
-    await jwtVerify(authHeader.slice(7), new TextEncoder().encode(JWT_SECRET), {
-      algorithms: ["HS256"],
-      issuer: JWT_ISSUER,
-      audience: JWT_AUDIENCE,
-    });
-  } catch {
-    return NextResponse.json({ error: "Invalid token" }, { status: 401 });
-  }
-
+  // Flush live sync metadata
   revalidateTag(CACHE_TAG.SYNC_META, {});
   revalidatePath(API_PATH.SYNC_META);
 
-  const body = (await req.json()) as {
+  const body = (await req.json().catch(() => ({}))) as {
     paths?: string[];
     path?: string;
   };
 
   const paths = body.paths ?? (body.path ? [body.path] : []);
-
-  if (paths.length === 0) {
-    return NextResponse.json({ error: "No paths provided" }, { status: 400 });
-  }
-
-  const revalidated: string[] = [];
+  const revalidated: string[] = [API_PATH.SYNC_META];
 
   for (const path of paths) {
     if (!path.startsWith("/")) {

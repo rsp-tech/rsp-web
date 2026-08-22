@@ -1,6 +1,6 @@
 import { fetchBackupAsset } from "./utils";
 
-export const revalidate = 14400; // 4 hours (REVALIDATE_SYNC_ZIP)
+export const revalidate = 86400; // 24 hours
 
 const SYNC_RESOURCE = process.env["SYNC_RESOURCE"];
 

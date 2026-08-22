@@ -4,7 +4,7 @@ import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/constants";
 import type { Database } from "@/database.types";
 import { fetchBackupAsset } from "../utils";
 
-export const revalidate = 14400; // 4 hours
+export const revalidate = 86400; // 24 hours
 
 const SYNC_RESOURCE = process.env["SYNC_RESOURCE"];
 

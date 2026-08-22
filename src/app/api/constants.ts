@@ -1,22 +1,19 @@
 // Revalidation intervals (in seconds)
-export const REVALIDATE_4_HOURS = 14400;
-export const REVALIDATE_8_HOURS = 28800;
+export const REVALIDATE_24_HOURS = 86400; // 24 hours
 
-// Cache tags and keys (guarantees zero typo mismatch between endpoints and revalidation)
+// Cache tags & keys (unified for cache storage slots and on-demand revalidation)
 export const CACHE_TAG = {
   SYNC_META: "sync-meta",
-  CSV_BACKUP: "csv-backup",
-} as const;
-
-export const CACHE_KEY = {
-  SYNC_META: "sync-meta-cache",
-  CSV_BACKUP: "csv-backup",
+  BACKUP_RESOURCES: "backup-resources",
 } as const;
 
 // Internal API Paths
 export const API_PATH = {
   SYNC_META: "/api/sync/meta",
+  SYNC: "/api/sync",
+  REVALIDATE: "/api/revalidate",
+  REVALIDATE_BACKUP: "/api/revalidate/backup",
 } as const;
 
 // External Backup Source
-export const CSV_ENDPOINT = process.env["CSV_ENDPOINT"]
+export const CSV_ENDPOINT = process.env["CSV_ENDPOINT"];
