@@ -36,8 +36,8 @@ export function QueryItem({
 }: QueryItemProps) {
   const timeStamp = q.created_at
     ? new Date(q.created_at).toLocaleDateString(undefined, {
-      dateStyle: "medium",
-    })
+        dateStyle: "medium",
+      })
     : null;
   return (
     <AccordionItem

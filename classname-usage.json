@@ -117,9 +117,7 @@
       "src\\app\\profile\\_components\\personal-settings-form.tsx",
       "src\\app\\queries\\_components\\query-reply-form.tsx"
     ],
-    "src\\components\\ui\\badge.tsx": [
-      "src\\app\\queries\\page.tsx"
-    ]
+    "src\\components\\ui\\badge.tsx": ["src\\app\\queries\\page.tsx"]
   },
   "data": [
     {

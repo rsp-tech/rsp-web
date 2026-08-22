@@ -94,10 +94,10 @@ export const getTablesToSync = async (
       lastSync: supaSyncMeta[table],
       idbLastSync: idbSyncMeta[table],
     })) as {
-      table: SyncTable;
-      lastSync: string | undefined;
-      idbLastSync: string | undefined;
-    }[];
+    table: SyncTable;
+    lastSync: string | undefined;
+    idbLastSync: string | undefined;
+  }[];
 };
 
 export const fetchTableWatermark = async (

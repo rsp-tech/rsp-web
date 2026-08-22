@@ -71,13 +71,13 @@ const toSyncResult = async (
     bubbledChangeCategoryIds.size > INVALIDATE_ALL_THRESHOLD
       ? ["*"]
       : await Promise.all(
-        Array.from(bubbledChangeCategoryIds).map(async (id) =>
-          id
-            ? (changedCategories[id] ??
-              (await db.get(STORE.CATEGORIES, id))?.url_path)
-            : "~",
-        ),
-      );
+          Array.from(bubbledChangeCategoryIds).map(async (id) =>
+            id
+              ? (changedCategories[id] ??
+                (await db.get(STORE.CATEGORIES, id))?.url_path)
+              : "~",
+          ),
+        );
 
   return {
     changedCategoryPaths,
@@ -145,15 +145,15 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
 
     const tablesToSync = targetTables?.length
       ? await Promise.all(
-        targetTables.map(async (table) => {
-          const idbMeta = await db.get(STORE.SYNC_META, table);
-          return {
-            table,
-            lastSync: undefined,
-            idbLastSync: idbMeta?.updated_at,
-          };
-        }),
-      )
+          targetTables.map(async (table) => {
+            const idbMeta = await db.get(STORE.SYNC_META, table);
+            return {
+              table,
+              lastSync: undefined,
+              idbLastSync: idbMeta?.updated_at,
+            };
+          }),
+        )
       : await getTablesToSync(db, self.location.origin);
 
     const limit = createLimiter(SYNC_CONCURRENCY);

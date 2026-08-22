@@ -158,7 +158,7 @@ export const MediaPreviewModal = () => {
         <div
           className="relative w-full flex items-center justify-center p-1"
           style={{
-            background: 'black',
+            background: "black",
             aspectRatio: isVideo ? "16/9" : undefined,
             height: isVideo ? undefined : isMobile ? "75vh" : "80vh",
           }}

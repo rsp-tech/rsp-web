@@ -68,7 +68,6 @@ export const runSync = ({
               STORE.USER_EDIT_REQUESTS,
             );
             const hasUsers = changedTables.includes(STORE.USERS);
-            const hasRecordings = changedTables.includes(STORE.RECORDINGS);
 
             if (hasQueries || hasReplies) {
               queryClient.invalidateQueries({
@@ -93,7 +92,12 @@ export const runSync = ({
           }
         }
 
-        if (Object.keys(result.newAdditions).some((key) => result.newAdditions[key as keyof SyncNewAdditions].length > 0)) {
+        if (
+          Object.keys(result.newAdditions).some(
+            (key) =>
+              result.newAdditions[key as keyof SyncNewAdditions].length > 0,
+          )
+        ) {
           addSyncNotifications(result.newAdditions, config.userId);
           queryClient.invalidateQueries({
             queryKey: [STORE.USERS, "notifications"],
