@@ -2,7 +2,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { unzipSync } from "fflate";
 import type { IDBPDatabase } from "idb";
 import {
-  MAX_SYNC_STALE_MS,
+  MAX_SYNC_STALE_DAYS,
+  ONE_DAY_MS,
   ROLE_SYNCED_TABLES,
   STORE,
   STRING_KEY_TABLES,
@@ -94,11 +95,7 @@ export const getTablesToSync = async (
       table,
       lastSync: supaSyncMeta[table],
       idbLastSync: idbSyncMeta[table],
-    })) as {
-    table: SyncTable;
-    lastSync: string | undefined;
-    idbLastSync: string | undefined;
-  }[];
+    }));
 };
 
 export const fetchTableWatermark = async (
@@ -292,7 +289,7 @@ const writeUnzippedTablesToDb = async (
       toCSVRows(unzipped, table),
       table,
     );
-    const cleanRecords = stripUpdatedAt(records) as RSP_IDB[IDBTable]["value"][];
+    const cleanRecords = stripUpdatedAt(records);
 
     const tx = db.transaction(table, "readwrite");
     await tx.store.clear();
@@ -422,13 +419,14 @@ export const syncTable = async ({
 export const isDatabaseStale = async (
   db: IDBPDatabase<RSP_IDB>,
 ): Promise<boolean> => {
-  const idbMetaRows = await db.getAll(STORE.SYNC_META);
-  const timestamps = idbMetaRows
-    .map((row) => new Date(row.updated_at).getTime())
-    .filter((time) => !Number.isNaN(time));
-  if (timestamps.length === 0) return true;
-  const latestSyncTime = Math.max(...timestamps);
-  return Date.now() - latestSyncTime > MAX_SYNC_STALE_MS;
+  const recMeta = await db.get(STORE.SYNC_META, STORE.RECORDINGS);
+
+  const recSyncDay = Math.floor(Date.parse(recMeta.updated_at) / ONE_DAY_MS);
+
+  return (
+    Number.isNaN(recSyncDay) ||
+    Math.floor(Date.now() / ONE_DAY_MS) - recSyncDay > MAX_SYNC_STALE_DAYS
+  );
 };
 
 export const loadStaticZipSeeds = async (

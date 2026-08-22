@@ -71,15 +71,13 @@ export const toCSVRows = (
   return parsed.data;
 };
 
-export const parseCSVTable = <T>(
-  rows: string[][],
-  tableName: string,
-): T[] => {
+export const parseCSVTable = <T>(rows: string[][], tableName: string): T[] => {
   if (!rows || rows.length < 2) return [];
 
   const headers = rows[0].map((header) => header.trim());
 
-  return rows.slice(1)
+  return rows
+    .slice(1)
     .filter((row) => row.some((value) => value.trim() !== ""))
     .map((row) => {
       const record: Record<string, CastValueType> = {};
@@ -117,4 +115,36 @@ export const stripUpdatedAt = <T extends { updated_at?: unknown }>(
     const { updated_at: _, ...rest } = row;
     return rest;
   });
+};
+
+export const findFirstIndexAfter = <T extends Record<string, unknown>>(
+  rows: T[],
+  threshold: string,
+): number => {
+  let low = 0;
+  let high = rows.length - 1;
+  let result = -1;
+
+  while (low <= high) {
+    const mid = (low + high) >> 1;
+    const rowTime = (rows[mid]["updated_at"] as string) || "";
+    if (rowTime >= threshold) {
+      result = mid;
+      high = mid - 1;
+    } else {
+      low = mid + 1;
+    }
+  }
+
+  return result;
+};
+
+export const sliceAfterWatermark = <T extends Record<string, unknown>>(
+  rows: T[],
+  watermark: string,
+  baselineMax: string | null,
+): T[] => {
+  if (!baselineMax || watermark >= baselineMax) return [];
+  const idx = findFirstIndexAfter(rows, watermark);
+  return idx !== -1 ? rows.slice(idx) : [];
 };
