@@ -97,3 +97,15 @@ export const parseCSVTable = <T>(rows: string[][], tableName: string): T[] => {
 
   return results;
 };
+
+export const toUpdatedAtMap = (
+  rows: Array<{ id: string; updated_at?: string | null }>,
+): Record<string, string> => {
+  const map: Record<string, string> = {};
+  for (const item of rows) {
+    if (item.id && item.updated_at) {
+      map[item.id] = item.updated_at;
+    }
+  }
+  return map;
+};

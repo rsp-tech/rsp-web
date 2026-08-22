@@ -11,7 +11,7 @@ import {
 } from "@/constants";
 import type { Database } from "@/database.types";
 import type { RSP_IDB } from "@/lib/idb";
-import { parseCSVTable, toCSVRows } from "@/lib/sync-utils";
+import { parseCSVTable, toCSVRows, toUpdatedAtMap } from "@/lib/sync-utils";
 import type {
   Category,
   DeletedRecord,
@@ -62,9 +62,6 @@ export interface SyncTableConfig {
   lastSync?: string;
 }
 
-const toUpdatedAtMap = (rows: SyncMetaRow[]): SyncMetaMap =>
-  Object.fromEntries(rows.map((entry) => [entry.id, entry.updated_at]));
-
 export const getTablesToSync = async (
   db: IDBPDatabase<RSP_IDB>,
   origin: string,
@@ -74,14 +71,16 @@ export const getTablesToSync = async (
     fetch(`${origin}/api/sync/meta`),
   ]);
 
+  if (supaMetaRes.status === 304) {
+    return [];
+  }
+
   if (!supaMetaRes.ok) {
     throw new Error(`Failed to fetch sync_meta: ${supaMetaRes.statusText}`);
   }
 
-  const supaSyncMetaRows = (await supaMetaRes.json()) as SyncMetaRow[];
-
+  const supaSyncMeta = (await supaMetaRes.json()) as SyncMetaMap;
   const idbSyncMeta = toUpdatedAtMap(idbRows);
-  const supaSyncMeta = toUpdatedAtMap(supaSyncMetaRows);
 
   return Object.values(STORE)
     .filter(
