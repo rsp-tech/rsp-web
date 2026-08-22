@@ -1,3 +1,6 @@
+import { type NextRequest, NextResponse } from "next/server";
+import type { SyncRequestBody } from "@/types";
+import { computeSyncDelta } from "./delta-service";
 import { fetchBackupAsset } from "./utils";
 
 export const revalidate = 86400; // 24 hours
@@ -9,3 +12,25 @@ if (!SYNC_RESOURCE) {
 }
 
 export const GET = async () => fetchBackupAsset(SYNC_RESOURCE);
+
+export const POST = async (request: NextRequest) => {
+  try {
+    const body = (await request.json()) as SyncRequestBody;
+
+    if (!body?.watermarks || typeof body.watermarks !== "object") {
+      return NextResponse.json(
+        { error: "Invalid sync payload: watermarks object required" },
+        { status: 400 },
+      );
+    }
+
+    const result = await computeSyncDelta(body);
+    return NextResponse.json(result);
+  } catch (error) {
+    console.error("Sync delta computation failed:", error);
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 },
+    );
+  }
+};

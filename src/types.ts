@@ -174,3 +174,17 @@ export interface AudioCacheLedgerEntry {
   accessedAt: number;
   size: number;
 }
+
+export type SyncTable = keyof typeof import("@/constants").SYNC_COLUMNS;
+export type ClientWatermarks = Record<string, string>;
+
+export interface SyncRequestBody {
+  roleId?: number;
+  watermarks: ClientWatermarks;
+}
+
+export interface SyncResponseData {
+  changed: boolean;
+  sync_meta: Record<string, string>;
+  deltas: Partial<Record<SyncTable, unknown[]>>;
+}
