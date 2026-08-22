@@ -2,6 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { unzipSync } from "fflate";
 import type { IDBPDatabase } from "idb";
 import {
+  MAX_SYNC_STALE_MS,
   ROLE_SYNCED_TABLES,
   STORE,
   STRING_KEY_TABLES,
@@ -291,9 +292,9 @@ const writeUnzippedTablesToDb = async (
       toCSVRows(unzipped, table),
       table,
     );
-    if (records.length === 0) continue;
 
     const tx = db.transaction(table, "readwrite");
+    await tx.store.clear();
     for (const record of records) {
       tx.store.put(record);
     }
@@ -415,6 +416,18 @@ export const syncTable = async ({
   await db.put(STORE.SYNC_META, { id: table, updated_at: highWatermark });
 
   return changedRows > 0 ? table : false;
+};
+
+export const isDatabaseStale = async (
+  db: IDBPDatabase<RSP_IDB>,
+): Promise<boolean> => {
+  const idbMetaRows = await db.getAll(STORE.SYNC_META);
+  const timestamps = idbMetaRows
+    .map((row) => new Date(row.updated_at).getTime())
+    .filter((time) => !Number.isNaN(time));
+  if (timestamps.length === 0) return true;
+  const latestSyncTime = Math.max(...timestamps);
+  return Date.now() - latestSyncTime > MAX_SYNC_STALE_MS;
 };
 
 export const loadStaticZipSeeds = async (

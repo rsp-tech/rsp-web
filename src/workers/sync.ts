@@ -14,6 +14,7 @@ import type { SyncChangedIds, SyncNewAdditions, SyncResult } from "@/types";
 import {
   type ChangedCategoryMeta,
   getTablesToSync,
+  isDatabaseStale,
   loadStaticZipSeeds,
   loadStaticZipSeedsForRole,
   type SyncTable,
@@ -117,17 +118,15 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
 
     postMessage({
       type: WORKER_MSG.PROGRESS,
-      message: "Syncing...",
+      message: "परिष्करोति… · Refining…",
     });
 
-    // Optimize first-time sync by loading pre-compiled static ZIP database seed
-    const idbSyncMetaCount = await db.count(STORE.SYNC_META);
-
-    if (idbSyncMetaCount === 0) {
+    // Optimize first-time sync or stale (> MAX_SYNC_STALE_MS) database by loading pre-compiled static ZIP database seed
+    if (await isDatabaseStale(db)) {
       try {
         postMessage({
           type: WORKER_MSG.PROGRESS,
-          message: "seeding database...",
+          message: "उत्कर्षयति… · Optimizing…",
         });
 
         const loaded = await loadStaticZipSeeds(db, self.location.origin);
@@ -135,9 +134,9 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
           postMessage(SEED_LOAD_SUCCESS_PAYLOAD);
         }
       } catch (zipErr) {
-        // Fallback silently to normal Supabase sync if static files fail
+        // Fallback silently to dynamic sync if static files fail
         console.error(
-          "Static sync ZIP seed failed, falling back to dynamic Supabase sync:",
+          "Static sync ZIP seed failed, falling back to dynamic sync:",
           zipErr,
         );
       }
@@ -192,7 +191,7 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       try {
         postMessage({
           type: WORKER_MSG.PROGRESS,
-          message: "seeding database for role...",
+          message: "उत्कर्षयति… · Optimizing…",
         });
         const loaded = await loadStaticZipSeedsForRole(
           db,

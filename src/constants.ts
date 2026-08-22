@@ -9,6 +9,7 @@ export const SYNC_INTERVAL = Number.parseInt(
 ); // 5 min default
 export const SYNC_PAGE_SIZE = 1000;
 export const SYNC_CONCURRENCY = 4;
+export const MAX_SYNC_STALE_MS = 30 * 24 * 60 * 60 * 1000; // 30 days
 
 export const ASSET_BASE_URL = process.env[
   "NEXT_PUBLIC_ASSET_BASE_URL"
