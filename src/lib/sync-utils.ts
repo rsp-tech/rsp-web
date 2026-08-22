@@ -128,7 +128,7 @@ export const findFirstIndexAfter = <T extends Record<string, unknown>>(
   while (low <= high) {
     const mid = (low + high) >> 1;
     const rowTime = (rows[mid]["updated_at"] as string) || "";
-    if (rowTime >= threshold) {
+    if (rowTime > threshold) {
       result = mid;
       high = mid - 1;
     } else {
