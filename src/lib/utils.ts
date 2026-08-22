@@ -45,6 +45,17 @@ export const sortByOrderInd =
   (a: { order_ind?: number | null }, b: { order_ind?: number | null }) =>
     direction * ((a.order_ind ?? 0) - (b.order_ind ?? 0));
 
+export const sortByDate =
+  <T extends {}, K extends keyof T>(
+    order: 1 | -1 = 1,
+    fieldName: K = "updated_at" as K,
+  ): ((a: T, b: T) => number) =>
+  (a, b) => {
+    const timeA = a[fieldName] ? new Date(a[fieldName] as string).getTime() : 0;
+    const timeB = b[fieldName] ? new Date(b[fieldName] as string).getTime() : 0;
+    return order * (timeA - timeB);
+  };
+
 /**
  * Converts a pathname (string or array of slug segments) to a DB urlPath (dot-separated, ltree format).
  * E.g., "/spiritual-discourses/bg" -> "spiritual_discourses.bg"

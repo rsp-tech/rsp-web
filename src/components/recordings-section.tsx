@@ -2,6 +2,7 @@
 
 import { Music } from "lucide-react";
 import { useMemo, useState } from "react";
+import { sortByDate, sortByOrderInd } from "@/lib/utils";
 import type { EnrichedRecording } from "@/types";
 import { RecordingCards } from "./recording-cards";
 import {
@@ -19,21 +20,19 @@ export const RecordingsSection = ({ recordings }: RecordingListProps) => {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
 
   const sortedRecordings = useMemo(() => {
-    return [...recordings].sort((a, b) => {
-      let result = 0;
-      if (sortBy === "name") {
-        result = (a.name || "").localeCompare(b.name || "");
-      } else if (sortBy === "date") {
-        const timeA = a.recorded_at ? new Date(a.recorded_at).getTime() : 0;
-        const timeB = b.recorded_at ? new Date(b.recorded_at).getTime() : 0;
-        result = timeA - timeB;
-      } else {
-        const orderA = a.order_ind ?? 0;
-        const orderB = b.order_ind ?? 0;
-        result = orderB - orderA; // default reverse sorted
-      }
-      return sortOrder === "asc" ? result : -result;
-    });
+    const order = sortOrder === "asc" ? 1 : -1;
+    switch (sortBy) {
+      case "name":
+        return recordings.toSorted(
+          (a, b) => order * (a.name || "").localeCompare(b.name || ""),
+        );
+      case "date":
+        return recordings.toSorted(
+          sortByDate(order, "created_at" as keyof EnrichedRecording),
+        );
+      case "order_ind":
+        return recordings.toSorted(sortByOrderInd(order));
+    }
   }, [recordings, sortBy, sortOrder]);
 
   return (

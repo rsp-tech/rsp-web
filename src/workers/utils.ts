@@ -22,13 +22,9 @@ import type {
 } from "@/types";
 
 type SupabaseProdClient = SupabaseClient<Database, "prod", "prod">;
-type SyncMetaRow = {
-  id: string;
-  updated_at: string;
-};
-
 type SyncMetaMap = Record<string, string>;
 type TableName = (typeof STORE)[keyof typeof STORE];
+
 export type IDBTable = Exclude<
   TableName,
   "sync_meta" | "role_meta" | "cache_ledger" | "deleted_records"
