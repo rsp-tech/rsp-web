@@ -1,5 +1,5 @@
 import Papa from "papaparse";
-import { STRING_KEY_TABLES } from "@/constants";
+import { ROLE_SYNCED_TABLES, STRING_KEY_TABLES } from "@/constants";
 
 export const NUMERIC_FIELDS = [
   "id",
@@ -109,3 +109,6 @@ export const toUpdatedAtMap = (
   }
   return map;
 };
+
+export const isRoleTable = (table: string): boolean =>
+  (ROLE_SYNCED_TABLES as readonly string[]).includes(table);

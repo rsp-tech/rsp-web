@@ -17,7 +17,9 @@ if (!SYNC_ENDPOINT) {
   throw new Error("Missing SYNC_ENDPOINT");
 }
 
-export const fetchBackupAsset = async (targetResource: string) => {
+export const fetchBackupAsset = async (
+  targetResource: string,
+): Promise<Response> => {
   const assetUrl = await fetch(SYNC_ENDPOINT, {
     headers: {
       Authorization: `Bearer ${BACKUP_TOKEN}`,
@@ -32,8 +34,13 @@ export const fetchBackupAsset = async (targetResource: string) => {
       ({ assets }) =>
         assets?.find(
           (a: { id: number; name: string }) => a.name === targetResource,
-        ).url,
+        )?.url,
     );
+
+  if (!assetUrl) {
+    console.error(`Asset ${targetResource} not found`);
+    return new Response("Asset not found", { status: 404 });
+  }
 
   const assetRes = await fetch(assetUrl, {
     headers: {
@@ -48,7 +55,7 @@ export const fetchBackupAsset = async (targetResource: string) => {
   });
 
   if (!assetRes.ok) {
-    console.error(await assetRes.text());
+    console.error(`Failed to download ${targetResource}:`, assetRes.statusText);
     return new Response("Failed to download seed", {
       status: assetRes.status,
     });
