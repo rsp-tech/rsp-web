@@ -71,31 +71,28 @@ export const toCSVRows = (
   return parsed.data;
 };
 
-export const parseCSVTable = <T>(rows: string[][], tableName: string): T[] => {
-  if (!rows || rows.length <= 1) return [];
+export const parseCSVTable = <T>(
+  rows: string[][],
+  tableName: string,
+): T[] => {
+  if (!rows || rows.length < 2) return [];
 
-  const header = rows[0].map((h) => h.trim());
-  const dataRows = rows.slice(1);
+  const headers = rows[0].map((header) => header.trim());
 
-  const results: T[] = [];
-  for (const row of dataRows) {
-    if (!row || row.length === 0 || (row.length === 1 && row[0] === "")) {
-      continue;
-    }
+  return rows.slice(1)
+    .filter((row) => row.some((value) => value.trim() !== ""))
+    .map((row) => {
+      const record: Record<string, CastValueType> = {};
 
-    const record: Record<string, CastValueType> = {};
-    for (let i = 0; i < header.length; i++) {
-      const fieldName = header[i];
-      if (i < row.length) {
-        record[fieldName] = castValue(tableName, fieldName, row[i]);
-      } else {
-        record[fieldName] = null;
-      }
-    }
-    results.push(record as T);
-  }
+      headers.forEach((fieldName, index) => {
+        record[fieldName] =
+          index < row.length
+            ? castValue(tableName, fieldName, row[index])
+            : null;
+      });
 
-  return results;
+      return record as T;
+    });
 };
 
 export const toUpdatedAtMap = (
@@ -112,3 +109,12 @@ export const toUpdatedAtMap = (
 
 export const isRoleTable = (table: string): boolean =>
   (ROLE_SYNCED_TABLES as readonly string[]).includes(table);
+
+export const stripUpdatedAt = <T extends { updated_at?: unknown }>(
+  rows: T[],
+): Array<Omit<T, "updated_at">> => {
+  return rows.map((row) => {
+    const { updated_at: _, ...rest } = row;
+    return rest;
+  });
+};

@@ -11,7 +11,12 @@ import {
 } from "@/constants";
 import type { Database } from "@/database.types";
 import type { RSP_IDB } from "@/lib/idb";
-import { parseCSVTable, toCSVRows, toUpdatedAtMap } from "@/lib/sync-utils";
+import {
+  parseCSVTable,
+  stripUpdatedAt,
+  toCSVRows,
+  toUpdatedAtMap,
+} from "@/lib/sync-utils";
 import type {
   Category,
   DeletedRecord,
@@ -283,14 +288,15 @@ const writeUnzippedTablesToDb = async (
   const txs: Promise<void>[] = [];
   for (const table of tables) {
     if (table === STORE.DELETED_RECORDS) continue;
-    const records = parseCSVTable<RSP_IDB[IDBTable]["value"]>(
+    const records = parseCSVTable<Record<string, unknown>>(
       toCSVRows(unzipped, table),
       table,
     );
+    const cleanRecords = stripUpdatedAt(records) as RSP_IDB[IDBTable]["value"][];
 
     const tx = db.transaction(table, "readwrite");
     await tx.store.clear();
-    for (const record of records) {
+    for (const record of cleanRecords) {
       tx.store.put(record);
     }
     txs.push(tx.done);
