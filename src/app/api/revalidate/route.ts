@@ -1,6 +1,7 @@
 import { jwtVerify } from "jose";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
+import { API_PATH, CACHE_TAG } from "@/app/api/constants";
 
 const JWT_SECRET = process.env["JWT_SECRET"];
 const JWT_ISSUER = process.env["JWT_ISSUER"];
@@ -33,8 +34,8 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 
-  revalidateTag("sync-meta", {});
-  revalidatePath("/api/sync/meta");
+  revalidateTag(CACHE_TAG.SYNC_META, {});
+  revalidatePath(API_PATH.SYNC_META);
 
   const body = (await req.json()) as {
     paths?: string[];

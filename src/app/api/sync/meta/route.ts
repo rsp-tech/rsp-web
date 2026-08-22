@@ -1,5 +1,10 @@
 import { unstable_cache } from "next/cache";
 import { NextResponse } from "next/server";
+import {
+  CACHE_KEY,
+  CACHE_TAG,
+  REVALIDATE_8_HOURS,
+} from "@/app/api/constants";
 import { STORE } from "@/constants";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
@@ -18,10 +23,10 @@ const getCachedSyncMeta = unstable_cache(
 
     return data;
   },
-  ["sync-meta-cache"],
+  [CACHE_KEY.SYNC_META],
   {
-    revalidate: 28800,
-    tags: ["sync-meta"],
+    revalidate: REVALIDATE_8_HOURS,
+    tags: [CACHE_TAG.SYNC_META],
   },
 );
 

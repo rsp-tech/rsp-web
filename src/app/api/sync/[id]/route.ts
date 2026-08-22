@@ -21,7 +21,7 @@ export const GET = async (
     if (!authHeader?.startsWith("Bearer ")) {
       return new Response("Unauthorized", { status: 401 });
     }
-    const token = authHeader.split(" ")[1];
+    const token = authHeader.slice(7);
 
     const { id } = await ctx.params;
 

@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import type { NextRequest } from "next/server";
-import { SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/constants";
+import { STORE, SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/constants";
 import type { Database } from "@/database.types";
 import { getCachedGitHubCSV } from "../utils";
 
@@ -84,11 +84,11 @@ export const GET = async (request: NextRequest) => {
       userQueries,
       queryReplies,
     ] = await Promise.all([
-      getCachedGitHubCSV("users"),
-      getCachedGitHubCSV("user_edit_requests"),
-      getCachedGitHubCSV("user_service_interests"),
-      getCachedGitHubCSV("user_queries"),
-      getCachedGitHubCSV("query_replies"),
+      getCachedGitHubCSV(STORE.USERS),
+      getCachedGitHubCSV(STORE.USER_EDIT_REQUESTS),
+      getCachedGitHubCSV(STORE.USER_SERVICE_INTERESTS),
+      getCachedGitHubCSV(STORE.USER_QUERIES),
+      getCachedGitHubCSV(STORE.QUERY_REPLIES),
     ]);
 
     const filteredUsers = filterByValue(users, "id", user.id);
