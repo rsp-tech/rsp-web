@@ -1,7 +1,6 @@
-import { createClient } from "@supabase/supabase-js";
 import type { NextRequest } from "next/server";
-import { STORE, SUPABASE_PUBLISHABLE_KEY, SUPABASE_URL } from "@/constants";
-import type { Database } from "@/database.types";
+import { STORE } from "@/constants";
+import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { getCachedCSV } from "../utils";
 
 type CSVRows = string[][];
@@ -56,15 +55,7 @@ export const GET = async (request: NextRequest) => {
 
     const token = authHeader.slice(7);
 
-    const supabase = createClient<Database>(
-      SUPABASE_URL,
-      SUPABASE_PUBLISHABLE_KEY,
-      {
-        db: {
-          schema: "prod",
-        },
-      },
-    );
+    const supabase = getSupabaseServerClient();
 
     const {
       data: { user },

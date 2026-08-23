@@ -44,8 +44,9 @@ export const getCachedLiveDiff = unstable_cache(
 
     const { data, error } = await query;
     if (error) {
-      console.error(`Failed to fetch live diff for ${table}:`, error.message);
-      return [];
+      throw new Error(
+        `Failed to fetch live diff for ${table}: ${error.message}`,
+      );
     }
 
     return (data as unknown as Array<Record<string, unknown>>) || [];

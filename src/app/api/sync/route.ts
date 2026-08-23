@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import type { SyncRequestBody } from "@/types";
+import { verifyRoleSyncAuth } from "./auth";
 import { computeSyncDelta } from "./delta-service";
 import { fetchBackupAsset } from "./utils";
 
@@ -24,7 +25,17 @@ export const POST = async (request: NextRequest) => {
       );
     }
 
-    const result = await computeSyncDelta(body);
+    // Role authorization boundary: reject unauthenticated or mismatched role requests
+    const authErrorResponse = await verifyRoleSyncAuth(request, body.roleId);
+    if (authErrorResponse) {
+      return authErrorResponse;
+    }
+
+    const result = await computeSyncDelta({
+      watermarks: body.watermarks,
+      roleId: body.roleId,
+    });
+
     return NextResponse.json(result);
   } catch (error) {
     console.error("Sync delta computation failed:", error);
