@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import type { SyncRequestBody } from "@/types";
-import { verifyRoleSyncAuth } from "./auth";
-import { computeSyncDelta } from "./delta-service";
+import { getAuthenticatedRoleId } from "./auth";
+import { computePublicSyncDelta, computeRoleSyncDelta } from "./delta-service";
 import { fetchBackupAsset } from "./utils";
 
 export const revalidate = 86400; // 24 hours
@@ -12,7 +12,34 @@ if (!SYNC_RESOURCE) {
   throw new Error("Missing SYNC_RESOURCE");
 }
 
-export const GET = async () => fetchBackupAsset(SYNC_RESOURCE);
+export const GET = async (request: NextRequest) => {
+  const { searchParams } = request.nextUrl;
+  const entries = Array.from(searchParams.entries());
+
+  // 1. If no query params: return the static public zip seed
+  if (entries.length === 0) {
+    return fetchBackupAsset(SYNC_RESOURCE);
+  }
+
+  // 2. Otherwise: compute 100% public diff based on query watermarks
+  try {
+    const watermarks: Record<string, string> = Object.fromEntries(entries);
+    const result = await computePublicSyncDelta(watermarks);
+
+    return NextResponse.json(result, {
+      headers: {
+        "Cache-Control":
+          "public, max-age=0, s-maxage=86400, stale-while-revalidate=86400",
+      },
+    });
+  } catch (error) {
+    console.error("Public sync delta failed:", error);
+    return NextResponse.json(
+      { error: (error as Error).message },
+      { status: 500 },
+    );
+  }
+};
 
 export const POST = async (request: NextRequest) => {
   try {
@@ -25,20 +52,23 @@ export const POST = async (request: NextRequest) => {
       );
     }
 
-    // Role authorization boundary: reject unauthenticated or mismatched role requests
-    const authErrorResponse = await verifyRoleSyncAuth(request, body.roleId);
-    if (authErrorResponse) {
-      return authErrorResponse;
+    // Role-specific sync: resolve role_id strictly from JWT on the server
+    const { roleId, errorResponse } = await getAuthenticatedRoleId(request);
+    if (errorResponse) {
+      return errorResponse;
     }
 
-    const result = await computeSyncDelta({
-      watermarks: body.watermarks,
-      roleId: body.roleId,
-    });
+    if (!roleId) {
+      return NextResponse.json(
+        { error: "Forbidden: user has no restricted role assigned" },
+        { status: 403 },
+      );
+    }
 
+    const result = await computeRoleSyncDelta(body.watermarks, roleId);
     return NextResponse.json(result);
   } catch (error) {
-    console.error("Sync delta computation failed:", error);
+    console.error("Role sync delta failed:", error);
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 500 },

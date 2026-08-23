@@ -36,8 +36,12 @@ export const getCachedLiveDiff = unstable_cache(
 
     if (isRoleTable(table)) {
       if (roleId) {
-        query = query.or(`allowed_roles.cs.{0},allowed_roles.cs.{${roleId}}`);
+        // Strictly role-extra: include roleId and exclude public {0}
+        query = query
+          .contains("allowed_roles", [roleId])
+          .not("allowed_roles", "cs", "{0}");
       } else {
+        // Strictly public: include public {0}
         query = query.contains("allowed_roles", [0]);
       }
     }

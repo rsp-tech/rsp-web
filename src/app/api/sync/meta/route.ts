@@ -10,8 +10,9 @@ export const GET = async (req: NextRequest) => {
   try {
     const data = await getCachedSyncMeta();
 
-    // Fast, deterministic ETag based on table IDs and updated_at timestamps
+    // Fast, deterministic ETag based on sorted table IDs and updated_at timestamps
     const rawTag = Object.entries(data)
+      .sort(([a], [b]) => a.localeCompare(b))
       .map(([k, v]) => `${k}:${v}`)
       .join("|");
     const etag = `"${Buffer.from(rawTag).toString("base64")}"`;
@@ -28,8 +29,10 @@ export const GET = async (req: NextRequest) => {
       });
     }
 
-    return NextResponse.json(data, {
+    return new Response(JSON.stringify(data), {
+      status: 200,
       headers: {
+        "Content-Type": "application/json",
         ETag: etag,
         "Cache-Control": CACHE_CONTROL_HEADER,
       },

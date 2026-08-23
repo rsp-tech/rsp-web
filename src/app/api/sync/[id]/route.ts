@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server";
-import { verifyRoleSyncAuth } from "../auth";
+import { getAuthenticatedRoleId } from "../auth";
 import { fetchBackupAsset } from "../utils";
 
 export const revalidate = 86400; // 24 hours
@@ -10,21 +10,11 @@ if (!SYNC_RESOURCE) {
   throw new Error("Missing SYNC_RESOURCE");
 }
 
-export const GET = async (
-  request: NextRequest,
-  ctx: { params: Promise<{ id: string }> },
-) => {
+export const GET = async (request: NextRequest) => {
   try {
-    const { id } = await ctx.params;
-    const roleId = Number(id);
-
-    if (!roleId) {
-      return new Response("Bad Request: roleId is required", { status: 400 });
-    }
-
-    const authErrorResponse = await verifyRoleSyncAuth(request, roleId);
-    if (authErrorResponse) {
-      return authErrorResponse;
+    const { roleId, errorResponse } = await getAuthenticatedRoleId(request);
+    if (errorResponse || !roleId) {
+      return errorResponse || new Response("Unauthorized", { status: 401 });
     }
 
     return await fetchBackupAsset(
