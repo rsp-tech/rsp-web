@@ -69,8 +69,26 @@ export const SEARCH_LOOKUP_TABLES = [
   STORE.EVENTS,
 ] as const;
 
+export const GENERIC_TABLES = [
+  STORE.CATEGORIES,
+  STORE.RECORDINGS,
+  STORE.MATERIALS,
+  STORE.SPEAKERS,
+  STORE.LANGUAGES,
+  STORE.CONTENT_TYPES,
+  STORE.VENUES,
+  STORE.SERVICES,
+  STORE.REDIRECTS,
+  STORE.EVENTS,
+  STORE.FAQ_CATEGORIES,
+  STORE.FAQS,
+  STORE.FEATURED_SECTIONS,
+  STORE.FEATURED_ITEMS,
+  STORE.DELETED_RECORDS,
+] as const;
+
 export const SYNC_COLUMNS = {
-  categories: `
+  [STORE.CATEGORIES]: `
     id,
     allowed_roles,
     img_id,
@@ -80,7 +98,7 @@ export const SYNC_COLUMNS = {
     url_path
   `,
 
-  recordings: `
+  [STORE.RECORDINGS]: `
     id,
     allowed_roles,
     audio_id,
@@ -96,7 +114,7 @@ export const SYNC_COLUMNS = {
     yt_id
   `,
 
-  materials: `
+  [STORE.MATERIALS]: `
     id,
     allowed_roles,
     name,
@@ -105,39 +123,39 @@ export const SYNC_COLUMNS = {
     type
   `,
 
-  speakers: `
+  [STORE.SPEAKERS]: `
     id,
     name
   `,
 
-  languages: `
+  [STORE.LANGUAGES]: `
     id,
     name,
     native_name
   `,
 
-  content_types: `
+  [STORE.CONTENT_TYPES]: `
     id,
     name
   `,
 
-  venues: `
+  [STORE.VENUES]: `
     id,
     name
   `,
 
-  events: `
+  [STORE.EVENTS]: `
     id,
     name,
     short_name
   `,
 
-  redirects: `
+  [STORE.REDIRECTS]: `
     id,
     to_path
   `,
 
-  services: `
+  [STORE.SERVICES]: `
     id,
     description,
     is_public,
@@ -146,14 +164,14 @@ export const SYNC_COLUMNS = {
     type
   `,
 
-  faq_categories: `
+  [STORE.FAQ_CATEGORIES]: `
     id,
     name,
     order_ind,
     slug
   `,
 
-  faqs: `
+  [STORE.FAQS]: `
     id,
     category_id,
     answer,
@@ -162,7 +180,7 @@ export const SYNC_COLUMNS = {
     order_ind
   `,
 
-  featured_sections: `
+  [STORE.FEATURED_SECTIONS]: `
     id,
     title,
     layout,
@@ -170,7 +188,7 @@ export const SYNC_COLUMNS = {
     order_ind
   `,
 
-  featured_items: `
+  [STORE.FEATURED_ITEMS]: `
     id,
     entity_id,
     entity_type,
@@ -178,7 +196,7 @@ export const SYNC_COLUMNS = {
     section_id
   `,
 
-  users: `
+  [STORE.USERS]: `
     id,
     email,
     name,
@@ -195,7 +213,7 @@ export const SYNC_COLUMNS = {
     updated_at
   `,
 
-  user_edit_requests: `
+  [STORE.USER_EDIT_REQUESTS]: `
     id,
     user_id,
     requested_role_id,
@@ -218,7 +236,7 @@ export const SYNC_COLUMNS = {
     updated_at
   `,
 
-  user_service_interests: `
+  [STORE.USER_SERVICE_INTERESTS]: `
     id,
     user_id,
     service_id,
@@ -227,7 +245,7 @@ export const SYNC_COLUMNS = {
     updated_at
   `,
 
-  user_queries: `
+  [STORE.USER_QUERIES]: `
     id,
     user_id,
     guest_email,
@@ -240,7 +258,7 @@ export const SYNC_COLUMNS = {
     updated_at
   `,
 
-  query_replies: `
+  [STORE.QUERY_REPLIES]: `
     id,
     query_id,
     user_id,
@@ -248,7 +266,7 @@ export const SYNC_COLUMNS = {
     updated_at
   `,
 
-  deleted_records: `
+  [STORE.DELETED_RECORDS]: `
     id,
     table_name,
     record_id
