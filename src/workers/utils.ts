@@ -1,4 +1,3 @@
-import type { SupabaseClient } from "@supabase/supabase-js";
 import { unzipSync } from "fflate";
 import type { IDBPDatabase } from "idb";
 import {
@@ -8,16 +7,9 @@ import {
   STORE,
   STRING_KEY_TABLES,
   SYNC_COLUMNS,
-  SYNC_PAGE_SIZE,
 } from "@/constants";
-import type { Database } from "@/database.types";
 import type { RSP_IDB } from "@/lib/idb";
-import {
-  parseCSVTable,
-  stripUpdatedAt,
-  toCSVRows,
-  toUpdatedAtMap,
-} from "@/lib/sync-utils";
+import { parseCSVTable, stripUpdatedAt, toCSVRows } from "@/lib/sync-utils";
 import type {
   Category,
   DeletedRecord,
@@ -25,20 +17,17 @@ import type {
   Recording,
   SyncChangedIds,
   SyncNewAdditions,
+  SyncResponseData,
+  SyncTable,
 } from "@/types";
 
-type SupabaseProdClient = SupabaseClient<Database, "prod", "prod">;
-type SyncMetaMap = Record<string, string>;
 type TableName = (typeof STORE)[keyof typeof STORE];
 
 export type IDBTable = Exclude<
   TableName,
   "sync_meta" | "role_meta" | "cache_ledger" | "deleted_records"
 >;
-export type SyncTable = Exclude<
-  TableName,
-  "sync_meta" | "role_meta" | "cache_ledger"
->;
+
 type SyncRow = (RSP_IDB[IDBTable]["value"] | DeletedRecord) & {
   created_at?: string | null;
   category_id?: number;
@@ -53,67 +42,6 @@ export interface ChangedCategoryMeta {
   changedRecordings: Record<number, number>; // [id]: category_id
   bubbledChangeRecordingIds: Set<number>;
 }
-export interface SyncTableConfig {
-  supabase: SupabaseProdClient;
-  db: IDBPDatabase<RSP_IDB>;
-  table: SyncTable;
-  changedIds: SyncChangedIds;
-  changedCategoryMeta: ChangedCategoryMeta;
-  newAdditions: SyncNewAdditions;
-  idbLastSync?: string;
-  lastSync?: string;
-}
-
-export const getTablesToSync = async (
-  db: IDBPDatabase<RSP_IDB>,
-  origin: string,
-) => {
-  const [idbRows, supaMetaRes] = await Promise.all([
-    db.getAll(STORE.SYNC_META),
-    fetch(`${origin}/api/sync/meta`),
-  ]);
-
-  if (supaMetaRes.status === 304) {
-    return [];
-  }
-
-  if (!supaMetaRes.ok) {
-    throw new Error(`Failed to fetch sync_meta: ${supaMetaRes.statusText}`);
-  }
-
-  const supaSyncMeta = (await supaMetaRes.json()) as SyncMetaMap;
-  const idbSyncMeta = toUpdatedAtMap(idbRows);
-
-  return Object.values(STORE)
-    .filter(
-      (table) =>
-        !table.endsWith("_meta") &&
-        table !== STORE.CACHE_LEDGER &&
-        idbSyncMeta[table] !== supaSyncMeta[table],
-    )
-    .map((table) => ({
-      table,
-      lastSync: supaSyncMeta[table],
-      idbLastSync: idbSyncMeta[table],
-    }));
-};
-
-export const fetchTableWatermark = async (
-  supabase: SupabaseProdClient,
-  table: SyncTable,
-): Promise<string | null> => {
-  const { data, error } = await supabase
-    .from(table)
-    .select("updated_at")
-    .not("updated_at", "is", null)
-    .order("updated_at", { ascending: false })
-    .limit(1);
-
-  if (error) {
-    throw new Error(`${table} watermark tracking failed: ${error.message}`);
-  }
-  return typeof data?.[0]?.updated_at === "string" ? data[0].updated_at : null;
-};
 
 interface WriteRowsConfig {
   db: IDBPDatabase<RSP_IDB>;
@@ -346,83 +274,13 @@ export const loadStaticZipSeedsForRole = async (
   return true;
 };
 
-export const syncTable = async ({
-  supabase,
-  db,
-  table,
-  changedIds,
-  idbLastSync,
-  lastSync,
-  changedCategoryMeta,
-  newAdditions,
-}: SyncTableConfig): Promise<string | boolean> => {
-  const highWatermark =
-    lastSync || (await fetchTableWatermark(supabase, table));
-
-  if (!highWatermark) return false;
-  if (
-    idbLastSync &&
-    new Date(idbLastSync).getTime() >= new Date(highWatermark).getTime()
-  ) {
-    return false;
-  }
-
-  let changedRows = 0;
-  let from = 0;
-
-  while (true) {
-    let query = supabase
-      .from(table)
-      .select(SYNC_COLUMNS[table])
-      .not("updated_at", "is", null)
-      .lte("updated_at", highWatermark)
-      .order("updated_at", { ascending: true })
-      .order("id", { ascending: true })
-      .range(from, from + SYNC_PAGE_SIZE);
-
-    if (idbLastSync) query = query.gt("updated_at", idbLastSync);
-
-    const { data, error } = await query;
-    if (error) throw new Error(`${table} page fetch failed: ${error.message}`);
-    if (!data?.length) break;
-
-    const rows = data as unknown as SyncRow[];
-    if (table === STORE.DELETED_RECORDS) {
-      await applyDeletedRecords(
-        db,
-        rows as DeletedRecord[],
-        changedIds,
-        changedCategoryMeta,
-      );
-    } else {
-      await writeRowsToStore({
-        db,
-        table: table as IDBTable,
-        rows: rows as RSP_IDB[IDBTable]["value"][],
-        changedIds,
-        changedCategoryMeta,
-        newAdditions,
-        idbLastSync,
-      });
-    }
-    changedRows += rows.length;
-
-    if (rows.length < SYNC_PAGE_SIZE) break;
-    from += SYNC_PAGE_SIZE;
-  }
-
-  await db.put(STORE.SYNC_META, { id: table, updated_at: highWatermark });
-
-  return changedRows > 0 ? table : false;
-};
-
 export const isDatabaseStale = async (
   db: IDBPDatabase<RSP_IDB>,
 ): Promise<boolean> => {
   const recMeta = await db.get(STORE.SYNC_META, STORE.RECORDINGS);
+  if (!recMeta?.updated_at) return true;
 
   const recSyncDay = Math.floor(Date.parse(recMeta.updated_at) / ONE_DAY_MS);
-
   return (
     Number.isNaN(recSyncDay) ||
     Math.floor(Date.now() / ONE_DAY_MS) - recSyncDay > MAX_SYNC_STALE_DAYS
@@ -469,4 +327,133 @@ export const loadStaticZipSeeds = async (
   await syncMetaTx.done;
 
   return true;
+};
+
+export const fetchPublicSyncDeltas = async (
+  origin: string,
+  watermarks: Record<string, string>,
+): Promise<SyncResponseData | null> => {
+  const query = new URLSearchParams(watermarks).toString();
+  const res = await fetch(`${origin}/api/sync?${query}`);
+
+  if (!res.ok) {
+    throw new Error(
+      `Public sync failed with status ${res.status}: ${res.statusText}`,
+    );
+  }
+
+  return (await res.json()) as SyncResponseData;
+};
+
+export const fetchRoleSyncDeltas = async (
+  origin: string,
+  watermarks: Record<string, string>,
+  accessToken: string,
+): Promise<SyncResponseData | null> => {
+  const res = await fetch(`${origin}/api/sync`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      watermarks,
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `Role sync failed with status ${res.status}: ${res.statusText}`,
+    );
+  }
+
+  return (await res.json()) as SyncResponseData;
+};
+
+export const mergeDeltas = (
+  publicDeltas?: Partial<Record<SyncTable, unknown[]>>,
+  roleDeltas?: Partial<Record<SyncTable, unknown[]>>,
+): Partial<Record<SyncTable, unknown[]>> => {
+  const merged: Partial<Record<SyncTable, unknown[]>> = {};
+
+  if (publicDeltas) {
+    for (const [table, rows] of Object.entries(publicDeltas)) {
+      if (rows?.length) {
+        merged[table as SyncTable] = [...rows];
+      }
+    }
+  }
+
+  if (roleDeltas) {
+    for (const [table, rows] of Object.entries(roleDeltas)) {
+      if (!rows?.length) continue;
+      const syncTable = table as SyncTable;
+      const existing = (merged[syncTable] || []) as Array<
+        Record<string, unknown>
+      >;
+      const map = new Map<unknown, Record<string, unknown>>();
+
+      for (const r of existing) {
+        const key = r["id"] ?? r["record_id"];
+        if (key !== undefined) map.set(key, r);
+      }
+
+      for (const r of rows as Array<Record<string, unknown>>) {
+        const key = r["id"] ?? r["record_id"];
+        if (key !== undefined) map.set(key, r);
+      }
+
+      merged[syncTable] = Array.from(map.values());
+    }
+  }
+
+  return merged;
+};
+
+export const applyDeltas = async (
+  db: IDBPDatabase<RSP_IDB>,
+  deltas: Partial<Record<SyncTable, unknown[]>>,
+  syncMeta: Record<string, string>,
+  watermarks: Record<string, string>,
+  changedIds: SyncChangedIds,
+  changedCategoryMeta: ChangedCategoryMeta,
+  newAdditions: SyncNewAdditions,
+): Promise<string[]> => {
+  const changedTables: string[] = [];
+
+  for (const [table, rows] of Object.entries(deltas)) {
+    if (!rows || rows.length === 0) continue;
+    const syncTable = table as SyncTable;
+
+    if (syncTable === STORE.DELETED_RECORDS) {
+      await applyDeletedRecords(
+        db,
+        rows as DeletedRecord[],
+        changedIds,
+        changedCategoryMeta,
+      );
+    } else {
+      await writeRowsToStore({
+        db,
+        table: syncTable as IDBTable,
+        rows: rows as RSP_IDB[IDBTable]["value"][],
+        changedIds,
+        changedCategoryMeta,
+        newAdditions,
+        idbLastSync: watermarks[syncTable],
+      });
+    }
+    changedTables.push(syncTable);
+  }
+
+  // Update sync_meta in IDB with server's latest watermarks
+  const syncMetaTx = db.transaction(STORE.SYNC_META, "readwrite");
+  for (const [table, updated_at] of Object.entries(syncMeta)) {
+    if (updated_at) {
+      syncMetaTx.store.put({ id: table, updated_at });
+    }
+  }
+  await syncMetaTx.done;
+
+  return changedTables;
 };

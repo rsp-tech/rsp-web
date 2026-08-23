@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import { useSession } from "@/components/providers";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { toRoleId } from "@/lib/utils";
-import type { SyncTable } from "@/workers/utils";
+import type { SyncTable } from "@/types";
 import { runSync } from "./use-sync";
 
 export function useNotificationSubscription(): void {

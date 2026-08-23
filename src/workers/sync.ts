@@ -1,24 +1,31 @@
 import type { IDBPDatabase } from "idb";
 import {
+  GENERIC_TABLES,
   INVALIDATE_ALL_THRESHOLD,
   META_KEY,
   SEARCH_LOOKUP_TABLES,
   STORE,
-  SYNC_CONCURRENCY,
   WORKER_MSG,
 } from "@/constants";
 import { getDB, type RSP_IDB } from "@/lib/idb";
-import { getSupabaseClient } from "@/lib/supabase-browser";
-import { createLimiter, errorMessage } from "@/lib/utils";
-import type { SyncChangedIds, SyncNewAdditions, SyncResult } from "@/types";
+import { toUpdatedAtMap } from "@/lib/sync-utils";
+import { errorMessage } from "@/lib/utils";
+import type {
+  SyncChangedIds,
+  SyncNewAdditions,
+  SyncResult,
+  SyncTable,
+} from "@/types";
+import { performCleanup } from "./cleanup-helpers";
 import {
+  applyDeltas,
   type ChangedCategoryMeta,
-  getTablesToSync,
+  fetchPublicSyncDeltas,
+  fetchRoleSyncDeltas,
   isDatabaseStale,
   loadStaticZipSeeds,
   loadStaticZipSeedsForRole,
-  type SyncTable,
-  syncTable,
+  mergeDeltas,
 } from "./utils";
 
 type WorkerMessage = {
@@ -27,6 +34,7 @@ type WorkerMessage = {
   supabaseKey: string;
   accessToken: string;
   roleId?: number;
+  userId?: string | null;
   isPublic?: boolean;
   targetTables?: SyncTable[];
 };
@@ -37,10 +45,13 @@ const toSyncResult = async (
   changedIds: SyncChangedIds,
   changedTables: string[],
   newAdditions: SyncNewAdditions,
+  clearedUser?: boolean,
+  clearedRole?: boolean,
 ): Promise<SyncResult> => {
-  const rebuildSearchIndex = changedTables.some((table) =>
-    (SEARCH_LOOKUP_TABLES as readonly string[]).includes(table),
-  );
+  const rebuildSearchIndex =
+    changedTables.some((table) =>
+      (SEARCH_LOOKUP_TABLES as readonly string[]).includes(table),
+    ) || Boolean(clearedRole);
   const {
     changedCategories,
     changedRecordings,
@@ -81,6 +92,8 @@ const toSyncResult = async (
         );
 
   return {
+    clearedUser,
+    clearedRole,
     changedCategoryPaths,
     changedIds: {
       recordings: Array.from(new Set(changedIds.recordings ?? [])),
@@ -99,63 +112,27 @@ const toSyncResult = async (
   };
 };
 
-const SEED_LOAD_SUCCESS_PAYLOAD = {
-  type: WORKER_MSG.SUCCESS,
-  changedCategoryPaths: ["*"],
-  changedIds: {},
-  rebuildSearchIndex: true,
-};
-
 self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
-  const { type, accessToken, roleId, isPublic, targetTables } = event.data;
+  const { type, accessToken, roleId, userId, isPublic, targetTables } =
+    event.data;
   if (type !== WORKER_MSG.START_SYNC) return;
 
   try {
     const db = await getDB();
     if (!db) throw new Error("Sync failed: IndexedDB not available");
 
-    const supabase = getSupabaseClient(accessToken);
-
     postMessage({
       type: WORKER_MSG.PROGRESS,
       message: "परिष्करोति… · Refining…",
     });
 
-    // Optimize first-time sync or stale (> MAX_SYNC_STALE_MS) database by loading pre-compiled static ZIP database seed
-    if (await isDatabaseStale(db)) {
-      try {
-        postMessage({
-          type: WORKER_MSG.PROGRESS,
-          message: "उत्कर्षयति… · Optimizing…",
-        });
+    // Phase 1: Local Cleanup & Store Purge
+    const { clearedUser, clearedRole } = await performCleanup(
+      db,
+      roleId,
+      userId ?? null,
+    );
 
-        const loaded = await loadStaticZipSeeds(db, self.location.origin);
-        if (loaded) {
-          postMessage(SEED_LOAD_SUCCESS_PAYLOAD);
-        }
-      } catch (zipErr) {
-        // Fallback silently to dynamic sync if static files fail
-        console.error(
-          "Static sync ZIP seed failed, falling back to dynamic sync:",
-          zipErr,
-        );
-      }
-    }
-
-    const tablesToSync = targetTables?.length
-      ? await Promise.all(
-          targetTables.map(async (table) => {
-            const idbMeta = await db.get(STORE.SYNC_META, table);
-            return {
-              table,
-              lastSync: undefined,
-              idbLastSync: idbMeta?.updated_at,
-            };
-          }),
-        )
-      : await getTablesToSync(db, self.location.origin);
-
-    const limit = createLimiter(SYNC_CONCURRENCY);
     const changedCategoryMeta: ChangedCategoryMeta = {
       changedCategories: {},
       changedRecordings: {},
@@ -175,6 +152,41 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       requests: [],
     };
 
+    const seedSuccessPayload = {
+      type: WORKER_MSG.SUCCESS,
+      clearedUser,
+      clearedRole,
+      changedCategoryPaths: ["*"],
+      changedIds,
+      newAdditions,
+      changedTables: [],
+      rebuildSearchIndex: true,
+    };
+
+    const isStale = await isDatabaseStale(db);
+    let loadedStaticSeed = false;
+
+    // Optimize first-time sync or stale (> MAX_SYNC_STALE_DAYS) database by loading pre-compiled static ZIP database seed
+    if (isStale) {
+      try {
+        postMessage({
+          type: WORKER_MSG.PROGRESS,
+          message: "उत्कर्षयति… · Optimizing…",
+        });
+
+        const loaded = await loadStaticZipSeeds(db, self.location.origin);
+        if (loaded) {
+          loadedStaticSeed = true;
+        }
+      } catch (zipErr) {
+        // Fallback silently to dynamic sync if static files fail
+        console.error(
+          "Static sync ZIP seed failed, falling back to dynamic sync:",
+          zipErr,
+        );
+      }
+    }
+
     const nextRole = roleId ?? null;
     const storedRole = await db.get(STORE.ROLE_META, META_KEY.SYNC_ROLE);
 
@@ -184,14 +196,14 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
     }
 
     if (
-      (!hasStoredRole || storedRole !== nextRole) &&
+      (!hasStoredRole || storedRole !== nextRole || isStale) &&
       !isPublic &&
       roleId !== undefined
     ) {
       try {
         postMessage({
           type: WORKER_MSG.PROGRESS,
-          message: "उत्कर्षयति… · Optimizing…",
+          message: "उत्कर्षयति… · Optimizing role data…",
         });
         const loaded = await loadStaticZipSeedsForRole(
           db,
@@ -200,13 +212,13 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
           accessToken,
         );
         if (loaded) {
-          postMessage(SEED_LOAD_SUCCESS_PAYLOAD);
+          loadedStaticSeed = true;
           await db.put(STORE.ROLE_META, nextRole, META_KEY.SYNC_ROLE);
         }
       } catch (zipErr) {
-        // Fallback silently to normal Supabase sync if static files fail
+        // Fallback silently to delta sync if static role seed fails
         console.error(
-          "Static sync ZIP seed for role failed, falling back to dynamic Supabase sync:",
+          "Static sync ZIP seed for role failed, falling back to delta sync:",
           zipErr,
         );
       }
@@ -214,24 +226,83 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
       await db.put(STORE.ROLE_META, null, META_KEY.SYNC_ROLE);
     }
 
-    const changedTables = (
-      await Promise.all(
-        tablesToSync.map(({ table, idbLastSync, lastSync }) =>
-          limit(() =>
-            syncTable({
-              supabase,
-              db,
-              changedIds,
-              changedCategoryMeta,
-              newAdditions,
-              table,
-              idbLastSync,
-              lastSync,
-            }),
-          ),
-        ),
-      )
-    ).filter((table): table is string => Boolean(table));
+    if (loadedStaticSeed) {
+      postMessage(seedSuccessPayload);
+      return;
+    }
+
+    // Collect current local watermarks from IndexedDB
+    const idbSyncMeta = toUpdatedAtMap(await db.getAll(STORE.SYNC_META));
+
+    const targetTableList = targetTables?.length
+      ? targetTables
+      : GENERIC_TABLES;
+
+    let changedTables: string[] = [];
+
+    // 1. Edge-cached pre-flight check via GET /api/sync/meta (304 / 0 lambda invocations)
+    const rawTag = Object.entries(idbSyncMeta)
+      .sort(([a], [b]) => a.localeCompare(b))
+      .map(([k, v]) => `${k}:${v}`)
+      .join("|");
+    const clientEtag = rawTag ? `"${btoa(rawTag)}"` : "";
+
+    const metaHeaders: Record<string, string> = {};
+    if (clientEtag) {
+      metaHeaders["If-None-Match"] = clientEtag;
+    }
+
+    const metaRes = await fetch(`${self.location.origin}/api/sync/meta`, {
+      headers: metaHeaders,
+    });
+
+    if (metaRes.ok && metaRes.status !== 304) {
+      const serverMeta = (await metaRes.json()) as Record<string, string>;
+
+      // Check if any requested table has a newer server watermark
+      const hasDirtyTables = targetTableList.some((table) => {
+        const serverTime = serverMeta[table];
+        return serverTime && serverTime > (idbSyncMeta[table] || "");
+      });
+
+      // 2. Perform delta sync when newer data exists on the server
+      if (hasDirtyTables) {
+        const watermarks: Record<string, string> = Object.fromEntries(
+          targetTableList.map((t) => [t, idbSyncMeta[t] || ""]),
+        );
+
+        // Fetch public and role deltas in parallel, keeping server pipelines completely separate
+        const isRestrictedRole = !isPublic && !!accessToken;
+        const [publicDeltaResult, roleDeltaResult] = await Promise.all([
+          fetchPublicSyncDeltas(self.location.origin, watermarks),
+          isRestrictedRole
+            ? fetchRoleSyncDeltas(self.location.origin, watermarks, accessToken)
+            : Promise.resolve(null),
+        ]);
+
+        const mergedDeltas = mergeDeltas(
+          publicDeltaResult?.deltas,
+          roleDeltaResult?.deltas,
+        );
+
+        const latestSyncMeta = {
+          ...(publicDeltaResult?.sync_meta || {}),
+          ...(roleDeltaResult?.sync_meta || {}),
+        };
+
+        if (Object.keys(mergedDeltas).length > 0) {
+          changedTables = await applyDeltas(
+            db,
+            mergedDeltas,
+            latestSyncMeta,
+            idbSyncMeta,
+            changedIds,
+            changedCategoryMeta,
+            newAdditions,
+          );
+        }
+      }
+    }
 
     // Sync browser caches with IndexedDB STORE.CACHE_LEDGER
     if (typeof self.caches !== "undefined") {
@@ -298,6 +369,8 @@ self.onmessage = async (event: MessageEvent<WorkerMessage>) => {
         changedIds,
         changedTables,
         newAdditions,
+        clearedUser,
+        clearedRole,
       )),
     });
   } catch (err) {

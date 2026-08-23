@@ -137,6 +137,8 @@ export interface SyncResult {
   newAdditions: SyncNewAdditions;
   rebuildSearchIndex: boolean;
   changedTables: string[];
+  clearedUser?: boolean;
+  clearedRole?: boolean;
 }
 
 export interface NotificationGroup {
@@ -179,7 +181,7 @@ export type SyncTable = keyof typeof import("@/constants").SYNC_COLUMNS;
 export type ClientWatermarks = Record<string, string>;
 
 export interface SyncRequestBody {
-  roleId?: number;
+  isPublic?: boolean;
   watermarks: ClientWatermarks;
 }
 

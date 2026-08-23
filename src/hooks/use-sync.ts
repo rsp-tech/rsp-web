@@ -7,12 +7,23 @@ import {
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { useSession } from "@/components/providers";
-import { QUERY_KEY, STORE, SYNC_INTERVAL, WORKER_MSG } from "@/constants";
+import {
+  LOCAL_STORAGE,
+  QUERY_KEY,
+  STORE,
+  SYNC_INTERVAL,
+  USER_SPECIFIC_TABLES,
+  WORKER_MSG,
+} from "@/constants";
 import { addSyncNotifications } from "@/hooks/use-notifications";
 import { useOnlineStatus } from "@/hooks/use-online-status";
-import { notifySearchWorker, rebuildSearchIndex } from "@/hooks/use-search";
+import {
+  notifySearchWorker,
+  rebuildSearchIndex,
+  terminateSearchWorker,
+} from "@/hooks/use-search";
 import { toRoleId } from "@/lib/utils";
-import type { SearchableTable, SyncNewAdditions, SyncResult } from "@/types";
+import type { SearchableTable, SyncResult } from "@/types";
 
 interface WorkerConfig {
   accessToken: string;
@@ -39,12 +50,42 @@ export const runSync = ({
     worker.onmessage = (e: MessageEvent<SyncWorkerMessage>) => {
       if (e.data.type === WORKER_MSG.SUCCESS) {
         worker.terminate();
-        const result = e.data;
-        const { changedCategoryPaths, changedTables } = result;
+        const {
+          changedCategoryPaths,
+          changedTables,
+          clearedUser,
+          clearedRole,
+          newAdditions,
+          rebuildSearchIndex: shouldRebuildSearchIndex,
+          changedIds,
+        } = e.data;
 
-        toast.success("Sync complete!", {
-          id: "sync-status",
-        });
+        toast.dismiss("sync-status");
+
+        if (clearedUser) {
+          try {
+            localStorage.removeItem(LOCAL_STORAGE.READ_NOTIFICATIONS);
+          } catch (err) {
+            console.error(
+              `Failed to clear ${LOCAL_STORAGE.READ_NOTIFICATIONS} from localStorage:`,
+              err,
+            );
+          }
+          USER_SPECIFIC_TABLES.forEach((table) => {
+            queryClient.invalidateQueries({ queryKey: [table] });
+          });
+        }
+
+        if (clearedRole) {
+          terminateSearchWorker();
+          queryClient.invalidateQueries({
+            queryKey: [QUERY_KEY.ALL_CATEGORIES],
+          });
+          queryClient.invalidateQueries({
+            queryKey: [QUERY_KEY.CATEGORY_PAGE],
+          });
+          rebuildSearchIndex(queryClient);
+        }
 
         if (changedCategoryPaths.length) {
           queryClient.invalidateQueries({
@@ -92,13 +133,8 @@ export const runSync = ({
           }
         }
 
-        if (
-          Object.keys(result.newAdditions).some(
-            (key) =>
-              result.newAdditions[key as keyof SyncNewAdditions].length > 0,
-          )
-        ) {
-          addSyncNotifications(result.newAdditions, config.userId);
+        if (Object.values(newAdditions).some((value) => value.length > 0)) {
+          addSyncNotifications(newAdditions, config.userId);
           queryClient.invalidateQueries({
             queryKey: [STORE.USERS, "notifications"],
           });
@@ -116,7 +152,7 @@ export const runSync = ({
           }
         }
 
-        if (result.rebuildSearchIndex) {
+        if (shouldRebuildSearchIndex) {
           rebuildSearchIndex(queryClient);
         } else {
           for (const table of [
@@ -124,7 +160,7 @@ export const runSync = ({
             STORE.CATEGORIES,
             STORE.MATERIALS,
           ] as const) {
-            const ids = result.changedIds[table];
+            const ids = changedIds[table];
             if (ids?.length) notifySearchWorker(table as SearchableTable, ids);
           }
         }
@@ -141,7 +177,7 @@ export const runSync = ({
     };
     worker.onerror = (e) => {
       worker.terminate();
-      toast.error("Critical sync worker error occurred", { id: "sync-status" });
+      toast.error("Sync failed!", { id: "sync-status" });
       reject(e);
     };
   });
@@ -153,6 +189,7 @@ export const useSync = () => {
   const isOnline = useOnlineStatus();
 
   const roleId = toRoleId(session?.user.app_metadata["role_id"]);
+  const userId = session?.user?.id;
   const isPublic = session?.user.app_metadata["is_public"] as
     | boolean
     | undefined;
@@ -162,12 +199,14 @@ export const useSync = () => {
     roleId,
     isPublic,
     queryClient,
-    userId: session?.user?.id,
+    userId,
   };
+
   return useQuery({
-    queryKey: [QUERY_KEY.SYNC, roleId],
+    queryKey: [QUERY_KEY.SYNC, roleId ?? "public", userId ?? "guest"],
     queryFn: () => runSync(workerConfig),
     staleTime: SYNC_INTERVAL,
+    refetchOnMount: "always",
     refetchInterval: SYNC_INTERVAL,
     enabled: !isLoading && isOnline,
   });
