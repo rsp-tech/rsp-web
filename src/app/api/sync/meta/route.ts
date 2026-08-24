@@ -1,4 +1,4 @@
-import { type NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
 import { getCachedSyncMeta } from "../meta-service";
 
 export const revalidate = 86400; // 24 hours
@@ -6,34 +6,14 @@ export const revalidate = 86400; // 24 hours
 const CACHE_CONTROL_HEADER =
   "public, max-age=0, s-maxage=86400, stale-while-revalidate=86400";
 
-export const GET = async (req: NextRequest) => {
+export const GET = async () => {
   try {
     const data = await getCachedSyncMeta();
-
-    // Fast, deterministic ETag based on sorted table IDs and updated_at timestamps
-    const rawTag = Object.entries(data)
-      .sort(([a], [b]) => a.localeCompare(b))
-      .map(([k, v]) => `${k}:${v}`)
-      .join("|");
-    const etag = `"${Buffer.from(rawTag).toString("base64")}"`;
-
-    const clientEtag = req.headers.get("if-none-match");
-
-    if (clientEtag && (clientEtag === etag || clientEtag === `W/${etag}`)) {
-      return new Response(null, {
-        status: 304,
-        headers: {
-          ETag: etag,
-          "Cache-Control": CACHE_CONTROL_HEADER,
-        },
-      });
-    }
 
     return new Response(JSON.stringify(data), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
-        ETag: etag,
         "Cache-Control": CACHE_CONTROL_HEADER,
       },
     });

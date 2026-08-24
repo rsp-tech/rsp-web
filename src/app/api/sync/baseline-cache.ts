@@ -9,7 +9,7 @@ import {
 } from "@/lib/sync-utils";
 import { sortByDate } from "@/lib/utils";
 import type { SyncTable } from "@/types";
-import { fetchBackupAsset } from "./utils";
+import { fetchBackupAsset, getCSV } from "./utils";
 
 const SYNC_RESOURCE = process.env["SYNC_RESOURCE"] || "sync.zip";
 
@@ -71,6 +71,19 @@ export const getCachedRoleExtraTable = unstable_cache(
     return parseAndSortTableRows(unzipped, table);
   },
   [CACHE_TAG.BACKUP_RESOURCES, "role"],
+  {
+    revalidate: REVALIDATE_24_HOURS,
+    tags: [CACHE_TAG.BACKUP_RESOURCES],
+  },
+);
+
+// Cached user baseline table (parsed and sorted ascending by updated_at)
+export const getCachedUserTable = unstable_cache(
+  async (table: SyncTable): Promise<Array<Record<string, unknown>>> =>
+    parseCSVTable<Record<string, unknown>>(await getCSV(table), table).sort(
+      sortByDate(),
+    ),
+  [CACHE_TAG.BACKUP_RESOURCES, "user-table"],
   {
     revalidate: REVALIDATE_24_HOURS,
     tags: [CACHE_TAG.BACKUP_RESOURCES],

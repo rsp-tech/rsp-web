@@ -1,4 +1,3 @@
-import { unstable_cache } from "next/cache";
 import Papa from "papaparse";
 import {
   CACHE_TAG,
@@ -69,34 +68,27 @@ export const fetchBackupAsset = async (
 };
 
 // Cached function to load backup CSV tables (Next.js automatically adds `table` arg to the cache key)
-export const getCachedCSV = unstable_cache(
-  async (table: string): Promise<string[][]> => {
-    if (!CSV_ENDPOINT) {
-      console.error("Missing CSV_ENDPOINT environment variable");
-      return [];
-    }
+export const getCSV = async (table: string): Promise<string[][]> => {
+  if (!CSV_ENDPOINT) {
+    console.error("Missing CSV_ENDPOINT environment variable");
+    return [];
+  }
 
-    const url = `${CSV_ENDPOINT}/${table}.csv`;
-    const res = await fetch(url, {
-      headers: {
-        Authorization: `Bearer ${BACKUP_TOKEN}`,
-      },
-    });
+  const url = `${CSV_ENDPOINT}/${table}.csv`;
+  const res = await fetch(url, {
+    headers: {
+      Authorization: `Bearer ${BACKUP_TOKEN}`,
+    },
+  });
 
-    if (!res.ok) {
-      console.error(`Failed to fetch CSV for ${table}:`, res.statusText);
-      return [];
-    }
+  if (!res.ok) {
+    console.error(`Failed to fetch CSV for ${table}:`, res.statusText);
+    return [];
+  }
 
-    const csvText = await res.text();
-    const parsed = Papa.parse<string[]>(csvText, {
-      skipEmptyLines: true,
-    });
-    return parsed.data;
-  },
-  [CACHE_TAG.BACKUP_RESOURCES],
-  {
-    revalidate: REVALIDATE_24_HOURS,
-    tags: [CACHE_TAG.BACKUP_RESOURCES],
-  },
-);
+  const csvText = await res.text();
+  const parsed = Papa.parse<string[]>(csvText, {
+    skipEmptyLines: true,
+  });
+  return parsed.data;
+};

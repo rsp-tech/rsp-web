@@ -1,4 +1,9 @@
-import { ROLE_SYNCED_TABLES, STORE, SYNC_COLUMNS } from "@/constants";
+import {
+  ROLE_SYNCED_TABLES,
+  STORE,
+  SYNC_COLUMNS,
+  USER_SPECIFIC_TABLES,
+} from "@/constants";
 import {
   isRoleTable,
   sliceAfterWatermark,
@@ -9,6 +14,7 @@ import type { ClientWatermarks, SyncResponseData, SyncTable } from "@/types";
 import {
   getCachedPublicTable,
   getCachedRoleExtraTable,
+  getCachedUserTable,
 } from "./baseline-cache";
 import { getCachedLiveDiff } from "./live-diff-fetcher";
 import { getCachedSyncMeta } from "./meta-service";
@@ -174,5 +180,95 @@ export const computeRoleSyncDelta = async (
     changed: true,
     sync_meta: serverSyncMeta,
     deltas: Object.fromEntries(deltaEntries),
+  };
+};
+
+export const computeUserSyncDelta = async (
+  watermarks: ClientWatermarks,
+  userId: string,
+): Promise<SyncResponseData> => {
+  const serverSyncMeta = await getCachedSyncMeta();
+
+  // Load all user queries first so we know all user query IDs across baseline & live diff
+  const baselineQueries = await getCachedUserTable(STORE.USER_QUERIES);
+  const highestQueriesBaseline =
+    (baselineQueries[baselineQueries.length - 1]?.["updated_at"] as
+      | string
+      | undefined) ?? null;
+  const liveQueries = await getCachedLiveDiff(
+    STORE.USER_QUERIES,
+    highestQueriesBaseline,
+  );
+
+  const userQueryIds = new Set<string>();
+  for (const q of baselineQueries) {
+    if (q["user_id"] === userId && q["id"]) {
+      userQueryIds.add(String(q["id"]));
+    }
+  }
+  for (const q of liveQueries) {
+    if (q["user_id"] === userId && q["id"]) {
+      userQueryIds.add(String(q["id"]));
+    }
+  }
+
+  const deltaEntries = await Promise.all(
+    (USER_SPECIFIC_TABLES as readonly SyncTable[]).map(async (table) => {
+      const clientWatermark = watermarks[table] || "";
+      const baselineRows = await getCachedUserTable(table);
+      const highestBaselineUpdatedAt =
+        (baselineRows[baselineRows.length - 1]?.["updated_at"] as
+          | string
+          | undefined) ?? null;
+
+      const liveDiffRows = await getCachedLiveDiff(
+        table,
+        highestBaselineUpdatedAt,
+      );
+
+      const pickedBaseline = sliceAfterWatermark(
+        baselineRows,
+        clientWatermark,
+        highestBaselineUpdatedAt,
+      );
+
+      const pickedLive = liveDiffRows.filter(
+        (r) =>
+          !clientWatermark ||
+          (r["updated_at"] && (r["updated_at"] as string) > clientWatermark),
+      );
+
+      const mergedMap = new Map<unknown, Record<string, unknown>>();
+      for (const row of pickedBaseline) {
+        if (row["id"] !== undefined) mergedMap.set(row["id"], row);
+      }
+      for (const row of pickedLive) {
+        if (row["id"] !== undefined) mergedMap.set(row["id"], row);
+      }
+
+      const userRows = Array.from(mergedMap.values()).filter((row) => {
+        if (table === STORE.USERS) {
+          return row["id"] === userId;
+        }
+        if (table === STORE.QUERY_REPLIES) {
+          return row["query_id"] && userQueryIds.has(String(row["query_id"]));
+        }
+        return row["user_id"] === userId;
+      });
+
+      const resultDelta = stripUpdatedAt(userRows.sort(sortByDate()));
+      return [table, resultDelta] as [SyncTable, unknown[]];
+    }),
+  );
+
+  const deltas = Object.fromEntries(
+    deltaEntries.filter(([_, rows]) => rows.length > 0),
+  );
+  const changed = Object.keys(deltas).length > 0;
+
+  return {
+    changed,
+    sync_meta: serverSyncMeta,
+    deltas,
   };
 };
