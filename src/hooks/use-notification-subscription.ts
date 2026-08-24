@@ -5,7 +5,7 @@ import { useSession } from "@/components/providers";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { toRoleId } from "@/lib/utils";
 import type { SyncTable } from "@/types";
-import { runSync } from "./use-sync";
+import { runUserSync } from "./use-user-sync";
 
 export function useNotificationSubscription(): void {
   const { session } = useSession();
@@ -17,21 +17,17 @@ export function useNotificationSubscription(): void {
     pathname === "/profile" || pathname.startsWith("/queries");
 
   const roleId = toRoleId(session?.user.app_metadata["role_id"]);
-  const isPublic = session?.user.app_metadata["is_public"] as
-    | boolean
-    | undefined;
 
   useEffect(() => {
     if (!userId || !(isTargetPage || roleId === 1) || !queryClient) return;
-    const handleTriggerSync = (targetTables?: SyncTable[]) =>
-      runSync({
-        accessToken: session?.access_token ?? "",
-        roleId,
-        isPublic,
+    const handleTriggerSync = (targetTables?: SyncTable[]) => {
+      console.debug(targetTables);
+      runUserSync({
         queryClient,
         userId: session?.user?.id,
-        targetTables,
+        accessToken: session?.access_token ?? "",
       });
+    };
 
     const supabase = getSupabaseClient();
     const channel = supabase.channel(
@@ -47,11 +43,7 @@ export function useNotificationSubscription(): void {
       .on("broadcast", { event: "sync" }, ({ payload }) => {
         handleBroadcast(payload);
       })
-      .subscribe((status) => {
-        if (status === "SUBSCRIBED") {
-          handleTriggerSync();
-        }
-      });
+      .subscribe();
 
     return () => {
       supabase.removeChannel(channel);
@@ -60,7 +52,6 @@ export function useNotificationSubscription(): void {
     userId,
     isTargetPage,
     roleId,
-    isPublic,
     session?.access_token,
     session?.user?.id,
     queryClient,

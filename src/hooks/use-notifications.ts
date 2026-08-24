@@ -40,6 +40,25 @@ const saveStoredGroups = (
   localStorage.setItem(getGroupsStorageKey(userId), JSON.stringify(groups));
 };
 
+export const clearNotificationStorage = () => {
+  if (typeof window === "undefined") return;
+  try {
+    localStorage.removeItem(LOCAL_STORAGE.READ_NOTIFICATIONS);
+    const keysToRemove: string[] = [];
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key?.startsWith(LOCAL_STORAGE.NOTIFICATION_GROUPS)) {
+        keysToRemove.push(key);
+      }
+    }
+    for (const key of keysToRemove) {
+      localStorage.removeItem(key);
+    }
+  } catch (err) {
+    console.error("Failed to clear notification storage:", err);
+  }
+};
+
 export const addSyncNotifications = (
   newAdditions: SyncNewAdditions,
   userId?: string | null,
