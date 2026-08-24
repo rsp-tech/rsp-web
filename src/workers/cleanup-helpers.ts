@@ -1,21 +1,13 @@
 import type { IDBPDatabase } from "idb";
-import { META_KEY, STORE } from "@/constants";
+import { META_KEY, STORE, USER_SPECIFIC_TABLES } from "@/constants";
 import type { RSP_IDB } from "@/lib/idb";
 
 type CleanupTable = "categories" | "recordings" | "materials";
 
-const TABLES: CleanupTable[] = [
+const ROLE_TABLES: CleanupTable[] = [
   STORE.CATEGORIES,
   STORE.RECORDINGS,
   STORE.MATERIALS,
-];
-
-const USER_SPECIFIC_TABLES: (keyof RSP_IDB)[] = [
-  STORE.USERS,
-  STORE.USER_EDIT_REQUESTS,
-  STORE.USER_SERVICE_INTERESTS,
-  STORE.USER_QUERIES,
-  STORE.QUERY_REPLIES,
 ];
 
 const isAllowed = (
@@ -39,56 +31,73 @@ const cleanupTable = async (
   await tx.done;
 };
 
-export interface CleanupResult {
-  clearedUser: boolean;
+export interface RoleCleanupResult {
   clearedRole: boolean;
 }
 
-export const performCleanup = async (
+export interface UserCleanupResult {
+  clearedUser: boolean;
+}
+
+export const performRoleCleanup = async (
   db: IDBPDatabase<RSP_IDB>,
   roleId: number | undefined,
-  userId: string | null,
-): Promise<CleanupResult> => {
-  // 1. Get stored metadata
+): Promise<RoleCleanupResult> => {
   const hasStoredRole =
     (await db.getKey(STORE.ROLE_META, META_KEY.CLEANUP_ROLE)) !== undefined;
   const storedRole = await db.get(STORE.ROLE_META, META_KEY.CLEANUP_ROLE);
 
+  if (!hasStoredRole) {
+    await Promise.all([
+      db.put(STORE.ROLE_META, roleId, META_KEY.CLEANUP_ROLE),
+      db.put(STORE.ROLE_META, roleId, META_KEY.SYNC_ROLE),
+    ]);
+    return { clearedRole: false };
+  }
+
+  if (storedRole !== roleId) {
+    await Promise.all([
+      ...ROLE_TABLES.map((t) => cleanupTable(db, t, roleId)),
+      db.clear(STORE.ROLE_SYNC_META),
+    ]);
+
+    await Promise.all([
+      db.put(STORE.ROLE_META, roleId, META_KEY.CLEANUP_ROLE),
+      db.put(STORE.ROLE_META, roleId, META_KEY.SYNC_ROLE),
+    ]);
+
+    return { clearedRole: true };
+  }
+
+  return { clearedRole: false };
+};
+
+export const performUserCleanup = async (
+  db: IDBPDatabase<RSP_IDB>,
+  userId: string,
+): Promise<UserCleanupResult> => {
   const hasStoredUserId =
     (await db.getKey(STORE.ROLE_META, META_KEY.CLEANUP_USER_ID)) !== undefined;
   const storedUserId = await db.get(STORE.ROLE_META, META_KEY.CLEANUP_USER_ID);
 
-  // Save initial state if not present (e.g. first run of database)
-  if (!hasStoredRole && !hasStoredUserId) {
-    await Promise.all([
-      db.put(STORE.ROLE_META, roleId, META_KEY.CLEANUP_ROLE),
-      db.put(STORE.ROLE_META, userId, META_KEY.CLEANUP_USER_ID),
-      db.put(STORE.ROLE_META, roleId, META_KEY.SYNC_ROLE),
-    ]);
-    return { clearedUser: false, clearedRole: false };
+  if (!hasStoredUserId) {
+    await db.put(STORE.ROLE_META, userId, META_KEY.CLEANUP_USER_ID);
+    return { clearedUser: false };
   }
 
-  let clearedUser = false;
-  let clearedRole = false;
-
-  // 2. User shift cleanup (logout, login, or different user)
   if (storedUserId !== userId) {
     await Promise.all(USER_SPECIFIC_TABLES.map((t) => db.clear(t)));
-    clearedUser = true;
+
+    // Clear user table watermarks from sync_meta
+    const syncMetaTx = db.transaction(STORE.SYNC_META, "readwrite");
+    for (const table of USER_SPECIFIC_TABLES) {
+      syncMetaTx.store.delete(table);
+    }
+    await syncMetaTx.done;
+
+    await db.put(STORE.ROLE_META, userId, META_KEY.CLEANUP_USER_ID);
+    return { clearedUser: true };
   }
 
-  // 3. Role-based cleanup (role changes)
-  if (storedRole !== roleId) {
-    await Promise.all(TABLES.map((t) => cleanupTable(db, t, roleId)));
-    clearedRole = true;
-  }
-
-  // 4. Update metadata atomically
-  await Promise.all([
-    db.put(STORE.ROLE_META, roleId, META_KEY.CLEANUP_ROLE),
-    db.put(STORE.ROLE_META, userId, META_KEY.CLEANUP_USER_ID),
-    db.put(STORE.ROLE_META, roleId, META_KEY.SYNC_ROLE),
-  ]);
-
-  return { clearedUser, clearedRole };
+  return { clearedUser: false };
 };

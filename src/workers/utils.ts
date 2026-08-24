@@ -1,9 +1,11 @@
 import { unzipSync } from "fflate";
 import type { IDBPDatabase } from "idb";
 import {
+  INVALIDATE_ALL_THRESHOLD,
   MAX_SYNC_STALE_DAYS,
   ONE_DAY_MS,
   ROLE_SYNCED_TABLES,
+  SEARCH_LOOKUP_TABLES,
   STORE,
   STRING_KEY_TABLES,
   SYNC_COLUMNS,
@@ -18,6 +20,7 @@ import type {
   SyncChangedIds,
   SyncNewAdditions,
   SyncResponseData,
+  SyncResult,
   SyncTable,
 } from "@/types";
 
@@ -230,6 +233,55 @@ const writeUnzippedTablesToDb = async (
   await Promise.all(txs);
 };
 
+export const syncCacheAndIDB = async (db: IDBPDatabase<RSP_IDB>) => {
+  if (typeof self.caches === "undefined") return;
+  try {
+    const cache = await self.caches.open("rsp-audio-cache");
+    const keys = await cache.keys();
+    for (const req of keys) {
+      const audioId = new URL(req.url).pathname.split("/").pop() || "";
+      if (!audioId) continue;
+
+      const ledgerEntry = await db.get(STORE.CACHE_LEDGER, audioId);
+      if (!ledgerEntry) {
+        const tx = db.transaction(STORE.RECORDINGS, "readonly");
+        let cursor = await tx.store.openCursor();
+        let recId: number | null = null;
+        while (cursor) {
+          if (cursor.value.audio_id === audioId) {
+            recId = cursor.value.id;
+            break;
+          }
+          cursor = await cursor.continue();
+        }
+
+        if (recId !== null) {
+          const cachedResponse = await cache.match(req);
+          let size = 0;
+          if (cachedResponse) {
+            const contentLength = cachedResponse.headers.get("content-length");
+            if (contentLength) {
+              size = parseInt(contentLength, 10);
+            } else {
+              const blob = await cachedResponse.clone().blob();
+              size = blob.size;
+            }
+          }
+
+          await db.put(STORE.CACHE_LEDGER, {
+            id: audioId,
+            recId,
+            accessedAt: Date.now(),
+            size,
+          });
+        }
+      }
+    }
+  } catch (cacheErr) {
+    console.error("Failed to sync cache ledger entries in worker:", cacheErr);
+  }
+};
+
 export const loadStaticZipSeedsForRole = async (
   db: IDBPDatabase<RSP_IDB>,
   origin: string,
@@ -246,7 +298,35 @@ export const loadStaticZipSeedsForRole = async (
   const unzipped = unzipSync(new Uint8Array(await zipRes.arrayBuffer()));
   await writeUnzippedTablesToDb(db, unzipped, ROLE_SYNCED_TABLES);
 
-  // Fetch user-specific tables from the new JSON endpoint and write to IndexedDB
+  const syncStateBytes = unzipped["sync_state.json"];
+  if (syncStateBytes) {
+    const syncState = JSON.parse(
+      new TextDecoder().decode(syncStateBytes),
+    ) as Record<string, string>;
+
+    const syncMetaTx = db.transaction(STORE.ROLE_SYNC_META, "readwrite");
+    for (const [table, lastUpdated] of Object.entries(syncState)) {
+      if (
+        (ROLE_SYNCED_TABLES as readonly string[]).includes(table) &&
+        lastUpdated
+      ) {
+        syncMetaTx.store.put({
+          id: table,
+          updated_at: lastUpdated,
+        });
+      }
+    }
+    await syncMetaTx.done;
+  }
+
+  return true;
+};
+
+export const loadUserSeeds = async (
+  db: IDBPDatabase<RSP_IDB>,
+  origin: string,
+  accessToken: string,
+): Promise<boolean> => {
   const userRes = await fetch(`${origin}/api/sync/user`, {
     headers: {
       "Content-Type": "application/json",
@@ -254,22 +334,43 @@ export const loadStaticZipSeedsForRole = async (
     },
   });
   if (!userRes.ok) return false;
-  const payload = await userRes.json();
+  const payload = (await userRes.json()) as Record<
+    string,
+    RSP_IDB[IDBTable]["value"][]
+  >;
   const txs: Promise<void>[] = [];
+  const latestTimestamps: Record<string, string> = {};
 
-  for (const [table, rows] of Object.entries(
-    payload as Record<string, string[][]>,
-  )) {
+  for (const [table, rows] of Object.entries(payload)) {
     if (!rows?.length || table === STORE.DELETED_RECORDS) continue;
 
-    const records = parseCSVTable<RSP_IDB[IDBTable]["value"]>(rows, table);
-    const tx = db.transaction(table, "readwrite");
-    for (const record of records) {
+    const tx = db.transaction(table as IDBTable, "readwrite");
+    for (const record of rows) {
       tx.store.put(record);
+      const r = record as { updated_at?: string };
+      if (r.updated_at) {
+        if (
+          !latestTimestamps[table] ||
+          r.updated_at > latestTimestamps[table]
+        ) {
+          latestTimestamps[table] = r.updated_at;
+        }
+      }
     }
     txs.push(tx.done);
   }
   await Promise.all(txs);
+
+  const syncMetaTx = db.transaction(STORE.SYNC_META, "readwrite");
+  for (const [table, lastUpdated] of Object.entries(latestTimestamps)) {
+    if (lastUpdated) {
+      syncMetaTx.store.put({
+        id: table,
+        updated_at: lastUpdated,
+      });
+    }
+  }
+  await syncMetaTx.done;
 
   return true;
 };
@@ -370,6 +471,31 @@ export const fetchRoleSyncDeltas = async (
   return (await res.json()) as SyncResponseData;
 };
 
+export const fetchUserSyncDeltas = async (
+  origin: string,
+  watermarks: Record<string, string>,
+  accessToken: string,
+): Promise<SyncResponseData | null> => {
+  const res = await fetch(`${origin}/api/sync/user`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${accessToken}`,
+    },
+    body: JSON.stringify({
+      watermarks,
+    }),
+  });
+
+  if (!res.ok) {
+    throw new Error(
+      `User sync failed with status ${res.status}: ${res.statusText}`,
+    );
+  }
+
+  return (await res.json()) as SyncResponseData;
+};
+
 export const mergeDeltas = (
   publicDeltas?: Partial<Record<SyncTable, unknown[]>>,
   roleDeltas?: Partial<Record<SyncTable, unknown[]>>,
@@ -418,6 +544,9 @@ export const applyDeltas = async (
   changedIds: SyncChangedIds,
   changedCategoryMeta: ChangedCategoryMeta,
   newAdditions: SyncNewAdditions,
+  metaStore:
+    | typeof STORE.SYNC_META
+    | typeof STORE.ROLE_SYNC_META = STORE.SYNC_META,
 ): Promise<string[]> => {
   const changedTables: string[] = [];
 
@@ -446,14 +575,88 @@ export const applyDeltas = async (
     changedTables.push(syncTable);
   }
 
-  // Update sync_meta in IDB with server's latest watermarks
-  const syncMetaTx = db.transaction(STORE.SYNC_META, "readwrite");
+  // Update target meta store in IDB with server's latest watermarks for changed tables
+  const metaTx = db.transaction(metaStore, "readwrite");
   for (const [table, updated_at] of Object.entries(syncMeta)) {
-    if (updated_at) {
-      syncMetaTx.store.put({ id: table, updated_at });
+    if (updated_at && changedTables.includes(table)) {
+      metaTx.store.put({ id: table, updated_at });
     }
   }
-  await syncMetaTx.done;
+  await metaTx.done;
 
   return changedTables;
+};
+
+export const toSyncResult = async (
+  db: IDBPDatabase<RSP_IDB>,
+  changedCategoryMeta: ChangedCategoryMeta,
+  changedIds: SyncChangedIds,
+  changedTables: string[],
+  newAdditions: SyncNewAdditions,
+  clearedUser?: boolean,
+  clearedRole?: boolean,
+): Promise<SyncResult> => {
+  const rebuildSearchIndex = changedTables.some((table) =>
+    (SEARCH_LOOKUP_TABLES as readonly string[]).includes(table),
+  );
+  const {
+    changedCategories,
+    changedRecordings,
+    bubbledChangeCategoryIds,
+    bubbledChangeRecordingIds,
+  } = changedCategoryMeta;
+
+  Object.keys(changedCategories).forEach((id) => {
+    bubbledChangeCategoryIds.add(Number(id));
+  });
+
+  if (bubbledChangeCategoryIds.size <= INVALIDATE_ALL_THRESHOLD) {
+    (
+      await Promise.all(
+        Array.from(bubbledChangeRecordingIds).map(
+          async (id) =>
+            changedRecordings[id] ??
+            (
+              await db.get(STORE.RECORDINGS, Number(id))
+            )?.category_id,
+        ),
+      )
+    ).forEach((id) => {
+      if (id) bubbledChangeCategoryIds.add(id);
+    });
+  }
+
+  const changedCategoryPaths =
+    bubbledChangeCategoryIds.size > INVALIDATE_ALL_THRESHOLD
+      ? ["*"]
+      : await Promise.all(
+          Array.from(bubbledChangeCategoryIds).map(async (id) =>
+            id
+              ? (changedCategories[id] ??
+                (await db.get(STORE.CATEGORIES, id))?.url_path)
+              : "~",
+          ),
+        );
+
+  return {
+    clearedUser,
+    clearedRole,
+    changedCategoryPaths: changedCategoryPaths.filter(
+      (p): p is string => p !== undefined,
+    ),
+    changedIds: {
+      recordings: Array.from(new Set(changedIds.recordings ?? [])),
+      categories: Array.from(new Set(changedIds.categories ?? [])),
+      materials: Array.from(new Set(changedIds.materials ?? [])),
+    },
+    newAdditions: {
+      recordings: Array.from(new Set(newAdditions.recordings)),
+      materials: Array.from(new Set(newAdditions.materials)),
+      categories: Array.from(new Set(newAdditions.categories)),
+      replies: Array.from(new Set(newAdditions.replies)),
+      requests: Array.from(new Set(newAdditions.requests)),
+    },
+    changedTables,
+    rebuildSearchIndex,
+  };
 };
