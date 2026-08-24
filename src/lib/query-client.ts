@@ -6,7 +6,11 @@ export function getQueryClient() {
   if (!client) {
     client = new QueryClient({
       defaultOptions: {
-        queries: { retry: false, refetchOnWindowFocus: false },
+        queries: {
+          retry: false,
+          refetchOnWindowFocus: false,
+          networkMode: "always",
+        },
       },
     });
   }

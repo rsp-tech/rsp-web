@@ -19,7 +19,7 @@ export const AUDIO_BASE_URL = process.env["NEXT_PUBLIC_AUDIO_BASE_URL"];
 
 // IndexedDB
 export const DB_NAME = "rsp";
-export const DB_VERSION = 2;
+export const DB_VERSION = 3;
 
 export const STORE = {
   CATEGORIES: "categories",
@@ -37,6 +37,7 @@ export const STORE = {
   FEATURED_SECTIONS: "featured_sections",
   FEATURED_ITEMS: "featured_items",
   SYNC_META: "sync_meta",
+  ROLE_SYNC_META: "role_sync_meta",
   ROLE_META: "role_meta",
   CACHE_LEDGER: "cache_ledger",
   USERS: "users",
@@ -307,7 +308,9 @@ export const LOCAL_STORAGE = {
 // Worker message types
 export const WORKER_MSG = {
   // Sync
-  START_SYNC: "START_SYNC",
+  START_PUBLIC_SYNC: "START_PUBLIC_SYNC",
+  START_ROLE_SYNC: "START_ROLE_SYNC",
+  START_USER_SYNC: "START_USER_SYNC",
   // Cleanup
   START_CLEANUP: "START_CLEANUP",
   // Search
@@ -328,7 +331,9 @@ export const WORKER_MSG = {
 export const QUERY_KEY = {
   CATEGORY_PAGE: "category-page",
   ALL_CATEGORIES: "categories",
-  SYNC: "sync",
+  SYNC_PUBLIC: "sync-public",
+  SYNC_ROLE: "sync-role",
+  SYNC_USER: "sync-user",
   SPEAKERS: "speakers",
   LANGUAGES: "languages",
   VENUES: "venues",

@@ -121,6 +121,10 @@ export interface RSP_IDB {
     key: StoreName;
     value: { id: string; updated_at: string };
   };
+  role_sync_meta: {
+    key: StoreName;
+    value: { id: string; updated_at: string };
+  };
   role_meta: {
     key: string;
     value: string;
@@ -188,6 +192,9 @@ const IDB_SCHEMA: Record<
     indexes: [{ name: INDEX.BY_SECTION_ID, keyPath: "section_id" }],
   },
   [STORE.SYNC_META]: {
+    keyPath: "id",
+  },
+  [STORE.ROLE_SYNC_META]: {
     keyPath: "id",
   },
   [STORE.ROLE_META]: {},

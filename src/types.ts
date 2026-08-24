@@ -1,3 +1,4 @@
+import type { WORKER_MSG } from "@/constants";
 import type { Database } from "@/database.types";
 
 type LocalTable<T> = Omit<T, "created_at" | "metadata" | "updated_at">;
@@ -190,3 +191,8 @@ export interface SyncResponseData {
   sync_meta: Record<string, string>;
   deltas: Partial<Record<SyncTable, unknown[]>>;
 }
+
+export type SyncWorkerMessage =
+  | (SyncResult & { type: typeof WORKER_MSG.SUCCESS })
+  | { type: typeof WORKER_MSG.ERROR; message: string }
+  | { type: typeof WORKER_MSG.PROGRESS; message: string };
