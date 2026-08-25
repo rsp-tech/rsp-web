@@ -108,8 +108,9 @@ export const handleSyncSuccess = (
   result: SyncResult,
   queryClient: QueryClient,
   userId?: string,
+  toastId?: string,
 ) => {
-  toast.dismiss("sync-status");
+  toast.dismiss(toastId || "sync-status");
 
   if (result.clearedUser) handleUserCleanup(queryClient);
   if (result.clearedRole) handleRoleCleanup(queryClient);

@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useSession } from "@/components/providers";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { toRoleId } from "@/lib/utils";
-import type { SyncTable } from "@/types";
 import { runUserSync } from "./use-user-sync";
 
 export function useNotificationSubscription(): void {
@@ -20,30 +19,19 @@ export function useNotificationSubscription(): void {
 
   useEffect(() => {
     if (!userId || !(isTargetPage || roleId === 1) || !queryClient) return;
-    const handleTriggerSync = (targetTables?: SyncTable[]) => {
-      console.debug(targetTables);
+    const handleTriggerSync = () =>
       runUserSync({
         queryClient,
         userId: session?.user?.id,
         accessToken: session?.access_token ?? "",
       });
-    };
 
     const supabase = getSupabaseClient();
     const channel = supabase.channel(
       roleId === 1 ? "admin-channel" : `user-channel-${userId}`,
     );
 
-    const handleBroadcast = (payload?: { tables: SyncTable[] }) => {
-      const tables = payload?.tables;
-      handleTriggerSync(tables);
-    };
-
-    channel
-      .on("broadcast", { event: "sync" }, ({ payload }) => {
-        handleBroadcast(payload);
-      })
-      .subscribe();
+    channel.on("broadcast", { event: "sync" }, handleTriggerSync).subscribe();
 
     return () => {
       supabase.removeChannel(channel);

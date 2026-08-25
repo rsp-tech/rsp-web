@@ -7,40 +7,28 @@ import {
 } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { QUERY_KEY, SYNC_INTERVAL, WORKER_MSG } from "@/constants";
-import type { SyncWorkerMessage } from "@/types";
+import { dispatchSyncJob } from "@/lib/sync-worker-client";
 import { handleSyncSuccess } from "./sync-helpers";
 
-export const runPublicSync = ({
+const TOAST_ID = "sync-public-status";
+
+export const runPublicSync = async ({
   queryClient,
 }: {
   queryClient: QueryClient;
-}): Promise<number> =>
-  new Promise((resolve, reject) => {
-    const worker = new Worker(new URL("@/workers/sync.ts", import.meta.url));
-    worker.postMessage({ type: WORKER_MSG.START_PUBLIC_SYNC });
-
-    worker.onmessage = (e: MessageEvent<SyncWorkerMessage>) => {
-      const { type } = e.data;
-
-      if (type === WORKER_MSG.SUCCESS) {
-        worker.terminate();
-        handleSyncSuccess(e.data, queryClient);
-        resolve(1);
-      } else if (type === WORKER_MSG.PROGRESS) {
-        toast.loading(e.data.message, { id: "sync-status" });
-      } else if (type === WORKER_MSG.ERROR) {
-        worker.terminate();
-        toast.error(`Sync error: ${e.data.message}`, { id: "sync-status" });
-        reject(new Error(e.data.message));
-      }
-    };
-
-    worker.onerror = (e) => {
-      worker.terminate();
-      toast.error("Sync failed!", { id: "sync-status" });
-      reject(e);
-    };
-  });
+}): Promise<number> => {
+  try {
+    const result = await dispatchSyncJob(
+      { type: WORKER_MSG.START_PUBLIC_SYNC },
+      (msg) => toast.loading(msg, { id: TOAST_ID }),
+    );
+    handleSyncSuccess(result, queryClient, undefined, TOAST_ID);
+    return 1;
+  } catch (err) {
+    toast.error(`Sync error: ${(err as Error).message}`, { id: TOAST_ID });
+    throw err;
+  }
+};
 
 export const usePublicSync = () => {
   const queryClient = useQueryClient();

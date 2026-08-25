@@ -8,11 +8,13 @@ import {
 import { toast } from "sonner";
 import { useSession } from "@/components/providers";
 import { QUERY_KEY, SYNC_INTERVAL, WORKER_MSG } from "@/constants";
+import { dispatchSyncJob } from "@/lib/sync-worker-client";
 import { toRoleId } from "@/lib/utils";
-import type { SyncWorkerMessage } from "@/types";
 import { handleSyncSuccess } from "./sync-helpers";
 
-export const runRoleSync = ({
+const TOAST_ID = "sync-role-status";
+
+export const runRoleSync = async ({
   queryClient,
   roleId,
   userId,
@@ -22,38 +24,24 @@ export const runRoleSync = ({
   roleId: number;
   userId: string;
   accessToken: string;
-}): Promise<number> =>
-  new Promise((resolve, reject) => {
-    const worker = new Worker(new URL("@/workers/sync.ts", import.meta.url));
-    worker.postMessage({
-      type: WORKER_MSG.START_ROLE_SYNC,
-      roleId,
-      userId,
-      accessToken,
-    });
-
-    worker.onmessage = (e: MessageEvent<SyncWorkerMessage>) => {
-      const { type } = e.data;
-
-      if (type === WORKER_MSG.SUCCESS) {
-        worker.terminate();
-        handleSyncSuccess(e.data, queryClient, userId);
-        resolve(1);
-      } else if (type === WORKER_MSG.PROGRESS) {
-        toast.loading(e.data.message, { id: "sync-status" });
-      } else if (type === WORKER_MSG.ERROR) {
-        worker.terminate();
-        toast.error(`Sync error: ${e.data.message}`, { id: "sync-status" });
-        reject(new Error(e.data.message));
-      }
-    };
-
-    worker.onerror = (e) => {
-      worker.terminate();
-      toast.error("Sync failed!", { id: "sync-status" });
-      reject(e);
-    };
-  });
+}): Promise<number> => {
+  try {
+    const result = await dispatchSyncJob(
+      {
+        type: WORKER_MSG.START_ROLE_SYNC,
+        roleId,
+        userId,
+        accessToken,
+      },
+      (msg) => toast.loading(msg, { id: TOAST_ID }),
+    );
+    handleSyncSuccess(result, queryClient, userId, TOAST_ID);
+    return 1;
+  } catch (err) {
+    toast.error(`Sync error: ${(err as Error).message}`, { id: TOAST_ID });
+    throw err;
+  }
+};
 
 export const useRoleSync = () => {
   const { session, isLoading } = useSession();
