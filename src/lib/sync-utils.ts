@@ -1,5 +1,9 @@
 import Papa from "papaparse";
-import { ROLE_SYNCED_TABLES, STRING_KEY_TABLES } from "@/constants";
+import {
+  ROLE_SYNCED_TABLES,
+  STRING_KEY_TABLES,
+  SYNC_COLUMNS,
+} from "@/constants";
 
 export const NUMERIC_FIELDS = [
   "id",
@@ -18,6 +22,30 @@ export const NUMERIC_FIELDS = [
 ];
 
 export type CastValueType = number | boolean | number[] | string | null;
+
+export const getSyncColumnList = (table: string): string[] => {
+  const cols = SYNC_COLUMNS[table as keyof typeof SYNC_COLUMNS];
+  if (!cols) return [];
+  return cols
+    .split(",")
+    .map((c) => c.trim())
+    .filter(Boolean);
+};
+
+export const pickSyncColumns = <T extends Record<string, unknown>>(
+  row: T,
+  table: string,
+): Partial<T> => {
+  const allowed = getSyncColumnList(table);
+  if (!allowed.length) return row;
+  const picked: Record<string, unknown> = {};
+  for (const col of allowed) {
+    if (row[col] !== undefined) {
+      picked[col] = row[col];
+    }
+  }
+  return picked as Partial<T>;
+};
 
 export const castValue = (
   tableName: string,

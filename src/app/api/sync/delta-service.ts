@@ -6,6 +6,7 @@ import {
 } from "@/constants";
 import {
   isRoleTable,
+  pickSyncColumns,
   sliceAfterWatermark,
   stripUpdatedAt,
 } from "@/lib/sync-utils";
@@ -60,7 +61,9 @@ const resolvePublicTableDelta = async (
   }
 
   const resultDelta = stripUpdatedAt(
-    Array.from(mergedMap.values()).sort(sortByDate()),
+    Array.from(mergedMap.values())
+      .map((r) => pickSyncColumns(r, table))
+      .sort(sortByDate()),
   );
   return [table, resultDelta];
 };
@@ -107,7 +110,9 @@ const resolveRoleTableDelta = async (
   }
 
   const resultDelta = stripUpdatedAt(
-    Array.from(mergedMap.values()).sort(sortByDate()),
+    Array.from(mergedMap.values())
+      .map((r) => pickSyncColumns(r, table))
+      .sort(sortByDate()),
   );
   return [table, resultDelta];
 };
@@ -256,7 +261,9 @@ export const computeUserSyncDelta = async (
         return row["user_id"] === userId;
       });
 
-      const resultDelta = stripUpdatedAt(userRows.sort(sortByDate()));
+      const resultDelta = stripUpdatedAt(
+        userRows.map((r) => pickSyncColumns(r, table)).sort(sortByDate()),
+      );
       return [table, resultDelta] as [SyncTable, unknown[]];
     }),
   );

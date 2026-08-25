@@ -4,6 +4,7 @@ import { getSupabaseServerClient } from "@/lib/supabase-server";
 import type { SyncRequestBody } from "@/types";
 import { getCachedUserTable } from "../baseline-cache";
 import { computeUserSyncDelta } from "../delta-service";
+import { getCachedSyncMeta } from "../meta-service";
 
 export const dynamic = "force-dynamic";
 
@@ -37,12 +38,14 @@ export const GET = async (request: NextRequest) => {
       userServiceInterests,
       userQueries,
       queryReplies,
+      serverSyncMeta,
     ] = await Promise.all([
       getCachedUserTable(STORE.USERS),
       getCachedUserTable(STORE.USER_EDIT_REQUESTS),
       getCachedUserTable(STORE.USER_SERVICE_INTERESTS),
       getCachedUserTable(STORE.USER_QUERIES),
       getCachedUserTable(STORE.QUERY_REPLIES),
+      getCachedSyncMeta(),
     ]);
 
     const filteredUsers = users.filter((r) => r["id"] === user.id);
@@ -62,6 +65,7 @@ export const GET = async (request: NextRequest) => {
     );
 
     return Response.json({
+      sync_meta: serverSyncMeta,
       [STORE.USERS]: filteredUsers,
       [STORE.USER_EDIT_REQUESTS]: filteredEditRequests,
       [STORE.USER_SERVICE_INTERESTS]: filteredInterests,
