@@ -9,6 +9,7 @@ import {
   STORE,
   STRING_KEY_TABLES,
   SYNC_COLUMNS,
+  USER_SPECIFIC_TABLES,
 } from "@/constants";
 import type { RSP_IDB } from "@/lib/idb";
 import { parseCSVTable, stripUpdatedAt, toCSVRows } from "@/lib/sync-utils";
@@ -212,6 +213,7 @@ const writeUnzippedTablesToDb = async (
   db: IDBPDatabase<RSP_IDB>,
   unzipped: ReturnType<typeof unzipSync>,
   tables: readonly SyncTable[],
+  clearStore = false,
 ) => {
   const txs: Promise<void>[] = [];
   for (const table of tables) {
@@ -223,7 +225,9 @@ const writeUnzippedTablesToDb = async (
     const cleanRecords = stripUpdatedAt(records);
 
     const tx = db.transaction(table, "readwrite");
-    await tx.store.clear();
+    if (clearStore) {
+      await tx.store.clear();
+    }
     for (const record of cleanRecords) {
       tx.store.put(record);
     }
@@ -296,7 +300,7 @@ export const loadStaticZipSeedsForRole = async (
   });
   if (!zipRes.ok) return false;
   const unzipped = unzipSync(new Uint8Array(await zipRes.arrayBuffer()));
-  await writeUnzippedTablesToDb(db, unzipped, ROLE_SYNCED_TABLES);
+  await writeUnzippedTablesToDb(db, unzipped, ROLE_SYNCED_TABLES, false);
 
   const syncStateBytes = unzipped["sync_state.json"];
   if (syncStateBytes) {
@@ -334,39 +338,35 @@ export const loadUserSeeds = async (
     },
   });
   if (!userRes.ok) return false;
-  const payload = (await userRes.json()) as Record<
-    string,
-    RSP_IDB[IDBTable]["value"][]
-  >;
+  const { sync_meta, ...userTables } = (await userRes.json()) as {
+    sync_meta: Record<string, string>;
+  } & Record<string, RSP_IDB[IDBTable]["value"][]>;
+
   const txs: Promise<void>[] = [];
-  const latestTimestamps: Record<string, string> = {};
 
-  for (const [table, rows] of Object.entries(payload)) {
-    if (!rows?.length || table === STORE.DELETED_RECORDS) continue;
+  for (const [table, rows] of Object.entries(userTables)) {
+    if (!Array.isArray(rows) || !rows.length) {
+      continue;
+    }
 
+    const cleanRows = stripUpdatedAt(
+      rows as Array<RSP_IDB[IDBTable]["value"] & { updated_at?: unknown }>,
+    );
     const tx = db.transaction(table as IDBTable, "readwrite");
-    for (const record of rows) {
-      tx.store.put(record);
-      const r = record as { updated_at?: string };
-      if (r.updated_at) {
-        if (
-          !latestTimestamps[table] ||
-          r.updated_at > latestTimestamps[table]
-        ) {
-          latestTimestamps[table] = r.updated_at;
-        }
-      }
+    for (const record of cleanRows) {
+      tx.store.put(record as RSP_IDB[IDBTable]["value"]);
     }
     txs.push(tx.done);
   }
   await Promise.all(txs);
 
   const syncMetaTx = db.transaction(STORE.SYNC_META, "readwrite");
-  for (const [table, lastUpdated] of Object.entries(latestTimestamps)) {
-    if (lastUpdated) {
+  for (const table of USER_SPECIFIC_TABLES) {
+    const watermark = sync_meta[table];
+    if (watermark) {
       syncMetaTx.store.put({
         id: table,
-        updated_at: lastUpdated,
+        updated_at: watermark,
       });
     }
   }
@@ -409,7 +409,7 @@ export const loadStaticZipSeeds = async (
   const tables = (Object.keys(SYNC_COLUMNS) as SyncTable[]).filter(
     (t) => t !== STORE.DELETED_RECORDS,
   );
-  await writeUnzippedTablesToDb(db, unzipped, tables);
+  await writeUnzippedTablesToDb(db, unzipped, tables, true);
 
   // Write updated_at watermarks to sync_meta
   const syncMetaTx = db.transaction(STORE.SYNC_META, "readwrite");
@@ -595,10 +595,13 @@ export const toSyncResult = async (
   newAdditions: SyncNewAdditions,
   clearedUser?: boolean,
   clearedRole?: boolean,
+  forceRebuildSearchIndex?: boolean,
 ): Promise<SyncResult> => {
-  const rebuildSearchIndex = changedTables.some((table) =>
-    (SEARCH_LOOKUP_TABLES as readonly string[]).includes(table),
-  );
+  const rebuildSearchIndex =
+    Boolean(forceRebuildSearchIndex) ||
+    changedTables.some((table) =>
+      (SEARCH_LOOKUP_TABLES as readonly string[]).includes(table),
+    );
   const {
     changedCategories,
     changedRecordings,
@@ -627,6 +630,7 @@ export const toSyncResult = async (
   }
 
   const changedCategoryPaths =
+    forceRebuildSearchIndex ||
     bubbledChangeCategoryIds.size > INVALIDATE_ALL_THRESHOLD
       ? ["*"]
       : await Promise.all(

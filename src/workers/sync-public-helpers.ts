@@ -36,19 +36,15 @@ export const syncPublicData = async (
     requests: [],
   };
 
+  let seedLoaded = false;
+
   // 1. If database is stale/fresh, load public base seed
   if (await isDatabaseStale(db)) {
     try {
       progressCallback?.("उत्कर्षयति… · Optimizing…");
       const loaded = await loadStaticZipSeeds(db, origin);
       if (loaded) {
-        return {
-          changedCategoryPaths: ["*"],
-          changedIds,
-          newAdditions,
-          changedTables: [],
-          rebuildSearchIndex: true,
-        };
+        seedLoaded = true;
       }
     } catch (zipErr) {
       console.error(
@@ -60,7 +56,9 @@ export const syncPublicData = async (
 
   const idbSyncMeta = toUpdatedAtMap(await db.getAll(STORE.SYNC_META));
 
-  let changedTables: string[] = [];
+  let changedTables: string[] = seedLoaded
+    ? (GENERIC_TABLES as readonly string[]).slice()
+    : [];
   const metaRes = await fetch(`${origin}/api/sync/meta`);
 
   if (!metaRes.ok) throw new Error("Failed to fetch sync meta");
@@ -83,7 +81,7 @@ export const syncPublicData = async (
       publicDeltaResult?.deltas &&
       Object.keys(publicDeltaResult.deltas).length > 0
     ) {
-      changedTables = await applyDeltas(
+      const deltaChangedTables = await applyDeltas(
         db,
         publicDeltaResult.deltas,
         publicDeltaResult.sync_meta || {},
@@ -91,6 +89,9 @@ export const syncPublicData = async (
         changedIds,
         changedCategoryMeta,
         newAdditions,
+      );
+      changedTables = Array.from(
+        new Set([...changedTables, ...deltaChangedTables]),
       );
     }
   }
@@ -101,5 +102,8 @@ export const syncPublicData = async (
     changedIds,
     changedTables,
     newAdditions,
+    false,
+    false,
+    seedLoaded,
   );
 };

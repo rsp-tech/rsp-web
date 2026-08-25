@@ -52,15 +52,7 @@ export const syncRoleData = async (
     requests: [],
   };
 
-  const seedSuccessPayload = {
-    clearedRole,
-    changedCategoryPaths: ["*"],
-    changedIds,
-    newAdditions,
-    changedTables: [],
-    rebuildSearchIndex: true,
-  };
-
+  let seedLoaded = false;
   const storedRole = await db.get(STORE.ROLE_META, META_KEY.SYNC_ROLE);
   const isStale = await isDatabaseStale(db);
 
@@ -76,7 +68,7 @@ export const syncRoleData = async (
       );
       if (loaded) {
         await db.put(STORE.ROLE_META, roleId, META_KEY.SYNC_ROLE);
-        return seedSuccessPayload;
+        seedLoaded = true;
       }
     } catch (zipErr) {
       console.error(
@@ -87,7 +79,10 @@ export const syncRoleData = async (
   }
 
   // Phase 3: Role Delta Sync
-  let changedTables: string[] = [];
+  let changedTables: string[] = seedLoaded
+    ? ([...ROLE_SYNCED_TABLES] as string[])
+    : [];
+
   if (accessToken && roleId > 0) {
     const idbRoleSyncMeta = toUpdatedAtMap(
       await db.getAll(STORE.ROLE_SYNC_META),
@@ -109,7 +104,7 @@ export const syncRoleData = async (
       roleDeltaResult?.deltas &&
       Object.keys(roleDeltaResult.deltas).length > 0
     ) {
-      changedTables = await applyDeltas(
+      const deltaChangedTables = await applyDeltas(
         db,
         roleDeltaResult.deltas,
         roleDeltaResult.sync_meta || {},
@@ -118,6 +113,9 @@ export const syncRoleData = async (
         changedCategoryMeta,
         newAdditions,
         STORE.ROLE_SYNC_META,
+      );
+      changedTables = Array.from(
+        new Set([...changedTables, ...deltaChangedTables]),
       );
     }
   }
@@ -130,5 +128,6 @@ export const syncRoleData = async (
     newAdditions,
     false,
     clearedRole,
+    seedLoaded,
   );
 };

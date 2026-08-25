@@ -4,18 +4,29 @@ import type { RSP_IDB } from "@/lib/idb";
 
 type CleanupTable = "categories" | "recordings" | "materials";
 
+// Leaf-to-root reverse order: materials -> recordings -> categories
 const ROLE_TABLES: CleanupTable[] = [
-  STORE.CATEGORIES,
-  STORE.RECORDINGS,
   STORE.MATERIALS,
+  STORE.RECORDINGS,
+  STORE.CATEGORIES,
 ];
 
 const isAllowed = (
-  allowedRoles: number[],
+  allowedRoles: number[] | undefined,
   roleId: number | undefined,
-): boolean =>
-  allowedRoles.includes(0) ||
-  (roleId !== undefined && allowedRoles.includes(roleId));
+): boolean => {
+  if (
+    !allowedRoles ||
+    !Array.isArray(allowedRoles) ||
+    allowedRoles.length === 0
+  ) {
+    return true;
+  }
+  return (
+    allowedRoles.includes(0) ||
+    (typeof roleId === "number" && roleId > 0 && allowedRoles.includes(roleId))
+  );
+};
 
 const cleanupTable = async (
   db: IDBPDatabase<RSP_IDB>,
@@ -48,24 +59,17 @@ export const performRoleCleanup = async (
   const storedRole = await db.get(STORE.ROLE_META, META_KEY.CLEANUP_ROLE);
 
   if (!hasStoredRole) {
-    await Promise.all([
-      db.put(STORE.ROLE_META, roleId, META_KEY.CLEANUP_ROLE),
-      db.put(STORE.ROLE_META, roleId, META_KEY.SYNC_ROLE),
-    ]);
+    await db.put(STORE.ROLE_META, roleId, META_KEY.CLEANUP_ROLE);
     return { clearedRole: false };
   }
 
   if (storedRole !== roleId) {
-    await Promise.all([
-      ...ROLE_TABLES.map((t) => cleanupTable(db, t, roleId)),
-      db.clear(STORE.ROLE_SYNC_META),
-    ]);
+    for (const t of ROLE_TABLES) {
+      await cleanupTable(db, t, roleId);
+    }
+    await db.clear(STORE.ROLE_SYNC_META);
 
-    await Promise.all([
-      db.put(STORE.ROLE_META, roleId, META_KEY.CLEANUP_ROLE),
-      db.put(STORE.ROLE_META, roleId, META_KEY.SYNC_ROLE),
-    ]);
-
+    await db.put(STORE.ROLE_META, roleId, META_KEY.CLEANUP_ROLE);
     return { clearedRole: true };
   }
 
@@ -74,7 +78,7 @@ export const performRoleCleanup = async (
 
 export const performUserCleanup = async (
   db: IDBPDatabase<RSP_IDB>,
-  userId: string,
+  userId: string | undefined,
 ): Promise<UserCleanupResult> => {
   const hasStoredUserId =
     (await db.getKey(STORE.ROLE_META, META_KEY.CLEANUP_USER_ID)) !== undefined;

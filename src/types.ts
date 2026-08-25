@@ -193,6 +193,6 @@ export interface SyncResponseData {
 }
 
 export type SyncWorkerMessage =
-  | (SyncResult & { type: typeof WORKER_MSG.SUCCESS })
-  | { type: typeof WORKER_MSG.ERROR; message: string }
-  | { type: typeof WORKER_MSG.PROGRESS; message: string };
+  | (SyncResult & { type: typeof WORKER_MSG.SUCCESS; jobId?: string })
+  | { type: typeof WORKER_MSG.ERROR; message: string; jobId?: string }
+  | { type: typeof WORKER_MSG.PROGRESS; message: string; jobId?: string };
