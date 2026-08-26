@@ -377,11 +377,24 @@ export const loadUserSeeds = async (
 
 export const isDatabaseStale = async (
   db: IDBPDatabase<RSP_IDB>,
+  serverMeta: Record<string, string>,
 ): Promise<boolean> => {
   const recMeta = await db.get(STORE.SYNC_META, STORE.RECORDINGS);
-  if (!recMeta?.updated_at) return true;
+  const clientRecTime = recMeta?.updated_at;
+  const serverRecTime = serverMeta[STORE.RECORDINGS];
 
-  const recSyncDay = Math.floor(Date.parse(recMeta.updated_at) / ONE_DAY_MS);
+  // 1. Missing client or server watermark -> stale (needs seed)
+  if (!clientRecTime || !serverRecTime) {
+    return true;
+  }
+
+  // 2. If client and server watermarks match, database is up-to-date -> not stale
+  if (clientRecTime === serverRecTime) {
+    return false;
+  }
+
+  // 3. If watermarks differ, check if client data is older than MAX_SYNC_STALE_DAYS from now
+  const recSyncDay = Math.floor(Date.parse(clientRecTime) / ONE_DAY_MS);
   return (
     Number.isNaN(recSyncDay) ||
     Math.floor(Date.now() / ONE_DAY_MS) - recSyncDay > MAX_SYNC_STALE_DAYS

@@ -38,8 +38,13 @@ export const syncPublicData = async (
 
   let seedLoaded = false;
 
-  // 1. If database is stale/fresh, load public base seed
-  if (await isDatabaseStale(db)) {
+  // 1. Fetch server sync metadata
+  const metaRes = await fetch(`${origin}/api/sync/meta`);
+  if (!metaRes.ok) throw new Error("Failed to fetch sync meta");
+  const serverMeta = (await metaRes.json()) as Record<string, string>;
+
+  // 2. If database is stale compared to server state, load public base seed
+  if (await isDatabaseStale(db, serverMeta)) {
     try {
       progressCallback?.("उत्कर्षयति… · Optimizing…");
       const loaded = await loadStaticZipSeeds(db, origin);
@@ -54,16 +59,12 @@ export const syncPublicData = async (
     }
   }
 
+  // 3. Immediately proceed to delta sync using current IDB watermarks (post-seed if seeded)
   const idbSyncMeta = toUpdatedAtMap(await db.getAll(STORE.SYNC_META));
 
   let changedTables: string[] = seedLoaded
     ? (GENERIC_TABLES as readonly string[]).slice()
     : [];
-  const metaRes = await fetch(`${origin}/api/sync/meta`);
-
-  if (!metaRes.ok) throw new Error("Failed to fetch sync meta");
-
-  const serverMeta = (await metaRes.json()) as Record<string, string>;
 
   const hasDirtyTables = GENERIC_TABLES.some((table) => {
     const serverTime = serverMeta[table];

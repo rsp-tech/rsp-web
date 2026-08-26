@@ -54,7 +54,11 @@ export const syncRoleData = async (
 
   let seedLoaded = false;
   const storedRole = await db.get(STORE.ROLE_META, META_KEY.SYNC_ROLE);
-  const isStale = await isDatabaseStale(db);
+
+  const metaRes = await fetch(`${origin}/api/sync/meta`);
+  if (!metaRes.ok) throw new Error("Failed to fetch sync meta");
+  const serverMeta = (await metaRes.json()) as Record<string, string>;
+  const isStale = await isDatabaseStale(db, serverMeta);
 
   // Phase 2: Role Base Seed (if role changed or DB is stale)
   if (!storedRole || storedRole !== roleId || isStale) {
@@ -87,36 +91,46 @@ export const syncRoleData = async (
     const idbRoleSyncMeta = toUpdatedAtMap(
       await db.getAll(STORE.ROLE_SYNC_META),
     );
-    const watermarks: Record<string, string> = Object.fromEntries(
-      (ROLE_SYNCED_TABLES as readonly SyncTable[]).map((t) => [
-        t,
-        idbRoleSyncMeta[t] || "",
-      ]),
+
+    const hasDirtyTables = (ROLE_SYNCED_TABLES as readonly string[]).some(
+      (table) => {
+        const serverTime = serverMeta[table];
+        return serverTime && serverTime > (idbRoleSyncMeta[table] || "");
+      },
     );
 
-    const roleDeltaResult = await fetchRoleSyncDeltas(
-      origin,
-      watermarks,
-      accessToken,
-    );
+    if (hasDirtyTables) {
+      const watermarks: Record<string, string> = Object.fromEntries(
+        (ROLE_SYNCED_TABLES as readonly SyncTable[]).map((t) => [
+          t,
+          idbRoleSyncMeta[t] || "",
+        ]),
+      );
 
-    if (
-      roleDeltaResult?.deltas &&
-      Object.keys(roleDeltaResult.deltas).length > 0
-    ) {
-      const deltaChangedTables = await applyDeltas(
-        db,
-        roleDeltaResult.deltas,
-        roleDeltaResult.sync_meta || {},
-        idbRoleSyncMeta,
-        changedIds,
-        changedCategoryMeta,
-        newAdditions,
-        STORE.ROLE_SYNC_META,
+      const roleDeltaResult = await fetchRoleSyncDeltas(
+        origin,
+        watermarks,
+        accessToken,
       );
-      changedTables = Array.from(
-        new Set([...changedTables, ...deltaChangedTables]),
-      );
+
+      if (
+        roleDeltaResult?.deltas &&
+        Object.keys(roleDeltaResult.deltas).length > 0
+      ) {
+        const deltaChangedTables = await applyDeltas(
+          db,
+          roleDeltaResult.deltas,
+          roleDeltaResult.sync_meta || {},
+          idbRoleSyncMeta,
+          changedIds,
+          changedCategoryMeta,
+          newAdditions,
+          STORE.ROLE_SYNC_META,
+        );
+        changedTables = Array.from(
+          new Set([...changedTables, ...deltaChangedTables]),
+        );
+      }
     }
   }
 
