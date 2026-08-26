@@ -2,11 +2,18 @@ import { useQueryClient } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { useSession } from "@/components/providers";
+import { STORE } from "@/constants";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { toRoleId } from "@/lib/utils";
 import { runUserSync } from "./use-user-sync";
 
-export function useNotificationSubscription(): void {
+interface SyncBroadcastEvent {
+  payload?: {
+    tables?: string[];
+  };
+}
+
+export const useNotificationSubscription = (): void => {
   const { session } = useSession();
   const pathname = usePathname();
   const queryClient = useQueryClient();
@@ -15,18 +22,35 @@ export function useNotificationSubscription(): void {
   const isTargetPage =
     pathname === "/profile" || pathname.startsWith("/queries");
 
-  const roleId = toRoleId(session?.user.app_metadata["role_id"]);
+  const roleId = toRoleId(session?.user?.app_metadata?.["role_id"]);
 
   useEffect(() => {
     if (!userId || !(isTargetPage || roleId === 1) || !queryClient) return;
-    const handleTriggerSync = () =>
-      runUserSync({
-        queryClient,
-        userId: session?.user?.id,
-        accessToken: session?.access_token ?? "",
-      });
 
     const supabase = getSupabaseClient();
+
+    const handleTriggerSync = async (event?: SyncBroadcastEvent) => {
+      const tables = event?.payload?.tables;
+      const isUserTableUpdated =
+        Array.isArray(tables) && tables.includes(STORE.USERS);
+
+      try {
+        let currentToken = session?.access_token ?? "";
+        if (isUserTableUpdated) {
+          const { data: refreshData } = await supabase.auth.refreshSession();
+          currentToken = refreshData?.session?.access_token ?? currentToken;
+        }
+
+        runUserSync({
+          queryClient,
+          userId,
+          accessToken: currentToken,
+        });
+      } catch (err) {
+        console.error("Failed to refresh session or run user sync:", err);
+      }
+    };
+
     const channel = supabase.channel(
       roleId === 1 ? "admin-channel" : `user-channel-${userId}`,
     );
@@ -36,12 +60,5 @@ export function useNotificationSubscription(): void {
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [
-    userId,
-    isTargetPage,
-    roleId,
-    session?.access_token,
-    session?.user?.id,
-    queryClient,
-  ]);
-}
+  }, [userId, isTargetPage, roleId, session?.access_token, queryClient]);
+};

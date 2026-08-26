@@ -27,7 +27,7 @@ const SessionContext = createContext<SessionContextType>({
 
 export const useSession = () => useContext(SessionContext);
 
-export function Providers({ children }: { children: React.ReactNode }) {
+export const Providers = ({ children }: { children: React.ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
 
@@ -38,7 +38,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
       setIsLoading(false);
     });
 
-    // 2. Listen to real-time auth mutations (login, logout, token refresh)
+    // Listen to real-time auth mutations (login, logout, token refresh)
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((_e, currentSession) => {
@@ -67,4 +67,4 @@ export function Providers({ children }: { children: React.ReactNode }) {
       </Suspense>
     </ThemeProvider>
   );
-}
+};

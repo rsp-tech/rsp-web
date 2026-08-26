@@ -74,7 +74,10 @@ export function MaterialBadge({ mat, isHighlighted }: MaterialBadgeProps) {
             variant="ghost"
             size="sm"
             onClick={handlePreviewClick}
-            className={cn("font-semibold text-xs h-6 px-2 gap-1", isLink && "pointer-events-none")}
+            className={cn(
+              "font-semibold text-xs h-6 px-2 gap-1",
+              isLink && "pointer-events-none",
+            )}
           >
             {getMaterialIcon()}
             <span className="truncate" style={{ maxWidth: "8.5rem" }}>
