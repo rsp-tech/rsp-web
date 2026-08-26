@@ -47,6 +47,7 @@ export type FeaturedItem = Tables<"featured_items">;
 export type UserQuery = DB_TABLE<"user_queries">;
 export type QueryReply = DB_TABLE<"query_replies">;
 export type DeletedRecord = DB_TABLE<"deleted_records">;
+export type RestrictedRecord = DB_TABLE<"restricted_records">;
 
 export type UserQueryWithUser = UserQuery & {
   users: { name: string | null; email: string } | null;

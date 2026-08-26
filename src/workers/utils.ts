@@ -29,7 +29,11 @@ type TableName = (typeof STORE)[keyof typeof STORE];
 
 export type IDBTable = Exclude<
   TableName,
-  "sync_meta" | "role_meta" | "cache_ledger" | "deleted_records"
+  | "sync_meta"
+  | "role_meta"
+  | "cache_ledger"
+  | "deleted_records"
+  | "restricted_records"
 >;
 
 type SyncRow = (RSP_IDB[IDBTable]["value"] | DeletedRecord) & {

@@ -23,7 +23,10 @@ import type {
   Venue,
 } from "@/types";
 
-type StoreName = Exclude<(typeof STORE)[keyof typeof STORE], "deleted_records">;
+type StoreName = Exclude<
+  (typeof STORE)[keyof typeof STORE],
+  "deleted_records" | "restricted_records"
+>;
 
 export interface RSP_IDB {
   categories: {
