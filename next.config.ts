@@ -32,10 +32,11 @@ const nextConfig: NextConfig = {
     return [
       {
         source: "/img/:path*",
-        destination: `${process.env["NEXT_PUBLIC_SUPABASE_URL"]}/storage/v1/object/public/images/:path*`,
+        destination: "/api/img/:path*",
       },
     ];
   },
+
   async headers() {
     return [
       {
