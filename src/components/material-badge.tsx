@@ -74,13 +74,13 @@ export function MaterialBadge({ mat, isHighlighted }: MaterialBadgeProps) {
             variant="ghost"
             size="sm"
             onClick={handlePreviewClick}
-            className="font-semibold text-xs h-6 px-2 gap-1"
+            className={cn("font-semibold text-xs h-6 px-2 gap-1", isLink && "pointer-events-none")}
           >
             {getMaterialIcon()}
             <span className="truncate" style={{ maxWidth: "8.5rem" }}>
               {name}
             </span>
-            <Eye className="w-3 h-3 text-primary shrink-0" />
+            {!isLink && <Eye className="w-3 h-3 text-primary shrink-0" />}
           </Button>
         </TooltipTrigger>
         <TooltipContent side="top">Preview &ldquo;{name}&rdquo;</TooltipContent>
