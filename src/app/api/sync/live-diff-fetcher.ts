@@ -21,7 +21,7 @@ export const getCachedLiveDiff = unstable_cache(
       ? `${SYNC_COLUMNS[table]}, updated_at`
       : "*, updated_at";
 
-    if (table === STORE.DELETED_RECORDS) {
+    if (table === STORE.DELETED_RECORDS || table === STORE.RESTRICTED_RECORDS) {
       columns = "table_name, record_id, updated_at";
     }
 

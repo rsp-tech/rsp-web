@@ -24,7 +24,7 @@ const resolvePublicTableDelta = async (
   table: SyncTable,
   clientWatermark: string,
 ): Promise<[SyncTable, unknown[]]> => {
-  if (table === STORE.DELETED_RECORDS) {
+  if (table === STORE.DELETED_RECORDS || table === STORE.RESTRICTED_RECORDS) {
     const liveDiffRows = await getCachedLiveDiff(
       table,
       clientWatermark || null,

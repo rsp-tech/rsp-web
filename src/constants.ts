@@ -46,6 +46,7 @@ export const STORE = {
   USER_QUERIES: "user_queries",
   QUERY_REPLIES: "query_replies",
   DELETED_RECORDS: "deleted_records",
+  RESTRICTED_RECORDS: "restricted_records",
 } as const;
 
 export const STRING_KEY_TABLES = new Set<string>([
@@ -86,6 +87,7 @@ export const GENERIC_TABLES = [
   STORE.FEATURED_SECTIONS,
   STORE.FEATURED_ITEMS,
   STORE.DELETED_RECORDS,
+  STORE.RESTRICTED_RECORDS,
 ] as const;
 
 export const USER_SPECIFIC_TABLES = [
@@ -276,6 +278,12 @@ export const SYNC_COLUMNS = {
   `,
 
   [STORE.DELETED_RECORDS]: `
+    id,
+    table_name,
+    record_id
+  `,
+
+  [STORE.RESTRICTED_RECORDS]: `
     id,
     table_name,
     record_id

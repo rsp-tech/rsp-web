@@ -97,6 +97,28 @@ export type Database = {
         };
         Relationships: [];
       };
+      restricted_records: {
+        Row: {
+          id: number;
+          record_id: string;
+          table_name: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: never;
+          record_id: string;
+          table_name: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: never;
+          record_id?: string;
+          table_name?: string;
+          updated_at?: string;
+        };
+        Relationships: [];
+      };
+
       events: {
         Row: {
           id: number;

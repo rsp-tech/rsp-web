@@ -217,7 +217,9 @@ const writeUnzippedTablesToDb = async (
 ) => {
   const txs: Promise<void>[] = [];
   for (const table of tables) {
-    if (table === STORE.DELETED_RECORDS) continue;
+    if (table === STORE.DELETED_RECORDS || table === STORE.RESTRICTED_RECORDS) {
+      continue;
+    }
     const records = parseCSVTable<Record<string, unknown>>(
       toCSVRows(unzipped, table),
       table,
@@ -567,7 +569,10 @@ export const applyDeltas = async (
     if (!rows || rows.length === 0) continue;
     const syncTable = table as SyncTable;
 
-    if (syncTable === STORE.DELETED_RECORDS) {
+    if (
+      syncTable === STORE.DELETED_RECORDS ||
+      syncTable === STORE.RESTRICTED_RECORDS
+    ) {
       await applyDeletedRecords(
         db,
         rows as DeletedRecord[],
