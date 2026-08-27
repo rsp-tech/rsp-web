@@ -4,7 +4,6 @@ import { useQuery } from "@tanstack/react-query";
 import type { IDBPDatabase } from "idb";
 import { INDEX, QUERY_KEY, STORE } from "@/constants";
 import { getDB, type RSP_IDB } from "@/lib/idb";
-import { getSupabaseClient } from "@/lib/supabase-browser";
 import { pathToUrlPath, sortByOrderInd } from "@/lib/utils";
 import type { Category, EnrichedRecording, Material, Recording } from "@/types";
 
@@ -41,22 +40,14 @@ const loadCategoryPage = async (
   const db = await getDB();
   if (!db) return initialData || null;
 
-  // If sync hasn't completed, fallback to RPC
-  const supabase = getSupabaseClient();
-
   if (!urlPath) {
-    let subcategories = await db.getAllFromIndex(
+    const subcategories = await db.getAllFromIndex(
       STORE.CATEGORIES,
       INDEX.BY_PATH,
       "",
     );
-    if (!subcategories.length) {
-      if (initialData?.subcategories.length) {
-        return initialData;
-      }
-      subcategories =
-        ((await supabase.from("categories").select("*").eq("path", ""))
-          .data as Category[]) ?? [];
+    if (!subcategories.length && initialData?.subcategories.length) {
+      return initialData;
     }
     return {
       subcategories,
@@ -83,17 +74,7 @@ const loadCategoryPage = async (
     if (initialData?.category) {
       return initialData;
     }
-
-    const { data, error } = await supabase.rpc("get_category_page_data", {
-      p_url_path: urlPath,
-    });
-
-    if (error || !data) {
-      return null;
-    }
-
-    // Postgres native jsonb aggregation maps perfectly to your interface
-    return data as unknown as CategoryPageData;
+    return null;
   }
 
   const expectedPath = `${category.path}.${category.id}`.replace(/^\./, "");

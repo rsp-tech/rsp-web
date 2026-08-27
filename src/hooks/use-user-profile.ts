@@ -7,7 +7,6 @@ import { useUserPendingRequestIdb } from "@/hooks/use-user-pending-request-idb";
 import { useUserProfileIdb } from "@/hooks/use-user-profile-idb";
 import { getDB } from "@/lib/idb";
 import { sendRealtimeBroadcast } from "@/lib/realtime-utils";
-import { getSupabaseClient } from "@/lib/supabase-browser";
 
 export const useUserProfile = () => {
   const { session, isLoading: sessionLoading } = useSession();
@@ -45,11 +44,11 @@ export const useSubmitProfileUpdate = () => {
       reason?: string | null;
     }) => {
       if (!session?.user?.id) throw new Error("No active session");
-      const supabase = getSupabaseClient();
 
-      const { data, error } = await supabase
-        .from("user_edit_requests")
-        .insert({
+      const res = await fetch("/api/user/edit-request", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           user_id: session.user.id,
           name: values.name,
           phone: values.phone,
@@ -61,20 +60,21 @@ export const useSubmitProfileUpdate = () => {
           authority_relationship: values.authority_relationship,
           requested_role_id: values.requested_role_id ?? null,
           reason: values.reason ?? "Profile update request by user",
-          status: "pending",
-        })
-        .select()
-        .single();
+        }),
+      });
 
-      if (error) throw error;
+      const json = await res.json();
+      if (!res.ok || json.error) {
+        throw new Error(json.error || "Failed to submit edit request");
+      }
 
       // 1. Save to IndexedDB immediately
       const db = await getDB();
-      if (db) {
-        await db.put(STORE.USER_EDIT_REQUESTS, data);
+      if (db && json.data) {
+        await db.put(STORE.USER_EDIT_REQUESTS, json.data);
       }
 
-      return data;
+      return json.data;
     },
     onSuccess: () => {
       if (session?.user?.id) {

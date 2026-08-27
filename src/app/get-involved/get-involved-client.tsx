@@ -11,7 +11,6 @@ import { Button } from "@/components/ui/button";
 import { STORE } from "@/constants";
 import { useUserServiceInterests } from "@/hooks/use-user-service-interests";
 import { getDB } from "@/lib/idb";
-import { getSupabaseClient } from "@/lib/supabase-browser";
 import type { Service, UserServiceInterest } from "@/types";
 import { VolunteerItem } from "./volunteer-item";
 
@@ -109,10 +108,11 @@ export function GetInvolvedClient() {
   const handleSave = async () => {
     if (!session?.user) return;
     setSaving(true);
-    const supabase = getSupabaseClient();
 
     try {
-      const toUpsert: UserServiceInterest[] = [];
+      const toUpsert: Array<
+        Omit<UserServiceInterest, "id" | "created_at" | "updated_at">
+      > = [];
       const toDelete: number[] = [];
 
       // Determine additions/updates
@@ -132,19 +132,25 @@ export function GetInvolvedClient() {
         }
       }
 
+      const res = await fetch("/api/user/service-interests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          user_id: session.user.id,
+          upsert: toUpsert,
+          delete_service_ids: toDelete,
+        }),
+      });
+
+      const json = await res.json();
+      if (!res.ok || json.error) {
+        throw new Error(json.error || "Failed to save interests");
+      }
+
       const db = await getDB();
-
-      // Execute deletes
-      if (toDelete.length > 0) {
-        const { error: deleteError } = await supabase
-          .from("user_service_interests")
-          .delete()
-          .eq("user_id", session.user.id)
-          .in("service_id", toDelete);
-
-        if (deleteError) throw deleteError;
-
-        if (db) {
+      if (db) {
+        // Update local deletions in IDB
+        if (toDelete.length > 0) {
           const allInterests = await db.getAll(STORE.USER_SERVICE_INTERESTS);
           const targetIds = allInterests
             .filter(
@@ -157,19 +163,10 @@ export function GetInvolvedClient() {
             await db.delete(STORE.USER_SERVICE_INTERESTS, targetId);
           }
         }
-      }
 
-      // Execute upserts
-      if (toUpsert.length > 0) {
-        const { data: upsertData, error: upsertError } = await supabase
-          .from("user_service_interests")
-          .upsert(toUpsert)
-          .select();
-
-        if (upsertError) throw upsertError;
-
-        if (db && upsertData) {
-          for (const row of upsertData) {
+        // Update local upserts in IDB
+        if (json.data && Array.isArray(json.data)) {
+          for (const row of json.data) {
             await db.put(STORE.USER_SERVICE_INTERESTS, row);
           }
         }
@@ -181,12 +178,11 @@ export function GetInvolvedClient() {
 
       setInitialInterests(new Map(interests));
       toast.success("Volunteering interests saved successfully!");
-      // biome-ignore lint/suspicious/noExplicitAny: ok for catch err
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error(err);
-      toast.error(
-        `Failed to save interests: ${err.message || "Unknown error"}`,
-      );
+      const errMsg =
+        err instanceof Error ? err.message : "Unknown error occurred";
+      toast.error(`Failed to save interests: ${errMsg}`);
     } finally {
       setSaving(false);
     }

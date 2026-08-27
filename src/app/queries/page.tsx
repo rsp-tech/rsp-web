@@ -20,8 +20,6 @@ import {
 import { STORE } from "@/constants";
 import { useUserQueriesAndReplies } from "@/hooks/use-user-queries-and-replies";
 import { getDB } from "@/lib/idb";
-import { sendRealtimeBroadcast } from "@/lib/realtime-utils";
-import { getSupabaseClient } from "@/lib/supabase-browser";
 import { QueryFilters } from "./_components/query-filters";
 import { QueryList } from "./_components/query-list";
 
@@ -59,23 +57,26 @@ export default function UserQueriesPage() {
     });
     setSendingReply(queryId);
     try {
-      const supabase = getSupabaseClient();
-      const { data, error } = await supabase
-        .from("query_replies")
-        .insert({
+      const res = await fetch("/api/queries/reply", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
           query_id: queryId,
           user_id: session.user.id,
           message: text,
-        })
-        .select("*, users(name, email)")
-        .single();
+        }),
+      });
 
-      if (error) throw error;
+      const json = await res.json();
+
+      if (!res.ok || json.error) {
+        throw new Error(json.error || "Failed to send reply");
+      }
 
       // 1. Write the new reply to IndexedDB immediately
       const db = await getDB();
-      if (db) {
-        const { users: _, ...replyRow } = data;
+      if (db && json.data) {
+        const { users: _, ...replyRow } = json.data;
         await db.put(STORE.QUERY_REPLIES, replyRow);
       }
 
@@ -84,22 +85,16 @@ export default function UserQueriesPage() {
         queryKey: [STORE.USER_QUERIES, session.user.id],
       });
 
-      // 3. Broadcast sync notification to the admin channel
-
-      sendRealtimeBroadcast("admin-channel", "sync", {
-        tables: [STORE.QUERY_REPLIES, STORE.USER_QUERIES],
-      });
-
       toast.success("Reply sent successfully!");
 
       setReplyTexts({
         ...replyTexts,
         [queryId]: "",
       });
-      // biome-ignore lint/suspicious/noExplicitAny: catch block
-    } catch (e: any) {
+    } catch (e: unknown) {
       console.error("Error sending reply:", e);
-      const errMsg = e.message || "Unknown error occurred.";
+      const errMsg =
+        e instanceof Error ? e.message : "Unknown error occurred.";
       setSubmitErrors((prev) => ({
         ...prev,
         [queryId]: errMsg,
