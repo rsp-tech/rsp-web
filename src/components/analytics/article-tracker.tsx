@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { type HTMLProps, useEffect, useRef } from "react";
 import { type ContentProperties, trackEvent } from "@/lib/analytics";
+import { cn } from "@/lib/utils";
 
-interface ArticleTrackerProps {
+interface ArticleTrackerProps extends HTMLProps<HTMLDivElement> {
   contentProps: ContentProperties;
 }
 
@@ -11,7 +12,11 @@ interface ArticleTrackerProps {
  * ArticleTracker utilizes the browser's native IntersectionObserver to fire
  * the 'article_completed' analytics event when the user reaches the end of the text.
  */
-export function ArticleTracker({ contentProps }: ArticleTrackerProps) {
+export function ArticleTracker({
+  contentProps,
+  className,
+  ...props
+}: ArticleTrackerProps) {
   const sentinelRef = useRef<HTMLDivElement>(null);
   const hasTracked = useRef(false);
 
@@ -47,6 +52,11 @@ export function ArticleTracker({ contentProps }: ArticleTrackerProps) {
   }, [contentProps]);
 
   return (
-    <div ref={sentinelRef} className="h-3 w-full mt-2" aria-hidden="true" />
+    <div
+      ref={sentinelRef}
+      className={cn("h-3 w-full mt-2", className)}
+      aria-hidden="true"
+      {...props}
+    />
   );
 }
