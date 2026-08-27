@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
+import { Loading } from "@/components/loading";
 import { ContactUsClient } from "./contact-us-client";
 
 export const metadata: Metadata = {
@@ -26,5 +28,9 @@ export const metadata: Metadata = {
 };
 
 export default function ContactUsPage() {
-  return <ContactUsClient />;
+  return (
+    <Suspense fallback={<Loading message="Loading contact form..." />}>
+      <ContactUsClient />
+    </Suspense>
+  );
 }

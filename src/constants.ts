@@ -358,6 +358,7 @@ export const SEARCH_BOOST_EVENT = 1.2;
 export const INVALIDATE_ALL_THRESHOLD = 10;
 
 export const QUERY_CATEGORIES = [
+  { value: "consultation", label: "Consultation / Speaker Invitation" },
   { value: "technical", label: "Technical Support / Feedback" },
   { value: "spiritual", label: "Spiritual Guidance / Inquiry" },
   { value: "feedback", label: "Feedback" },
