@@ -1,14 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { cn } from "@/lib/utils";
 import { HeaderActions } from "./header-actions";
 import { MobileDrawer } from "./mobile-drawer";
 import { SearchBar } from "./search-bar";
 
 export function Header() {
+  const pathname = usePathname();
   return (
     <header
-      className="w-full border-b border-border bg-background/50 px-3 sm:px-4 py-3 flex items-center justify-between gap-2 sm:gap-4"
+      className={cn(
+        "w-full border-b border-border bg-background/50 px-3 sm:px-4 py-3 flex items-center justify-between gap-2 sm:gap-4",
+        pathname === "/about" && "dark",
+      )}
       style={{
         backdropFilter: "blur(12px)",
         WebkitBackdropFilter: "blur(12px)",
@@ -42,7 +48,7 @@ export function Header() {
             </picture>
           </div>
           <div className="hidden sm:flex flex-col">
-            <span className="font-bold text-sm font-heading leading-tight ">
+            <span className="font-bold text-sm font-heading leading-tight text-foreground">
               HG Radheshyam Das
             </span>
             <span className="text-xxs text-muted-foreground font-semibold leading-none">
