@@ -1,0 +1,89 @@
+import { ShieldCheck, Sparkles, Target } from "lucide-react";
+
+export const WhyInvite = () => {
+  return (
+    <section
+      className="about-section-pad"
+      style={{ backgroundColor: "var(--bg-white)" }}
+    >
+      <div className="about-section-container">
+        <div className="about-why-grid">
+          {/* Feature List */}
+          <div className="flex flex-col gap-8">
+            <div>
+              <span className="about-sec-sub" style={{ textAlign: "left" }}>
+                Distinct Value
+              </span>
+              <h2 className="about-sec-title text-left">
+                Why Organizations{" "}
+                <span className="about-hand-underline">Invite Him</span>
+              </h2>
+            </div>
+
+            <div className="flex flex-col gap-6">
+              <div className="flex gap-4">
+                <div className="w-12 h-12 rounded-full bg-[var(--bg-cream)] text-[var(--accent-gold-dark)] flex items-center justify-center shrink-0">
+                  <ShieldCheck className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-medium font-heading mb-1">
+                    Ancient Wisdom Meets Modern Relevance
+                  </h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Rooted in classical Vedic texts and structured through the
+                    lens of an IIT Bombay engineering mindset, making profound
+                    concepts immediately practical.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="w-12 h-12 rounded-full bg-[var(--bg-cream)] text-[var(--accent-gold-dark)] flex items-center justify-center shrink-0">
+                  <Target className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-medium font-heading mb-1">
+                    30+ Years of Field Leadership Experience
+                  </h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Not theoretical lecturing — proven organizational experience
+                    leading thousands of team members and global youth
+                    institutions.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex gap-4">
+                <div className="w-12 h-12 rounded-full bg-[var(--bg-cream)] text-[var(--accent-gold-dark)] flex items-center justify-center shrink-0">
+                  <Sparkles className="w-6 h-6" />
+                </div>
+                <div>
+                  <h4 className="text-lg font-medium font-heading mb-1">
+                    Deep Audience Connection & Emotional Resonance
+                  </h4>
+                  <p className="text-sm text-muted-foreground leading-relaxed">
+                    Engaging storytelling, clear logical reasoning, and
+                    compassionate insight that resonates across diverse cultural
+                    and professional backgrounds.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Quote Block */}
+          <div className="about-quote-box">
+            <p className="text-xl sm:text-2xl font-light font-serif italic text-foreground leading-relaxed mb-6">
+              "Leadership is not merely about achieving corporate targets; it is
+              the art of mastering one's mind, anchoring character in timeless
+              truth, and inspiring others through authentic integrity."
+            </p>
+            <span className="text-xs uppercase tracking-widest text-[var(--accent-gold-dark)] font-bold">
+              Radheshyam Das
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
