@@ -1,8 +1,9 @@
-// biome-ignore-all lint/suspicious/noArrayIndexKey: ok
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { SectionHeader } from "./section-header";
 
 interface Testimonial {
   name: string;
@@ -71,14 +72,13 @@ export const TestimonialsSlider = () => {
       style={{ backgroundColor: "var(--bg-cream)" }}
     >
       <div className="about-section-container">
-        <div className="about-sec-title-wrap">
-          <span className="about-sec-sub">Endorsements</span>
-          <h2 className="about-sec-title">
-            What Leaders <span className="about-hand-underline">Say</span>
-          </h2>
-        </div>
+        <SectionHeader
+          subtitle="Endorsements"
+          title="What Leaders"
+          underlinedWord="Say"
+        />
 
-        <div className="max-w-3xl mx-auto relative px-4 sm:px-16">
+        <div className="max-w-3xl mx-auto relative px-4 sm:px-16 reveal-blur">
           <div className="flex flex-col items-center text-center">
             {/* Avatar */}
             <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden shadow-xl border-4 border-white mb-6 bg-muted">
@@ -111,28 +111,32 @@ export const TestimonialsSlider = () => {
           </div>
 
           {/* Prev/Next buttons */}
-          <button
+          <Button
             type="button"
+            variant="outline"
+            size="icon"
             onClick={prev}
             aria-label="Previous testimonial"
-            className="absolute left-0 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full border border-border bg-background/80 hover:bg-background flex items-center justify-center text-foreground transition-all cursor-pointer shadow-xs"
+            className="absolute left-0 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full border-border bg-background/80 hover:bg-background shadow-xs"
           >
             <ChevronLeft className="w-5 h-5" />
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant="outline"
+            size="icon"
             onClick={next}
             aria-label="Next testimonial"
-            className="absolute right-0 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full border border-border bg-background/80 hover:bg-background flex items-center justify-center text-foreground transition-all cursor-pointer shadow-xs"
+            className="absolute right-0 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full border-border bg-background/80 hover:bg-background shadow-xs"
           >
             <ChevronRight className="w-5 h-5" />
-          </button>
+          </Button>
 
           {/* Dots */}
           <div className="flex justify-center gap-2 mt-8">
-            {testimonials.map((_, i) => (
+            {testimonials.map((item, i) => (
               <button
-                key={`test-${i}`}
+                key={item.name}
                 type="button"
                 onClick={() => setIndex(i)}
                 aria-label={`Testimonial ${i + 1}`}

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import { ArticleTracker } from "@/components/analytics/article-tracker";
+import { AboutAnimator } from "./about-animator";
 import { AboutCharcoalBio } from "./about-charcoal-bio";
 import { AboutHero } from "./about-hero";
 import { AcademicCorporate } from "./academic-corporate";
+import { AuroraBackground } from "./aurora-background";
 import { CommunityGallery } from "./community-gallery";
 import { ConsultationSection } from "./consultation-section";
 import { InitiativesGrid } from "./initiatives-grid";
@@ -87,6 +89,12 @@ export default function AboutPage() {
         // biome-ignore lint/security/noDangerouslySetInnerHtml: Validated JSON-LD Schema
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
+
+      {/* 3D Floating Aurora Glow Background */}
+      <AuroraBackground />
+
+      {/* Interactive Scroll & 3D Tilt Animator */}
+      <AboutAnimator />
 
       {/* 1. Hero Section */}
       <AboutHero />

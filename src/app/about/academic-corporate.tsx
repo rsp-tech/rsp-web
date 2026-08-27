@@ -1,3 +1,6 @@
+import { Button } from "@/components/ui/button";
+import { SectionHeader } from "./section-header";
+
 export const AcademicCorporate = () => {
   return (
     <div className="flex flex-col">
@@ -8,7 +11,7 @@ export const AcademicCorporate = () => {
       >
         <div className="about-section-container">
           <div className="about-collage-grid">
-            <div className="about-collage-card-main">
+            <div className="about-collage-card-main reveal-3d">
               <picture>
                 <source
                   srcSet="/assets/about/university-session.avif"
@@ -29,13 +32,13 @@ export const AcademicCorporate = () => {
               </picture>
             </div>
 
-            <div className="flex flex-col">
-              <span className="about-sec-sub" style={{ textAlign: "left" }}>
-                Inspiring Top Campuses
-              </span>
-              <h2 className="about-sec-title text-left mb-6">
-                Academic <span className="about-hand-underline">Keynotes</span>
-              </h2>
+            <div className="flex flex-col reveal-right">
+              <SectionHeader
+                subtitle="Inspiring Top Campuses"
+                title="Academic"
+                underlinedWord="Keynotes"
+                align="left"
+              />
               <p className="text-muted-foreground text-base sm:text-lg leading-relaxed mb-6">
                 Bridging ancient logic with modern academic inquiry, Radheshyam
                 Das has conducted highly received guest lectures and seminar
@@ -45,7 +48,7 @@ export const AcademicCorporate = () => {
                 </strong>{" "}
                 across the globe.
               </p>
-              <div className="flex flex-wrap gap-6 items-center opacity-70 grayscale hover:grayscale-0 transition-all">
+              <div className="flex flex-wrap gap-6 items-center opacity-70 grayscale hover:grayscale-0 transition-all reveal-blur">
                 <img
                   src="/assets/about/logo-mit.png"
                   alt="MIT"
@@ -79,13 +82,13 @@ export const AcademicCorporate = () => {
       >
         <div className="about-section-container">
           <div className="about-collage-grid">
-            <div className="flex flex-col order-2 lg:order-1">
-              <span className="about-sec-sub" style={{ textAlign: "left" }}>
-                Workplace Excellence
-              </span>
-              <h2 className="about-sec-title text-left mb-6">
-                Corporate <span className="about-hand-underline">Seminars</span>
-              </h2>
+            <div className="flex flex-col order-2 lg:order-1 reveal-left">
+              <SectionHeader
+                subtitle="Workplace Excellence"
+                title="Corporate"
+                underlinedWord="Seminars"
+                align="left"
+              />
               <p className="text-muted-foreground text-base sm:text-lg leading-relaxed mb-6">
                 Helping executives and technical teams at{" "}
                 <strong>
@@ -96,13 +99,17 @@ export const AcademicCorporate = () => {
                 frameworks, and clear decision-making processes.
               </p>
               <div>
-                <a href="#workshops" className="about-btn about-btn-primary">
-                  <span>View Workshops</span>
-                </a>
+                <Button
+                  asChild
+                  size="lg"
+                  className="rounded-full bg-[var(--accent-vibrant)] hover:bg-[var(--accent-vibrant)]/90 text-white font-semibold uppercase tracking-widest text-xs h-12 px-8 shadow-md"
+                >
+                  <a href="#workshops">View Workshops</a>
+                </Button>
               </div>
             </div>
 
-            <div className="about-collage-card-main order-1 lg:order-2">
+            <div className="about-collage-card-main order-1 lg:order-2 reveal-3d">
               <picture>
                 <source
                   srcSet="/assets/about/corporate-session.avif"

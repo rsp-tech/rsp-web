@@ -1,6 +1,5 @@
-// biome-ignore-all lint/suspicious/noArrayIndexKey: ok
-
 import { ArrowRight } from "lucide-react";
+import { SectionHeader } from "./section-header";
 
 interface BookItem {
   tag: string;
@@ -36,29 +35,24 @@ const books: BookItem[] = [
 
 export const PublicationsShowcase = () => {
   return (
-    <section
-      className="about-section-pad"
-      id="books"
-      style={{ backgroundColor: "var(--bg-dark-section)", color: "#FFFFFF" }}
-    >
+    <section className="about-books-sec" id="books">
       <div className="about-section-container">
         {/* Title */}
-        <div className="about-sec-title-wrap">
-          <span className="about-sec-sub">Literary Works</span>
-          <h2 className="about-sec-title" style={{ color: "#FFFFFF" }}>
-            Author of Bestselling{" "}
-            <span className="about-hand-underline">Books</span>
-          </h2>
-          <p className="text-white/70 text-sm sm:text-base max-w-xl mx-auto mt-4">
-            Transformative books guiding thousands of professionals, students,
-            and seekers worldwide.
-          </p>
-        </div>
+        <SectionHeader
+          subtitle="Literary Works"
+          title="Author of Bestselling"
+          underlinedWord="Books"
+          description="Transformative books guiding thousands of professionals, students, and seekers worldwide."
+          isDark
+        />
 
         {/* Books Grid */}
         <div className="about-books-grid">
-          {books.map((b, idx) => (
-            <div key={`book-${idx}`} className="about-book-card">
+          {books.map((b) => (
+            <div
+              key={b.title}
+              className="about-book-card about-tilt-card reveal-3d"
+            >
               <div className="flex flex-col">
                 <div className="relative aspect-3/4 max-w-[200px] mx-auto rounded-lg overflow-hidden shadow-2xl mb-6">
                   <picture>
@@ -75,7 +69,7 @@ export const PublicationsShowcase = () => {
                   </picture>
                 </div>
 
-                <span className="text-xs uppercase tracking-widest text-[#C2A383] font-semibold mb-2">
+                <span className="text-xs uppercase tracking-widest text-[#c2a383] font-semibold mb-2">
                   {b.tag}
                 </span>
                 <h3 className="text-2xl font-light font-heading text-white mb-3">
@@ -90,7 +84,7 @@ export const PublicationsShowcase = () => {
                 href={b.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-xs uppercase tracking-widest text-[#C2A383] hover:text-white font-semibold transition-colors"
+                className="inline-flex items-center text-xs uppercase tracking-widest text-[#c2a383] hover:text-white font-semibold transition-colors"
               >
                 <span>Order On VOICE Publication</span>
                 <ArrowRight className="w-4 h-4 ml-1.5" />

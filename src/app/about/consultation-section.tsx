@@ -2,6 +2,11 @@
 
 import { Mail, MapPin, Phone, Send } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { SectionHeader } from "./section-header";
 
 export const ConsultationSection = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -20,14 +25,13 @@ export const ConsultationSection = () => {
       <div className="about-section-container">
         <div className="about-collage-grid">
           {/* Left Info */}
-          <div className="flex flex-col">
-            <span className="about-sec-sub" style={{ textAlign: "left" }}>
-              Get in Touch
-            </span>
-            <h2 className="about-sec-title text-left mb-6">
-              Schedule a{" "}
-              <span className="about-hand-underline">Conversation</span>
-            </h2>
+          <div className="flex flex-col reveal-left">
+            <SectionHeader
+              subtitle="Get in Touch"
+              title="Schedule a"
+              underlinedWord="Conversation"
+              align="left"
+            />
             <p className="text-muted-foreground text-base sm:text-lg leading-relaxed mb-8">
               Interested in inviting Radheshyam Das for a corporate keynote,
               executive workshop, or university session? Reach out to our
@@ -57,7 +61,7 @@ export const ConsultationSection = () => {
           </div>
 
           {/* Right Form */}
-          <div className="bg-[var(--bg-cream)] p-8 sm:p-10 rounded-2xl border border-border shadow-xs">
+          <div className="bg-[var(--bg-cream)] p-8 sm:p-10 rounded-2xl border border-border shadow-xs reveal-right">
             {submitted ? (
               <div className="text-center py-10 flex flex-col items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-primary/10 text-primary flex items-center justify-center">
@@ -70,76 +74,77 @@ export const ConsultationSection = () => {
                 </p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1">
-                  <label
+              <form onSubmit={handleSubmit} className="flex flex-col gap-5">
+                <div className="flex flex-col gap-1.5">
+                  <Label
                     htmlFor="about-name"
                     className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
                   >
                     Your Name
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     id="about-name"
                     required
                     type="text"
                     placeholder="Full name"
-                    className="w-full px-4 py-3 rounded-xl bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold)]"
+                    className="h-11 px-4 rounded-xl bg-background border-border text-sm focus-visible:ring-[var(--accent-gold)]"
                   />
                 </div>
 
-                <div className="flex flex-col gap-1">
-                  <label
+                <div className="flex flex-col gap-1.5">
+                  <Label
                     htmlFor="about-email"
                     className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
                   >
                     Email Address
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     id="about-email"
                     required
                     type="email"
                     placeholder="name@organization.com"
-                    className="w-full px-4 py-3 rounded-xl bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold)]"
+                    className="h-11 px-4 rounded-xl bg-background border-border text-sm focus-visible:ring-[var(--accent-gold)]"
                   />
                 </div>
 
-                <div className="flex flex-col gap-1">
-                  <label
+                <div className="flex flex-col gap-1.5">
+                  <Label
                     htmlFor="about-org"
                     className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
                   >
                     Organization / Institution
-                  </label>
-                  <input
+                  </Label>
+                  <Input
                     id="about-org"
                     type="text"
                     placeholder="Company or University name"
-                    className="w-full px-4 py-3 rounded-xl bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold)]"
+                    className="h-11 px-4 rounded-xl bg-background border-border text-sm focus-visible:ring-[var(--accent-gold)]"
                   />
                 </div>
 
-                <div className="flex flex-col gap-1">
-                  <label
+                <div className="flex flex-col gap-1.5">
+                  <Label
                     htmlFor="about-message"
                     className="text-xs font-semibold uppercase tracking-wider text-muted-foreground"
                   >
                     Proposed Theme / Message
-                  </label>
-                  <textarea
+                  </Label>
+                  <Textarea
                     id="about-message"
                     required
                     rows={4}
                     placeholder="Describe your session requirement or question..."
-                    className="w-full px-4 py-3 rounded-xl bg-background border border-border text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold)] resize-none"
+                    className="px-4 py-3 rounded-xl bg-background border-border text-sm focus-visible:ring-[var(--accent-gold)] resize-none"
                   />
                 </div>
 
-                <button
+                <Button
                   type="submit"
-                  className="about-btn about-btn-primary w-full mt-2"
+                  size="lg"
+                  className="rounded-full bg-[var(--accent-vibrant)] hover:bg-[var(--accent-vibrant)]/90 text-white font-semibold uppercase tracking-widest text-xs h-12 w-full mt-2 shadow-md"
                 >
-                  <span>Submit Inquiry</span>
-                </button>
+                  Submit Inquiry
+                </Button>
               </form>
             )}
           </div>

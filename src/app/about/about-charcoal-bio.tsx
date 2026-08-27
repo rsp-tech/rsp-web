@@ -1,10 +1,12 @@
+import { Button } from "@/components/ui/button";
+
 export const AboutCharcoalBio = () => {
   return (
     <section className="about-charcoal-sec" id="about">
       <div className="about-section-container">
         <div className="about-charcoal-grid">
-          {/* Gold Framed Portrait */}
-          <div className="about-gold-frame">
+          {/* Clean Frameless Portrait */}
+          <div className="relative w-full max-w-[420px] mx-auto aspect-4/5 rounded-2xl overflow-hidden shadow-2xl reveal-3d">
             <picture>
               <source
                 srcSet="/assets/about/about-profile.avif"
@@ -19,14 +21,14 @@ export const AboutCharcoalBio = () => {
                 alt="Radheshyam Das Portrait"
                 width={720}
                 height={920}
-                className="w-full h-full object-cover rounded-sm"
+                className="w-full h-full object-cover"
                 loading="lazy"
               />
             </picture>
           </div>
 
           {/* Biography Content */}
-          <div className="flex flex-col justify-center">
+          <div className="flex flex-col justify-center reveal-right">
             <h2 className="text-4xl sm:text-5xl font-light font-heading text-white mb-2">
               Radheshyam Das
             </h2>
@@ -50,12 +52,21 @@ export const AboutCharcoalBio = () => {
             </p>
 
             <div className="flex flex-wrap gap-4 pt-2">
-              <a href="#initiatives" className="about-btn about-btn-primary">
-                <span>Key Initiatives</span>
-              </a>
-              <a href="#workshops" className="about-btn about-btn-outline">
-                <span>My Philosophy</span>
-              </a>
+              <Button
+                asChild
+                size="lg"
+                className="rounded-full bg-[var(--accent-vibrant)] hover:bg-[var(--accent-vibrant)]/90 text-white font-semibold uppercase tracking-widest text-xs h-12 px-8 shadow-md"
+              >
+                <a href="#initiatives">Key Initiatives</a>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="lg"
+                className="rounded-full border-white/40 text-white hover:bg-white hover:text-[var(--primary-dark)] font-semibold uppercase tracking-widest text-xs h-12 px-8 bg-transparent"
+              >
+                <a href="#workshops">My Philosophy</a>
+              </Button>
             </div>
           </div>
         </div>

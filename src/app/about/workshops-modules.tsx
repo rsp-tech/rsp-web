@@ -1,8 +1,9 @@
-// biome-ignore-all lint/suspicious/noArrayIndexKey: ok
 "use client";
 
 import { Brain, Clock, Flame, HeartHandshake, Users } from "lucide-react";
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { SectionHeader } from "./section-header";
 
 interface Workshop {
   num: string;
@@ -108,9 +109,7 @@ export const WorkshopsModules = () => {
   >("all");
 
   const filtered =
-    filter === "all"
-      ? workshops
-      : workshops.filter((w) => w.category === filter);
+    filter === "all" ? workshops : workshops.filter((w) => w.category === filter);
 
   return (
     <section
@@ -120,64 +119,63 @@ export const WorkshopsModules = () => {
     >
       <div className="about-section-container">
         {/* Title */}
-        <div className="about-sec-title-wrap">
-          <span className="about-sec-sub">Curated Keynotes & Workshops</span>
-          <h2 className="about-sec-title">
-            Practical. Relevant.{" "}
-            <span className="about-hand-underline">Transformational.</span>
-          </h2>
-          <p className="text-muted-foreground text-sm sm:text-base max-w-xl mx-auto mt-4">
-            Every session delivers actionable principles that participants can
-            apply immediately — in leadership, decision-making, and daily life.
-          </p>
-        </div>
+        <SectionHeader
+          subtitle="Curated Keynotes & Workshops"
+          title="Practical. Relevant."
+          underlinedWord="Transformational."
+          description="Every session delivers actionable principles that participants can apply immediately — in leadership, decision-making, and daily life."
+        />
 
         {/* Tab Filter */}
-        <div className="flex justify-center gap-3 mb-12 flex-wrap">
-          <button
+        <div className="flex justify-center gap-3 mb-12 flex-wrap reveal-blur">
+          <Button
             type="button"
+            variant={filter === "all" ? "default" : "outline"}
             onClick={() => setFilter("all")}
-            className={`px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+            className={`rounded-full px-6 py-2 text-xs font-semibold uppercase tracking-wider h-9 ${
               filter === "all"
-                ? "bg-[var(--primary-dark)] text-white shadow-md"
-                : "bg-background text-muted-foreground hover:text-foreground border border-border"
+                ? "bg-[var(--primary-dark)] text-white hover:bg-[var(--primary-dark)]/90"
+                : "bg-background text-muted-foreground hover:text-foreground"
             }`}
           >
             All Modules
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant={filter === "leadership" ? "default" : "outline"}
             onClick={() => setFilter("leadership")}
-            className={`px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+            className={`rounded-full px-6 py-2 text-xs font-semibold uppercase tracking-wider h-9 ${
               filter === "leadership"
-                ? "bg-[var(--primary-dark)] text-white shadow-md"
-                : "bg-background text-muted-foreground hover:text-foreground border border-border"
+                ? "bg-[var(--primary-dark)] text-white hover:bg-[var(--primary-dark)]/90"
+                : "bg-background text-muted-foreground hover:text-foreground"
             }`}
           >
             Performance & Leadership
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant={filter === "excellence" ? "default" : "outline"}
             onClick={() => setFilter("excellence")}
-            className={`px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+            className={`rounded-full px-6 py-2 text-xs font-semibold uppercase tracking-wider h-9 ${
               filter === "excellence"
-                ? "bg-[var(--primary-dark)] text-white shadow-md"
-                : "bg-background text-muted-foreground hover:text-foreground border border-border"
+                ? "bg-[var(--primary-dark)] text-white hover:bg-[var(--primary-dark)]/90"
+                : "bg-background text-muted-foreground hover:text-foreground"
             }`}
           >
             Personal Excellence
-          </button>
-          <button
+          </Button>
+          <Button
             type="button"
+            variant={filter === "wellbeing" ? "default" : "outline"}
             onClick={() => setFilter("wellbeing")}
-            className={`px-6 py-2.5 rounded-full text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+            className={`rounded-full px-6 py-2 text-xs font-semibold uppercase tracking-wider h-9 ${
               filter === "wellbeing"
-                ? "bg-[var(--primary-dark)] text-white shadow-md"
-                : "bg-background text-muted-foreground hover:text-foreground border border-border"
+                ? "bg-[var(--primary-dark)] text-white hover:bg-[var(--primary-dark)]/90"
+                : "bg-background text-muted-foreground hover:text-foreground"
             }`}
           >
             Wellbeing & Resilience
-          </button>
+          </Button>
         </div>
 
         {/* Workshops Grid */}
@@ -185,7 +183,7 @@ export const WorkshopsModules = () => {
           {filtered.map((w) => (
             <div
               key={w.num}
-              className={`about-workshop-card ${w.num === "10" && filter === "all" ? "capstone" : ""}`}
+              className={`about-workshop-card about-tilt-card reveal-3d ${w.num === "10" && filter === "all" ? "capstone" : ""}`}
             >
               <span className="text-3xl font-light font-serif text-[var(--accent-gold)] block mb-4">
                 {w.num}
@@ -201,18 +199,21 @@ export const WorkshopsModules = () => {
         </div>
 
         {/* Program Formats */}
-        <div className="about-sec-title-wrap mt-20 mb-10">
-          <span className="about-sec-sub">Program Delivery</span>
-          <h3 className="text-2xl sm:text-3xl font-light font-serif">
-            Available Formats
-          </h3>
+        <div className="mt-24 mb-10">
+          <SectionHeader
+            subtitle="Program Delivery"
+            title="Available Formats"
+          />
         </div>
 
         <div className="about-formats-grid">
-          {formats.map((fmt, idx) => {
+          {formats.map((fmt) => {
             const Icon = fmt.icon;
             return (
-              <div key={`format-${idx}`} className="about-format-card">
+              <div
+                key={fmt.title}
+                className="about-format-card about-tilt-card reveal-3d"
+              >
                 <div className="w-12 h-12 rounded-full bg-[var(--bg-cream)] text-[var(--accent-gold-dark)] flex items-center justify-center mx-auto mb-4">
                   <Icon className="w-5 h-5" />
                 </div>

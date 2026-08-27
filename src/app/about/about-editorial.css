@@ -18,7 +18,7 @@
   --text-light: #f4f6f5;
   --font-serif: "Cormorant Garamond", Georgia, serif;
   --font-sans: "Inter", -apple-system, sans-serif;
-  --transition-smooth: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   --shadow-luxe: 0 20px 50px rgba(44, 48, 46, 0.04);
   --shadow-luxe-hover: 0 30px 60px rgba(44, 48, 46, 0.08);
 
@@ -27,8 +27,9 @@
   line-height: 1.8;
   font-weight: 300;
   width: 100%;
-  overflow-x: hidden;
-  margin-top: -60px;
+  max-width: 100%;
+  overflow-x: clip;
+  position: relative;
 }
 
 .dark .about-page-root {
@@ -37,6 +38,168 @@
   --bg-stone: #1e211f;
   --text-dark: #f4f6f5;
   --text-slate: #9ba3a0;
+}
+
+/* =========================================================================
+   1. Aurora 3D Animated Background
+   ========================================================================= */
+.aurora-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-color: #fdfbf7;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+
+.dark .aurora-bg {
+  background-color: #121413;
+}
+
+.aurora-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.55;
+  animation: float 20s infinite alternate ease-in-out;
+}
+
+.orb-1 {
+  width: 60vw;
+  height: 60vw;
+  background: radial-gradient(
+    circle,
+    rgba(230, 220, 200, 0.55) 0%,
+    rgba(230, 220, 200, 0) 70%
+  );
+  top: -10%;
+  left: -10%;
+  animation-delay: 0s;
+}
+
+.orb-2 {
+  width: 50vw;
+  height: 50vw;
+  background: radial-gradient(
+    circle,
+    rgba(255, 245, 230, 0.45) 0%,
+    rgba(255, 245, 230, 0) 70%
+  );
+  bottom: -20%;
+  right: -10%;
+  animation-delay: -5s;
+}
+
+.orb-3 {
+  width: 45vw;
+  height: 45vw;
+  background: radial-gradient(
+    circle,
+    rgba(240, 230, 215, 0.45) 0%,
+    rgba(240, 230, 215, 0) 70%
+  );
+  top: 40%;
+  left: 30%;
+  animation-delay: -10s;
+}
+
+@keyframes float {
+  0% {
+    transform: translate(0, 0) scale(1);
+  }
+  50% {
+    transform: translate(4vw, 8vh) scale(1.08);
+  }
+  100% {
+    transform: translate(-8vw, 4vh) scale(0.92);
+  }
+}
+
+/* =========================================================================
+   2. Scroll Reveal & 3D Tilt Animations
+   ========================================================================= */
+.reveal-on-scroll,
+.reveal-3d,
+.reveal-blur,
+.reveal-left,
+.reveal-right {
+  opacity: 0;
+  transition: var(--transition-smooth);
+  will-change: transform, opacity, filter;
+}
+
+.reveal-3d {
+  transform: translateY(50px) scale(0.95);
+}
+
+.reveal-blur {
+  transform: translateY(25px);
+  filter: blur(10px);
+}
+
+.reveal-left {
+  transform: translateX(-40px);
+}
+
+.reveal-right {
+  transform: translateX(40px);
+}
+
+/* Revealed active states */
+.reveal-3d.is-revealed {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+.reveal-blur.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+  filter: blur(0px);
+}
+
+.reveal-left.is-revealed,
+.reveal-right.is-revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.about-tilt-card {
+  position: relative;
+  transition:
+    transform 0.12s ease-out,
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.about-tilt-card:not(.is-tilting) {
+  transition:
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.4s ease;
+}
+
+.about-tilt-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at var(--tilt-glow-x, 50%) var(--tilt-glow-y, 50%),
+    rgba(194, 163, 131, 0.18) 0%,
+    transparent 65%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 2;
+}
+
+.about-tilt-card.is-tilting::after {
+  opacity: 1;
 }
 
 /* Base Headings */
@@ -65,13 +228,13 @@
 }
 
 .about-section-pad {
-  padding: 100px 0;
+  padding: 120px 0;
   position: relative;
 }
 
 @media (max-width: 768px) {
   .about-section-pad {
-    padding: 60px 0;
+    padding: 70px 0;
   }
 }
 
@@ -93,15 +256,15 @@
 }
 
 .about-sec-title {
-  font-size: 2.8rem;
+  font-size: 3.2rem;
   font-family: var(--font-serif);
   font-weight: 300;
-  line-height: 1.2;
+  line-height: 1.15;
 }
 
 @media (max-width: 768px) {
   .about-sec-title {
-    font-size: 2.1rem;
+    font-size: 2.2rem;
   }
 }
 
@@ -124,15 +287,17 @@
   background-repeat: no-repeat;
 }
 
-/* HERO */
+/* =========================================================================
+   3. HERO with Slanted/Curved Separator
+   ========================================================================= */
 .about-hero-wrap {
-  min-height: 85vh;
+  min-height: 88vh;
   background:
     linear-gradient(rgba(30, 32, 30, 0.72), rgba(30, 32, 30, 0.65)),
     url("/assets/about/hero-portrait.webp") no-repeat center center / cover;
   display: flex;
   align-items: center;
-  padding: 120px 0 100px;
+  padding: 130px 0 130px;
   color: #ffffff;
   position: relative;
   clip-path: ellipse(150% 100% at 50% 0%);
@@ -140,7 +305,7 @@
 
 .about-hero-grid {
   display: grid;
-  grid-template-columns: 1.2fr 0.8fr;
+  grid-template-columns: 1.25fr 0.75fr;
   gap: 60px;
   align-items: center;
 }
@@ -163,7 +328,7 @@
 }
 
 .about-hero-h1 {
-  font-size: 4.2rem;
+  font-size: 4.5rem;
   color: #ffffff;
   margin-bottom: 25px;
   line-height: 1.1;
@@ -194,8 +359,8 @@
   font-size: 1.15rem;
   color: rgba(255, 255, 255, 0.88);
   margin-bottom: 35px;
-  max-width: 600px;
-  line-height: 1.8;
+  max-width: 620px;
+  line-height: 1.85;
 }
 
 /* Buttons */
@@ -203,7 +368,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 14px 32px;
+  padding: 14px 34px;
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: 0.8rem;
@@ -256,20 +421,44 @@
   0% {
     transform: translateX(0);
   }
-
   100% {
     transform: translateX(-50%);
   }
 }
 
-/* Charcoal Bio Section */
+/* =========================================================================
+   4. Charcoal Bio Section with Arched Wave Separators
+   ========================================================================= */
 .about-charcoal-sec {
   background-color: var(--bg-dark-section);
   color: #ffffff;
-  padding: 120px 0;
+  padding: 140px 0;
   position: relative;
   width: 100%;
-  clip-path: ellipse(150% 100% at 50% 100%);
+  margin: 70px 0;
+}
+
+.about-charcoal-sec::before {
+  content: "";
+  position: absolute;
+  top: -70px;
+  left: 0;
+  width: 100%;
+  height: 72px;
+  background-color: var(--bg-dark-section);
+  border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+}
+
+.about-charcoal-sec::after {
+  content: "";
+  position: absolute;
+  bottom: -70px;
+  left: 0;
+  width: 100%;
+  height: 72px;
+  background-color: var(--bg-dark-section);
+  border-radius: 0 0 50% 50% / 0 0 100% 100%;
+  z-index: 1;
 }
 
 .about-charcoal-grid {
@@ -286,29 +475,9 @@
   }
 }
 
-.about-gold-frame {
-  position: relative;
-  width: 100%;
-  max-width: 440px;
-  aspect-ratio: 4 / 5;
-  margin: 0 auto;
-  border: 1px solid rgba(194, 163, 131, 0.4);
-  padding: 14px;
-}
-
-.about-gold-frame::before {
-  content: "";
-  position: absolute;
-  top: -6px;
-  left: -6px;
-  right: -6px;
-  bottom: -6px;
-  border: 1px solid var(--accent-gold);
-  pointer-events: none;
-  opacity: 0.6;
-}
-
-/* Collage Sections */
+/* =========================================================================
+   5. Overlapping Collage Sections
+   ========================================================================= */
 .about-collage-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -345,7 +514,9 @@
   z-index: 2;
 }
 
-/* Workshop Cards */
+/* =========================================================================
+   6. Workshop & Program Format Cards
+   ========================================================================= */
 .about-workshops-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -378,7 +549,6 @@
   color: #ffffff;
 }
 
-/* Format Cards */
 .about-formats-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
@@ -395,7 +565,18 @@
   border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
-/* Books Grid */
+/* =========================================================================
+   7. Bestselling Books Section with Slanted Clip-Path
+   ========================================================================= */
+.about-books-sec {
+  background-color: var(--bg-dark-section);
+  color: #ffffff;
+  padding: 140px 0;
+  position: relative;
+  clip-path: polygon(0 4%, 100% 0, 100% 96%, 0 100%);
+  margin: 40px 0;
+}
+
 .about-books-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -419,7 +600,9 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* Why Invite Section */
+/* =========================================================================
+   8. Why Organizations Invite Him
+   ========================================================================= */
 .about-why-grid {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;

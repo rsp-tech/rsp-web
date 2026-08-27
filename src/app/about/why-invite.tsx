@@ -1,4 +1,5 @@
 import { ShieldCheck, Sparkles, Target } from "lucide-react";
+import { SectionHeader } from "./section-header";
 
 export const WhyInvite = () => {
   return (
@@ -9,16 +10,13 @@ export const WhyInvite = () => {
       <div className="about-section-container">
         <div className="about-why-grid">
           {/* Feature List */}
-          <div className="flex flex-col gap-8">
-            <div>
-              <span className="about-sec-sub" style={{ textAlign: "left" }}>
-                Distinct Value
-              </span>
-              <h2 className="about-sec-title text-left">
-                Why Organizations{" "}
-                <span className="about-hand-underline">Invite Him</span>
-              </h2>
-            </div>
+          <div className="flex flex-col gap-8 reveal-left">
+            <SectionHeader
+              subtitle="Distinct Value"
+              title="Why Organizations"
+              underlinedWord="Invite Him"
+              align="left"
+            />
 
             <div className="flex flex-col gap-6">
               <div className="flex gap-4">
@@ -72,7 +70,7 @@ export const WhyInvite = () => {
           </div>
 
           {/* Quote Block */}
-          <div className="about-quote-box">
+          <div className="about-quote-box reveal-right">
             <p className="text-xl sm:text-2xl font-light font-serif italic text-foreground leading-relaxed mb-6">
               "Leadership is not merely about achieving corporate targets; it is
               the art of mastering one's mind, anchoring character in timeless

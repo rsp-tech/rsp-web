@@ -1,3 +1,6 @@
+import { Button } from "@/components/ui/button";
+import { SectionHeader } from "./section-header";
+
 export const InitiativesGrid = () => {
   return (
     <section
@@ -8,14 +11,13 @@ export const InitiativesGrid = () => {
       <div className="about-section-container">
         <div className="about-collage-grid">
           {/* Info Block */}
-          <div className="flex flex-col">
-            <span className="about-sec-sub" style={{ textAlign: "left" }}>
-              Empowering the Future
-            </span>
-            <h2 className="about-sec-title text-left mb-6">
-              VOICE Leadership{" "}
-              <span className="about-hand-underline">Initiative</span>
-            </h2>
+          <div className="flex flex-col reveal-left">
+            <SectionHeader
+              subtitle="Empowering the Future"
+              title="VOICE Leadership"
+              underlinedWord="Initiative"
+              align="left"
+            />
             <p className="text-muted-foreground text-base sm:text-lg leading-relaxed mb-4">
               <strong>VOICE</strong> (Vedic Oasis for Inspiration, Culture, and
               Education) is a dynamic platform designed to inspire leadership
@@ -28,14 +30,23 @@ export const InitiativesGrid = () => {
               build positive, values-driven communities that uplift society.
             </p>
             <div>
-              <a href="#contact" className="about-btn about-btn-primary">
-                <span>Learn More</span>
-              </a>
+              <Button
+                asChild
+                size="lg"
+                className="rounded-full bg-[var(--accent-vibrant)] hover:bg-[var(--accent-vibrant)]/90 text-white font-semibold uppercase tracking-widest text-xs h-12 px-8 shadow-md"
+              >
+                <a
+                  href="#contact"
+                  aria-label="Learn more about the VOICE leadership initiative"
+                >
+                  Learn More
+                </a>
+              </Button>
             </div>
           </div>
 
           {/* Overlapping Collage */}
-          <div className="relative flex flex-col items-center">
+          <div className="relative flex flex-col items-center reveal-right">
             <div className="about-collage-card-main">
               <picture>
                 <source
