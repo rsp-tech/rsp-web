@@ -13,7 +13,7 @@
     "purge-ui": "node --experimental-strip-types scripts/purge-dead-ui.ts",
     "css:build": "node --experimental-strip-types scripts/process-build-css.ts",
     "db-types": "dotenv -- bash -c 'pnpm supabase gen types typescript --project-id $SUPABASE_PROJECT_ID --schema prod > src/database.types.ts && pnpm db-types:prune '",
-    "test": "vitest run",
+    "test": "vitest run --coverage",
     "format": "biome format --write"
   },
   "dependencies": {
@@ -53,8 +53,10 @@
     "@types/papaparse": "^5.5.2",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
+    "@vitest/coverage-v8": "4.1.10",
     "babel-plugin-react-compiler": "1.0.0",
     "dotenv-cli": "^11.0.0",
+    "happy-dom": "^20.11.12",
     "husky": "^9.1.7",
     "jscpd": "^5.0.15",
     "serwist": "^9.5.12",
