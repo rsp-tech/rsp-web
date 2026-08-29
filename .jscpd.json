@@ -3,6 +3,7 @@
     "**/database.types.ts",
     "**/node_modules/**",
     "**/.next/**",
-    "**/pnpm-lock.yaml"
+    "**/pnpm-lock.yaml",
+    "**/*.test.*"
   ]
 }
