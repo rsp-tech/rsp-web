@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("@/lib/supabase-server", () => ({
+vi.mock("@/lib/supabase-server", async () => ({
   getSupabaseServerClient: () => ({
     from: () => ({
       insert: () => ({

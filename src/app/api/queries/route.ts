@@ -1,5 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { getSupabaseServerClient } from "@/lib/supabase-server";
+import {
+  getSupabaseServerClient,
+  handleMutationResult,
+} from "@/lib/supabase-server";
 
 interface QueryRequestBody {
   guest_name?: string | null;
@@ -36,15 +39,7 @@ export const POST = async (req: NextRequest) => {
       .select()
       .single();
 
-    if (error) {
-      console.error("Failed to insert user query on server:", error);
-      return NextResponse.json(
-        { error: error.message || "Database insert failed" },
-        { status: 500 },
-      );
-    }
-
-    return NextResponse.json({ success: true, data });
+    return handleMutationResult(data, error, "insert user query on server");
   } catch (err: unknown) {
     console.error("Error processing query submit route:", err);
     const errorMessage =

@@ -20,6 +20,35 @@ import {
 import { getCachedLiveDiff } from "./live-diff-fetcher";
 import { getCachedSyncMeta } from "./meta-service";
 
+const mergeAndPickTableRows = (
+  baselineRows: Record<string, unknown>[],
+  liveDiffRows: Record<string, unknown>[],
+  clientWatermark: string,
+  highestBaselineUpdatedAt: string | null,
+): Record<string, unknown>[] => {
+  const pickedBaseline = sliceAfterWatermark(
+    baselineRows,
+    clientWatermark,
+    highestBaselineUpdatedAt,
+  );
+
+  const pickedLive = liveDiffRows.filter(
+    (r) =>
+      !clientWatermark ||
+      (r["updated_at"] && (r["updated_at"] as string) > clientWatermark),
+  );
+
+  const mergedMap = new Map<unknown, Record<string, unknown>>();
+  for (const row of pickedBaseline) {
+    if (row["id"] !== undefined) mergedMap.set(row["id"], row);
+  }
+  for (const row of pickedLive) {
+    if (row["id"] !== undefined) mergedMap.set(row["id"], row);
+  }
+
+  return Array.from(mergedMap.values());
+};
+
 const resolvePublicTableDelta = async (
   table: SyncTable,
   clientWatermark: string,
@@ -39,31 +68,15 @@ const resolvePublicTableDelta = async (
     null;
 
   const liveDiffRows = await getCachedLiveDiff(table, highestBaselineUpdatedAt);
-
-  const pickedPublic = sliceAfterWatermark(
+  const mergedRows = mergeAndPickTableRows(
     publicRows,
+    liveDiffRows,
     clientWatermark,
     highestBaselineUpdatedAt,
   );
 
-  const pickedLive = liveDiffRows.filter(
-    (r) =>
-      !clientWatermark ||
-      (r["updated_at"] && (r["updated_at"] as string) > clientWatermark),
-  );
-
-  const mergedMap = new Map<unknown, Record<string, unknown>>();
-  for (const row of pickedPublic) {
-    if (row["id"] !== undefined) mergedMap.set(row["id"], row);
-  }
-  for (const row of pickedLive) {
-    if (row["id"] !== undefined) mergedMap.set(row["id"], row);
-  }
-
   const resultDelta = stripUpdatedAt(
-    Array.from(mergedMap.values())
-      .map((r) => pickSyncColumns(r, table))
-      .sort(sortByDate()),
+    mergedRows.map((r) => pickSyncColumns(r, table)).sort(sortByDate()),
   );
   return [table, resultDelta];
 };
@@ -88,48 +101,44 @@ const resolveRoleTableDelta = async (
     highestBaselineUpdatedAt,
     roleId,
   );
-
-  const pickedRole = sliceAfterWatermark(
+  const mergedRows = mergeAndPickTableRows(
     roleRows,
+    liveDiffRows,
     clientWatermark,
     highestBaselineUpdatedAt,
   );
 
-  const pickedLive = liveDiffRows.filter(
-    (r) =>
-      !clientWatermark ||
-      (r["updated_at"] && (r["updated_at"] as string) > clientWatermark),
-  );
-
-  const mergedMap = new Map<unknown, Record<string, unknown>>();
-  for (const row of pickedRole) {
-    if (row["id"] !== undefined) mergedMap.set(row["id"], row);
-  }
-  for (const row of pickedLive) {
-    if (row["id"] !== undefined) mergedMap.set(row["id"], row);
-  }
-
   const resultDelta = stripUpdatedAt(
-    Array.from(mergedMap.values())
-      .map((r) => pickSyncColumns(r, table))
-      .sort(sortByDate()),
+    mergedRows.map((r) => pickSyncColumns(r, table)).sort(sortByDate()),
   );
   return [table, resultDelta];
+};
+
+const findDirtyTables = (
+  watermarks: ClientWatermarks,
+  serverSyncMeta: Record<string, string>,
+  isValidTable: (table: string) => boolean,
+): SyncTable[] => {
+  const dirtyTables: SyncTable[] = [];
+  for (const [table, clientTime] of Object.entries(watermarks)) {
+    if (!isValidTable(table)) continue;
+    const serverTime = serverSyncMeta[table];
+    if (serverTime && serverTime > (clientTime || "")) {
+      dirtyTables.push(table as SyncTable);
+    }
+  }
+  return dirtyTables;
 };
 
 export const computePublicSyncDelta = async (
   watermarks: ClientWatermarks,
 ): Promise<SyncResponseData> => {
   const serverSyncMeta = await getCachedSyncMeta();
-
-  const dirtyTables: SyncTable[] = [];
-  for (const [table, clientTime] of Object.entries(watermarks)) {
-    if (!(table in SYNC_COLUMNS)) continue;
-    const serverTime = serverSyncMeta[table];
-    if (serverTime && serverTime > (clientTime || "")) {
-      dirtyTables.push(table as SyncTable);
-    }
-  }
+  const dirtyTables = findDirtyTables(
+    watermarks,
+    serverSyncMeta,
+    (table) => table in SYNC_COLUMNS,
+  );
 
   if (dirtyTables.length === 0) {
     return {
@@ -157,15 +166,9 @@ export const computeRoleSyncDelta = async (
   roleId: number,
 ): Promise<SyncResponseData> => {
   const serverSyncMeta = await getCachedSyncMeta();
-
-  const dirtyTables: SyncTable[] = [];
-  for (const [table, clientTime] of Object.entries(watermarks)) {
-    if (!(ROLE_SYNCED_TABLES as readonly string[]).includes(table)) continue;
-    const serverTime = serverSyncMeta[table];
-    if (serverTime && serverTime > (clientTime || "")) {
-      dirtyTables.push(table as SyncTable);
-    }
-  }
+  const dirtyTables = findDirtyTables(watermarks, serverSyncMeta, (table) =>
+    (ROLE_SYNCED_TABLES as readonly string[]).includes(table),
+  );
 
   if (dirtyTables.length === 0) {
     return {
@@ -231,27 +234,14 @@ export const computeUserSyncDelta = async (
         highestBaselineUpdatedAt,
       );
 
-      const pickedBaseline = sliceAfterWatermark(
+      const mergedRows = mergeAndPickTableRows(
         baselineRows,
+        liveDiffRows,
         clientWatermark,
         highestBaselineUpdatedAt,
       );
 
-      const pickedLive = liveDiffRows.filter(
-        (r) =>
-          !clientWatermark ||
-          (r["updated_at"] && (r["updated_at"] as string) > clientWatermark),
-      );
-
-      const mergedMap = new Map<unknown, Record<string, unknown>>();
-      for (const row of pickedBaseline) {
-        if (row["id"] !== undefined) mergedMap.set(row["id"], row);
-      }
-      for (const row of pickedLive) {
-        if (row["id"] !== undefined) mergedMap.set(row["id"], row);
-      }
-
-      const userRows = Array.from(mergedMap.values()).filter((row) => {
+      const userRows = mergedRows.filter((row) => {
         if (table === STORE.USERS) {
           return row["id"] === userId;
         }

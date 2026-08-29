@@ -12,3 +12,18 @@ export const getSupabaseServerClient = () =>
       schema: "prod",
     },
   });
+
+export const handleMutationResult = <T>(
+  data: T,
+  error: { message?: string } | null,
+  failureContext: string,
+) => {
+  if (error) {
+    console.error(`Failed to ${failureContext}:`, error);
+    return Response.json(
+      { error: error.message || "Database insert failed" },
+      { status: 500 },
+    );
+  }
+  return Response.json({ success: true, data });
+};

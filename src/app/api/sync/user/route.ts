@@ -1,7 +1,7 @@
 import type { NextRequest } from "next/server";
 import { STORE } from "@/constants";
-import { getSupabaseServerClient } from "@/lib/supabase-server";
 import type { SyncRequestBody } from "@/types";
+import { getAuthenticatedUser } from "../auth";
 import { getCachedUserTable } from "../baseline-cache";
 import { computeUserSyncDelta } from "../delta-service";
 import { getCachedSyncMeta } from "../meta-service";
@@ -10,26 +10,9 @@ export const dynamic = "force-dynamic";
 
 export const GET = async (request: NextRequest) => {
   try {
-    const authHeader = request.headers.get("Authorization");
-
-    if (!authHeader?.startsWith("Bearer ")) {
-      return new Response("Unauthorized", {
-        status: 401,
-      });
-    }
-
-    const token = authHeader.slice(7);
-    const supabase = getSupabaseServerClient();
-
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(token);
-
-    if (error || !user) {
-      return new Response("Unauthorized", {
-        status: 401,
-      });
+    const { user, errorResponse } = await getAuthenticatedUser(request);
+    if (errorResponse || !user) {
+      return errorResponse || new Response("Unauthorized", { status: 401 });
     }
 
     const [
@@ -82,26 +65,9 @@ export const GET = async (request: NextRequest) => {
 
 export const POST = async (request: NextRequest) => {
   try {
-    const authHeader = request.headers.get("Authorization");
-
-    if (!authHeader?.startsWith("Bearer ")) {
-      return new Response("Unauthorized", {
-        status: 401,
-      });
-    }
-
-    const token = authHeader.slice(7);
-    const supabase = getSupabaseServerClient();
-
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(token);
-
-    if (error || !user) {
-      return new Response("Unauthorized", {
-        status: 401,
-      });
+    const { user, errorResponse } = await getAuthenticatedUser(request);
+    if (errorResponse || !user) {
+      return errorResponse || new Response("Unauthorized", { status: 401 });
     }
 
     const body = (await request.json()) as SyncRequestBody;

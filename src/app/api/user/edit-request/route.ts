@@ -1,5 +1,8 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { getSupabaseServerClient } from "@/lib/supabase-server";
+import {
+  getSupabaseServerClient,
+  handleMutationResult,
+} from "@/lib/supabase-server";
 
 interface EditRequestBody {
   user_id: string;
@@ -47,15 +50,7 @@ export const POST = async (req: NextRequest) => {
       .select()
       .single();
 
-    if (error) {
-      console.error("Failed to submit user edit request:", error);
-      return NextResponse.json(
-        { error: error.message || "Database insert failed" },
-        { status: 500 },
-      );
-    }
-
-    return NextResponse.json({ success: true, data });
+    return handleMutationResult(data, error, "submit user edit request");
   } catch (err: unknown) {
     console.error("Error processing edit-request submit route:", err);
     const errorMessage =

@@ -1,3 +1,4 @@
+import type { User } from "@supabase/supabase-js";
 import { type NextRequest, NextResponse } from "next/server";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
@@ -63,4 +64,36 @@ export const getAuthenticatedRoleId = async (
   }
 
   return { roleId };
+};
+
+export interface AuthenticatedUserResult {
+  user?: User;
+  errorResponse?: Response;
+}
+
+export const getAuthenticatedUser = async (
+  request: NextRequest,
+): Promise<AuthenticatedUserResult> => {
+  const authHeader = request.headers.get("Authorization");
+  if (!authHeader?.startsWith("Bearer ")) {
+    return {
+      errorResponse: new Response("Unauthorized", { status: 401 }),
+    };
+  }
+
+  const token = authHeader.slice(7);
+  const supabase = getSupabaseServerClient();
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser(token);
+
+  if (error || !user) {
+    return {
+      errorResponse: new Response("Unauthorized", { status: 401 }),
+    };
+  }
+
+  return { user };
 };
