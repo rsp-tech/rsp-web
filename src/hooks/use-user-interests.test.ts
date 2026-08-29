@@ -1,10 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { STORE } from "@/constants";
 
 vi.mock("@/lib/idb", () => ({
   getDB: () =>
     Promise.resolve({
-      getAll: (store: string) =>
+      getAll: (_store: string) =>
         Promise.resolve([
           { id: "int_1", user_id: "user_1", service_id: 10 },
           { id: "int_2", user_id: "user_2", service_id: 20 },
@@ -28,4 +27,3 @@ describe.concurrent("use-user-service-interests suite", () => {
     expect(list?.[0]?.service_id).toBe(10);
   });
 });
-

@@ -6,7 +6,9 @@ vi.mock("@/lib/supabase-server", () => ({
       select: () => ({
         neq: () =>
           Promise.resolve({
-            data: [{ url_path: "gita.ch1", updated_at: "2026-01-01T00:00:00Z" }],
+            data: [
+              { url_path: "gita.ch1", updated_at: "2026-01-01T00:00:00Z" },
+            ],
             error: null,
           }),
       }),
@@ -23,4 +25,3 @@ describe.concurrent("app/sitemap suite", () => {
     expect(entries.some((e) => e.url.includes("gita/ch1"))).toBe(true);
   });
 });
-

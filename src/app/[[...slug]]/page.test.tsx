@@ -45,4 +45,3 @@ describe.concurrent("src/app/[[...slug]]/page.tsx suite", () => {
     expect(tree).toBeDefined();
   });
 });
-

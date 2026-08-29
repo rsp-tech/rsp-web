@@ -39,4 +39,3 @@ describe.concurrent("workers/cleanup-helpers suite", () => {
     expect(res.clearedRole).toBe(true);
   });
 });
-

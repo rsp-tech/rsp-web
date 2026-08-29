@@ -17,7 +17,7 @@ vi.mock("sonner", () => ({
 }));
 
 import { handleSyncSuccess } from "./sync-helpers";
-import { runRoleSync, useRoleSync } from "./use-role-sync";
+import { runRoleSync } from "./use-role-sync";
 
 describe.concurrent("use-role-sync hook suite", () => {
   it.concurrent("runRoleSync dispatches role sync job and handles success", async () => {
@@ -32,4 +32,3 @@ describe.concurrent("use-role-sync hook suite", () => {
     expect(handleSyncSuccess).toHaveBeenCalled();
   });
 });
-

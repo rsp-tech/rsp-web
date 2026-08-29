@@ -37,4 +37,3 @@ describe.concurrent("use-user-queries-and-replies suite", () => {
     expect(data?.replies["q1"]?.[0]?.message).toBe("With devotion");
   });
 });
-

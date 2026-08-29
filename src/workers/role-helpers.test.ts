@@ -39,21 +39,18 @@ describe.concurrent("workers/role-helpers suite", () => {
     });
 
     const mockDb: any = {
-      getAll: () => Promise.resolve([{ id: "recordings", updated_at: "2026-01-01" }]),
+      getAll: () =>
+        Promise.resolve([{ id: "recordings", updated_at: "2026-01-01" }]),
       get: () => Promise.resolve(1),
       put: () => Promise.resolve(),
     };
 
-
     const { syncRoleData } = await import("./sync-role-helpers");
-    const res = await syncRoleData(
-      mockDb,
-      "https://localhost",
-      { roleId: 1, userId: "u1", accessToken: "token123" },
-    );
+    const res = await syncRoleData(mockDb, "https://localhost", {
+      roleId: 1,
+      userId: "u1",
+      accessToken: "token123",
+    });
     expect(res.changedTables).toContain("recordings");
   });
 });
-
-
-

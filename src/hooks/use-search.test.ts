@@ -28,7 +28,4 @@ describe.concurrent("use-search hook suite", () => {
     expect(invalidateQueries).toHaveBeenCalled();
     terminateSearchWorker();
   });
-
 });
-
-

@@ -1,10 +1,9 @@
 import { describe, expect, it, vi } from "vitest";
-import { STORE } from "@/constants";
 
 vi.mock("@/lib/idb", () => ({
   getDB: () =>
     Promise.resolve({
-      getAll: (store: string) =>
+      getAll: (_store: string) =>
         Promise.resolve([
           { id: "req_1", user_id: "user_1", status: "pending", new_data: {} },
         ]),
@@ -27,4 +26,3 @@ describe.concurrent("use-user-pending-request-idb suite", () => {
     expect(req?.status).toBe("pending");
   });
 });
-

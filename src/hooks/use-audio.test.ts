@@ -4,7 +4,7 @@ vi.mock("react", async () => {
   const actual = await vi.importActual("react");
   return {
     ...actual,
-    useSyncExternalStore: (subscribe: any, getSnapshot: any) => getSnapshot(),
+    useSyncExternalStore: (_subscribe: any, getSnapshot: any) => getSnapshot(),
   };
 });
 
@@ -13,7 +13,6 @@ import {
   useAudioPlayback,
   useAudioTimeline,
 } from "./use-audio";
-
 
 describe.concurrent("use-audio hook suite", () => {
   it.concurrent("useAudioPlayback returns playback control getters", () => {
@@ -37,5 +36,3 @@ describe.concurrent("use-audio hook suite", () => {
     expect(typeof config.setRate).toBe("function");
   });
 });
-
-

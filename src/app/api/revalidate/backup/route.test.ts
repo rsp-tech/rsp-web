@@ -19,4 +19,3 @@ describe.concurrent("app/api/revalidate/backup/route suite", () => {
     expect(res.status).toBe(200);
   });
 });
-

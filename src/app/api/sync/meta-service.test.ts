@@ -16,7 +16,6 @@ vi.mock("@/lib/supabase-server", () => ({
   }),
 }));
 
-
 describe.concurrent("api/sync/meta-service suite", () => {
   it.concurrent("getCachedSyncMeta returns mapping of table updated_at timestamps", async () => {
     const { getCachedSyncMeta } = await import("./meta-service");

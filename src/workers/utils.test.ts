@@ -6,8 +6,10 @@ describe.concurrent("workers/utils suite", () => {
     const { toSyncResult } = await import("./utils");
     const mockDb: any = {
       get: (store: string, id: number) => {
-        if (store === STORE.CATEGORIES) return Promise.resolve({ url_path: `cat_${id}` });
-        if (store === STORE.RECORDINGS) return Promise.resolve({ category_id: 99 });
+        if (store === STORE.CATEGORIES)
+          return Promise.resolve({ url_path: `cat_${id}` });
+        if (store === STORE.RECORDINGS)
+          return Promise.resolve({ category_id: 99 });
         return Promise.resolve(null);
       },
     };
@@ -22,7 +24,13 @@ describe.concurrent("workers/utils suite", () => {
       },
       { categories: [1], recordings: [], materials: [] },
       [STORE.CATEGORIES],
-      { categories: [], recordings: [], materials: [], replies: [], requests: [] },
+      {
+        categories: [],
+        recordings: [],
+        materials: [],
+        replies: [],
+        requests: [],
+      },
       false,
       false,
     );
@@ -33,7 +41,10 @@ describe.concurrent("workers/utils suite", () => {
 
   it.concurrent("syncCacheAndIDB scans cache and syncs ledger", async () => {
     const mockCache = {
-      keys: () => Promise.resolve([new Request("https://cdn.example.com/audio/track123")]),
+      keys: () =>
+        Promise.resolve([
+          new Request("https://cdn.example.com/audio/track123"),
+        ]),
       match: () =>
         Promise.resolve({
           headers: new Headers({ "content-length": "2048" }),
@@ -58,7 +69,7 @@ describe.concurrent("workers/utils suite", () => {
             }),
         },
       }),
-      put: (store: string, entry: any) => {
+      put: (_store: string, entry: any) => {
         putEntries.push(entry);
         return Promise.resolve();
       },
@@ -74,8 +85,9 @@ describe.concurrent("workers/utils suite", () => {
   it.concurrent("isDatabaseStale determines whether local IndexedDB is outdated", async () => {
     const { isDatabaseStale } = await import("./utils");
     const mockDb: any = {
-      get: vi.fn().mockImplementation((store, id) => {
-        if (id === STORE.RECORDINGS) return Promise.resolve({ updated_at: "2026-01-01T00:00:00Z" });
+      get: vi.fn().mockImplementation((_store, id) => {
+        if (id === STORE.RECORDINGS)
+          return Promise.resolve({ updated_at: "2026-01-01T00:00:00Z" });
         return Promise.resolve(null);
       }),
     };
@@ -85,7 +97,9 @@ describe.concurrent("workers/utils suite", () => {
 
     // Up to date: exact match
     expect(
-      await isDatabaseStale(mockDb, { [STORE.RECORDINGS]: "2026-01-01T00:00:00Z" }),
+      await isDatabaseStale(mockDb, {
+        [STORE.RECORDINGS]: "2026-01-01T00:00:00Z",
+      }),
     ).toBe(false);
   });
 
@@ -112,7 +126,9 @@ describe.concurrent("workers/utils suite", () => {
     const changedTables = await applyDeltas(
       mockDb,
       {
-        [STORE.RECORDINGS]: [{ id: 1, title: "BG 1.1", created_at: "2026-01-01" }],
+        [STORE.RECORDINGS]: [
+          { id: 1, title: "BG 1.1", created_at: "2026-01-01" },
+        ],
       },
       { [STORE.RECORDINGS]: "2026-01-02T00:00:00Z" },
       {},
@@ -123,13 +139,90 @@ describe.concurrent("workers/utils suite", () => {
         changedRecordings: {},
         bubbledChangeRecordingIds: new Set(),
       },
-      { recordings: [], materials: [], categories: [], replies: [], requests: [] },
+      {
+        recordings: [],
+        materials: [],
+        categories: [],
+        replies: [],
+        requests: [],
+      },
     );
 
     expect(changedTables).toContain(STORE.RECORDINGS);
     expect(putMeta).toHaveBeenCalled();
   });
+
+  it.concurrent("fetchPublicSyncDeltas and fetchRoleSyncDeltas query sync APIs", async () => {
+    const { fetchPublicSyncDeltas, fetchRoleSyncDeltas } = await import(
+      "./utils"
+    );
+
+    const mockFetch = vi.fn().mockResolvedValue({
+      ok: true,
+      json: () =>
+        Promise.resolve({
+          deltas: { [STORE.RECORDINGS]: [] },
+          watermarks: { [STORE.RECORDINGS]: "2026-01-01" },
+        }),
+    });
+    globalThis.fetch = mockFetch;
+
+    const pubRes = await fetchPublicSyncDeltas("https://api.test", {
+      [STORE.RECORDINGS]: "2026-01-01",
+    });
+    expect(pubRes?.deltas).toBeDefined();
+
+    const roleRes = await fetchRoleSyncDeltas(
+      "https://api.test",
+      { [STORE.RECORDINGS]: "2026-01-01" },
+      "jwt_token_123",
+    );
+    expect(roleRes?.deltas).toBeDefined();
+
+    const { fetchUserSyncDeltas, mergeDeltas, toSyncResult } = await import(
+      "./utils"
+    );
+
+    const userRes = await fetchUserSyncDeltas(
+      "https://api.test",
+      { [STORE.USER_QUERIES]: "2026-01-01" },
+      "jwt_token_123",
+    );
+    expect(userRes?.deltas).toBeDefined();
+
+    const merged = mergeDeltas(
+      { [STORE.RECORDINGS]: [{ id: 1, title: "Public 1" }] },
+      {
+        [STORE.RECORDINGS]: [
+          { id: 1, title: "Role 1" },
+          { id: 2, title: "Role 2" },
+        ],
+      },
+    );
+    expect(merged[STORE.RECORDINGS]?.length).toBe(2);
+
+    const testDb: any = {
+      get: vi.fn().mockResolvedValue(null),
+    };
+
+    const syncRes = await toSyncResult(
+      testDb,
+      {
+        changedCategories: {},
+        bubbledChangeCategoryIds: new Set(),
+        changedRecordings: {},
+        bubbledChangeRecordingIds: new Set(),
+      },
+      { recordings: [], categories: [], materials: [] },
+      [STORE.RECORDINGS],
+      {
+        recordings: [],
+        materials: [],
+        categories: [],
+        replies: [],
+        requests: [],
+      },
+    );
+    expect(syncRes.changedTables).toContain(STORE.RECORDINGS);
+  });
 });
-
-
-

@@ -16,11 +16,10 @@ export default defineConfig({
     },
     testTimeout: 30000,
     hookTimeout: 30000,
-    maxConcurrency: 50,
     coverage: {
       provider: "v8",
-      clean: true,
-      cleanOnRerun: true,
+      clean: false,
+      cleanOnRerun: false,
       reporter: ["text", "json-summary"],
       reportsDirectory: "./coverage",
       include: ["src/**/*.{ts,tsx}"],
@@ -36,5 +35,3 @@ export default defineConfig({
     },
   },
 });
-
-

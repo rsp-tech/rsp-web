@@ -8,4 +8,3 @@ describe.concurrent("src/app/api/sync/route.ts suite", () => {
     expect(mod).toBeDefined();
   });
 });
-

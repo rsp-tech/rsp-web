@@ -23,4 +23,3 @@ describe.concurrent("use-categories suite", () => {
     expect(data?.[0]?.name).toBe("Gita");
   });
 });
-

@@ -4,7 +4,7 @@ vi.mock("@/lib/supabase-server", () => ({
   getSupabaseServerClient: () => ({
     storage: {
       from: () => ({
-        download: (filename: string) =>
+        download: (_filename: string) =>
           Promise.resolve({
             data: new Blob(["img_bytes"], { type: "image/webp" }),
             error: null,
@@ -25,4 +25,3 @@ describe.concurrent("app/api/img/[...path]/route suite", () => {
     expect(res.headers.get("content-type")).toBe("image/webp");
   });
 });
-

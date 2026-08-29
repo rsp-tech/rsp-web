@@ -8,4 +8,3 @@ describe.concurrent("use-metadata suite", () => {
     expect(typeof useLanguages).toBe("function");
   });
 });
-

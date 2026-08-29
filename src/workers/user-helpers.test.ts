@@ -38,21 +38,17 @@ describe.concurrent("workers/user-helpers suite", () => {
     });
 
     const mockDb: any = {
-      getAll: () => Promise.resolve([{ id: "user_queries", updated_at: "2026-01-01" }]),
+      getAll: () =>
+        Promise.resolve([{ id: "user_queries", updated_at: "2026-01-01" }]),
       get: () => Promise.resolve({ updated_at: "2026-01-01" }),
       put: () => Promise.resolve(),
     };
 
-
     const { syncUserData } = await import("./sync-user-helpers");
-    const res = await syncUserData(
-      mockDb,
-      "https://localhost",
-      { userId: "u1", accessToken: "token123" },
-    );
+    const res = await syncUserData(mockDb, "https://localhost", {
+      userId: "u1",
+      accessToken: "token123",
+    });
     expect(res.changedTables).toContain("user_queries");
   });
 });
-
-
-

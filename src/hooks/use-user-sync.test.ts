@@ -17,7 +17,7 @@ vi.mock("sonner", () => ({
 }));
 
 import { handleSyncSuccess } from "./sync-helpers";
-import { runUserSync, useUserSync } from "./use-user-sync";
+import { runUserSync } from "./use-user-sync";
 
 describe.concurrent("use-user-sync hook suite", () => {
   it.concurrent("runUserSync dispatches user sync job and handles success", async () => {
@@ -31,4 +31,3 @@ describe.concurrent("use-user-sync hook suite", () => {
     expect(handleSyncSuccess).toHaveBeenCalled();
   });
 });
-

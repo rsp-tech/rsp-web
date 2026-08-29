@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 
 describe.concurrent("api/sync/auth suite", () => {
   it.concurrent("rejects requests without Bearer token", async () => {

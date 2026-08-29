@@ -14,7 +14,7 @@ vi.mock("./sync-helpers", () => ({
 }));
 
 import { handleRoleCleanup, handleUserCleanup } from "./sync-helpers";
-import { runCleanup, useCleanup } from "./use-cleanup";
+import { runCleanup } from "./use-cleanup";
 
 describe.concurrent("use-cleanup suite", () => {
   it.concurrent("runCleanup dispatches job and invokes cleanup handlers", async () => {
@@ -24,4 +24,3 @@ describe.concurrent("use-cleanup suite", () => {
     expect(handleRoleCleanup).toHaveBeenCalledWith(queryClient);
   });
 });
-

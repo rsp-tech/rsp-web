@@ -19,7 +19,6 @@ vi.mock("@/lib/supabase-server", () => ({
   }),
 }));
 
-
 describe.concurrent("api/queries/reply/route suite", () => {
   it.concurrent("POST inserts reply for authorized admin", async () => {
     const { POST } = await import("./route");

@@ -14,4 +14,3 @@ describe.concurrent("src/app/sw.ts suite", () => {
     expect(mod).toBeDefined();
   });
 });
-

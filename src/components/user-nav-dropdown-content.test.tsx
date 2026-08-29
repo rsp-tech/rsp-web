@@ -5,15 +5,24 @@ vi.mock("@/hooks/use-is-mobile", () => ({ useIsMobile: () => false }));
 vi.mock("@/hooks/use-online-status", () => ({ useOnlineStatus: () => true }));
 vi.mock("@/lib/supabase-browser", () => ({
   getSupabaseBrowserClient: () => ({
-    auth: { getUser: () => Promise.resolve({ data: { user: null } }), onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }) },
-    from: () => ({ select: () => ({ eq: () => Promise.resolve({ data: [] }) }) }),
+    auth: {
+      getUser: () => Promise.resolve({ data: { user: null } }),
+      onAuthStateChange: () => ({
+        data: { subscription: { unsubscribe: () => {} } },
+      }),
+    },
+    from: () => ({
+      select: () => ({ eq: () => Promise.resolve({ data: [] }) }),
+    }),
   }),
 }));
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
 describe.concurrent("src/components/user-nav-dropdown-content.tsx suite", () => {
   it.concurrent("renders UserNavDropdownContent component without crashing", async () => {
-    const { UserNavDropdownContent } = await import("./user-nav-dropdown-content");
+    const { UserNavDropdownContent } = await import(
+      "./user-nav-dropdown-content"
+    );
     expect(typeof UserNavDropdownContent).toBe("function");
     try {
       const tree = UserNavDropdownContent({});

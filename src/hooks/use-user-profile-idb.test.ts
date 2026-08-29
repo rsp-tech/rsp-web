@@ -1,11 +1,14 @@
 import { describe, expect, it, vi } from "vitest";
-import { STORE } from "@/constants";
 
 vi.mock("@/lib/idb", () => ({
   getDB: () =>
     Promise.resolve({
-      get: (store: string, id: string) =>
-        Promise.resolve({ id, full_name: "Radheshyam", email: "user@test.com" }),
+      get: (_store: string, id: string) =>
+        Promise.resolve({
+          id,
+          full_name: "Radheshyam",
+          email: "user@test.com",
+        }),
     }),
 }));
 
@@ -25,4 +28,3 @@ describe.concurrent("use-user-profile-idb suite", () => {
     expect(profile?.id).toBe("user_1");
   });
 });
-

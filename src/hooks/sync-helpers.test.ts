@@ -44,8 +44,12 @@ describe.concurrent("sync-helpers suite", () => {
     const queryClient: any = { invalidateQueries };
 
     handleTableInvalidations(queryClient, [STORE.QUERY_REPLIES]);
-    expect(invalidateQueries).toHaveBeenCalledWith({ queryKey: [STORE.QUERY_REPLIES] });
-    expect(invalidateQueries).toHaveBeenCalledWith({ queryKey: [STORE.USER_QUERIES] });
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: [STORE.QUERY_REPLIES],
+    });
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: [STORE.USER_QUERIES],
+    });
   });
 
   it.concurrent("handleCategoryPathInvalidations invalidates paths and wildcards", () => {
@@ -53,11 +57,17 @@ describe.concurrent("sync-helpers suite", () => {
     const queryClient: any = { invalidateQueries };
 
     handleCategoryPathInvalidations(queryClient, ["*"]);
-    expect(invalidateQueries).toHaveBeenCalledWith({ queryKey: [QUERY_KEY.ALL_CATEGORIES] });
-    expect(invalidateQueries).toHaveBeenCalledWith({ queryKey: [QUERY_KEY.CATEGORY_PAGE] });
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: [QUERY_KEY.ALL_CATEGORIES],
+    });
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: [QUERY_KEY.CATEGORY_PAGE],
+    });
 
     handleCategoryPathInvalidations(queryClient, ["gita/ch1"]);
-    expect(invalidateQueries).toHaveBeenCalledWith({ queryKey: [QUERY_KEY.CATEGORY_PAGE, "gita/ch1"] });
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: [QUERY_KEY.CATEGORY_PAGE, "gita/ch1"],
+    });
   });
 
   it.concurrent("handleSyncSuccess applies full sync result dispatching", () => {
@@ -78,4 +88,3 @@ describe.concurrent("sync-helpers suite", () => {
     expect(invalidateQueries).toHaveBeenCalled();
   });
 });
-

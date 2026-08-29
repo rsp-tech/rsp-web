@@ -1,5 +1,4 @@
 import { describe, expect, it, vi } from "vitest";
-import { STORE } from "@/constants";
 
 vi.mock("./utils", () => ({
   isDatabaseStale: () => Promise.resolve(false),
@@ -36,7 +35,8 @@ describe.concurrent("workers/public-helpers suite", () => {
     });
 
     const mockDb: any = {
-      getAll: () => Promise.resolve([{ id: "categories", updated_at: "2026-01-01" }]),
+      getAll: () =>
+        Promise.resolve([{ id: "categories", updated_at: "2026-01-01" }]),
     };
 
     const { syncPublicData } = await import("./sync-public-helpers");
@@ -44,6 +44,3 @@ describe.concurrent("workers/public-helpers suite", () => {
     expect(res.changedTables).toContain("categories");
   });
 });
-
-
-

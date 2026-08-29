@@ -44,4 +44,3 @@ describe.concurrent("app/api/queries/route suite", () => {
     expect(body.data.id).toBe("q1");
   });
 });
-

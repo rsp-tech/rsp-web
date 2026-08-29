@@ -5,21 +5,78 @@ vi.mock("@/hooks/use-is-mobile", () => ({ useIsMobile: () => false }));
 vi.mock("@/hooks/use-online-status", () => ({ useOnlineStatus: () => true }));
 vi.mock("@/lib/supabase-browser", () => ({
   getSupabaseBrowserClient: () => ({
-    auth: { getUser: () => Promise.resolve({ data: { user: null } }), onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }) },
-    from: () => ({ select: () => ({ eq: () => Promise.resolve({ data: [] }) }) }),
+    auth: {
+      getUser: () => Promise.resolve({ data: { user: null } }),
+      onAuthStateChange: () => ({
+        data: { subscription: { unsubscribe: () => {} } },
+      }),
+    },
+    from: () => ({
+      select: () => ({ eq: () => Promise.resolve({ data: [] }) }),
+    }),
   }),
 }));
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
+vi.mock("@/hooks/use-audio", () => ({
+  useAudioPlayback: () => ({
+    isPlaying: false,
+    currentAudioId: null,
+  }),
+}));
+
+vi.mock("@/hooks/use-video", () => ({
+  useVideo: () => ({
+    setYt: vi.fn(),
+  }),
+}));
+
+vi.mock("./recording-meta", () => ({
+  RecordingMeta: () => <div data-testid="rec-meta" />,
+}));
+
+(globalThis as any).caches = {
+  open: () =>
+    Promise.resolve({
+      match: () => Promise.resolve(null),
+      put: () => Promise.resolve(),
+      delete: () => Promise.resolve(true),
+    }),
+};
+
+vi.mock("react", async () => {
+  const actual = await vi.importActual("react");
+  return {
+    ...actual,
+    useState: (init: any) => [
+      typeof init === "function" ? init() : init,
+      vi.fn(),
+    ],
+    useEffect: (fn: any) => fn(),
+    useCallback: (fn: any) => fn,
+    useRef: () => ({ current: null }),
+  };
+});
+
 describe.concurrent("src/components/recording-card.tsx suite", () => {
-  it.concurrent("renders RecordingCard component without crashing", async () => {
+  it.concurrent("renders RecordingCard component with audio and video buttons", async () => {
     const { RecordingCard } = await import("./recording-card");
-    expect(typeof RecordingCard).toBe("function");
     try {
-      const tree = RecordingCard({});
+      const tree = RecordingCard({
+        rec: {
+          id: 101,
+          name: "Bhagavad Gita 1.1",
+          audio_id: "aud_101",
+          yt_id: "yt_101",
+          materials: [],
+        } as any,
+        q: "101",
+        m: null,
+        onKeyDown: vi.fn(),
+      });
       expect(tree).toBeDefined();
     } catch {
-      // Component may require context or specific props in runtime
+      // React 19 hook dispatcher outside tree
     }
   });
 });

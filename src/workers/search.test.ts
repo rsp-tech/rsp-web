@@ -37,7 +37,6 @@ describe.concurrent("workers/search engine suite", () => {
       postMessage: mockPostMessage,
     };
 
-
     await import("./search");
 
     if (typeof self.onmessage === "function") {
@@ -65,7 +64,6 @@ describe.concurrent("workers/search engine suite", () => {
       ).toBe(true);
     }
   });
-
 
   const recordingsSchema = {
     id: "string",
@@ -196,5 +194,29 @@ describe.concurrent("workers/search engine suite", () => {
       } as any);
     }
   });
-});
 
+  it.concurrent("executes SEARCH_ALL with multi-criteria filters", async () => {
+    if (typeof self.onmessage === "function") {
+      await self.onmessage({
+        data: {
+          type: WORKER_MSG.SEARCH_ALL,
+          payload: {
+            term: "Gita",
+            targets: [STORE.RECORDINGS, STORE.CATEGORIES, STORE.MATERIALS],
+            reqId: "req_filtered",
+            filters: {
+              category_id: 10,
+              category_ids: [10],
+              venues_id: 1,
+              event_id: 1,
+              speaker_ids: ["1"],
+              lang_ids: ["1"],
+              date_start: "2020-01-01",
+              date_end: "2026-12-31",
+            },
+          },
+        },
+      } as any);
+    }
+  });
+});

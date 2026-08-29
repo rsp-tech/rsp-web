@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 vi.mock("@/app/api/revalidate/auth", () => ({
   verifyRevalidateAuth: (req: Request) => {
     const auth = req.headers.get("authorization");
-    if (!auth || !auth.startsWith("Bearer valid_token")) {
+    if (!auth?.startsWith("Bearer valid_token")) {
       return Promise.resolve(
         new Response(JSON.stringify({ error: "Unauthorized" }), {
           status: 401,
@@ -28,4 +28,3 @@ describe.concurrent("api/revalidate suite", () => {
     expect(res.status).toBe(401);
   });
 });
-

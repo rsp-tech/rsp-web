@@ -10,7 +10,8 @@ vi.mock("../auth", () => ({
 }));
 
 vi.mock("../utils", () => ({
-  fetchBackupAsset: () => Promise.resolve(new Response("ZIP_CONTENT", { status: 200 })),
+  fetchBackupAsset: () =>
+    Promise.resolve(new Response("ZIP_CONTENT", { status: 200 })),
 }));
 
 describe.concurrent("api/sync/[id]/route suite", () => {

@@ -17,7 +17,7 @@ vi.mock("sonner", () => ({
 }));
 
 import { handleSyncSuccess } from "./sync-helpers";
-import { runPublicSync, usePublicSync } from "./use-public-sync";
+import { runPublicSync } from "./use-public-sync";
 
 describe.concurrent("use-public-sync hook suite", () => {
   it.concurrent("runPublicSync dispatches public sync job and processes result", async () => {
@@ -27,4 +27,3 @@ describe.concurrent("use-public-sync hook suite", () => {
     expect(handleSyncSuccess).toHaveBeenCalled();
   });
 });
-

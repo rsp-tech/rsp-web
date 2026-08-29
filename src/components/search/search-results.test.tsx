@@ -5,8 +5,15 @@ vi.mock("@/hooks/use-is-mobile", () => ({ useIsMobile: () => false }));
 vi.mock("@/hooks/use-online-status", () => ({ useOnlineStatus: () => true }));
 vi.mock("@/lib/supabase-browser", () => ({
   getSupabaseBrowserClient: () => ({
-    auth: { getUser: () => Promise.resolve({ data: { user: null } }), onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } }) },
-    from: () => ({ select: () => ({ eq: () => Promise.resolve({ data: [] }) }) }),
+    auth: {
+      getUser: () => Promise.resolve({ data: { user: null } }),
+      onAuthStateChange: () => ({
+        data: { subscription: { unsubscribe: () => {} } },
+      }),
+    },
+    from: () => ({
+      select: () => ({ eq: () => Promise.resolve({ data: [] }) }),
+    }),
   }),
 }));
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
@@ -17,7 +24,9 @@ describe.concurrent("src/components/search/search-results.tsx suite", () => {
     expect(typeof SearchResults).toBe("function");
     try {
       const tree = SearchResults({
-        categories: [{ id: 1, name: "Gita", url_path: "gita", path: "gita" } as any],
+        categories: [
+          { id: 1, name: "Gita", url_path: "gita", path: "gita" } as any,
+        ],
         recordings: [
           {
             id: 10,
@@ -38,5 +47,3 @@ describe.concurrent("src/components/search/search-results.tsx suite", () => {
     }
   });
 });
-
-

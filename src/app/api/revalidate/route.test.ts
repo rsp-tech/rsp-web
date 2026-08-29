@@ -4,8 +4,6 @@ vi.mock("./auth", () => ({
   verifyRevalidateAuth: () => Promise.resolve(null),
 }));
 
-
-
 vi.mock("next/cache", () => ({
   revalidatePath: vi.fn(),
   revalidateTag: vi.fn(),

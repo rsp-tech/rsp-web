@@ -1,17 +1,26 @@
 import { describe, expect, it, vi } from "vitest";
-import { INDEX, STORE } from "@/constants";
+import { STORE } from "@/constants";
 
 vi.mock("@/lib/idb", () => ({
   getDB: () =>
     Promise.resolve({
       getAllFromIndex: (store: string) => {
-        if (store === STORE.CATEGORIES) return Promise.resolve([{ id: 2, name: "Ch 1" }]);
-        if (store === STORE.RECORDINGS) return Promise.resolve([{ id: 10, name: "Lecture 1", order_index: 1 }]);
+        if (store === STORE.CATEGORIES)
+          return Promise.resolve([{ id: 2, name: "Ch 1" }]);
+        if (store === STORE.RECORDINGS)
+          return Promise.resolve([
+            { id: 10, name: "Lecture 1", order_index: 1 },
+          ]);
         return Promise.resolve([]);
       },
       get: () => Promise.resolve(null),
       getFromIndex: () =>
-        Promise.resolve({ id: 1, path: "gita", name: "Bhagavad Gita", url_path: "gita" }),
+        Promise.resolve({
+          id: 1,
+          path: "gita",
+          name: "Bhagavad Gita",
+          url_path: "gita",
+        }),
       transaction: () => ({
         store: {
           index: () => ({
@@ -39,5 +48,3 @@ describe.concurrent("use-category-page hook suite", () => {
     expect(data?.recordings[0]?.materials.length).toBe(1);
   });
 });
-
-

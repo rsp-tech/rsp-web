@@ -8,4 +8,3 @@ describe.concurrent("app/robots suite", () => {
     expect(Array.isArray(config.rules)).toBe(true);
   });
 });
-

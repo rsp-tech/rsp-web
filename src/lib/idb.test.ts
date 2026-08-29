@@ -1,10 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
-import { DB_NAME, DB_VERSION, STORE } from "@/constants";
+import { STORE } from "@/constants";
 
 describe.concurrent("lib/idb suite", () => {
   it.concurrent("returns null when indexedDB is undefined", async () => {
     const originalIDB = globalThis.indexedDB;
-    // @ts-ignore
+    // @ts-expect-error
     delete globalThis.indexedDB;
 
     const { getDB } = await import("./idb");

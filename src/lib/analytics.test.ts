@@ -1,5 +1,5 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import posthog from "posthog-js";
+import { describe, expect, it, vi } from "vitest";
 import { trackEvent } from "./analytics";
 
 // Mock posthog-js
@@ -28,6 +28,3 @@ describe.concurrent("analytics utility", () => {
     expect(posthog.capture).toHaveBeenCalledWith("test_event", { foo: "bar" });
   });
 });
-
-
-

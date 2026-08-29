@@ -10,6 +10,7 @@ const mockQuery: any = {
   gt: () => mockQuery,
   contains: () => mockQuery,
   not: () => mockQuery,
+  // biome-ignore lint/suspicious/noThenProperty: ok
   then: (resolve: any) =>
     resolve({
       data: [{ id: 2, name: "New Cat", updated_at: "2026-01-05T00:00:00Z" }],
@@ -25,12 +26,13 @@ vi.mock("@/lib/supabase-server", () => ({
   }),
 }));
 
-
-
 describe.concurrent("api/sync/live-diff-fetcher suite", () => {
   it.concurrent("getCachedLiveDiff queries rows modified after watermark", async () => {
     const { getCachedLiveDiff } = await import("./live-diff-fetcher");
-    const diffs = await getCachedLiveDiff(STORE.CATEGORIES, "2026-01-01T00:00:00Z");
+    const diffs = await getCachedLiveDiff(
+      STORE.CATEGORIES,
+      "2026-01-01T00:00:00Z",
+    );
     expect(diffs.length).toBeGreaterThan(0);
     expect(diffs[0]?.["id"]).toBe(2);
   });
