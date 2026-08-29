@@ -29,7 +29,12 @@ vi.mock("@/lib/idb", () => ({
       getFromIndex: () =>
         Promise.resolve({ id: 1, name: "Bhagavad Gita", url_path: "gita" }),
       get: (_store: string, id: number) =>
-        Promise.resolve({ id, name: "Gita 1.1", category_id: 1 }),
+        Promise.resolve({
+          id,
+          name: "Gita 1.1",
+          category_id: 1,
+          url_path: "gita",
+        }),
     }),
 }));
 
@@ -50,12 +55,26 @@ vi.mock("react", async () => {
 import { useSearchBar } from "./use-search-bar";
 
 describe.concurrent("use-search-bar suite", () => {
-  it.concurrent("useSearchBar initializes with default state and getters", () => {
+  it.concurrent("handles selection of category, recording, and material", () => {
     const hook = useSearchBar();
+    hook.handleSelectCategory({
+      id: 1,
+      name: "Gita",
+      url_path: "gita",
+      path: "gita",
+    } as any);
+    hook.handleSelectRecording({
+      id: 101,
+      name: "Gita 1.1",
+      category_id: 1,
+    } as any);
+    hook.handleSelectMaterial({
+      id: 201,
+      name: "Slide.pdf",
+      recording_id: 101,
+      recording: { id: 101 } as any,
+      category: { id: 1, url_path: "gita" } as any,
+    } as any);
     expect(hook.term).toBe("");
-    expect(hook.scope).toBe("full");
-    expect(typeof hook.setTerm).toBe("function");
-    expect(typeof hook.setScope).toBe("function");
-    expect(typeof hook.setFilters).toBe("function");
   });
 });

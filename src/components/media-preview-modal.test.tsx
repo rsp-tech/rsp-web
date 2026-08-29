@@ -19,14 +19,33 @@ vi.mock("@/lib/supabase-browser", () => ({
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
 describe.concurrent("src/components/media-preview-modal.tsx suite", () => {
-  it.concurrent("renders MediaPreviewModal component without crashing", async () => {
-    const { MediaPreviewModal } = await import("./media-preview-modal");
-    expect(typeof MediaPreviewModal).toBe("function");
-    try {
-      const tree = MediaPreviewModal({});
-      expect(tree).toBeDefined();
-    } catch {
-      // Component may require context or specific props in runtime
-    }
+  it.concurrent("resolves youtube, drive, and standard asset urls", async () => {
+    const { getMaterialIframeUrl, getMaterialDirectUrl } = await import(
+      "./media-preview-modal"
+    );
+
+    expect(
+      getMaterialIframeUrl({
+        id: 1,
+        name: "Video",
+        uri: "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
+      } as any),
+    ).toContain("youtube-nocookie.com/embed/dQw4w9WgXcQ");
+
+    expect(
+      getMaterialIframeUrl({
+        id: 2,
+        name: "Doc",
+        uri: "1A2B3C4D5E6F7G8H9I0J",
+      } as any),
+    ).toContain("drive.google.com/file/d/1A2B3C4D5E6F7G8H9I0J/preview");
+
+    expect(
+      getMaterialDirectUrl({
+        id: 3,
+        name: "PDF",
+        uri: "https://test.com/book.pdf",
+      } as any),
+    ).toBe("https://test.com/book.pdf");
   });
 });

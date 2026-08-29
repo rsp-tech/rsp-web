@@ -19,14 +19,19 @@ vi.mock("@/lib/supabase-browser", () => ({
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
 describe.concurrent("src/components/search/search-scope-tabs.tsx suite", () => {
-  it.concurrent("renders SearchScopeTabs component without crashing", async () => {
+  it.concurrent("renders SearchScopeTabs with full, current, and sub tab buttons", async () => {
     const { SearchScopeTabs } = await import("./search-scope-tabs");
-    expect(typeof SearchScopeTabs).toBe("function");
-    try {
-      const tree = SearchScopeTabs({});
-      expect(tree).toBeDefined();
-    } catch {
-      // Component may require context or specific props in runtime
-    }
+    const setScope = vi.fn();
+    const tree = SearchScopeTabs({
+      scope: "full",
+      setScope,
+      currentCategory: {
+        id: 1,
+        name: "Bhagavad Gita",
+        url_path: "gita",
+        path: "gita",
+      } as any,
+    });
+    expect(tree).toBeDefined();
   });
 });

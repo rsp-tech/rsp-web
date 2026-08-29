@@ -19,14 +19,33 @@ vi.mock("@/lib/supabase-browser", () => ({
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
 describe.concurrent("src/app/queries/_components/query-reply-thread.tsx suite", () => {
-  it.concurrent("renders QueryReplyThread component without crashing", async () => {
+  it.concurrent("renders empty and populated reply threads", async () => {
     const { QueryReplyThread } = await import("./query-reply-thread");
-    expect(typeof QueryReplyThread).toBe("function");
-    try {
-      const tree = QueryReplyThread({});
-      expect(tree).toBeDefined();
-    } catch {
-      // Component may require context or specific props in runtime
-    }
+
+    const emptyTree = QueryReplyThread({ replies: [], currentUserId: "u1" });
+    expect(emptyTree).toBeDefined();
+
+    const populatedTree = QueryReplyThread({
+      replies: [
+        {
+          id: "r1",
+          query_id: "q1",
+          user_id: "admin1",
+          message: "We have checked the audio stream",
+          updated_at: "2026-01-01T12:00:00Z",
+          users: { name: "Admin Support" },
+        } as any,
+        {
+          id: "r2",
+          query_id: "q1",
+          user_id: "u1",
+          message: "Thank you!",
+          updated_at: "2026-01-01T12:05:00Z",
+          users: { name: "User 1" },
+        } as any,
+      ],
+      currentUserId: "u1",
+    });
+    expect(populatedTree).toBeDefined();
   });
 });

@@ -19,14 +19,14 @@ vi.mock("@/lib/supabase-browser", () => ({
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
 describe.concurrent("src/components/search/search-input.tsx suite", () => {
-  it.concurrent("renders SearchInput component without crashing", async () => {
+  it.concurrent("renders SearchInput component with term and spinner", async () => {
     const { SearchInput } = await import("./search-input");
-    expect(typeof SearchInput).toBe("function");
-    try {
-      const tree = SearchInput({});
-      expect(tree).toBeDefined();
-    } catch {
-      // Component may require context or specific props in runtime
-    }
+    const onChange = vi.fn();
+    const tree = SearchInput({
+      term: "Bhagavad",
+      onChange,
+      searching: true,
+    });
+    expect(tree).toBeDefined();
   });
 });

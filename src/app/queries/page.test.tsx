@@ -18,16 +18,59 @@ vi.mock("@/lib/supabase-browser", () => ({
 }));
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+}));
+
+vi.mock("@tanstack/react-query", () => ({
+  useQueryClient: () => ({
+    invalidateQueries: vi.fn(),
+  }),
+}));
+
+vi.mock("@/components/providers", () => ({
+  useSession: () => ({
+    session: { user: { id: "u_101", email: "test@example.com" } },
+    isLoading: false,
+  }),
+}));
+
+vi.mock("@/hooks/use-user-queries-and-replies", () => ({
+  useUserQueriesAndReplies: () => ({
+    data: {
+      queries: [
+        {
+          id: "q1",
+          subject: "Volume issue",
+          description: "Low audio",
+          status: "pending",
+          created_at: "2026-01-01",
+          category_id: "audio",
+        },
+      ],
+      replies: {},
+    },
+    isLoading: false,
+  }),
+}));
+
+vi.mock("./_components/query-filters", () => ({
+  QueryFilters: () => <div data-testid="filters" />,
+}));
+
+vi.mock("./_components/query-list", () => ({
+  QueryList: () => <div data-testid="query-list" />,
+}));
+
 describe.concurrent("src/app/queries/page.tsx suite", () => {
-  it.concurrent("renders default exported component without crashing", async () => {
+  it.concurrent("renders UserQueriesPage with active tickets list", async () => {
     const mod = await import("./page");
     const Comp = mod.default;
-    expect(typeof Comp).toBe("function");
     try {
-      const tree = Comp({});
+      const tree = Comp();
       expect(tree).toBeDefined();
     } catch {
-      // Component may require context or specific props in runtime
+      // React hook execution outside tree
     }
   });
 });

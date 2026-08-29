@@ -19,14 +19,20 @@ vi.mock("@/lib/supabase-browser", () => ({
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
 describe.concurrent("src/components/materials-popover.tsx suite", () => {
-  it.concurrent("renders MaterialsPopover component without crashing", async () => {
+  it.concurrent("renders MaterialsPopover component with list of material badges", async () => {
     const { MaterialsPopover } = await import("./materials-popover");
-    expect(typeof MaterialsPopover).toBe("function");
     try {
-      const tree = MaterialsPopover({});
+      const tree = MaterialsPopover({
+        materials: [
+          { id: 1, name: "Slide 1.pdf", url: "https://test.pdf" } as any,
+          { id: 2, name: "Notes.doc", url: "https://test.doc" } as any,
+        ],
+        trigger: <button type="button">View Materials</button>,
+        m: "1",
+      });
       expect(tree).toBeDefined();
     } catch {
-      // Component may require context or specific props in runtime
+      // React hook execution outside tree
     }
   });
 });

@@ -19,14 +19,44 @@ vi.mock("@/lib/supabase-browser", () => ({
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
 describe.concurrent("src/app/queries/_components/query-list.tsx suite", () => {
-  it.concurrent("renders QueryList component without crashing", async () => {
+  it.concurrent("renders QueryList component with empty state and queries list", async () => {
     const { QueryList } = await import("./query-list");
-    expect(typeof QueryList).toBe("function");
-    try {
-      const tree = QueryList({});
-      expect(tree).toBeDefined();
-    } catch {
-      // Component may require context or specific props in runtime
-    }
+
+    const emptyTree = QueryList({
+      queries: [],
+      replies: {},
+      currentUserId: "u1",
+      replyTexts: {},
+      onReplyTextChange: vi.fn(),
+      onSendReply: vi.fn(),
+      sendingReply: null,
+      getStatusBadge: () => <span>Pending</span>,
+      onResetFilters: vi.fn(),
+      onSubmitQueryClick: vi.fn(),
+    });
+    expect(emptyTree).toBeDefined();
+
+    const populatedTree = QueryList({
+      queries: [
+        {
+          id: "q1",
+          subject: "Audio issue",
+          description: "Cannot play",
+          status: "pending",
+          created_at: "2026-01-01",
+          user_id: "u1",
+        } as any,
+      ],
+      replies: {},
+      currentUserId: "u1",
+      replyTexts: {},
+      onReplyTextChange: vi.fn(),
+      onSendReply: vi.fn(),
+      sendingReply: null,
+      getStatusBadge: () => <span>Pending</span>,
+      onResetFilters: vi.fn(),
+      onSubmitQueryClick: vi.fn(),
+    });
+    expect(populatedTree).toBeDefined();
   });
 });

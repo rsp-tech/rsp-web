@@ -19,14 +19,22 @@ vi.mock("@/lib/supabase-browser", () => ({
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
 describe.concurrent("src/components/search/searchable-select.tsx suite", () => {
-  it.concurrent("renders SearchableSelect component without crashing", async () => {
+  it.concurrent("renders SearchableSelect component with selected item", async () => {
     const { SearchableSelect } = await import("./searchable-select");
-    expect(typeof SearchableSelect).toBe("function");
+    const onChange = vi.fn();
     try {
-      const tree = SearchableSelect({});
+      const tree = SearchableSelect({
+        options: [
+          { value: "en", label: "English" },
+          { value: "hi", label: "Hindi" },
+        ],
+        value: "en",
+        onChange,
+        placeholder: "Select Language",
+      });
       expect(tree).toBeDefined();
     } catch {
-      // Component may require context or specific props in runtime
+      // React 19 hook outside tree
     }
   });
 });

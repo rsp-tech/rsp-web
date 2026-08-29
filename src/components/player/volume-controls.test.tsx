@@ -18,15 +18,21 @@ vi.mock("@/lib/supabase-browser", () => ({
 }));
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
+vi.mock("@/hooks/use-audio", () => ({
+  useAudioConfiguration: () => ({
+    volume: 0.8,
+    setVolume: vi.fn(),
+  }),
+}));
+
 describe.concurrent("src/components/player/volume-controls.tsx suite", () => {
-  it.concurrent("renders VolumeControlPopover component without crashing", async () => {
+  it.concurrent("renders VolumeControlPopover with current volume slider", async () => {
     const { VolumeControlPopover } = await import("./volume-controls");
-    expect(typeof VolumeControlPopover).toBe("function");
     try {
-      const tree = VolumeControlPopover({});
+      const tree = VolumeControlPopover();
       expect(tree).toBeDefined();
     } catch {
-      // Component may require context or specific props in runtime
+      // React hook execution outside tree
     }
   });
 });

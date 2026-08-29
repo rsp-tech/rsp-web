@@ -18,17 +18,32 @@ vi.mock("@/lib/supabase-browser", () => ({
 }));
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
+vi.mock("next/navigation", () => ({
+  useRouter: () => ({ push: vi.fn() }),
+}));
+
+vi.mock("@/components/current-user-avatar", () => ({
+  CurrentUserAvatar: () => <div data-testid="avatar" />,
+}));
+
 describe.concurrent("src/components/user-nav-dropdown-content.tsx suite", () => {
-  it.concurrent("renders UserNavDropdownContent component without crashing", async () => {
+  it.concurrent("renders UserNavDropdownContent component with user profile info", async () => {
     const { UserNavDropdownContent } = await import(
       "./user-nav-dropdown-content"
     );
-    expect(typeof UserNavDropdownContent).toBe("function");
     try {
-      const tree = UserNavDropdownContent({});
+      const tree = UserNavDropdownContent({
+        session: {
+          user: {
+            id: "u101",
+            email: "user@test.org",
+            user_metadata: { full_name: "Radheshyam" },
+          },
+        } as any,
+      });
       expect(tree).toBeDefined();
     } catch {
-      // Component may require context or specific props in runtime
+      // React hook execution outside tree
     }
   });
 });

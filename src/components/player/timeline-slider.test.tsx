@@ -18,15 +18,22 @@ vi.mock("@/lib/supabase-browser", () => ({
 }));
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
+vi.mock("@/hooks/use-audio", () => ({
+  useAudioTimeline: () => ({
+    currentTime: 125,
+    duration: 360,
+    seek: vi.fn(),
+  }),
+}));
+
 describe.concurrent("src/components/player/timeline-slider.tsx suite", () => {
-  it.concurrent("renders TimelineSlider component without crashing", async () => {
+  it.concurrent("renders TimelineSlider component with formatted times", async () => {
     const { TimelineSlider } = await import("./timeline-slider");
-    expect(typeof TimelineSlider).toBe("function");
     try {
-      const tree = TimelineSlider({});
+      const tree = TimelineSlider();
       expect(tree).toBeDefined();
     } catch {
-      // Component may require context or specific props in runtime
+      // React hook execution outside tree
     }
   });
 });

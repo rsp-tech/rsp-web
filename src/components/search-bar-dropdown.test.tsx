@@ -18,15 +18,55 @@ vi.mock("@/lib/supabase-browser", () => ({
 }));
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
+vi.mock("@/hooks/use-metadata", () => ({
+  useMetadata: () => ({
+    speakers: [{ id: 1, name: "HG Radheshyamdas" }],
+    languages: [{ id: 1, name: "English", native_name: "English" }],
+    venues: [{ id: 1, name: "NVCC Pune" }],
+  }),
+}));
+
+vi.mock("./search/date-picker", () => ({
+  DateRangePicker: () => <div data-testid="date-picker" />,
+}));
+vi.mock("./search/search-results", () => ({
+  SearchResults: () => <div data-testid="search-results" />,
+}));
+vi.mock("./search/search-scope-tabs", () => ({
+  SearchScopeTabs: () => <div data-testid="scope-tabs" />,
+}));
+vi.mock("./search/searchable-select", () => ({
+  SearchableSelect: () => <div data-testid="searchable-select" />,
+}));
+
 describe.concurrent("src/components/search-bar-dropdown.tsx suite", () => {
-  it.concurrent("renders SearchBarDropdownContent component without crashing", async () => {
+  it.concurrent("renders SearchBarDropdownContent with search results and active filters", async () => {
     const { SearchBarDropdownContent } = await import("./search-bar-dropdown");
-    expect(typeof SearchBarDropdownContent).toBe("function");
-    try {
-      const tree = SearchBarDropdownContent({});
-      expect(tree).toBeDefined();
-    } catch {
-      // Component may require context or specific props in runtime
-    }
+    const tree = SearchBarDropdownContent({
+      showFilters: true,
+      hasActiveFilters: false,
+      term: "Gita",
+      scope: "full",
+      setScope: vi.fn(),
+      currentCategory: {
+        id: 1,
+        name: "Gita",
+        url_path: "gita",
+        path: "gita",
+      } as any,
+      results: { categories: [], recordings: [], materials: [] },
+      filters: {
+        speaker_ids: [],
+        lang_ids: [],
+        venues_id: undefined,
+        date_start: "",
+        date_end: "",
+      },
+      setFilters: vi.fn(),
+      handleSelectCategory: vi.fn(),
+      handleSelectRecording: vi.fn(),
+      handleSelectMaterial: vi.fn(),
+    } as any);
+    expect(tree).toBeDefined();
   });
 });

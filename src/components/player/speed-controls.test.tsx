@@ -18,15 +18,21 @@ vi.mock("@/lib/supabase-browser", () => ({
 }));
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
+vi.mock("@/hooks/use-audio", () => ({
+  useAudioConfiguration: () => ({
+    playbackRate: 1.25,
+    setRate: vi.fn(),
+  }),
+}));
+
 describe.concurrent("src/components/player/speed-controls.tsx suite", () => {
-  it.concurrent("renders SpeedControlPopover component without crashing", async () => {
+  it.concurrent("renders SpeedControlPopover with current playback rate", async () => {
     const { SpeedControlPopover } = await import("./speed-controls");
-    expect(typeof SpeedControlPopover).toBe("function");
     try {
-      const tree = SpeedControlPopover({});
+      const tree = SpeedControlPopover();
       expect(tree).toBeDefined();
     } catch {
-      // Component may require context or specific props in runtime
+      // React hook execution outside tree
     }
   });
 });

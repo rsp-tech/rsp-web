@@ -19,14 +19,30 @@ vi.mock("@/lib/supabase-browser", () => ({
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
 describe.concurrent("src/components/category-list.tsx suite", () => {
-  it.concurrent("renders CategoryList component without crashing", async () => {
+  it.concurrent("renders CategoryList with empty and populated lists", async () => {
     const { CategoryList } = await import("./category-list");
-    expect(typeof CategoryList).toBe("function");
-    try {
-      const tree = CategoryList({});
-      expect(tree).toBeDefined();
-    } catch {
-      // Component may require context or specific props in runtime
-    }
+
+    const emptyTree = CategoryList({ categories: [] });
+    expect(emptyTree).toBeDefined();
+
+    const populatedTree = CategoryList({
+      categories: [
+        {
+          id: 1,
+          name: "Bhagavad Gita",
+          url_path: "gita",
+          path: "gita",
+          order_ind: 1,
+        } as any,
+        {
+          id: 2,
+          name: "Srimad Bhagavatam",
+          url_path: "sb",
+          path: "sb",
+          order_ind: 2,
+        } as any,
+      ],
+    });
+    expect(populatedTree).toBeDefined();
   });
 });
