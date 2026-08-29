@@ -43,10 +43,11 @@ interface MarqueeRowProps {
 }
 
 const MarqueeRow = ({ images, duration, reverse = false }: MarqueeRowProps) => (
-  <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
+  <div className="relative w-full overflow-hidden about-marquee-mask">
     <div
-      className="flex gap-4 whitespace-nowrap w-max"
+      className="flex gap-4 whitespace-nowrap"
       style={{
+        width: "max-content",
         animation: `aboutMarqueeAnim ${duration} linear infinite ${reverse ? "reverse" : ""}`,
       }}
     >
@@ -54,7 +55,7 @@ const MarqueeRow = ({ images, duration, reverse = false }: MarqueeRowProps) => (
         <div
           // biome-ignore lint/suspicious/noArrayIndexKey: infinite marquee clone
           key={idx}
-          className="w-64 sm:w-80 aspect-4/3 rounded-xl overflow-hidden shadow-md border border-border/50 shrink-0 bg-muted"
+          className="about-gallery-card"
         >
           <picture>
             <source srcSet={`/assets/about/${img}.avif`} type="image/avif" />
@@ -64,7 +65,7 @@ const MarqueeRow = ({ images, duration, reverse = false }: MarqueeRowProps) => (
               alt="Community engagement"
               width={320}
               height={240}
-              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              className="about-gallery-img"
               loading="lazy"
             />
           </picture>
@@ -77,20 +78,19 @@ const MarqueeRow = ({ images, duration, reverse = false }: MarqueeRowProps) => (
 export const CommunityGallery = () => {
   return (
     <section
-      className="about-section-pad overflow-hidden max-w-full"
+      className="about-section-pad"
       style={{ backgroundColor: "var(--bg-stone)" }}
     >
-      <div className="about-section-container mb-12">
+      <div className="about-section-container">
         <SectionHeader
           subtitle="Visual Chronicles"
           title="Impact in"
           underlinedWord="Action"
           description="Moments from university auditoriums, corporate workshops, youth leadership festivals, and temple community gatherings."
-          className="mb-0"
         />
       </div>
 
-      <div className="flex flex-col gap-4 w-full overflow-hidden max-w-full">
+      <div className="flex flex-col gap-4 overflow-hidden">
         <MarqueeRow images={row1} duration="45s" />
         <MarqueeRow images={row2} duration="55s" reverse />
         <MarqueeRow images={row3} duration="60s" />

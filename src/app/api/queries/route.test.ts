@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("@/lib/supabase-server", async () => ({
+vi.mock("@/lib/supabase-server", () => ({
   getSupabaseServerClient: () => ({
     from: () => ({
       insert: () => ({
@@ -14,6 +14,15 @@ vi.mock("@/lib/supabase-server", async () => ({
       }),
     }),
   }),
+  handleMutationResult: <T>(data: T, error: { message?: string } | null) => {
+    if (error) {
+      return Response.json(
+        { error: error.message || "Database insert failed" },
+        { status: 500 },
+      );
+    }
+    return Response.json({ success: true, data });
+  },
 }));
 
 describe.concurrent("app/api/queries/route suite", () => {

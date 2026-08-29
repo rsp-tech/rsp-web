@@ -16,9 +16,7 @@ import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { useSession } from "@/components/providers";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { saveUserQueryToIdb } from "@/hooks/use-user-queries-and-replies";
 import { formatConsultationMessage, getUserDisplayName } from "@/lib/utils";
 import { SectionHeader } from "./section-header";
@@ -151,16 +149,16 @@ export const ConsultationSection = () => {
               underlinedWord="Conversation"
               align="left"
             />
-            <p className="text-muted-foreground text-base sm:text-lg leading-relaxed mb-8">
+            <p className="about-editorial-p">
               Interested in inviting <strong>Radheshyam Das</strong> for a
               corporate keynote, executive leadership retreat, or university
               seminar? Reach out to our leadership office to coordinate
               schedules and customize program themes.
             </p>
 
-            <div className="flex flex-col gap-5 text-sm">
-              <div className="flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-full bg-[var(--bg-cream)] text-[var(--accent-gold-dark)] flex items-center justify-center shrink-0 shadow-xs border border-border/50">
+            <div className="about-contact-list">
+              <div className="about-contact-item">
+                <div className="about-icon-badge">
                   <Mail className="w-4 h-4" />
                 </div>
                 <div className="flex flex-col">
@@ -169,15 +167,15 @@ export const ConsultationSection = () => {
                   </span>
                   <a
                     href="mailto:info@radheshyamdas.com"
-                    className="font-medium hover:text-[var(--accent-gold-dark)] transition-colors"
+                    className="font-medium hover:text-primary transition-colors"
                   >
                     info@radheshyamdas.com
                   </a>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-full bg-[var(--bg-cream)] text-[var(--accent-gold-dark)] flex items-center justify-center shrink-0 shadow-xs border border-border/50">
+              <div className="about-contact-item">
+                <div className="about-icon-badge">
                   <Phone className="w-4 h-4" />
                 </div>
                 <div className="flex flex-col">
@@ -186,22 +184,22 @@ export const ConsultationSection = () => {
                   </span>
                   <a
                     href="tel:+917378709688"
-                    className="font-medium hover:text-[var(--accent-gold-dark)] transition-colors"
+                    className="font-medium hover:text-primary transition-colors"
                   >
                     +91 73787 09688
                   </a>
                 </div>
               </div>
 
-              <div className="flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-full bg-[var(--bg-cream)] text-[var(--accent-gold-dark)] flex items-center justify-center shrink-0 shadow-xs border border-border/50">
+              <div className="about-contact-item">
+                <div className="about-icon-badge">
                   <MapPin className="w-4 h-4" />
                 </div>
                 <div className="flex flex-col">
                   <span className="text-xs uppercase tracking-wider text-muted-foreground font-semibold">
                     Headquarters
                   </span>
-                  <span className="font-medium text-foreground/90">
+                  <span className="font-medium text-foreground">
                     ISKCON NVCC, Katraj-Kondhwa Bypass, Pune, India
                   </span>
                 </div>
@@ -210,10 +208,10 @@ export const ConsultationSection = () => {
           </div>
 
           {/* Right Form Column */}
-          <div className="bg-[var(--bg-cream)] p-6 sm:p-10 rounded-2xl border border-border shadow-md reveal-right">
+          <div className="about-contact-form-card reveal-right">
             {submitted ? (
-              <div className="text-center py-10 flex flex-col items-center gap-4">
-                <div className="w-14 h-14 rounded-full bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center">
+              <div className="about-success-state">
+                <div className="about-success-icon">
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <h4 className="text-2xl font-bold font-heading">
@@ -225,12 +223,15 @@ export const ConsultationSection = () => {
                   review your requirements and reply promptly.
                 </p>
 
-                <div className="flex flex-wrap justify-center gap-3 mt-4">
+                <div
+                  className="flex flex-wrap justify-center gap-3"
+                  style={{ marginTop: 16 }}
+                >
                   {session?.user && (
                     <Button asChild variant="default" className="rounded-full">
                       <Link href="/queries">
                         <span>Track in My Inquiries</span>
-                        <ExternalLink className="w-4 h-4 ml-1.5" />
+                        <ExternalLink className="w-4 h-4 ml-2" />
                       </Link>
                     </Button>
                   )}
@@ -240,7 +241,7 @@ export const ConsultationSection = () => {
                     onClick={resetForm}
                     className="rounded-full"
                   >
-                    <PlusCircle className="w-4 h-4 mr-1.5" />
+                    <PlusCircle className="w-4 h-4 mr-2" />
                     <span>Submit Another Inquiry</span>
                   </Button>
                 </div>
@@ -256,14 +257,14 @@ export const ConsultationSection = () => {
                     >
                       Your Name <span className="text-destructive">*</span>
                     </Label>
-                    <Input
+                    <input
                       id="consult-name"
                       required
                       type="text"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
                       placeholder="e.g. Rajesh Sharma"
-                      className="h-10 px-3.5 rounded-xl bg-background border-border text-sm focus-visible:ring-[var(--accent-gold)]"
+                      className="about-form-input"
                     />
                   </div>
 
@@ -275,14 +276,14 @@ export const ConsultationSection = () => {
                     >
                       Official Email <span className="text-destructive">*</span>
                     </Label>
-                    <Input
+                    <input
                       id="consult-email"
                       required
                       type="email"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       placeholder="name@organization.com"
-                      className="h-10 px-3.5 rounded-xl bg-background border-border text-sm focus-visible:ring-[var(--accent-gold)]"
+                      className="about-form-input"
                     />
                   </div>
                 </div>
@@ -297,14 +298,14 @@ export const ConsultationSection = () => {
                       Phone / WhatsApp{" "}
                       <span className="text-destructive">*</span>
                     </Label>
-                    <Input
+                    <input
                       id="consult-phone"
                       required
                       type="tel"
                       value={phone}
                       onChange={(e) => setPhone(e.target.value)}
                       placeholder="+91 98765 43210"
-                      className="h-10 px-3.5 rounded-xl bg-background border-border text-sm focus-visible:ring-[var(--accent-gold)]"
+                      className="about-form-input"
                     />
                   </div>
 
@@ -317,14 +318,14 @@ export const ConsultationSection = () => {
                       Organization / University{" "}
                       <span className="text-destructive">*</span>
                     </Label>
-                    <Input
+                    <input
                       id="consult-org"
                       required
                       type="text"
                       value={organization}
                       onChange={(e) => setOrganization(e.target.value)}
                       placeholder="e.g. Infosys, IIT Bombay"
-                      className="h-10 px-3.5 rounded-xl bg-background border-border text-sm focus-visible:ring-[var(--accent-gold)]"
+                      className="about-form-input"
                     />
                   </div>
                 </div>
@@ -341,7 +342,7 @@ export const ConsultationSection = () => {
                     id="consult-type"
                     value={engagementType}
                     onChange={(e) => setEngagementType(e.target.value)}
-                    className="h-10 px-3 rounded-xl bg-background border border-border text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-[var(--accent-gold)]"
+                    className="about-form-select"
                   >
                     {ENGAGEMENT_TYPES.map((type) => (
                       <option key={type} value={type}>
@@ -360,13 +361,13 @@ export const ConsultationSection = () => {
                     >
                       Audience Size (Optional)
                     </Label>
-                    <Input
+                    <input
                       id="consult-audience"
                       type="text"
                       value={audienceSize}
                       onChange={(e) => setAudienceSize(e.target.value)}
                       placeholder="e.g. 150 participants"
-                      className="h-10 px-3.5 rounded-xl bg-background border-border text-sm focus-visible:ring-[var(--accent-gold)]"
+                      className="about-form-input"
                     />
                   </div>
 
@@ -378,13 +379,13 @@ export const ConsultationSection = () => {
                     >
                       Target Timeframe (Optional)
                     </Label>
-                    <Input
+                    <input
                       id="consult-dates"
                       type="text"
                       value={preferredDates}
                       onChange={(e) => setPreferredDates(e.target.value)}
                       placeholder="e.g. Q3 2026 / November"
-                      className="h-10 px-3.5 rounded-xl bg-background border-border text-sm focus-visible:ring-[var(--accent-gold)]"
+                      className="about-form-input"
                     />
                   </div>
                 </div>
@@ -398,14 +399,14 @@ export const ConsultationSection = () => {
                     Proposed Theme / Objectives{" "}
                     <span className="text-destructive">*</span>
                   </Label>
-                  <Textarea
+                  <textarea
                     id="consult-message"
                     required
                     rows={4}
                     value={message}
                     onChange={(e) => setMessage(e.target.value)}
                     placeholder="Describe your session objectives, key audience background, or preferred keynote topic..."
-                    className="px-3.5 py-2.5 rounded-xl bg-background border-border text-sm focus-visible:ring-[var(--accent-gold)] resize-none"
+                    className="about-form-textarea"
                   />
                 </div>
 
@@ -413,7 +414,7 @@ export const ConsultationSection = () => {
                   type="submit"
                   size="lg"
                   disabled={submitting}
-                  className="rounded-full bg-[var(--accent-vibrant)] hover:bg-[var(--accent-vibrant)]/90 text-white font-semibold uppercase tracking-widest text-xs h-12 w-full mt-2 shadow-md"
+                  className="about-btn about-btn-primary w-full mt-2"
                 >
                   {submitting ? (
                     <span className="inline-flex items-center gap-2">

@@ -15,6 +15,7 @@ const OUTPUT_CSV = path.join(process.cwd(), "classname-usage.csv");
 
 const CSS_ENTRY = "./src/app/globals.css";
 const CSS_BASELINE_OUT = "./dist/tailwind-baseline.css";
+const ABOUT_EDITORIAL_CSS = "./src/app/about/about-editorial.css";
 
 interface ClassUsage {
   count: number;
@@ -25,6 +26,26 @@ const usageMap = new Map<string, ClassUsage>();
 const filesUsingCn = new Set<string>();
 const primitiveExports = new Map<string, Set<string>>();
 const primitivesUsedWithClassName = new Map<string, Set<string>>();
+const ignoredClasses = new Set<string>();
+
+const loadIgnoredCustomCssClasses = async (): Promise<void> => {
+  try {
+    const cssPath = path.resolve(process.cwd(), ABOUT_EDITORIAL_CSS);
+    const cssContent = await fs.readFile(cssPath, "utf-8");
+    const matches = cssContent.matchAll(/\.([a-zA-Z0-9_-]+)/g);
+    for (const match of matches) {
+      const cls = match[1];
+      if (cls && cls !== "dark") {
+        ignoredClasses.add(cls);
+      }
+    }
+  } catch (err) {
+    console.warn(
+      "⚠️ Warning: Could not load about-editorial.css for class ignoring:",
+      err,
+    );
+  }
+};
 
 const pool = async <T, R>(
   items: T[],
@@ -165,6 +186,7 @@ const processFile = async (filePath: string): Promise<void> => {
   const addClasses = (text: string, source: string) => {
     const classes = text.split(/\s+/).filter(Boolean);
     for (const cls of classes) {
+      if (ignoredClasses.has(cls)) continue;
       let entry = usageMap.get(cls);
       if (!entry) {
         entry = { count: 0, components: new Set() };
@@ -176,6 +198,18 @@ const processFile = async (filePath: string): Promise<void> => {
   };
 
   const extractStringsFromExpression = (node: ts.Node) => {
+    if (ts.isBinaryExpression(node)) {
+      const op = node.operatorToken.kind;
+      if (
+        op === ts.SyntaxKind.EqualsEqualsToken ||
+        op === ts.SyntaxKind.EqualsEqualsEqualsToken ||
+        op === ts.SyntaxKind.ExclamationEqualsToken ||
+        op === ts.SyntaxKind.ExclamationEqualsEqualsToken
+      ) {
+        return; // Skip comparison conditions like align === "center"
+      }
+    }
+
     if (ts.isStringLiteral(node)) {
       addClasses(node.text, relativePath);
     } else if (ts.isTemplateExpression(node)) {
@@ -250,6 +284,11 @@ const main = async (): Promise<void> => {
 
   try {
     const files = await getAllFiles(SRC_DIR);
+
+    console.log(
+      "🔍 Loading ignored custom classes from about-editorial.css...",
+    );
+    await loadIgnoredCustomCssClasses();
 
     console.log("🔍 Pass 1: Scanning primitives...");
     await pool(files, 15, identifyPrimitives);
@@ -333,6 +372,8 @@ const main = async (): Promise<void> => {
           gZipBytes: await getGZipSize(buf),
         });
       }
+
+      nextCssFilesData.sort((a, b) => b.rawBytes - a.rawBytes);
     } catch {
       console.warn(
         "⚠️ Warning: Could not locate '.next/static/css'. Run 'next build' first.",

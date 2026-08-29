@@ -16,19 +16,18 @@ export const LogoMarquee = () => {
   return (
     <section className="flex flex-col gap-4 py-4 overflow-hidden">
       <div className="text-center">
-        <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
+        <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
           Delivered Keynotes & Leadership Seminars At
         </span>
       </div>
 
-      <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_10%,black_90%,transparent)]">
-        <div className="flex gap-8 sm:gap-12 items-center py-2 animate-[aboutMarqueeAnim_35s_linear_infinite] whitespace-nowrap w-max">
+      <div className="relative w-full overflow-hidden about-marquee-mask">
+        <div
+          className="about-logo-marquee-track"
+          style={{ animation: "aboutMarqueeAnim 35s linear infinite" }}
+        >
           {[...logos, ...logos, ...logos].map((logo, idx) => (
-            <div
-              key={`logo-${idx}`}
-              className="flex items-center justify-center opacity-70 hover:opacity-100 transition-opacity grayscale hover:grayscale-0"
-              style={{ minWidth: "120px" }}
-            >
+            <div key={`logo-${idx}`} className="about-logo-marquee-item">
               <picture>
                 <source srcSet={`${logo.src}.avif`} type="image/avif" />
                 <source srcSet={`${logo.src}.webp`} type="image/webp" />
@@ -37,7 +36,7 @@ export const LogoMarquee = () => {
                   alt={logo.name}
                   width={140}
                   height={40}
-                  className="h-8 sm:h-9 w-auto max-w-[140px] object-contain dark:invert"
+                  className="about-logo-marquee-img"
                   loading="lazy"
                 />
               </picture>

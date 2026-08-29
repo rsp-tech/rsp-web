@@ -286,7 +286,7 @@ export const ContactUsClient = () => {
                 >
                   <Link href="/about#workshops">
                     <span>Explore Workshop Themes</span>
-                    <ExternalLink className="w-3.5 h-3.5 ml-1.5" />
+                    <ExternalLink className="w-3 h-3 ml-1" />
                   </Link>
                 </Button>
               </CardContent>
@@ -356,7 +356,7 @@ export const ContactUsClient = () => {
                 </div>
 
                 {isConsultation && (
-                  <div className="p-3 bg-muted/60 rounded-xl border border-border text-xs flex items-center gap-2 text-muted-foreground">
+                  <div className="p-3 bg-muted/50 rounded-xl border border-border text-xs flex items-center gap-2 text-muted-foreground">
                     <Info className="w-4 h-4 text-primary shrink-0" />
                     <span>
                       Consultation details are editable so coordinators can
@@ -473,7 +473,7 @@ export const ContactUsClient = () => {
                         id={`${id}-type`}
                         value={engagementType}
                         onChange={(e) => setEngagementType(e.target.value)}
-                        className="h-9 px-3 rounded-lg bg-muted border border-input text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
+                        className="h-9 px-3 rounded-lg bg-muted border border-input text-sm text-foreground focus:outline-hidden focus:ring-1 focus:ring-primary"
                       >
                         {ENGAGEMENT_TYPES.map((type) => (
                           <option key={type} value={type}>

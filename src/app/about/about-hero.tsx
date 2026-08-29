@@ -24,18 +24,14 @@ export const AboutHero = () => {
               and purpose.
             </p>
             <div className="flex flex-wrap gap-4 pt-2 reveal-3d">
-              <Button
-                asChild
-                size="lg"
-                className="rounded-full bg-[var(--accent-vibrant)] hover:bg-[var(--accent-vibrant)]/90 text-white font-semibold uppercase tracking-widest text-xs h-12 px-8 shadow-md"
-              >
+              <Button asChild size="lg" className="about-btn about-btn-primary">
                 <a href="#workshops">Explore Workshops</a>
               </Button>
               <Button
                 asChild
                 variant="outline"
                 size="lg"
-                className="rounded-full border-white/40 text-white hover:bg-white hover:text-[var(--primary-dark)] font-semibold uppercase tracking-widest text-xs h-12 px-8 bg-transparent"
+                className="about-btn about-btn-outline bg-transparent"
               >
                 <Link href="/">
                   <span>Explore Discourses</span>

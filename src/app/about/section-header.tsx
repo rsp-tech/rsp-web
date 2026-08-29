@@ -23,20 +23,12 @@ export const SectionHeader = ({
     <div
       className={cn(
         "about-sec-title-wrap reveal-blur",
-        align === "left" && "text-left mb-6",
+        align === "left" && "about-sec-left",
         className,
       )}
     >
-      <span className={cn("about-sec-sub", align === "left" && "text-left")}>
-        {subtitle}
-      </span>
-      <h2
-        className={cn(
-          "about-sec-title",
-          align === "left" && "text-left",
-          isDark && "text-white",
-        )}
-      >
+      <span className="about-sec-sub">{subtitle}</span>
+      <h2 className={cn("about-sec-title", isDark && "text-white")}>
         {title}{" "}
         {underlinedWord && (
           <span className="about-hand-underline">{underlinedWord}</span>
@@ -45,9 +37,9 @@ export const SectionHeader = ({
       {description && (
         <p
           className={cn(
-            "text-sm sm:text-base mt-4 leading-relaxed",
-            align === "center" && "max-w-xl mx-auto",
-            isDark ? "text-white/70" : "text-muted-foreground",
+            "about-sec-desc",
+            align === "center" && "about-sec-desc-center",
+            isDark && "about-sec-desc-dark",
           )}
         >
           {description}

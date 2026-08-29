@@ -43,26 +43,19 @@ const stats: StatItem[] = [
 
 export const ImpactStats = () => {
   return (
-    <section className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+    <section className="about-stats-grid">
       {stats.map((stat, idx) => {
         const Icon = stat.icon;
         return (
-          <div
-            key={idx}
-            className="flex flex-col items-center text-center p-5 rounded-2xl bg-card border border-border/80 shadow-xs hover:border-primary/40 hover:shadow-md transition-all group"
-          >
-            <div className="p-2.5 rounded-xl bg-primary/10 text-primary mb-3 group-hover:scale-110 transition-transform">
+          <div key={idx} className="about-stat-card">
+            <div className="about-stat-icon">
               <Icon className="w-5 h-5" />
             </div>
-            <span className="text-2xl sm:text-3xl font-extrabold font-heading text-primary tracking-tight">
-              {stat.value}
-            </span>
+            <span className="about-stat-val font-heading">{stat.value}</span>
             <span className="text-xs sm:text-sm font-bold text-foreground mt-1">
               {stat.label}
             </span>
-            <span className="text-[11px] text-muted-foreground leading-snug mt-1 hidden sm:block">
-              {stat.description}
-            </span>
+            <span className="about-stat-desc">{stat.description}</span>
           </div>
         );
       })}

@@ -2,7 +2,6 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import { SectionHeader } from "./section-header";
 
 interface Testimonial {
@@ -78,10 +77,10 @@ export const TestimonialsSlider = () => {
           underlinedWord="Say"
         />
 
-        <div className="max-w-3xl mx-auto relative px-4 sm:px-16 reveal-blur">
+        <div className="about-testimonial-wrap reveal-blur">
           <div className="flex flex-col items-center text-center">
             {/* Avatar */}
-            <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-full overflow-hidden shadow-xl border-4 border-white mb-6 bg-muted">
+            <div className="about-testimonial-avatar">
               <picture>
                 <source srcSet={`${t.avatar}.avif`} type="image/avif" />
                 <source srcSet={`${t.avatar}.webp`} type="image/webp" />
@@ -97,7 +96,7 @@ export const TestimonialsSlider = () => {
             </div>
 
             {/* Quote */}
-            <p className="text-lg sm:text-xl font-normal text-foreground leading-relaxed italic mb-6 max-w-2xl">
+            <p className="about-testimonial-quote text-foreground max-w-2xl">
               "{t.quote}"
             </p>
 
@@ -105,46 +104,47 @@ export const TestimonialsSlider = () => {
             <h4 className="text-lg font-bold text-foreground font-heading">
               {t.name}
             </h4>
-            <span className="text-xs sm:text-sm font-semibold text-[var(--accent-gold-dark)]">
+            <span className="text-xs sm:text-sm font-semibold about-text-gold-dark">
               {t.role} • {t.company}
             </span>
           </div>
 
           {/* Prev/Next buttons */}
-          <Button
+          <button
             type="button"
-            variant="outline"
-            size="icon"
             onClick={prev}
             aria-label="Previous testimonial"
-            className="absolute left-0 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full border-border bg-background/80 hover:bg-background shadow-xs"
+            className="about-testimonial-nav-btn"
+            style={{ left: 0 }}
           >
             <ChevronLeft className="w-5 h-5" />
-          </Button>
-          <Button
+          </button>
+          <button
             type="button"
-            variant="outline"
-            size="icon"
             onClick={next}
             aria-label="Next testimonial"
-            className="absolute right-0 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full border-border bg-background/80 hover:bg-background shadow-xs"
+            className="about-testimonial-nav-btn"
+            style={{ right: 0 }}
           >
             <ChevronRight className="w-5 h-5" />
-          </Button>
+          </button>
 
           {/* Dots */}
-          <div className="flex justify-center gap-2 mt-8">
+          <div className="flex justify-center gap-2" style={{ marginTop: 32 }}>
             {testimonials.map((item, i) => (
               <button
                 key={item.name}
                 type="button"
                 onClick={() => setIndex(i)}
                 aria-label={`Testimonial ${i + 1}`}
-                className={`h-2 rounded-full transition-all cursor-pointer ${
-                  i === index
-                    ? "w-8 bg-[var(--accent-gold)]"
-                    : "w-2 bg-muted hover:bg-muted-foreground"
-                }`}
+                className="about-testimonial-dot"
+                style={{
+                  width: i === index ? "32px" : "8px",
+                  backgroundColor:
+                    i === index
+                      ? "var(--accent-gold)"
+                      : "var(--accent-gold-light)",
+                }}
               />
             ))}
           </div>

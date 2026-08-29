@@ -39,7 +39,7 @@ export const AcademicCorporate = () => {
                 underlinedWord="Keynotes"
                 align="left"
               />
-              <p className="text-muted-foreground text-base sm:text-lg leading-relaxed mb-6">
+              <p className="about-editorial-p">
                 Bridging ancient logic with modern academic inquiry, Radheshyam
                 Das has conducted highly received guest lectures and seminar
                 series at world-class institutions including{" "}
@@ -48,26 +48,26 @@ export const AcademicCorporate = () => {
                 </strong>{" "}
                 across the globe.
               </p>
-              <div className="flex flex-wrap gap-6 items-center opacity-70 grayscale hover:grayscale-0 transition-all reveal-blur">
+              <div className="about-academic-logos reveal-blur">
                 <img
                   src="/assets/about/logo-mit.png"
                   alt="MIT"
-                  className="h-7 w-auto dark:invert"
+                  className="about-academic-logo-img"
                 />
                 <img
                   src="/assets/about/logo-harvard.png"
                   alt="Harvard"
-                  className="h-7 w-auto dark:invert"
+                  className="about-academic-logo-img"
                 />
                 <img
                   src="/assets/about/logo-stanford.png"
                   alt="Stanford"
-                  className="h-7 w-auto dark:invert"
+                  className="about-academic-logo-img"
                 />
                 <img
                   src="/assets/about/logo-cornell.png"
                   alt="Cornell"
-                  className="h-7 w-auto dark:invert"
+                  className="about-academic-logo-img"
                 />
               </div>
             </div>
@@ -81,15 +81,15 @@ export const AcademicCorporate = () => {
         style={{ backgroundColor: "var(--bg-stone)" }}
       >
         <div className="about-section-container">
-          <div className="about-collage-grid">
-            <div className="flex flex-col order-2 lg:order-1 reveal-left">
+          <div className="about-collage-grid about-reverse">
+            <div className="flex flex-col reveal-left">
               <SectionHeader
                 subtitle="Workplace Excellence"
                 title="Corporate"
                 underlinedWord="Seminars"
                 align="left"
               />
-              <p className="text-muted-foreground text-base sm:text-lg leading-relaxed mb-6">
+              <p className="about-editorial-p">
                 Helping executives and technical teams at{" "}
                 <strong>
                   Infosys, Bank of America, Deutsche Bank, Tech Mahindra, and
@@ -102,14 +102,14 @@ export const AcademicCorporate = () => {
                 <Button
                   asChild
                   size="lg"
-                  className="rounded-full bg-[var(--accent-vibrant)] hover:bg-[var(--accent-vibrant)]/90 text-white font-semibold uppercase tracking-widest text-xs h-12 px-8 shadow-md"
+                  className="about-btn about-btn-primary"
                 >
                   <a href="#workshops">View Workshops</a>
                 </Button>
               </div>
             </div>
 
-            <div className="about-collage-card-main order-1 lg:order-2 reveal-3d">
+            <div className="about-collage-card-main reveal-3d">
               <picture>
                 <source
                   srcSet="/assets/about/corporate-session.avif"

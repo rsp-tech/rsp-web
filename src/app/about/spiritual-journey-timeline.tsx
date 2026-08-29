@@ -75,44 +75,40 @@ export const SpiritualJourneyTimeline = () => {
           <Milestone className="w-4 h-4" />
           <span>Biographical Milestones</span>
         </div>
-        <h2 className="text-2xl sm:text-4xl font-bold font-heading tracking-tight text-foreground">
+        <h2 className="about-timeline-section-title font-heading tracking-tight">
           A Life of Dedicated Spiritual Leadership
         </h2>
-        <p className="text-muted-foreground text-sm sm:text-base max-w-2xl">
+        <p className="text-muted-foreground text-sm leading-relaxed max-w-2xl">
           From top engineering academic achievements to leading one of the
           world's most vibrant spiritual and youth training organizations.
         </p>
       </div>
 
-      <div className="relative border-l-2 border-primary/30 pl-6 sm:pl-8 ml-3 sm:ml-4 flex flex-col gap-8 mt-4">
+      <div className="about-timeline-track">
         {timeline.map((item, idx) => {
           const Icon = item.icon;
           return (
             <div
               key={`timeline-${idx}`}
-              className="relative flex flex-col gap-2 group"
+              className="relative flex flex-col gap-2 about-timeline-item group"
             >
               {/* Timeline marker */}
-              <div className="absolute -left-[35px] sm:-left-[43px] top-0 p-1.5 sm:p-2 rounded-full bg-background border-2 border-primary text-primary group-hover:bg-primary group-hover:text-primary-foreground transition-colors shadow-xs">
+              <div className="about-timeline-marker">
                 <Icon className="w-4 h-4" />
               </div>
 
               <div className="flex flex-wrap items-center gap-2">
-                <span className="px-2.5 py-0.5 rounded-md bg-primary/10 text-primary font-bold text-xs">
-                  {item.period}
-                </span>
+                <span className="about-timeline-badge">{item.period}</span>
                 <span className="text-xs text-muted-foreground font-medium">
                   {item.subtitle}
                 </span>
               </div>
 
-              <h3 className="text-lg sm:text-xl font-bold font-heading text-foreground group-hover:text-primary transition-colors">
+              <h3 className="about-timeline-heading font-heading">
                 {item.title}
               </h3>
 
-              <p className="text-sm sm:text-base text-muted-foreground leading-relaxed">
-                {item.description}
-              </p>
+              <p className="about-timeline-desc">{item.description}</p>
             </div>
           );
         })}

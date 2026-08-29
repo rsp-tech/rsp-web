@@ -129,16 +129,12 @@ export const WorkshopsModules = () => {
         />
 
         {/* Tab Filter */}
-        <div className="flex justify-center gap-3 mb-12 flex-wrap reveal-blur">
+        <div className="about-filter-row reveal-blur">
           <Button
             type="button"
             variant={filter === "all" ? "default" : "outline"}
             onClick={() => setFilter("all")}
-            className={`rounded-full px-6 py-2 text-xs font-semibold uppercase tracking-wider h-9 ${
-              filter === "all"
-                ? "bg-[var(--primary-dark)] text-white hover:bg-[var(--primary-dark)]/90"
-                : "bg-background text-muted-foreground hover:text-foreground"
-            }`}
+            className="rounded-full px-6 py-2 text-xs font-semibold uppercase tracking-wider h-9"
           >
             All Modules
           </Button>
@@ -146,11 +142,7 @@ export const WorkshopsModules = () => {
             type="button"
             variant={filter === "leadership" ? "default" : "outline"}
             onClick={() => setFilter("leadership")}
-            className={`rounded-full px-6 py-2 text-xs font-semibold uppercase tracking-wider h-9 ${
-              filter === "leadership"
-                ? "bg-[var(--primary-dark)] text-white hover:bg-[var(--primary-dark)]/90"
-                : "bg-background text-muted-foreground hover:text-foreground"
-            }`}
+            className="rounded-full px-6 py-2 text-xs font-semibold uppercase tracking-wider h-9"
           >
             Performance & Leadership
           </Button>
@@ -158,11 +150,7 @@ export const WorkshopsModules = () => {
             type="button"
             variant={filter === "excellence" ? "default" : "outline"}
             onClick={() => setFilter("excellence")}
-            className={`rounded-full px-6 py-2 text-xs font-semibold uppercase tracking-wider h-9 ${
-              filter === "excellence"
-                ? "bg-[var(--primary-dark)] text-white hover:bg-[var(--primary-dark)]/90"
-                : "bg-background text-muted-foreground hover:text-foreground"
-            }`}
+            className="rounded-full px-6 py-2 text-xs font-semibold uppercase tracking-wider h-9"
           >
             Personal Excellence
           </Button>
@@ -170,11 +158,7 @@ export const WorkshopsModules = () => {
             type="button"
             variant={filter === "wellbeing" ? "default" : "outline"}
             onClick={() => setFilter("wellbeing")}
-            className={`rounded-full px-6 py-2 text-xs font-semibold uppercase tracking-wider h-9 ${
-              filter === "wellbeing"
-                ? "bg-[var(--primary-dark)] text-white hover:bg-[var(--primary-dark)]/90"
-                : "bg-background text-muted-foreground hover:text-foreground"
-            }`}
+            className="rounded-full px-6 py-2 text-xs font-semibold uppercase tracking-wider h-9"
           >
             Wellbeing & Resilience
           </Button>
@@ -185,23 +169,22 @@ export const WorkshopsModules = () => {
           {filtered.map((w) => (
             <div
               key={w.num}
-              className={`about-workshop-card about-tilt-card reveal-3d ${w.num === "10" && filter === "all" ? "capstone" : ""}`}
+              className={`about-workshop-card about-tilt-card reveal-3d ${w.num === "10" && filter === "all" ? "about-capstone" : ""}`}
             >
-              <span className="text-3xl font-light font-serif text-[var(--accent-gold)] block mb-4">
+              <span
+                className="text-3xl font-serif about-text-gold mb-4"
+                style={{ display: "block" }}
+              >
                 {w.num}
               </span>
-              <h3 className="text-xl font-normal font-heading mb-3">
-                {w.title}
-              </h3>
-              <p className="text-sm leading-relaxed text-muted-foreground">
-                {w.desc}
-              </p>
+              <h3 className="about-workshop-title font-heading">{w.title}</h3>
+              <p className="about-workshop-desc">{w.desc}</p>
             </div>
           ))}
         </div>
 
         {/* Program Formats */}
-        <div className="mt-24 mb-10">
+        <div className="about-formats-heading">
           <SectionHeader
             subtitle="Program Delivery"
             title="Available Formats"
@@ -216,15 +199,11 @@ export const WorkshopsModules = () => {
                 key={fmt.title}
                 className="about-format-card about-tilt-card reveal-3d"
               >
-                <div className="w-12 h-12 rounded-full bg-[var(--bg-cream)] text-[var(--accent-gold-dark)] flex items-center justify-center mx-auto mb-4">
+                <div className="about-icon-badge mx-auto mb-4">
                   <Icon className="w-5 h-5" />
                 </div>
-                <h4 className="text-sm font-semibold uppercase tracking-wide mb-2">
-                  {fmt.title}
-                </h4>
-                <p className="text-xs text-muted-foreground leading-relaxed">
-                  {fmt.desc}
-                </p>
+                <h4 className="about-format-title">{fmt.title}</h4>
+                <p className="about-format-desc">{fmt.desc}</p>
               </div>
             );
           })}

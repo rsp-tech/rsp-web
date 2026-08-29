@@ -54,7 +54,7 @@ export const PublicationsShowcase = () => {
               className="about-book-card about-tilt-card reveal-3d"
             >
               <div className="flex flex-col">
-                <div className="relative aspect-3/4 max-w-[200px] mx-auto rounded-lg overflow-hidden shadow-2xl mb-6">
+                <div className="about-book-img-wrap">
                   <picture>
                     <source srcSet={`${b.img}.avif`} type="image/avif" />
                     <source srcSet={`${b.img}.webp`} type="image/webp" />
@@ -69,22 +69,21 @@ export const PublicationsShowcase = () => {
                   </picture>
                 </div>
 
-                <span className="text-xs uppercase tracking-widest text-[#c2a383] font-semibold mb-2">
+                <span
+                  className="about-sec-sub"
+                  style={{ textAlign: "left", marginBottom: 8 }}
+                >
                   {b.tag}
                 </span>
-                <h3 className="text-2xl font-light font-heading text-white mb-3">
-                  {b.title}
-                </h3>
-                <p className="text-sm leading-relaxed text-white/75 mb-6">
-                  {b.desc}
-                </p>
+                <h3 className="about-book-title font-heading">{b.title}</h3>
+                <p className="about-book-desc">{b.desc}</p>
               </div>
 
               <a
                 href={b.link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center text-xs uppercase tracking-widest text-[#c2a383] hover:text-white font-semibold transition-colors"
+                className="about-book-link"
               >
                 <span>Order On VOICE Publication</span>
                 <ArrowRight className="w-4 h-4 ml-1.5" />

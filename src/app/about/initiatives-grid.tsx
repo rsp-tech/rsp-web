@@ -18,23 +18,19 @@ export const InitiativesGrid = () => {
               underlinedWord="Initiative"
               align="left"
             />
-            <p className="text-muted-foreground text-base sm:text-lg leading-relaxed mb-4">
+            <p className="about-editorial-p mb-4">
               <strong>VOICE</strong> (Vedic Oasis for Inspiration, Culture, and
               Education) is a dynamic platform designed to inspire leadership
               built on solid character, ethical values, and ancient principles.
             </p>
-            <p className="text-muted-foreground text-base sm:text-lg leading-relaxed mb-6">
+            <p className="about-editorial-p">
               By establishing over <strong>100 centers worldwide</strong>, VOICE
               empowers youth, university researchers, and professionals to tap
               into their maximum potential, cultivate mental resilience, and
               build positive, values-driven communities that uplift society.
             </p>
             <div>
-              <Button
-                asChild
-                size="lg"
-                className="rounded-full bg-[var(--accent-vibrant)] hover:bg-[var(--accent-vibrant)]/90 text-white font-semibold uppercase tracking-widest text-xs h-12 px-8 shadow-md"
-              >
+              <Button asChild size="lg" className="about-btn about-btn-primary">
                 <a
                   href="#contact"
                   aria-label="Learn more about the VOICE leadership initiative"
