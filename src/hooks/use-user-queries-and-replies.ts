@@ -52,3 +52,18 @@ export const useUserQueriesAndReplies = (userId: string | undefined) =>
     },
     enabled: !!userId,
   });
+
+export const saveUserQueryToIdb = async (
+  queryClient: import("@tanstack/react-query").QueryClient,
+  userId?: string,
+  data?: unknown,
+) => {
+  if (!userId || !data) return;
+  const db = await getDB();
+  if (db) {
+    await db.put(STORE.USER_QUERIES, data as UserQuery);
+  }
+  queryClient.invalidateQueries({
+    queryKey: [STORE.USER_QUERIES, userId],
+  });
+};

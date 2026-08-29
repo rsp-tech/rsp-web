@@ -30,9 +30,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { QUERY_CATEGORIES, STORE } from "@/constants";
-import { getDB } from "@/lib/idb";
-import { getUserDisplayName } from "@/lib/utils";
+import { QUERY_CATEGORIES } from "@/constants";
+import { saveUserQueryToIdb } from "@/hooks/use-user-queries-and-replies";
+import { formatConsultationMessage, getUserDisplayName } from "@/lib/utils";
 
 const ENGAGEMENT_TYPES = [
   "Corporate Workshop / Seminar",
@@ -115,25 +115,16 @@ export const ContactUsClient = () => {
       : subject.trim();
 
     const finalMessage = isConsultation
-      ? [
-          "--- Consultation / Speaker Invitation Details ---",
-          `Organization / Institution: ${organization.trim()}`,
-          `Engagement Type: ${engagementType}`,
-          `Contact Person: ${name.trim()}`,
-          `Official Email: ${email.trim()}`,
-          `Phone / WhatsApp: ${phone.trim()}`,
-          audienceSize.trim()
-            ? `Estimated Audience Size: ${audienceSize.trim()}`
-            : null,
-          preferredDates.trim()
-            ? `Preferred Dates / Timeframe: ${preferredDates.trim()}`
-            : null,
-          "",
-          "--- Proposed Theme / Message Details ---",
-          message.trim(),
-        ]
-          .filter(Boolean)
-          .join("\n")
+      ? formatConsultationMessage({
+          organization,
+          engagementType,
+          name,
+          email,
+          phone,
+          audienceSize,
+          preferredDates,
+          message,
+        })
       : message.trim();
 
     try {
@@ -156,15 +147,7 @@ export const ContactUsClient = () => {
         throw new Error(json.error || "Failed to submit query");
       }
 
-      if (session?.user?.id && json.data) {
-        const db = await getDB();
-        if (db) {
-          await db.put(STORE.USER_QUERIES, json.data);
-        }
-        queryClient.invalidateQueries({
-          queryKey: [STORE.USER_QUERIES, session.user.id],
-        });
-      }
+      await saveUserQueryToIdb(queryClient, session?.user?.id, json.data);
 
       toast.success(
         isConsultation

@@ -36,6 +36,44 @@ const row3 = [
   "Community_7",
 ];
 
+interface MarqueeRowProps {
+  images: string[];
+  duration: string;
+  reverse?: boolean;
+}
+
+const MarqueeRow = ({ images, duration, reverse = false }: MarqueeRowProps) => (
+  <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
+    <div
+      className="flex gap-4 whitespace-nowrap w-max"
+      style={{
+        animation: `aboutMarqueeAnim ${duration} linear infinite ${reverse ? "reverse" : ""}`,
+      }}
+    >
+      {[...images, ...images].map((img, idx) => (
+        <div
+          // biome-ignore lint/suspicious/noArrayIndexKey: infinite marquee clone
+          key={idx}
+          className="w-64 sm:w-80 aspect-4/3 rounded-xl overflow-hidden shadow-md border border-border/50 shrink-0 bg-muted"
+        >
+          <picture>
+            <source srcSet={`/assets/about/${img}.avif`} type="image/avif" />
+            <source srcSet={`/assets/about/${img}.webp`} type="image/webp" />
+            <img
+              src={`/assets/about/${img}.jpg`}
+              alt="Community engagement"
+              width={320}
+              height={240}
+              className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
+              loading="lazy"
+            />
+          </picture>
+        </div>
+      ))}
+    </div>
+  </div>
+);
+
 export const CommunityGallery = () => {
   return (
     <section
@@ -53,106 +91,9 @@ export const CommunityGallery = () => {
       </div>
 
       <div className="flex flex-col gap-4 w-full overflow-hidden max-w-full">
-        {/* Row 1 */}
-        <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
-          <div className="flex gap-4 animate-[aboutMarqueeAnim_45s_linear_infinite] whitespace-nowrap w-max">
-            {[...row1, ...row1].map((img, idx) => (
-              <div
-                // biome-ignore lint/suspicious/noArrayIndexKey: infinite marquee clone
-                key={idx}
-                className="w-64 sm:w-80 aspect-4/3 rounded-xl overflow-hidden shadow-md border border-border/50 shrink-0 bg-muted"
-              >
-                <picture>
-                  <source
-                    srcSet={`/assets/about/${img}.avif`}
-                    type="image/avif"
-                  />
-                  <source
-                    srcSet={`/assets/about/${img}.webp`}
-                    type="image/webp"
-                  />
-                  <img
-                    src={`/assets/about/${img}.jpg`}
-                    alt="Community engagement"
-                    width={320}
-                    height={240}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                </picture>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Row 2 (Reverse) */}
-        <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
-          <div
-            className="flex gap-4 whitespace-nowrap w-max"
-            style={{
-              animation: "aboutMarqueeAnim 55s linear infinite reverse",
-            }}
-          >
-            {[...row2, ...row2].map((img, idx) => (
-              <div
-                // biome-ignore lint/suspicious/noArrayIndexKey: infinite marquee clone
-                key={idx}
-                className="w-64 sm:w-80 aspect-4/3 rounded-xl overflow-hidden shadow-md border border-border/50 shrink-0 bg-muted"
-              >
-                <picture>
-                  <source
-                    srcSet={`/assets/about/${img}.avif`}
-                    type="image/avif"
-                  />
-                  <source
-                    srcSet={`/assets/about/${img}.webp`}
-                    type="image/webp"
-                  />
-                  <img
-                    src={`/assets/about/${img}.jpg`}
-                    alt="Community engagement"
-                    width={320}
-                    height={240}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                </picture>
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Row 3 */}
-        <div className="relative w-full overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
-          <div className="flex gap-4 animate-[aboutMarqueeAnim_60s_linear_infinite] whitespace-nowrap w-max">
-            {[...row3, ...row3].map((img, idx) => (
-              <div
-                // biome-ignore lint/suspicious/noArrayIndexKey: infinite marquee clone
-                key={idx}
-                className="w-64 sm:w-80 aspect-4/3 rounded-xl overflow-hidden shadow-md border border-border/50 shrink-0 bg-muted"
-              >
-                <picture>
-                  <source
-                    srcSet={`/assets/about/${img}.avif`}
-                    type="image/avif"
-                  />
-                  <source
-                    srcSet={`/assets/about/${img}.webp`}
-                    type="image/webp"
-                  />
-                  <img
-                    src={`/assets/about/${img}.jpg`}
-                    alt="Community engagement"
-                    width={320}
-                    height={240}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-500"
-                    loading="lazy"
-                  />
-                </picture>
-              </div>
-            ))}
-          </div>
-        </div>
+        <MarqueeRow images={row1} duration="45s" />
+        <MarqueeRow images={row2} duration="55s" reverse />
+        <MarqueeRow images={row3} duration="60s" />
       </div>
     </section>
   );

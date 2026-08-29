@@ -68,3 +68,37 @@ export const pathToUrlPath = (path: string | string[]): string => {
 
 export const toRoleId = (value: unknown): number | undefined =>
   typeof value === "number" && Number.isInteger(value) ? value : undefined;
+
+export interface ConsultationDetails {
+  organization: string;
+  engagementType: string;
+  name: string;
+  email: string;
+  phone: string;
+  audienceSize?: string;
+  preferredDates?: string;
+  message: string;
+}
+
+export const formatConsultationMessage = (
+  details: ConsultationDetails,
+): string =>
+  [
+    "--- Consultation / Speaker Invitation Details ---",
+    `Organization / Institution: ${details.organization.trim()}`,
+    `Engagement Type: ${details.engagementType}`,
+    `Contact Person: ${details.name.trim()}`,
+    `Official Email: ${details.email.trim()}`,
+    `Phone / WhatsApp: ${details.phone.trim()}`,
+    details.audienceSize?.trim()
+      ? `Estimated Audience Size: ${details.audienceSize.trim()}`
+      : null,
+    details.preferredDates?.trim()
+      ? `Preferred Dates / Timeframe: ${details.preferredDates.trim()}`
+      : null,
+    "",
+    "--- Proposed Theme / Message Details ---",
+    details.message.trim(),
+  ]
+    .filter(Boolean)
+    .join("\n");

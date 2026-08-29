@@ -19,9 +19,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { STORE } from "@/constants";
-import { getDB } from "@/lib/idb";
-import { getUserDisplayName } from "@/lib/utils";
+import { saveUserQueryToIdb } from "@/hooks/use-user-queries-and-replies";
+import { formatConsultationMessage, getUserDisplayName } from "@/lib/utils";
 import { SectionHeader } from "./section-header";
 
 const ENGAGEMENT_TYPES = [
@@ -75,26 +74,16 @@ export const ConsultationSection = () => {
     setSubmitting(true);
 
     const formattedSubject = `[Speaker Invitation] ${organization.trim()} - ${engagementType}`;
-
-    const formattedMessage = [
-      "--- Consultation / Speaker Invitation Details ---",
-      `Organization / Institution: ${organization.trim()}`,
-      `Engagement Type: ${engagementType}`,
-      `Contact Person: ${name.trim()}`,
-      `Official Email: ${email.trim()}`,
-      `Phone / WhatsApp: ${phone.trim()}`,
-      audienceSize.trim()
-        ? `Estimated Audience Size: ${audienceSize.trim()}`
-        : null,
-      preferredDates.trim()
-        ? `Preferred Dates / Timeframe: ${preferredDates.trim()}`
-        : null,
-      "",
-      "--- Proposed Theme / Message Details ---",
-      message.trim(),
-    ]
-      .filter(Boolean)
-      .join("\n");
+    const formattedMessage = formatConsultationMessage({
+      organization,
+      engagementType,
+      name,
+      email,
+      phone,
+      audienceSize,
+      preferredDates,
+      message,
+    });
 
     try {
       const res = await fetch("/api/queries", {
@@ -116,18 +105,10 @@ export const ConsultationSection = () => {
         throw new Error(json.error || "Failed to submit inquiry");
       }
 
-      // If logged in, cache returned data into client IndexedDB & invalidate React Query
-      if (session?.user?.id && json.data) {
-        const db = await getDB();
-        if (db) {
-          await db.put(STORE.USER_QUERIES, json.data);
-        }
-        queryClient.invalidateQueries({
-          queryKey: [STORE.USER_QUERIES, session.user.id],
-        });
-      }
+      await saveUserQueryToIdb(queryClient, session?.user?.id, json.data);
 
       setSubmitted(true);
+
       toast.success(
         "Inquiry received! Our leadership office will contact you shortly.",
       );
