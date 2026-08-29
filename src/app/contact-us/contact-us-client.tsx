@@ -211,7 +211,9 @@ export const ContactUsClient = () => {
             <CardHeader>
               <CardTitle className="text-lg font-bold flex items-center gap-2">
                 <MessageSquare className="w-5 h-5 text-primary" />
-                <span>{isConsultation ? "Leadership Office" : "Get in Touch"}</span>
+                <span>
+                  {isConsultation ? "Leadership Office" : "Get in Touch"}
+                </span>
               </CardTitle>
               <CardDescription className="text-xs">
                 {isConsultation
@@ -289,7 +291,9 @@ export const ContactUsClient = () => {
               </CardHeader>
               <CardContent className="text-xs text-muted-foreground flex flex-col gap-3">
                 <p className="leading-relaxed">
-                  Explore all 10 curated modules including <em>Art of Smart Work</em>, <em>Stress to Strength</em>, and <em>Integrity: The Ultimate Advantage</em>.
+                  Explore all 10 curated modules including{" "}
+                  <em>Art of Smart Work</em>, <em>Stress to Strength</em>, and{" "}
+                  <em>Integrity: The Ultimate Advantage</em>.
                 </p>
                 <Button
                   asChild
@@ -372,7 +376,8 @@ export const ContactUsClient = () => {
                   <div className="p-3 bg-muted/60 rounded-xl border border-border text-xs flex items-center gap-2 text-muted-foreground">
                     <Info className="w-4 h-4 text-primary shrink-0" />
                     <span>
-                      Consultation details are editable so coordinators can submit official institutional contact info.
+                      Consultation details are editable so coordinators can
+                      submit official institutional contact info.
                     </span>
                   </div>
                 )}
@@ -394,7 +399,9 @@ export const ContactUsClient = () => {
                       onChange={(e) => setName(e.target.value)}
                       disabled={!!session && !isConsultation}
                       placeholder={
-                        isConsultation ? "e.g. Rajesh Sharma" : "Enter your full name"
+                        isConsultation
+                          ? "e.g. Rajesh Sharma"
+                          : "Enter your full name"
                       }
                       className="bg-muted"
                       required
@@ -436,7 +443,8 @@ export const ContactUsClient = () => {
                           className="text-xs font-bold text-muted-foreground uppercase tracking-wider"
                           htmlFor={`${id}-phone`}
                         >
-                          Phone / WhatsApp <span className="text-destructive">*</span>
+                          Phone / WhatsApp{" "}
+                          <span className="text-destructive">*</span>
                         </Label>
                         <Input
                           id={`${id}-phone`}
@@ -455,7 +463,8 @@ export const ContactUsClient = () => {
                           className="text-xs font-bold text-muted-foreground uppercase tracking-wider"
                           htmlFor={`${id}-org`}
                         >
-                          Organization / University <span className="text-destructive">*</span>
+                          Organization / University{" "}
+                          <span className="text-destructive">*</span>
                         </Label>
                         <Input
                           id={`${id}-org`}
@@ -588,7 +597,9 @@ export const ContactUsClient = () => {
                       <Send className="w-4 h-4" />
                     )}
                     <span>
-                      {isConsultation ? "Submit Speaker Invitation" : "Send Message"}
+                      {isConsultation
+                        ? "Submit Speaker Invitation"
+                        : "Send Message"}
                     </span>
                   </Button>
                 </div>

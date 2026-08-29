@@ -109,7 +109,9 @@ export const WorkshopsModules = () => {
   >("all");
 
   const filtered =
-    filter === "all" ? workshops : workshops.filter((w) => w.category === filter);
+    filter === "all"
+      ? workshops
+      : workshops.filter((w) => w.category === filter);
 
   return (
     <section

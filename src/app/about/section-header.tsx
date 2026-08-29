@@ -27,12 +27,7 @@ export const SectionHeader = ({
         className,
       )}
     >
-      <span
-        className={cn(
-          "about-sec-sub",
-          align === "left" && "text-left",
-        )}
-      >
+      <span className={cn("about-sec-sub", align === "left" && "text-left")}>
         {subtitle}
       </span>
       <h2

@@ -93,8 +93,7 @@ export default function UserQueriesPage() {
       });
     } catch (e: unknown) {
       console.error("Error sending reply:", e);
-      const errMsg =
-        e instanceof Error ? e.message : "Unknown error occurred.";
+      const errMsg = e instanceof Error ? e.message : "Unknown error occurred.";
       setSubmitErrors((prev) => ({
         ...prev,
         [queryId]: errMsg,

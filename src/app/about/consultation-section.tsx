@@ -173,8 +173,8 @@ export const ConsultationSection = () => {
             <p className="text-muted-foreground text-base sm:text-lg leading-relaxed mb-8">
               Interested in inviting <strong>Radheshyam Das</strong> for a
               corporate keynote, executive leadership retreat, or university
-              seminar? Reach out to our leadership office to coordinate schedules
-              and customize program themes.
+              seminar? Reach out to our leadership office to coordinate
+              schedules and customize program themes.
             </p>
 
             <div className="flex flex-col gap-5 text-sm">
