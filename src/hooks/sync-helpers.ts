@@ -70,11 +70,12 @@ export const handleCategoryPathInvalidations = (
 
 export const handleNotifications = (
   queryClient: QueryClient,
-  newAdditions: SyncNewAdditions,
+  newAdditions?: SyncNewAdditions,
   userId?: string,
 ) => {
+  if (!newAdditions) return;
   const hasNewItems = Object.keys(newAdditions).some(
-    (key) => newAdditions[key as keyof SyncNewAdditions].length > 0,
+    (key) => newAdditions[key as keyof SyncNewAdditions]?.length > 0,
   );
   if (!hasNewItems) return;
 
@@ -86,13 +87,14 @@ export const handleNotifications = (
 
 export const handleSearchUpdates = (
   queryClient: QueryClient,
-  rebuildSearch: boolean,
-  changedIds: SyncResult["changedIds"],
+  rebuildSearch?: boolean,
+  changedIds?: SyncResult["changedIds"],
 ) => {
   if (rebuildSearch) {
     rebuildSearchIndex(queryClient);
     return;
   }
+  if (!changedIds) return;
 
   for (const table of [
     STORE.RECORDINGS,
@@ -124,4 +126,32 @@ export const handleSyncSuccess = (
     result.rebuildSearchIndex,
     result.changedIds,
   );
+};
+
+export const executeSyncJob = async ({
+  job,
+  queryClient,
+  userId,
+  toastId = "sync-status",
+  dispatch,
+}: {
+  job: Record<string, unknown>;
+  queryClient: QueryClient;
+  userId?: string;
+  toastId?: string;
+  dispatch: (
+    job: Record<string, unknown>,
+    onProgress: (msg: string) => void,
+  ) => Promise<SyncResult>;
+}): Promise<number> => {
+  try {
+    const result = await dispatch(job, (msg) =>
+      toast.loading(msg, { id: toastId }),
+    );
+    handleSyncSuccess(result, queryClient, userId, toastId);
+    return 1;
+  } catch (err) {
+    toast.error(`Sync error: ${(err as Error).message}`, { id: toastId });
+    throw err;
+  }
 };

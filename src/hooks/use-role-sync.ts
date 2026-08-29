@@ -5,16 +5,15 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
-import { toast } from "sonner";
 import { useSession } from "@/components/providers";
 import { QUERY_KEY, SYNC_INTERVAL, WORKER_MSG } from "@/constants";
 import { dispatchSyncJob } from "@/lib/sync-worker-client";
 import { toRoleId } from "@/lib/utils";
-import { handleSyncSuccess } from "./sync-helpers";
+import { executeSyncJob } from "./sync-helpers";
 
-const TOAST_ID = "sync-role-status";
+const TOAST_ID = "role-sync-status";
 
-export const runRoleSync = async ({
+export const runRoleSync = ({
   queryClient,
   roleId,
   userId,
@@ -24,24 +23,19 @@ export const runRoleSync = async ({
   roleId: number;
   userId: string;
   accessToken: string;
-}): Promise<number> => {
-  try {
-    const result = await dispatchSyncJob(
-      {
-        type: WORKER_MSG.START_ROLE_SYNC,
-        roleId,
-        userId,
-        accessToken,
-      },
-      (msg) => toast.loading(msg, { id: TOAST_ID }),
-    );
-    handleSyncSuccess(result, queryClient, userId, TOAST_ID);
-    return 1;
-  } catch (err) {
-    toast.error(`Sync error: ${(err as Error).message}`, { id: TOAST_ID });
-    throw err;
-  }
-};
+}): Promise<number> =>
+  executeSyncJob({
+    job: {
+      type: WORKER_MSG.START_ROLE_SYNC,
+      roleId,
+      userId,
+      accessToken,
+    },
+    queryClient,
+    userId,
+    toastId: TOAST_ID,
+    dispatch: dispatchSyncJob,
+  });
 
 export const useRoleSync = () => {
   const { session, isLoading } = useSession();
