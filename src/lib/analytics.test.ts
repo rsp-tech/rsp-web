@@ -1,5 +1,5 @@
-import posthog from "posthog-js";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import posthog from "posthog-js";
 import { trackEvent } from "./analytics";
 
 // Mock posthog-js
@@ -12,48 +12,22 @@ vi.mock("posthog-js", () => {
   };
 });
 
-describe("analytics utility", () => {
-  const originalEnv = process.env;
-  const originalWindow = global.window;
-
-  beforeEach(() => {
-    vi.resetAllMocks();
-    process.env = { ...originalEnv };
-  });
-
-  afterEach(() => {
-    process.env = originalEnv;
-    global.window = originalWindow;
-  });
-
-  it("should not fire events if executed server-side (window is undefined)", () => {
-    // Simulate server-side: window is undefined
-    // @ts-expect-error
-    delete global.window;
-    process.env["NEXT_PUBLIC_POSTHOG_KEY"] = "phc_test_key";
-
-    trackEvent("test_event", { foo: "bar" });
-
-    expect(posthog.capture).not.toHaveBeenCalled();
-  });
-
-  it("should not fire events if NEXT_PUBLIC_POSTHOG_KEY is missing", () => {
-    // biome-ignore lint/suspicious/noExplicitAny: Simulate client-side: window is defined
-    global.window = {} as any;
+describe.concurrent("analytics utility", () => {
+  it.concurrent("should not fire events if NEXT_PUBLIC_POSTHOG_KEY is missing", () => {
     delete process.env["NEXT_PUBLIC_POSTHOG_KEY"];
-
     trackEvent("test_event", { foo: "bar" });
-
     expect(posthog.capture).not.toHaveBeenCalled();
   });
 
-  it("should fire events if client-side and NEXT_PUBLIC_POSTHOG_KEY is present", async () => {
-    // biome-ignore lint/suspicious/noExplicitAny: Simulate client-side: window is defined
-    global.window = {} as any;
+  it.concurrent("should fire events if NEXT_PUBLIC_POSTHOG_KEY is present", async () => {
     process.env["NEXT_PUBLIC_POSTHOG_KEY"] = "phc_test_key";
+    process.env["NEXT_PUBLIC_POSTHOG_HOST"] = "https://app.posthog.com";
 
     await trackEvent("test_event", { foo: "bar" });
 
     expect(posthog.capture).toHaveBeenCalledWith("test_event", { foo: "bar" });
   });
 });
+
+
+

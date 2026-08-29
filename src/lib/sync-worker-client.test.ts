@@ -244,4 +244,28 @@ describe("sync-worker-client", () => {
 
     await expect(promise).rejects.toThrow("DataCloneError");
   });
+
+  it("getAudioCacheSettings returns defaults and parses stored JSON safely", async () => {
+    const { DEFAULT_SETTINGS, getAudioCacheSettings } = await import(
+      "@/hooks/use-audio-cache"
+    );
+    expect(getAudioCacheSettings()).toEqual(DEFAULT_SETTINGS);
+
+    localStorage.setItem(
+      "rsp-audio-settings",
+      JSON.stringify({ maxCacheSizeMB: 500 }),
+    );
+    expect(getAudioCacheSettings()).toEqual({ maxCacheSizeMB: 500 });
+
+    localStorage.setItem("rsp-audio-settings", "invalid-json");
+    expect(getAudioCacheSettings()).toEqual(DEFAULT_SETTINGS);
+    localStorage.removeItem("rsp-audio-settings");
+  });
+
+  it("useIsMobile and useOnlineStatus hook helpers resolve correctly", async () => {
+    const { useIsMobile } = await import("@/hooks/use-is-mobile");
+    const { useOnlineStatus } = await import("@/hooks/use-online-status");
+    expect(typeof useIsMobile).toBe("function");
+    expect(typeof useOnlineStatus).toBe("function");
+  });
 });

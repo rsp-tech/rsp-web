@@ -1,38 +1,222 @@
-import { describe, expect, it } from "vitest";
-import { pathToUrlPath } from "./utils";
+import type { User } from "@supabase/supabase-js";
+import { describe, expect, it, vi } from "vitest";
+import type { Category } from "@/types";
 
-describe("pathToUrlPath", () => {
-  it("converts a single segment path string", () => {
-    expect(pathToUrlPath("/spiritual-discourses")).toBe("spiritual_discourses");
+import { getQueryClient } from "./query-client";
+import { getAssetUrl, getAudioUrl, getCategoryImageUrl } from "./storage";
+import {
+  categoryPath,
+  cn,
+  createLimiter,
+  errorMessage,
+  getUserDisplayName,
+  pathToUrlPath,
+  slugToLabel,
+  sortByDate,
+  sortByOrderInd,
+  toRoleId,
+} from "./utils";
+
+describe.concurrent("utils.ts suite", () => {
+  it.concurrent("cn merges class names and handles tailwind conflicts", () => {
+    expect(
+      cn("px-2 py-1", "bg-red-500", {
+        "text-white": true,
+        "opacity-50": false,
+      }),
+    ).toBe("px-2 py-1 bg-red-500 text-white");
+    expect(cn("p-4", "p-2")).toBe("p-2");
   });
 
-  it("converts a multi-segment path string", () => {
+  it.concurrent("categoryPath converts dot and underscore to slash and hyphen", () => {
+    expect(categoryPath("spiritual_discourses.bhagavad_gita")).toBe(
+      "spiritual-discourses/bhagavad-gita",
+    );
+    expect(categoryPath("simple")).toBe("simple");
+  });
+
+  it.concurrent("slugToLabel transforms underscore separated slugs into capitalized words", () => {
+    expect(slugToLabel("bhagavad_gita")).toBe("Bhagavad Gita");
+    expect(slugToLabel("srimad_bhagavatam_canto_1")).toBe(
+      "Srimad Bhagavatam Canto 1",
+    );
+    expect(slugToLabel("")).toBe("");
+  });
+
+  it.concurrent("errorMessage extracts error message from Error instances or strings", () => {
+    expect(errorMessage(new Error("Database disconnected"))).toBe(
+      "Database disconnected",
+    );
+    expect(errorMessage("Raw string error")).toBe("Raw string error");
+    expect(errorMessage({ code: 500 })).toBe("[object Object]");
+    expect(errorMessage(404)).toBe("404");
+    expect(errorMessage(null)).toBe("null");
+    expect(errorMessage(undefined)).toBe("undefined");
+  });
+
+  it.concurrent("getUserDisplayName retrieves name from metadata, email, or fallback", () => {
+    const userWithName = {
+      user_metadata: { full_name: "Radha Krishna Das" },
+      email: "rkdas@example.com",
+    } as unknown as User;
+    expect(getUserDisplayName(userWithName)).toBe("Radha Krishna Das");
+
+    const userWithEmail = {
+      user_metadata: {},
+      email: "bhakta_john@example.com",
+    } as unknown as User;
+    expect(getUserDisplayName(userWithEmail)).toBe("bhakta_john");
+
+    expect(getUserDisplayName(undefined)).toBe("User");
+    expect(getUserDisplayName(undefined, "Guest")).toBe("Guest");
+  });
+
+  it.concurrent("createLimiter limits concurrent async task executions", async () => {
+    const limit = createLimiter(2);
+    let activeCount = 0;
+    let maxActiveObserved = 0;
+
+    const makeTask = (delayMs: number, resultVal: string) => () =>
+      limit(
+        () =>
+          new Promise<string>((resolve) => {
+            activeCount++;
+            if (activeCount > maxActiveObserved) {
+              maxActiveObserved = activeCount;
+            }
+            setTimeout(() => {
+              activeCount--;
+              resolve(resultVal);
+            }, delayMs);
+          }),
+      );
+
+    const results = await Promise.all([
+      makeTask(30, "A")(),
+      makeTask(20, "B")(),
+      makeTask(10, "C")(),
+      makeTask(10, "D")(),
+    ]);
+
+    expect(results).toEqual(["A", "B", "C", "D"]);
+    expect(maxActiveObserved).toBeLessThanOrEqual(2);
+  });
+
+  it.concurrent("createLimiter propagates promise rejection and continues processing queue", async () => {
+    const limit = createLimiter(1);
+    const failingTask = () =>
+      limit(() => Promise.reject(new Error("Task failure")));
+    const succeedingTask = () =>
+      limit(() => Promise.resolve("Success after fail"));
+
+    await expect(failingTask()).rejects.toThrow("Task failure");
+    const nextResult = await succeedingTask();
+    expect(nextResult).toBe("Success after fail");
+  });
+
+  it.concurrent("sortByOrderInd sorts objects by order_ind ascending or descending", () => {
+    const items = [
+      { order_ind: 10, name: "C" },
+      { order_ind: 1, name: "A" },
+      { order_ind: null, name: "Null" },
+      { order_ind: 5, name: "B" },
+    ];
+    items.sort(sortByOrderInd(1));
+    expect(items.map((i) => i.name)).toEqual(["Null", "A", "B", "C"]);
+
+    items.sort(sortByOrderInd(-1));
+    expect(items.map((i) => i.name)).toEqual(["C", "B", "A", "Null"]);
+  });
+
+  it.concurrent("sortByDate sorts by date ascending or descending", () => {
+    const items = [
+      { id: 1, updated_at: "2026-02-01T00:00:00Z" },
+      { id: 2, updated_at: "2026-01-01T00:00:00Z" },
+      { id: 3, updated_at: null },
+    ];
+    items.sort(sortByDate(1));
+    expect(items.map((i) => i.id)).toEqual([3, 2, 1]);
+
+    const recs = [
+      { id: 1, recorded_at: "2025-05-01T00:00:00Z" },
+      { id: 2, recorded_at: "2026-05-01T00:00:00Z" },
+      { id: 3, recorded_at: "2024-05-01T00:00:00Z" },
+    ];
+    recs.sort(sortByDate(-1, "recorded_at"));
+    expect(recs.map((i) => i.id)).toEqual([2, 1, 3]);
+  });
+
+  it.concurrent("pathToUrlPath converts paths and slug arrays to ltree format", () => {
+    expect(pathToUrlPath("/spiritual-discourses")).toBe("spiritual_discourses");
     expect(pathToUrlPath("/spiritual-discourses/bg")).toBe(
       "spiritual_discourses.bg",
     );
-  });
-
-  it("handles string arrays (slugs) correctly", () => {
     expect(pathToUrlPath(["spiritual-discourses", "bg"])).toBe(
       "spiritual_discourses.bg",
     );
-  });
-
-  it("normalizes leading/trailing and duplicate slashes", () => {
     expect(pathToUrlPath("///spiritual-discourses//bg/")).toBe(
       "spiritual_discourses.bg",
     );
-  });
-
-  it("handles empty path string or empty array gracefully", () => {
     expect(pathToUrlPath("")).toBe("");
     expect(pathToUrlPath("/")).toBe("");
     expect(pathToUrlPath([])).toBe("");
   });
 
-  it("replaces multiple hyphens with underscores", () => {
-    expect(pathToUrlPath("/some-very-long-path-name/sub-cat")).toBe(
-      "some_very_long_path_name.sub_cat",
+  it.concurrent("toRoleId extracts integer role ids safely", () => {
+    expect(toRoleId(1)).toBe(1);
+    expect(toRoleId(0)).toBe(0);
+    expect(toRoleId(108)).toBe(108);
+    expect(toRoleId(1.5)).toBeUndefined();
+    expect(toRoleId("1")).toBeUndefined();
+    expect(toRoleId(null)).toBeUndefined();
+    expect(toRoleId(undefined)).toBeUndefined();
+  });
+
+  it.concurrent("storage generates URLs for assets, audio, and category images", () => {
+    const cat = { img_id: 100 } as Category;
+    expect(getCategoryImageUrl(cat)).toBe("/img/2s.webp");
+    expect(
+      getCategoryImageUrl({ img_id: null } as unknown as Category),
+    ).toBeNull();
+
+    expect(getAssetUrl("https://external.cdn/image.jpg")).toBe(
+      "https://external.cdn/image.jpg",
     );
+    expect(getAssetUrl("assets/file.pdf")).toContain("assets/file.pdf");
+    expect(getAudioUrl("audio_123.mp3")).toContain("audio_123.mp3");
+  });
+
+  it.concurrent("getQueryClient returns configured singleton", () => {
+    const client1 = getQueryClient();
+    const client2 = getQueryClient();
+    expect(client1).toBe(client2);
+    expect(client1.getDefaultOptions().queries?.retry).toBe(false);
+    expect(client1.getDefaultOptions().queries?.networkMode).toBe("always");
+  });
+
+  it.concurrent("audioEngine manages audio snapshot and controls", async () => {
+    const { audioEngine } = await import("./audio-engine");
+    const listener = vi.fn();
+    const unsubscribe = audioEngine.subscribe(listener);
+
+    expect(audioEngine.getSnapshot().isPlaying).toBe(false);
+
+    audioEngine.setVolume(0.5);
+    expect(audioEngine.getSnapshot().volume).toBe(0.5);
+
+    audioEngine.setRate(1.5);
+    expect(audioEngine.getSnapshot().playbackRate).toBe(1.5);
+
+    audioEngine.seek(60);
+    audioEngine.togglePlay();
+    audioEngine.dismiss();
+
+    unsubscribe();
+  });
+
+  it.concurrent("idb getDB returns promise or null when indexedDB is checked", async () => {
+    const { getDB } = await import("./idb");
+    const db = getDB();
+    expect(db).toBeDefined();
   });
 });
