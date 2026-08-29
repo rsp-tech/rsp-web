@@ -23,7 +23,7 @@ describe.concurrent("src/views/category-hero.tsx suite", () => {
     const { CategoryHero } = await import("./category-hero");
     expect(typeof CategoryHero).toBe("function");
     try {
-      const tree = CategoryHero({});
+      const tree = (CategoryHero as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

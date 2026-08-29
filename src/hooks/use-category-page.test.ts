@@ -45,6 +45,6 @@ describe.concurrent("use-category-page hook suite", () => {
     const res = useCategoryPage("/gita");
     const data = await res.data;
     expect(data?.category?.name).toBe("Bhagavad Gita");
-    expect(data?.recordings[0]?.materials.length).toBe(1);
+    expect(data?.recordings?.[0]?.materials?.length).toBe(1);
   });
 });

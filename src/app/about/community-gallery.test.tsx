@@ -23,7 +23,7 @@ describe.concurrent("src/app/about/community-gallery.tsx suite", () => {
     const { CommunityGallery } = await import("./community-gallery");
     expect(typeof CommunityGallery).toBe("function");
     try {
-      const tree = CommunityGallery({});
+      const tree = (CommunityGallery as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

@@ -8,6 +8,7 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "biome check",
+    "typecheck": "tsc --noEmit",
     "db-types:prune": "node --experimental-strip-types scripts/prune-supabase-types.ts",
     "css": "node --experimental-strip-types scripts/analyze-css.ts",
     "purge-ui": "node --experimental-strip-types scripts/purge-dead-ui.ts",

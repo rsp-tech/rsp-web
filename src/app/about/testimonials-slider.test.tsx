@@ -23,7 +23,7 @@ describe.concurrent("src/app/about/testimonials-slider.tsx suite", () => {
     const { TestimonialsSlider } = await import("./testimonials-slider");
     expect(typeof TestimonialsSlider).toBe("function");
     try {
-      const tree = TestimonialsSlider({});
+      const tree = (TestimonialsSlider as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

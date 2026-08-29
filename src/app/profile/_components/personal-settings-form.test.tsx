@@ -23,7 +23,7 @@ describe.concurrent("src/app/profile/_components/personal-settings-form.tsx suit
     const { PersonalSettingsForm } = await import("./personal-settings-form");
     expect(typeof PersonalSettingsForm).toBe("function");
     try {
-      const tree = PersonalSettingsForm({});
+      const tree = (PersonalSettingsForm as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

@@ -23,7 +23,7 @@ describe.concurrent("src/app/queries/_components/query-reply-form.tsx suite", ()
     const { QueryReplyForm } = await import("./query-reply-form");
     expect(typeof QueryReplyForm).toBe("function");
     try {
-      const tree = QueryReplyForm({});
+      const tree = (QueryReplyForm as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

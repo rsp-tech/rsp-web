@@ -23,7 +23,7 @@ describe.concurrent("src/app/get-involved/volunteer-item.tsx suite", () => {
     const { VolunteerItem } = await import("./volunteer-item");
     expect(typeof VolunteerItem).toBe("function");
     try {
-      const tree = VolunteerItem({});
+      const tree = (VolunteerItem as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

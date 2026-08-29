@@ -23,7 +23,7 @@ describe.concurrent("src/components/sync-trigger.tsx suite", () => {
     const { SyncTrigger } = await import("./sync-trigger");
     expect(typeof SyncTrigger).toBe("function");
     try {
-      const tree = SyncTrigger({});
+      const tree = (SyncTrigger as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

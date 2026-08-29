@@ -23,7 +23,7 @@ describe.concurrent("src/app/about/why-invite.tsx suite", () => {
     const { WhyInvite } = await import("./why-invite");
     expect(typeof WhyInvite).toBe("function");
     try {
-      const tree = WhyInvite({});
+      const tree = (WhyInvite as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

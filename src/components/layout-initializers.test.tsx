@@ -23,7 +23,7 @@ describe.concurrent("src/components/layout-initializers.tsx suite", () => {
     const { LayoutInitializers } = await import("./layout-initializers");
     expect(typeof LayoutInitializers).toBe("function");
     try {
-      const tree = LayoutInitializers({});
+      const tree = (LayoutInitializers as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

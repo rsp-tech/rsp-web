@@ -24,7 +24,7 @@ describe.concurrent("src/app/about/page.tsx suite", () => {
     const Comp = mod.default;
     expect(typeof Comp).toBe("function");
     try {
-      const tree = Comp({});
+      const tree = (Comp as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

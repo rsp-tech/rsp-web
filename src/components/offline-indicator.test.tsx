@@ -23,7 +23,7 @@ describe.concurrent("src/components/offline-indicator.tsx suite", () => {
     const { OfflineIndicator } = await import("./offline-indicator");
     expect(typeof OfflineIndicator).toBe("function");
     try {
-      const tree = OfflineIndicator({});
+      const tree = (OfflineIndicator as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

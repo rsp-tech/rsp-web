@@ -23,7 +23,7 @@ describe.concurrent("src/app/about/photo.tsx suite", () => {
     const { RSPPhoto } = await import("./photo");
     expect(typeof RSPPhoto).toBe("function");
     try {
-      const tree = RSPPhoto({});
+      const tree = (RSPPhoto as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

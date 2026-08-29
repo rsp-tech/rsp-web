@@ -23,7 +23,7 @@ describe.concurrent("src/components/mobile-drawer.tsx suite", () => {
     const { MobileDrawer } = await import("./mobile-drawer");
     expect(typeof MobileDrawer).toBe("function");
     try {
-      const tree = MobileDrawer({});
+      const tree = (MobileDrawer as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

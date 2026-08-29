@@ -23,7 +23,7 @@ describe.concurrent("src/app/about/initiatives-grid.tsx suite", () => {
     const { InitiativesGrid } = await import("./initiatives-grid");
     expect(typeof InitiativesGrid).toBe("function");
     try {
-      const tree = InitiativesGrid({});
+      const tree = (InitiativesGrid as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

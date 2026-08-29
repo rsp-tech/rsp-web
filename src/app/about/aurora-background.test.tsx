@@ -23,7 +23,7 @@ describe.concurrent("src/app/about/aurora-background.tsx suite", () => {
     const { AuroraBackground } = await import("./aurora-background");
     expect(typeof AuroraBackground).toBe("function");
     try {
-      const tree = AuroraBackground({});
+      const tree = (AuroraBackground as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

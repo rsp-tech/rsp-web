@@ -4,7 +4,8 @@ vi.mock("./cleanup-helpers", () => ({
   performUserCleanup: () => Promise.resolve({ clearedUser: false }),
 }));
 
-vi.mock("./utils", () => ({
+vi.mock("./utils", async (importOriginal) => ({
+  ...await importOriginal(),
   loadUserSeeds: () => Promise.resolve(),
   fetchUserSyncDeltas: () =>
     Promise.resolve({

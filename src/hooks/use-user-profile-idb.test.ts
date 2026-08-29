@@ -24,7 +24,7 @@ describe.concurrent("use-user-profile-idb suite", () => {
   it.concurrent("useUserProfileIdb returns profile from IDB", async () => {
     const res = useUserProfileIdb("user_1");
     const profile = await res.data;
-    expect(profile?.full_name).toBe("Radheshyam");
+    expect((profile as any)?.full_name).toBe("Radheshyam");
     expect(profile?.id).toBe("user_1");
   });
 });

@@ -4,7 +4,8 @@ vi.mock("./cleanup-helpers", () => ({
   performRoleCleanup: () => Promise.resolve({ clearedRole: false }),
 }));
 
-vi.mock("./utils", () => ({
+vi.mock("./utils", async (importOriginal) => ({
+  ...await importOriginal(),
   isDatabaseStale: () => Promise.resolve(false),
   loadStaticZipSeedsForRole: () => Promise.resolve(false),
   fetchRoleSyncDeltas: () =>

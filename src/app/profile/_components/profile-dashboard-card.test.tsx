@@ -23,7 +23,7 @@ describe.concurrent("src/app/profile/_components/profile-dashboard-card.tsx suit
     const { ProfileDashboardCard } = await import("./profile-dashboard-card");
     expect(typeof ProfileDashboardCard).toBe("function");
     try {
-      const tree = ProfileDashboardCard({});
+      const tree = (ProfileDashboardCard as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from "vitest";
 
-vi.mock("./utils", () => ({
+vi.mock("./utils", async (importOriginal) => ({
+  ...await importOriginal(),
   isDatabaseStale: () => Promise.resolve(false),
   loadStaticZipSeeds: () => Promise.resolve(false),
   fetchPublicSyncDeltas: () =>

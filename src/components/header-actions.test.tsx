@@ -23,7 +23,7 @@ describe.concurrent("src/components/header-actions.tsx suite", () => {
     const { HeaderActions } = await import("./header-actions");
     expect(typeof HeaderActions).toBe("function");
     try {
-      const tree = HeaderActions({});
+      const tree = (HeaderActions as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

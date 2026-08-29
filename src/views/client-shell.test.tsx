@@ -39,7 +39,7 @@ vi.mock("@/hooks/use-category-page", () => ({
 describe.concurrent("src/views/client-shell.tsx suite", () => {
   it.concurrent("renders ClientShell category page view", async () => {
     const { ClientShell } = await import("./client-shell");
-    const tree = ClientShell({});
+    const tree = (ClientShell as any)({});
     expect(tree).toBeDefined();
   });
 });

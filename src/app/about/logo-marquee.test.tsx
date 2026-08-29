@@ -23,7 +23,7 @@ describe.concurrent("src/app/about/logo-marquee.tsx suite", () => {
     const { LogoMarquee } = await import("./logo-marquee");
     expect(typeof LogoMarquee).toBe("function");
     try {
-      const tree = LogoMarquee({});
+      const tree = (LogoMarquee as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

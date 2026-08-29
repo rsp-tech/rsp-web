@@ -25,7 +25,7 @@ describe.concurrent("src/app/about/spiritual-journey-timeline.tsx suite", () => 
     );
     expect(typeof SpiritualJourneyTimeline).toBe("function");
     try {
-      const tree = SpiritualJourneyTimeline({});
+      const tree = (SpiritualJourneyTimeline as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

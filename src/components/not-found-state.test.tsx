@@ -23,7 +23,7 @@ describe.concurrent("src/components/not-found-state.tsx suite", () => {
     const { NotFoundState } = await import("./not-found-state");
     expect(typeof NotFoundState).toBe("function");
     try {
-      const tree = NotFoundState({});
+      const tree = (NotFoundState as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

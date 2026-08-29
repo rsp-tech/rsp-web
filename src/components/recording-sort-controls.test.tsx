@@ -23,7 +23,7 @@ describe.concurrent("src/components/recording-sort-controls.tsx suite", () => {
     const { RecordingSortControls } = await import("./recording-sort-controls");
     expect(typeof RecordingSortControls).toBe("function");
     try {
-      const tree = RecordingSortControls({});
+      const tree = (RecordingSortControls as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

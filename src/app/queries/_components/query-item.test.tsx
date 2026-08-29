@@ -23,7 +23,7 @@ describe.concurrent("src/app/queries/_components/query-item.tsx suite", () => {
     const { QueryItem } = await import("./query-item");
     expect(typeof QueryItem).toBe("function");
     try {
-      const tree = QueryItem({});
+      const tree = (QueryItem as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

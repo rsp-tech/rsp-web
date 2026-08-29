@@ -23,7 +23,7 @@ describe.concurrent("src/app/contact-us/contact-us-client.tsx suite", () => {
     const { ContactUsClient } = await import("./contact-us-client");
     expect(typeof ContactUsClient).toBe("function");
     try {
-      const tree = ContactUsClient({});
+      const tree = (ContactUsClient as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

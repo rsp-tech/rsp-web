@@ -23,7 +23,7 @@ describe.concurrent("src/components/nav-links.tsx suite", () => {
     const { NavLinks } = await import("./nav-links");
     expect(typeof NavLinks).toBe("function");
     try {
-      const tree = NavLinks({});
+      const tree = (NavLinks as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

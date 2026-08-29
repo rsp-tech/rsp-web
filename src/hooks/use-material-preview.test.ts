@@ -9,10 +9,10 @@ describe.concurrent("use-material-preview suite", () => {
       url: "https://test.pdf",
     };
 
-    useMaterialPreview.getState().openPreview(mockMaterial);
-    expect(useMaterialPreview.getState().material).toEqual(mockMaterial);
+    useMaterialPreview.getState()?.openPreview(mockMaterial);
+    expect(useMaterialPreview.getState()?.material).toEqual(mockMaterial);
 
-    useMaterialPreview.getState().closePreview();
-    expect(useMaterialPreview.getState().material).toBeNull();
+    useMaterialPreview.getState()?.closePreview();
+    expect(useMaterialPreview.getState()?.material).toBeNull();
   });
 });

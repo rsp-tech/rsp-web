@@ -23,7 +23,7 @@ describe.concurrent("src/components/footer.tsx suite", () => {
     const { Footer } = await import("./footer");
     expect(typeof Footer).toBe("function");
     try {
-      const tree = Footer({});
+      const tree = (Footer as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

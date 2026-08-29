@@ -23,7 +23,7 @@ describe.concurrent("src/app/about/impact-stats.tsx suite", () => {
     const { ImpactStats } = await import("./impact-stats");
     expect(typeof ImpactStats).toBe("function");
     try {
-      const tree = ImpactStats({});
+      const tree = (ImpactStats as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime

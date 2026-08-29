@@ -23,7 +23,7 @@ describe.concurrent("src/app/queries/_components/query-filters.tsx suite", () =>
     const { QueryFilters } = await import("./query-filters");
     expect(typeof QueryFilters).toBe("function");
     try {
-      const tree = QueryFilters({});
+      const tree = (QueryFilters as any)({});
       expect(tree).toBeDefined();
     } catch {
       // Component may require context or specific props in runtime
