@@ -5,7 +5,7 @@ vi.mock("./cleanup-helpers", () => ({
 }));
 
 vi.mock("./utils", async (importOriginal) => ({
-  ...await importOriginal(),
+  ...(await importOriginal()),
   loadUserSeeds: () => Promise.resolve(),
   fetchUserSyncDeltas: () =>
     Promise.resolve({

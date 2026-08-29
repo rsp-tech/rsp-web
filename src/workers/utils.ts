@@ -51,6 +51,31 @@ export interface ChangedCategoryMeta {
   bubbledChangeRecordingIds: Set<number>;
 }
 
+export const createInitialSyncState = (): {
+  changedCategoryMeta: ChangedCategoryMeta;
+  changedIds: SyncChangedIds;
+  newAdditions: SyncNewAdditions;
+} => ({
+  changedCategoryMeta: {
+    changedCategories: {},
+    changedRecordings: {},
+    bubbledChangeCategoryIds: new Set(),
+    bubbledChangeRecordingIds: new Set(),
+  },
+  changedIds: {
+    categories: [],
+    recordings: [],
+    materials: [],
+  },
+  newAdditions: {
+    recordings: [],
+    materials: [],
+    categories: [],
+    replies: [],
+    requests: [],
+  },
+});
+
 interface WriteRowsConfig {
   db: IDBPDatabase<RSP_IDB>;
   table: IDBTable;

@@ -2,16 +2,11 @@ import type { IDBPDatabase } from "idb";
 import { STORE, USER_SPECIFIC_TABLES } from "@/constants";
 import type { RSP_IDB } from "@/lib/idb";
 import { toUpdatedAtMap } from "@/lib/sync-utils";
-import type {
-  SyncChangedIds,
-  SyncNewAdditions,
-  SyncResult,
-  SyncTable,
-} from "@/types";
+import type { SyncResult, SyncTable } from "@/types";
 import { performUserCleanup } from "./cleanup-helpers";
 import {
   applyDeltas,
-  type ChangedCategoryMeta,
+  createInitialSyncState,
   fetchUserSyncDeltas,
   loadUserSeeds,
   toSyncResult,
@@ -31,24 +26,8 @@ export const syncUserData = async (
   // Phase 1: Local User Cleanup (clears previous user data on account switch)
   const { clearedUser } = await performUserCleanup(db, userId);
 
-  const changedCategoryMeta: ChangedCategoryMeta = {
-    changedCategories: {},
-    changedRecordings: {},
-    bubbledChangeCategoryIds: new Set(),
-    bubbledChangeRecordingIds: new Set(),
-  };
-  const changedIds: SyncChangedIds = {
-    categories: [],
-    recordings: [],
-    materials: [],
-  };
-  const newAdditions: SyncNewAdditions = {
-    recordings: [],
-    materials: [],
-    categories: [],
-    replies: [],
-    requests: [],
-  };
+  const { changedCategoryMeta, changedIds, newAdditions } =
+    createInitialSyncState();
 
   let changedTables: string[] = [];
 

@@ -2,10 +2,10 @@ import type { IDBPDatabase } from "idb";
 import { GENERIC_TABLES, STORE } from "@/constants";
 import type { RSP_IDB } from "@/lib/idb";
 import { toUpdatedAtMap } from "@/lib/sync-utils";
-import type { SyncChangedIds, SyncNewAdditions, SyncResult } from "@/types";
+import type { SyncResult } from "@/types";
 import {
   applyDeltas,
-  type ChangedCategoryMeta,
+  createInitialSyncState,
   fetchPublicSyncDeltas,
   isDatabaseStale,
   loadStaticZipSeeds,
@@ -17,24 +17,8 @@ export const syncPublicData = async (
   origin: string,
   progressCallback?: (msg: string) => void,
 ): Promise<SyncResult> => {
-  const changedCategoryMeta: ChangedCategoryMeta = {
-    changedCategories: {},
-    changedRecordings: {},
-    bubbledChangeCategoryIds: new Set(),
-    bubbledChangeRecordingIds: new Set(),
-  };
-  const changedIds: SyncChangedIds = {
-    categories: [],
-    recordings: [],
-    materials: [],
-  };
-  const newAdditions: SyncNewAdditions = {
-    recordings: [],
-    materials: [],
-    categories: [],
-    replies: [],
-    requests: [],
-  };
+  const { changedCategoryMeta, changedIds, newAdditions } =
+    createInitialSyncState();
 
   let seedLoaded = false;
 

@@ -2,16 +2,11 @@ import type { IDBPDatabase } from "idb";
 import { META_KEY, ROLE_SYNCED_TABLES, STORE } from "@/constants";
 import type { RSP_IDB } from "@/lib/idb";
 import { toUpdatedAtMap } from "@/lib/sync-utils";
-import type {
-  SyncChangedIds,
-  SyncNewAdditions,
-  SyncResult,
-  SyncTable,
-} from "@/types";
+import type { SyncResult, SyncTable } from "@/types";
 import { performRoleCleanup } from "./cleanup-helpers";
 import {
   applyDeltas,
-  type ChangedCategoryMeta,
+  createInitialSyncState,
   fetchRoleSyncDeltas,
   isDatabaseStale,
   loadStaticZipSeedsForRole,
@@ -33,26 +28,11 @@ export const syncRoleData = async (
   // Phase 1: Role Cleanup (purges old role data if roleId shifted)
   const { clearedRole } = await performRoleCleanup(db, roleId);
 
-  const changedCategoryMeta: ChangedCategoryMeta = {
-    changedCategories: {},
-    changedRecordings: {},
-    bubbledChangeCategoryIds: new Set(),
-    bubbledChangeRecordingIds: new Set(),
-  };
-  const changedIds: SyncChangedIds = {
-    categories: [],
-    recordings: [],
-    materials: [],
-  };
-  const newAdditions: SyncNewAdditions = {
-    recordings: [],
-    materials: [],
-    categories: [],
-    replies: [],
-    requests: [],
-  };
+  const { changedCategoryMeta, changedIds, newAdditions } =
+    createInitialSyncState();
 
   let seedLoaded = false;
+
   const storedRole = await db.get(STORE.ROLE_META, META_KEY.SYNC_ROLE);
 
   const metaRes = await fetch(`${origin}/api/sync/meta`);
