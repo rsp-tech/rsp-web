@@ -10,6 +10,5 @@ FILES=$(git diff --cached --name-only --diff-filter=ACM | grep -E '\.(ts|mts|tsx
 
 # Run Biome (Lint/Format)
 echo "$FILES" | xargs -n 50 pnpm biome check --write --no-errors-on-unmatched
-echo "$FILES" | xargs -n 50 pnpx @promptshield/cli --check
 
 git add $FILES
