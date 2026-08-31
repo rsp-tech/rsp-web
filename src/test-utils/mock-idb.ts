@@ -73,38 +73,12 @@ export const createMockDb = (
       const targetStore = Array.isArray(store) ? store[0] : store;
       return {
         store: {
-          get: (key: string | number) =>
-            Promise.resolve(storeData.get(`${targetStore}:${key}`)),
-          getAll: () => {
-            const items: unknown[] = [];
-            for (const [k, v] of storeData.entries()) {
-              if (k.startsWith(`${targetStore}:`)) {
-                items.push(v);
-              }
-            }
-            return Promise.resolve(items);
-          },
-          put: (val: unknown, key?: string | number) => {
-            const recordKey =
-              key ??
-              (val && typeof val === "object" && "id" in val
-                ? (val as { id: string | number }).id
-                : undefined);
-            storeData.set(`${targetStore}:${recordKey}`, val);
-            return Promise.resolve(recordKey);
-          },
-          delete: (key: string | number) => {
-            storeData.delete(`${targetStore}:${key}`);
-            return Promise.resolve();
-          },
-          clear: () => {
-            for (const k of Array.from(storeData.keys())) {
-              if (k.startsWith(`${targetStore}:`)) {
-                storeData.delete(k);
-              }
-            }
-            return Promise.resolve();
-          },
+          get: (key: string | number) => mockDb.get(targetStore, key),
+          getAll: () => mockDb.getAll(targetStore),
+          put: (val: unknown, key?: string | number) =>
+            mockDb.put(targetStore, val, key),
+          delete: (key: string | number) => mockDb.delete(targetStore, key),
+          clear: () => mockDb.clear(targetStore),
           openCursor: () => Promise.resolve(null),
         },
         done: Promise.resolve(),

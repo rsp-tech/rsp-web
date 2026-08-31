@@ -17,17 +17,11 @@ import { toast } from "sonner";
 import { useSession } from "@/components/providers";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
+import { ENGAGEMENT_TYPES } from "@/constants";
+import { useConsultationForm } from "@/hooks/use-consultation-form";
 import { saveUserQueryToIdb } from "@/hooks/use-user-queries-and-replies";
-import { formatConsultationMessage, getUserDisplayName } from "@/lib/utils";
+import { getUserDisplayName } from "@/lib/utils";
 import { SectionHeader } from "./section-header";
-
-const ENGAGEMENT_TYPES = [
-  "Corporate Workshop / Seminar",
-  "Academic Lecture / Keynote",
-  "Leadership Retreat / Executive Advisory",
-  "Youth / Community Festival",
-  "General Advisory / Consultation",
-] as const;
 
 export const ConsultationSection = () => {
   const queryClient = useQueryClient();
@@ -35,14 +29,8 @@ export const ConsultationSection = () => {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
-  const [organization, setOrganization] = useState("");
-  const [engagementType, setEngagementType] = useState<string>(
-    ENGAGEMENT_TYPES[0],
-  );
-  const [audienceSize, setAudienceSize] = useState("");
-  const [preferredDates, setPreferredDates] = useState("");
   const [message, setMessage] = useState("");
+  const consult = useConsultationForm();
 
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -61,8 +49,8 @@ export const ConsultationSection = () => {
     if (
       !name.trim() ||
       !email.trim() ||
-      !phone.trim() ||
-      !organization.trim() ||
+      !consult.phone.trim() ||
+      !consult.organization.trim() ||
       !message.trim()
     ) {
       toast.error("Please fill in all required fields.");
@@ -71,17 +59,8 @@ export const ConsultationSection = () => {
 
     setSubmitting(true);
 
-    const formattedSubject = `[Speaker Invitation] ${organization.trim()} - ${engagementType}`;
-    const formattedMessage = formatConsultationMessage({
-      organization,
-      engagementType,
-      name,
-      email,
-      phone,
-      audienceSize,
-      preferredDates,
-      message,
-    });
+    const formattedSubject = consult.formatSubject();
+    const formattedMessage = consult.formatMessage(name, email, message);
 
     try {
       const res = await fetch("/api/queries", {
@@ -123,9 +102,7 @@ export const ConsultationSection = () => {
 
   const resetForm = () => {
     setSubmitted(false);
-    setOrganization("");
-    setAudienceSize("");
-    setPreferredDates("");
+    consult.reset();
     setMessage("");
     if (session?.user) {
       setName(getUserDisplayName(session.user));
@@ -302,8 +279,8 @@ export const ConsultationSection = () => {
                       id="consult-phone"
                       required
                       type="tel"
-                      value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      value={consult.phone}
+                      onChange={(e) => consult.setPhone(e.target.value)}
                       placeholder="+91 98765 43210"
                       className="about-form-input"
                     />
@@ -322,8 +299,8 @@ export const ConsultationSection = () => {
                       id="consult-org"
                       required
                       type="text"
-                      value={organization}
-                      onChange={(e) => setOrganization(e.target.value)}
+                      value={consult.organization}
+                      onChange={(e) => consult.setOrganization(e.target.value)}
                       placeholder="e.g. Infosys, IIT Bombay"
                       className="about-form-input"
                     />
@@ -340,8 +317,8 @@ export const ConsultationSection = () => {
                   </Label>
                   <select
                     id="consult-type"
-                    value={engagementType}
-                    onChange={(e) => setEngagementType(e.target.value)}
+                    value={consult.engagementType}
+                    onChange={(e) => consult.setEngagementType(e.target.value)}
                     className="about-form-select"
                   >
                     {ENGAGEMENT_TYPES.map((type) => (
@@ -364,8 +341,8 @@ export const ConsultationSection = () => {
                     <input
                       id="consult-audience"
                       type="text"
-                      value={audienceSize}
-                      onChange={(e) => setAudienceSize(e.target.value)}
+                      value={consult.audienceSize}
+                      onChange={(e) => consult.setAudienceSize(e.target.value)}
                       placeholder="e.g. 150 participants"
                       className="about-form-input"
                     />
@@ -382,8 +359,10 @@ export const ConsultationSection = () => {
                     <input
                       id="consult-dates"
                       type="text"
-                      value={preferredDates}
-                      onChange={(e) => setPreferredDates(e.target.value)}
+                      value={consult.preferredDates}
+                      onChange={(e) =>
+                        consult.setPreferredDates(e.target.value)
+                      }
                       placeholder="e.g. Q3 2026 / November"
                       className="about-form-input"
                     />

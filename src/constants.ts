@@ -18,10 +18,11 @@ export const ASSET_BASE_URL = process.env[
 export const AUDIO_BASE_URL = process.env["NEXT_PUBLIC_AUDIO_BASE_URL"];
 
 // IndexedDB
-export const DB_NAME = "rsp";
-export const DB_VERSION = 3;
+export const DB_NAME = "k";
+export const DB_VERSION = 1;
 
 export const STORE = {
+  ANNOUNCEMENTS: "announcements",
   CATEGORIES: "categories",
   RECORDINGS: "recordings",
   MATERIALS: "materials",
@@ -72,6 +73,7 @@ export const SEARCH_LOOKUP_TABLES = [
 ] as const;
 
 export const GENERIC_TABLES = [
+  STORE.ANNOUNCEMENTS,
   STORE.CATEGORIES,
   STORE.RECORDINGS,
   STORE.MATERIALS,
@@ -97,6 +99,8 @@ export const USER_SPECIFIC_TABLES = [
   STORE.USER_QUERIES,
   STORE.QUERY_REPLIES,
 ] as const;
+
+export const FEATURE_FLAGS_TABLE = "feature_flags";
 
 export const SYNC_COLUMNS = {
   [STORE.CATEGORIES]: `
@@ -188,6 +192,24 @@ export const SYNC_COLUMNS = {
     answer,
     question,
     is_published,
+    order_ind
+  `,
+
+  [STORE.ANNOUNCEMENTS]: `
+    id,
+    title,
+    subtitle,
+    badge_text,
+    category,
+    cta_label,
+    cta_url,
+    media_path,
+    media_type,
+    bg_gradient,
+    start_date,
+    end_date,
+    is_annual_recurring,
+    is_active,
     order_ind
   `,
 
@@ -305,6 +327,8 @@ export const META_KEY = {
   CLEANUP_ROLE: "cleanup_role",
   SYNC_ROLE: "sync_role",
   CLEANUP_USER_ID: "cleanup_user_id",
+  PUBLIC_FEATURES: "public_features",
+  USER_FEATURES: "user_features",
 } as const;
 
 export const LOCAL_STORAGE = {
@@ -347,6 +371,7 @@ export const QUERY_KEY = {
   VENUES: "venues",
   EVENTS: "events",
   AUDIO_CACHE_LIST: "audio-cache-list",
+  FEATURE_CONFIG: "feature-config",
 } as const;
 
 // Search
@@ -369,6 +394,16 @@ export const QUERY_CATEGORIES = [
   { value: "services", label: "Service Related Queries" },
 ];
 
+export const ENGAGEMENT_TYPES = [
+  "Corporate Workshop / Seminar",
+  "Academic Lecture / Keynote",
+  "Leadership Retreat / Executive Advisory",
+  "Youth / Community Festival",
+  "General Advisory / Consultation",
+] as const;
+
+export type EngagementType = (typeof ENGAGEMENT_TYPES)[number];
+
 export const AUDIO_CACHE_NAME = "rsp-audio-cache";
 
 export const PHILOSOPHICAL_CONCEPTS = [
@@ -383,3 +418,7 @@ export const PHILOSOPHICAL_CONCEPTS = [
   "Yoga — Union with Supreme",
   "Dharma — Eternal Duty",
 ] as const;
+
+export const FEATURE_FLAGS = {
+  VIDEOS: "video_sanctuary",
+};

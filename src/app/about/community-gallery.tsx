@@ -48,7 +48,7 @@ const MarqueeRow = ({ images, duration, reverse = false }: MarqueeRowProps) => (
       className="flex gap-4 whitespace-nowrap"
       style={{
         width: "max-content",
-        animation: `aboutMarqueeAnim ${duration} linear infinite ${reverse ? "reverse" : ""}`,
+        animation: `marquee ${duration} linear infinite ${reverse ? "reverse" : ""}`,
       }}
     >
       {[...images, ...images].map((img, idx) => (

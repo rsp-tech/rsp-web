@@ -47,6 +47,37 @@ const loadIgnoredCustomCssClasses = async (): Promise<void> => {
   }
 };
 
+const loadExistingClasses = async (): Promise<Set<string>> => {
+  const existing = new Set<string>();
+  try {
+    const raw = await fs.readFile(OUTPUT_FILE, "utf-8");
+    const json = JSON.parse(raw);
+    if (Array.isArray(json.data)) {
+      for (const item of json.data) {
+        if (item && typeof item.className === "string") {
+          existing.add(item.className);
+        }
+      }
+    }
+  } catch {
+    // If JSON read/parse fails, try loading from CSV
+    try {
+      const csvRaw = await fs.readFile(OUTPUT_CSV, "utf-8");
+      const lines = csvRaw.split(/\r?\n/).slice(1);
+      for (const line of lines) {
+        const trimmed = line.trim();
+        if (!trimmed) continue;
+        const rawCls = trimmed.split(",")[0];
+        const cls = rawCls.replace(/^\./, "").replace(/^"|"$/g, "");
+        if (cls) existing.add(cls);
+      }
+    } catch {
+      // Neither file exists yet
+    }
+  }
+  return existing;
+};
+
 const pool = async <T, R>(
   items: T[],
   limit: number,
@@ -283,6 +314,9 @@ const main = async (): Promise<void> => {
   const start = performance.now();
 
   try {
+    console.log("🔍 Loading existing class data for comparison...");
+    const existingClasses = await loadExistingClasses();
+
     const files = await getAllFiles(SRC_DIR);
 
     console.log(
@@ -309,6 +343,13 @@ const main = async (): Promise<void> => {
       }))
       .sort((a, b) => a.className.localeCompare(b.className));
 
+    const newlyAddedClasses =
+      existingClasses.size > 0
+        ? sorted
+            .map((item) => item.className)
+            .filter((cls) => !existingClasses.has(cls))
+        : [];
+
     console.log("🧪 Processing total dataset footprint calculations...");
 
     const finalReportData: Array<{
@@ -317,6 +358,7 @@ const main = async (): Promise<void> => {
       length: number;
       uncompressedBytes: number;
       brotliBytesUpperLimit: number;
+      isNew?: boolean;
     }> = [];
 
     for (const item of sorted) {
@@ -346,6 +388,7 @@ const main = async (): Promise<void> => {
         length: clsName.length,
         uncompressedBytes,
         brotliBytesUpperLimit,
+        isNew: existingClasses.size > 0 ? !existingClasses.has(clsName) : false,
       });
     }
 
@@ -392,6 +435,7 @@ const main = async (): Promise<void> => {
       timestamp: new Date().toISOString(),
       baselineCSSBytes: baselineBuffer.length,
       baselineBrotliBytes: baselineBrotliSize,
+      newlyAddedClasses,
       nextGeneratedCss: nextCssFilesData, // Injected Next.js output array
       primitiveUsage: primitiveUsageOutput,
       data: finalReportData,
@@ -419,7 +463,17 @@ const main = async (): Promise<void> => {
     console.log(
       `\n✅ Done. Generated report mapping all ${sorted.length} classes.`,
     );
-    console.log(`📂 JSON data stored at: ${OUTPUT_FILE}`);
+    if (newlyAddedClasses.length > 0) {
+      console.log(`\n✨ Newly added classes (${newlyAddedClasses.length}):`);
+      for (const cls of newlyAddedClasses) {
+        console.log(`  + ${cls}`);
+      }
+    } else if (existingClasses.size > 0) {
+      console.log(
+        "\n✨ Newly added classes: None (all matched existing dataset)",
+      );
+    }
+    console.log(`\n📂 JSON data stored at: ${OUTPUT_FILE}`);
     console.log(`📂 CSV records written to: ${OUTPUT_CSV}`);
     console.log(
       `\n⏱️ Total Execution Pipeline Time: ${((performance.now() - start) / 1000).toFixed(2)}s`,

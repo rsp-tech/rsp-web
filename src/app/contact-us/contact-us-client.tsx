@@ -30,17 +30,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { QUERY_CATEGORIES } from "@/constants";
+import { ENGAGEMENT_TYPES, QUERY_CATEGORIES } from "@/constants";
+import { useConsultationForm } from "@/hooks/use-consultation-form";
 import { saveUserQueryToIdb } from "@/hooks/use-user-queries-and-replies";
-import { formatConsultationMessage, getUserDisplayName } from "@/lib/utils";
-
-const ENGAGEMENT_TYPES = [
-  "Corporate Workshop / Seminar",
-  "Academic Lecture / Keynote",
-  "Leadership Retreat / Executive Advisory",
-  "Youth / Community Festival",
-  "General Advisory / Consultation",
-] as const;
+import { getUserDisplayName } from "@/lib/utils";
 
 export const ContactUsClient = () => {
   const router = useRouter();
@@ -64,13 +57,7 @@ export const ContactUsClient = () => {
   const [message, setMessage] = useState("");
 
   // Morphed Consultation fields
-  const [phone, setPhone] = useState("");
-  const [organization, setOrganization] = useState("");
-  const [engagementType, setEngagementType] = useState<string>(
-    ENGAGEMENT_TYPES[0],
-  );
-  const [audienceSize, setAudienceSize] = useState("");
-  const [preferredDates, setPreferredDates] = useState("");
+  const consult = useConsultationForm();
 
   const [submitting, setSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -98,7 +85,7 @@ export const ContactUsClient = () => {
     }
 
     if (isConsultation) {
-      if (!phone.trim() || !organization.trim()) {
+      if (!consult.phone.trim() || !consult.organization.trim()) {
         toast.error("Please provide your phone number and organization name.");
         return;
       }
@@ -111,20 +98,11 @@ export const ContactUsClient = () => {
     setSubmitError(null);
 
     const finalSubject = isConsultation
-      ? `[Speaker Invitation] ${organization.trim()} - ${engagementType}`
+      ? consult.formatSubject()
       : subject.trim();
 
     const finalMessage = isConsultation
-      ? formatConsultationMessage({
-          organization,
-          engagementType,
-          name,
-          email,
-          phone,
-          audienceSize,
-          preferredDates,
-          message,
-        })
+      ? consult.formatMessage(name, email, message)
       : message.trim();
 
     try {
@@ -159,10 +137,7 @@ export const ContactUsClient = () => {
 
       setSubject("");
       setMessage("");
-      setOrganization("");
-      setPhone("");
-      setAudienceSize("");
-      setPreferredDates("");
+      consult.reset();
     } catch (err: unknown) {
       console.error(err);
       const errMsg =
@@ -432,8 +407,8 @@ export const ContactUsClient = () => {
                         <Input
                           id={`${id}-phone`}
                           type="tel"
-                          value={phone}
-                          onChange={(e) => setPhone(e.target.value)}
+                          value={consult.phone}
+                          onChange={(e) => consult.setPhone(e.target.value)}
                           placeholder="+91 98765 43210"
                           className="bg-muted"
                           required
@@ -452,8 +427,10 @@ export const ContactUsClient = () => {
                         <Input
                           id={`${id}-org`}
                           type="text"
-                          value={organization}
-                          onChange={(e) => setOrganization(e.target.value)}
+                          value={consult.organization}
+                          onChange={(e) =>
+                            consult.setOrganization(e.target.value)
+                          }
                           placeholder="e.g. Infosys, IIT Bombay"
                           className="bg-muted"
                           required
@@ -471,8 +448,10 @@ export const ContactUsClient = () => {
                       </Label>
                       <select
                         id={`${id}-type`}
-                        value={engagementType}
-                        onChange={(e) => setEngagementType(e.target.value)}
+                        value={consult.engagementType}
+                        onChange={(e) =>
+                          consult.setEngagementType(e.target.value)
+                        }
                         className="h-9 px-3 rounded-lg bg-muted border border-input text-sm text-foreground focus:outline-hidden focus:ring-1 focus:ring-primary"
                       >
                         {ENGAGEMENT_TYPES.map((type) => (
@@ -495,8 +474,10 @@ export const ContactUsClient = () => {
                         <Input
                           id={`${id}-audience`}
                           type="text"
-                          value={audienceSize}
-                          onChange={(e) => setAudienceSize(e.target.value)}
+                          value={consult.audienceSize}
+                          onChange={(e) =>
+                            consult.setAudienceSize(e.target.value)
+                          }
                           placeholder="e.g. 100-250 participants"
                           className="bg-muted"
                         />
@@ -513,8 +494,10 @@ export const ContactUsClient = () => {
                         <Input
                           id={`${id}-dates`}
                           type="text"
-                          value={preferredDates}
-                          onChange={(e) => setPreferredDates(e.target.value)}
+                          value={consult.preferredDates}
+                          onChange={(e) =>
+                            consult.setPreferredDates(e.target.value)
+                          }
                           placeholder="e.g. Q4 2026 / November"
                           className="bg-muted"
                         />

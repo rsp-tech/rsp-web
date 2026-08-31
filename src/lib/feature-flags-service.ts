@@ -1,8 +1,8 @@
+import type { User } from "@supabase/supabase-js";
 import { unstable_cache } from "next/cache";
 import { CACHE_TAG, REVALIDATE_24_HOURS } from "@/app/api/constants";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import type { FeatureFlag } from "@/types";
-import { User } from "@supabase/supabase-js";
 
 export interface UserSessionLike {
   user?: {

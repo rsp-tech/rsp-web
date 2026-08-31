@@ -24,7 +24,7 @@ export const LogoMarquee = () => {
       <div className="relative w-full overflow-hidden about-marquee-mask">
         <div
           className="about-logo-marquee-track"
-          style={{ animation: "aboutMarqueeAnim 35s linear infinite" }}
+          style={{ animation: "marquee 35s linear infinite" }}
         >
           {[...logos, ...logos, ...logos].map((logo, idx) => (
             <div key={`logo-${idx}`} className="about-logo-marquee-item">
