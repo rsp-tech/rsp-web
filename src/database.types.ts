@@ -10,10 +10,85 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.4";
+    PostgrestVersion: "14.5";
   };
   prod: {
     Tables: {
+      announcements: {
+        Row: {
+          badge_text: string | null;
+          bg_gradient: string | null;
+          category: string | null;
+          cta_label: string | null;
+          cta_url: string | null;
+          end_date: string | null;
+          id: number;
+          is_active: boolean | null;
+          is_annual_recurring: boolean | null;
+          media_path: string | null;
+          media_type: string | null;
+          order_ind: number | null;
+          start_date: string | null;
+          subtitle: string | null;
+          title: string;
+          updated_at: string | null;
+        };
+        Insert: {
+          badge_text?: string | null;
+          bg_gradient?: string | null;
+          category?: string | null;
+          cta_label?: string | null;
+          cta_url?: string | null;
+          end_date?: string | null;
+          id?: never;
+          is_active?: boolean | null;
+          is_annual_recurring?: boolean | null;
+          media_path?: string | null;
+          media_type?: string | null;
+          order_ind?: number | null;
+          start_date?: string | null;
+          subtitle?: string | null;
+          title: string;
+          updated_at?: string | null;
+        };
+        Update: {
+          badge_text?: string | null;
+          bg_gradient?: string | null;
+          category?: string | null;
+          cta_label?: string | null;
+          cta_url?: string | null;
+          end_date?: string | null;
+          id?: never;
+          is_active?: boolean | null;
+          is_annual_recurring?: boolean | null;
+          media_path?: string | null;
+          media_type?: string | null;
+          order_ind?: number | null;
+          start_date?: string | null;
+          subtitle?: string | null;
+          title?: string;
+          updated_at?: string | null;
+        };
+        Relationships: [];
+      };
+      banner_images: {
+        Row: {
+          description: string;
+          id: number;
+          updated_at: string | null;
+        };
+        Insert: {
+          description: string;
+          id?: number;
+          updated_at?: string | null;
+        };
+        Update: {
+          description?: string;
+          id?: number;
+          updated_at?: string | null;
+        };
+        Relationships: [];
+      };
       categories: {
         Row: {
           allowed_roles: number[];
@@ -97,28 +172,6 @@ export type Database = {
         };
         Relationships: [];
       };
-      restricted_records: {
-        Row: {
-          id: number;
-          record_id: string;
-          table_name: string;
-          updated_at: string;
-        };
-        Insert: {
-          id?: never;
-          record_id: string;
-          table_name: string;
-          updated_at?: string;
-        };
-        Update: {
-          id?: never;
-          record_id?: string;
-          table_name?: string;
-          updated_at?: string;
-        };
-        Relationships: [];
-      };
-
       events: {
         Row: {
           id: number;
@@ -207,6 +260,39 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
+      };
+      feature_flags: {
+        Row: {
+          allowed_emails: string[] | null;
+          allowed_roles: number[] | null;
+          description: string | null;
+          id: string;
+          is_enabled: boolean;
+          is_ga: boolean;
+          name: string;
+          updated_at: string | null;
+        };
+        Insert: {
+          allowed_emails?: string[] | null;
+          allowed_roles?: number[] | null;
+          description?: string | null;
+          id: string;
+          is_enabled?: boolean;
+          is_ga?: boolean;
+          name: string;
+          updated_at?: string | null;
+        };
+        Update: {
+          allowed_emails?: string[] | null;
+          allowed_roles?: number[] | null;
+          description?: string | null;
+          id?: string;
+          is_enabled?: boolean;
+          is_ga?: boolean;
+          name?: string;
+          updated_at?: string | null;
+        };
+        Relationships: [];
       };
       featured_items: {
         Row: {
@@ -328,36 +414,6 @@ export type Database = {
             referencedColumns: ["id"];
           },
         ];
-      };
-      notifications: {
-        Row: {
-          created_at: string | null;
-          id: string;
-          message: string;
-          target_roles: number[] | null;
-          target_type: string;
-          target_users: string[] | null;
-          title: string;
-        };
-        Insert: {
-          created_at?: string | null;
-          id?: string;
-          message: string;
-          target_roles?: number[] | null;
-          target_type: string;
-          target_users?: string[] | null;
-          title: string;
-        };
-        Update: {
-          created_at?: string | null;
-          id?: string;
-          message?: string;
-          target_roles?: number[] | null;
-          target_type?: string;
-          target_users?: string[] | null;
-          title?: string;
-        };
-        Relationships: [];
       };
       query_replies: {
         Row: {
@@ -496,6 +552,27 @@ export type Database = {
           id?: string;
           to_path?: string;
           updated_at?: string | null;
+        };
+        Relationships: [];
+      };
+      restricted_records: {
+        Row: {
+          id: number;
+          record_id: string;
+          table_name: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: never;
+          record_id: string;
+          table_name: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: never;
+          record_id?: string;
+          table_name?: string;
+          updated_at?: string;
         };
         Relationships: [];
       };
@@ -659,51 +736,6 @@ export type Database = {
           },
           {
             foreignKeyName: "user_edit_requests_user_id_fkey";
-            columns: ["user_id"];
-            isOneToOne: false;
-            referencedRelation: "users";
-            referencedColumns: ["id"];
-          },
-        ];
-      };
-      user_notifications: {
-        Row: {
-          created_at: string | null;
-          id: string;
-          message: string;
-          notification_id: string | null;
-          read: boolean | null;
-          title: string;
-          user_id: string;
-        };
-        Insert: {
-          created_at?: string | null;
-          id?: string;
-          message: string;
-          notification_id?: string | null;
-          read?: boolean | null;
-          title: string;
-          user_id: string;
-        };
-        Update: {
-          created_at?: string | null;
-          id?: string;
-          message?: string;
-          notification_id?: string | null;
-          read?: boolean | null;
-          title?: string;
-          user_id?: string;
-        };
-        Relationships: [
-          {
-            foreignKeyName: "user_notifications_notification_id_fkey";
-            columns: ["notification_id"];
-            isOneToOne: false;
-            referencedRelation: "notifications";
-            referencedColumns: ["id"];
-          },
-          {
-            foreignKeyName: "user_notifications_user_id_fkey";
             columns: ["user_id"];
             isOneToOne: false;
             referencedRelation: "users";
