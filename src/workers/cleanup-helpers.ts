@@ -92,6 +92,8 @@ export const performUserCleanup = async (
   if (storedUserId !== userId) {
     await Promise.all(USER_SPECIFIC_TABLES.map((t) => db.clear(t)));
 
+    await db.delete(STORE.ROLE_META, META_KEY.USER_FEATURES);
+
     // Clear user table watermarks from sync_meta
     const syncMetaTx = db.transaction(STORE.SYNC_META, "readwrite");
     for (const table of USER_SPECIFIC_TABLES) {
