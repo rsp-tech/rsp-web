@@ -53,7 +53,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value: `default-src 'self'; script-src 'self'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""} 'unsafe-inline' https://rsp.mayankchaudhari.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com; media-src 'self' blob: https://r.mayankchaudhari.com; connect-src 'self' https://r.mayankchaudhari.com https://bfiyqzcnmkpczkmgounm.supabase.co wss://bfiyqzcnmkpczkmgounm.supabase.co https://rsp.mayankchaudhari.com; font-src 'self' data:; frame-src 'self' https://www.youtube-nocookie.com https://www.youtube.com https://drive.google.com; frame-ancestors 'none'; object-src 'none';`,
+            value: `default-src 'self'; script-src 'self'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""} 'unsafe-inline' https://rsp.mayankchaudhari.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com https://i.ytimg.com; media-src 'self' blob: https://r.mayankchaudhari.com; connect-src 'self' https://r.mayankchaudhari.com https://bfiyqzcnmkpczkmgounm.supabase.co wss://bfiyqzcnmkpczkmgounm.supabase.co https://rsp.mayankchaudhari.com; font-src 'self' data:; frame-src 'self' https://www.youtube-nocookie.com https://www.youtube.com https://drive.google.com; frame-ancestors 'none'; object-src 'none';`,
           },
           {
             key: "Cross-Origin-Opener-Policy",
