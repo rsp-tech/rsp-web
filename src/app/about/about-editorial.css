@@ -30,6 +30,7 @@
   max-width: 100%;
   overflow-x: clip;
   position: relative;
+  margin-top: -60px;
 }
 
 .dark .about-page-root {
@@ -107,9 +108,11 @@
   0% {
     transform: translate(0, 0) scale(1);
   }
+
   50% {
     transform: translate(4vw, 8vh) scale(1.08);
   }
+
   100% {
     transform: translate(-8vw, 4vh) scale(0.92);
   }
@@ -443,17 +446,8 @@
 .about-marquee-track {
   display: flex;
   width: max-content;
-  animation: aboutMarqueeAnim 45s linear infinite;
+  animation: marquee 45s linear infinite;
   align-items: center;
-}
-
-@keyframes aboutMarqueeAnim {
-  0% {
-    transform: translateX(0);
-  }
-  100% {
-    transform: translateX(-50%);
-  }
 }
 
 /* --- 4. Charcoal Bio Section with Arched Wave Separators --- */
