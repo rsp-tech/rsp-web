@@ -1,4 +1,8 @@
 import { NextResponse } from "next/server";
+import {
+  evaluatePublicFlags,
+  getCachedFeatureFlags,
+} from "@/lib/feature-flags-service";
 import { getCachedSyncMeta } from "../meta-service";
 
 export const revalidate = 86400; // 24 hours
@@ -8,9 +12,17 @@ const CACHE_CONTROL_HEADER =
 
 export const GET = async () => {
   try {
-    const data = await getCachedSyncMeta();
+    const [data, flags] = await Promise.all([
+      getCachedSyncMeta(),
+      getCachedFeatureFlags(),
+    ]);
 
-    return new Response(JSON.stringify(data), {
+    const payload = {
+      ...data,
+      public_feature_flags: evaluatePublicFlags(flags),
+    };
+
+    return new Response(JSON.stringify(payload), {
       status: 200,
       headers: {
         "Content-Type": "application/json",
