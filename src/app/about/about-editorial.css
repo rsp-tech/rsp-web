@@ -40,9 +40,7 @@
   --text-slate: #9ba3a0;
 }
 
-/* =========================================================================
-   1. Aurora 3D Animated Background
-   ========================================================================= */
+/* --- 1. Aurora 3D Animated Background --- */
 .aurora-bg {
   position: fixed;
   inset: 0;
@@ -117,9 +115,7 @@
   }
 }
 
-/* =========================================================================
-   2. Scroll Reveal & 3D Tilt Animations
-   ========================================================================= */
+/* --- 2. Scroll Reveal & 3D Tilt Animations --- */
 .reveal-on-scroll,
 .reveal-3d,
 .reveal-blur,
@@ -286,9 +282,7 @@
   background-repeat: no-repeat;
 }
 
-/* =========================================================================
-   3. HERO with Slanted/Curved Separator
-   ========================================================================= */
+/* --- 3. HERO with Slanted/Curved Separator --- */
 .about-hero-wrap {
   min-height: 88vh;
   background:
@@ -462,9 +456,7 @@
   }
 }
 
-/* =========================================================================
-   4. Charcoal Bio Section with Arched Wave Separators
-   ========================================================================= */
+/* --- 4. Charcoal Bio Section with Arched Wave Separators --- */
 .about-charcoal-sec {
   background-color: var(--bg-dark-section);
   color: #ffffff;
@@ -511,9 +503,7 @@
   }
 }
 
-/* =========================================================================
-   5. Overlapping Collage Sections
-   ========================================================================= */
+/* --- 5. Overlapping Collage Sections --- */
 .about-collage-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -550,9 +540,7 @@
   z-index: 2;
 }
 
-/* =========================================================================
-   6. Workshop & Program Format Cards
-   ========================================================================= */
+/* --- 6. Workshop & Program Format Cards --- */
 .about-filter-row {
   display: flex;
   justify-content: center;
@@ -609,9 +597,7 @@
   border: 1px solid rgba(0, 0, 0, 0.03);
 }
 
-/* =========================================================================
-   7. Bestselling Books Section with Slanted Clip-Path
-   ========================================================================= */
+/* --- 7. Bestselling Books Section with Slanted Clip-Path --- */
 .about-books-sec {
   background-color: var(--bg-dark-section);
   color: #ffffff;
@@ -644,9 +630,7 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
-/* =========================================================================
-   8. Why Organizations Invite Him
-   ========================================================================= */
+/* --- 8. Why Organizations Invite Him --- */
 .about-why-grid {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
@@ -767,9 +751,7 @@
   line-height: 1.7;
 }
 
-/* =========================================================================
-   9. Stats, Timeline, Gallery, Slider, Forms & Component Styles
-   ========================================================================= */
+/* --- 9. Stats, Timeline, Gallery, Slider, Forms & Component Styles --- */
 .about-stats-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
