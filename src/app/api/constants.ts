@@ -5,6 +5,7 @@ export const REVALIDATE_24_HOURS = 86400; // 24 hours
 export const CACHE_TAG = {
   SYNC_META: "sync-meta",
   BACKUP_RESOURCES: "backup-resources",
+  FEATURE_FLAGS: "feature-flags",
 } as const;
 
 // Internal API Paths
