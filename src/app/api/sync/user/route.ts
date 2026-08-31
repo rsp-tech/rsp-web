@@ -1,5 +1,9 @@
 import type { NextRequest } from "next/server";
 import { STORE } from "@/constants";
+import {
+  evaluateUserFlags,
+  getCachedFeatureFlags,
+} from "@/lib/feature-flags-service";
 import type { SyncRequestBody } from "@/types";
 import { getAuthenticatedUser } from "../auth";
 import { getCachedUserTable } from "../baseline-cache";
@@ -22,6 +26,7 @@ export const GET = async (request: NextRequest) => {
       userQueries,
       queryReplies,
       serverSyncMeta,
+      featureFlags,
     ] = await Promise.all([
       getCachedUserTable(STORE.USERS),
       getCachedUserTable(STORE.USER_EDIT_REQUESTS),
@@ -29,7 +34,10 @@ export const GET = async (request: NextRequest) => {
       getCachedUserTable(STORE.USER_QUERIES),
       getCachedUserTable(STORE.QUERY_REPLIES),
       getCachedSyncMeta(),
+      getCachedFeatureFlags(),
     ]);
+
+    const userFlags = evaluateUserFlags(featureFlags, user);
 
     const filteredUsers = users.filter((r) => r["id"] === user.id);
     const filteredEditRequests = userEditRequests.filter(
@@ -49,6 +57,7 @@ export const GET = async (request: NextRequest) => {
 
     return Response.json({
       sync_meta: serverSyncMeta,
+      user_feature_flags: userFlags,
       [STORE.USERS]: filteredUsers,
       [STORE.USER_EDIT_REQUESTS]: filteredEditRequests,
       [STORE.USER_SERVICE_INTERESTS]: filteredInterests,
@@ -73,8 +82,17 @@ export const POST = async (request: NextRequest) => {
     const body = (await request.json()) as SyncRequestBody;
     const watermarks = body?.watermarks || {};
 
-    const result = await computeUserSyncDelta(watermarks, user.id);
-    return Response.json(result);
+    const [result, featureFlags] = await Promise.all([
+      computeUserSyncDelta(watermarks, user.id),
+      getCachedFeatureFlags(),
+    ]);
+
+    const userFlags = evaluateUserFlags(featureFlags, user);
+
+    return Response.json({
+      ...result,
+      user_feature_flags: userFlags,
+    });
   } catch (error) {
     console.error("User delta sync failed:", error);
     return Response.json({ error: (error as Error).message }, { status: 500 });

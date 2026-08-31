@@ -2,6 +2,7 @@ import { unstable_cache } from "next/cache";
 import { CACHE_TAG, REVALIDATE_24_HOURS } from "@/app/api/constants";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import type { FeatureFlag } from "@/types";
+import { User } from "@supabase/supabase-js";
 
 export interface UserSessionLike {
   user?: {
@@ -42,16 +43,13 @@ export const evaluatePublicFlags = (flags: FeatureFlag[]): string[] =>
 
 export const evaluateUserFlags = (
   flags: FeatureFlag[],
-  user?: { email?: string | null; role_id?: number | null } | null,
+  user?: User,
 ): string[] => {
   if (!user) return [];
+  const userRoleId = Number(user.app_metadata?.["role_id"]);
 
   const allowed: string[] = [];
   const userEmail = user.email?.toLowerCase().trim();
-  const userRoleId =
-    typeof user.role_id === "number" && !Number.isNaN(user.role_id)
-      ? user.role_id
-      : undefined;
 
   for (const flag of flags) {
     // Only check enabled, non-GA flags (since GA flags are already delivered publicly)

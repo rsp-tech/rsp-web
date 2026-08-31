@@ -17,6 +17,7 @@ export const handleUserCleanup = (queryClient: QueryClient) => {
   for (const table of USER_SPECIFIC_TABLES) {
     queryClient.invalidateQueries({ queryKey: [table] });
   }
+  queryClient.invalidateQueries({ queryKey: [QUERY_KEY.FEATURE_CONFIG] });
 };
 
 export const handleRoleCleanup = (queryClient: QueryClient) => {
@@ -33,6 +34,12 @@ export const handleTableInvalidations = (
 ) => {
   for (const table of changedTables) {
     queryClient.invalidateQueries({ queryKey: [table] });
+  }
+
+  if (changedTables.includes("feature_flags")) {
+    queryClient.invalidateQueries({
+      queryKey: [QUERY_KEY.FEATURE_CONFIG],
+    });
   }
 
   if (
