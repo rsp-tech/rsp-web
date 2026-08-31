@@ -19,4 +19,16 @@ describe.concurrent("api/revalidate/route suite", () => {
     const res = await POST(req as any);
     expect(res.status).toBe(200);
   });
+
+  it.concurrent("POST revalidates feature-flags tag", async () => {
+    const { POST } = await import("./route");
+    const req = new Request("https://localhost/api/revalidate", {
+      method: "POST",
+      body: JSON.stringify({ tag: "feature-flags" }),
+    });
+    const res = await POST(req as any);
+    expect(res.status).toBe(200);
+    const json = await res.json();
+    expect(json.revalidated).toContain("tag:feature-flags");
+  });
 });

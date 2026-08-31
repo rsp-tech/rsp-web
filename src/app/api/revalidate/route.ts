@@ -14,10 +14,21 @@ export const POST = async (req: NextRequest) => {
   const body = (await req.json().catch(() => ({}))) as {
     paths?: string[];
     path?: string;
+    tag?: string;
+    tags?: string[];
   };
 
-  const paths = body.paths ?? (body.path ? [body.path] : []);
   const revalidated: string[] = [API_PATH.SYNC_META];
+
+  if (
+    body.tag === CACHE_TAG.FEATURE_FLAGS ||
+    body.tags?.includes(CACHE_TAG.FEATURE_FLAGS)
+  ) {
+    revalidateTag(CACHE_TAG.FEATURE_FLAGS, {});
+    revalidated.push(`tag:${CACHE_TAG.FEATURE_FLAGS}`);
+  }
+
+  const paths = body.paths ?? (body.path ? [body.path] : []);
 
   for (const path of paths) {
     if (!path.startsWith("/")) {
