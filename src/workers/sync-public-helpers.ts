@@ -1,8 +1,9 @@
 import type { IDBPDatabase } from "idb";
-import { GENERIC_TABLES, STORE } from "@/constants";
+import { GENERIC_TABLES, META_KEY, STORE } from "@/constants";
 import type { RSP_IDB } from "@/lib/idb";
 import { toUpdatedAtMap } from "@/lib/sync-utils";
 import type { SyncResult } from "@/types";
+import { fetchSyncMeta } from "./meta-cache";
 import {
   applyDeltas,
   createInitialSyncState,
@@ -22,10 +23,8 @@ export const syncPublicData = async (
 
   let seedLoaded = false;
 
-  // 1. Fetch server sync metadata
-  const metaRes = await fetch(`${origin}/api/sync/meta`);
-  if (!metaRes.ok) throw new Error("Failed to fetch sync meta");
-  const serverMeta = (await metaRes.json()) as Record<string, string>;
+  // 1. Fetch server sync metadata (deduped & cached across workers)
+  const { serverMeta, publicFeatureFlags } = await fetchSyncMeta(origin);
 
   // 2. If database is stale compared to server state, load public base seed
   if (await isDatabaseStale(db, serverMeta)) {
@@ -50,6 +49,15 @@ export const syncPublicData = async (
     ? (GENERIC_TABLES as readonly string[]).slice()
     : [];
 
+  // Persist public feature flags sent along with public metadata
+  if (Array.isArray(publicFeatureFlags)) {
+    await db.put(
+      STORE.ROLE_META,
+      JSON.stringify(publicFeatureFlags),
+      META_KEY.PUBLIC_FEATURES,
+    );
+  }
+
   const hasDirtyTables = GENERIC_TABLES.some((table) => {
     const serverTime = serverMeta[table];
     return serverTime && serverTime > (idbSyncMeta[table] || "");
@@ -62,13 +70,10 @@ export const syncPublicData = async (
 
     const publicDeltaResult = await fetchPublicSyncDeltas(origin, watermarks);
 
-    if (
-      publicDeltaResult?.deltas &&
-      Object.keys(publicDeltaResult.deltas).length > 0
-    ) {
+    if (publicDeltaResult) {
       const deltaChangedTables = await applyDeltas(
         db,
-        publicDeltaResult.deltas,
+        publicDeltaResult.deltas || {},
         publicDeltaResult.sync_meta || {},
         idbSyncMeta,
         changedIds,
@@ -79,6 +84,14 @@ export const syncPublicData = async (
         new Set([...changedTables, ...deltaChangedTables]),
       );
     }
+  } else if (serverMeta && Object.keys(serverMeta).length > 0) {
+    const metaTx = db.transaction(STORE.SYNC_META, "readwrite");
+    for (const [table, updated_at] of Object.entries(serverMeta)) {
+      if (updated_at) {
+        metaTx.store.put({ id: table, updated_at });
+      }
+    }
+    await metaTx.done;
   }
 
   return toSyncResult(

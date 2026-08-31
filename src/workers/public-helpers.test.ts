@@ -1,4 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
+import { STORE } from "@/constants";
+import { createMockDb } from "@/test-utils/mock-idb";
 
 vi.mock("./utils", async (importOriginal) => ({
   ...(await importOriginal()),
@@ -35,13 +37,12 @@ describe.concurrent("workers/public-helpers suite", () => {
       json: () => Promise.resolve({ categories: "2026-01-02" }),
     });
 
-    const mockDb: any = {
-      getAll: () =>
-        Promise.resolve([{ id: "categories", updated_at: "2026-01-01" }]),
-    };
+    const mockDb = createMockDb({
+      [`${STORE.SYNC_META}:categories`]: { updated_at: "2026-01-01" },
+    });
 
     const { syncPublicData } = await import("./sync-public-helpers");
-    const res = await syncPublicData(mockDb, "https://localhost");
+    const res = await syncPublicData(mockDb as any, "https://localhost");
     expect(res.changedTables).toContain("categories");
   });
 });
