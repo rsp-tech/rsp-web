@@ -1,4 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
+import { META_KEY, STORE } from "@/constants";
+import { createMockDb } from "@/test-utils/mock-idb";
 
 vi.mock("./cleanup-helpers", () => ({
   performRoleCleanup: () => Promise.resolve({ clearedRole: false }),
@@ -39,15 +41,13 @@ describe.concurrent("workers/role-helpers suite", () => {
       json: () => Promise.resolve({ recordings: "2026-01-02" }),
     });
 
-    const mockDb: any = {
-      getAll: () =>
-        Promise.resolve([{ id: "recordings", updated_at: "2026-01-01" }]),
-      get: () => Promise.resolve(1),
-      put: () => Promise.resolve(),
-    };
+    const mockDb = createMockDb({
+      [`${STORE.ROLE_SYNC_META}:recordings`]: { updated_at: "2026-01-01" },
+      [`${STORE.ROLE_META}:${META_KEY.SYNC_ROLE}`]: 1,
+    });
 
     const { syncRoleData } = await import("./sync-role-helpers");
-    const res = await syncRoleData(mockDb, "https://localhost", {
+    const res = await syncRoleData(mockDb as any, "https://localhost", {
       roleId: 1,
       userId: "u1",
       accessToken: "token123",

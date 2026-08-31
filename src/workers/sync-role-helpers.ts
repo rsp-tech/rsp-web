@@ -4,6 +4,7 @@ import type { RSP_IDB } from "@/lib/idb";
 import { toUpdatedAtMap } from "@/lib/sync-utils";
 import type { SyncResult, SyncTable } from "@/types";
 import { performRoleCleanup } from "./cleanup-helpers";
+import { fetchSyncMeta } from "./meta-cache";
 import {
   applyDeltas,
   createInitialSyncState,
@@ -35,9 +36,7 @@ export const syncRoleData = async (
 
   const storedRole = await db.get(STORE.ROLE_META, META_KEY.SYNC_ROLE);
 
-  const metaRes = await fetch(`${origin}/api/sync/meta`);
-  if (!metaRes.ok) throw new Error("Failed to fetch sync meta");
-  const serverMeta = (await metaRes.json()) as Record<string, string>;
+  const { serverMeta } = await fetchSyncMeta(origin);
   const isStale = await isDatabaseStale(db, serverMeta);
 
   // Phase 2: Role Base Seed (if role changed or DB is stale)
