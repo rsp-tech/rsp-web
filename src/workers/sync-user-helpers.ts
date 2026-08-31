@@ -1,9 +1,15 @@
 import type { IDBPDatabase } from "idb";
-import { STORE, USER_SPECIFIC_TABLES } from "@/constants";
+import {
+  FEATURE_FLAGS_TABLE,
+  META_KEY,
+  STORE,
+  USER_SPECIFIC_TABLES,
+} from "@/constants";
 import type { RSP_IDB } from "@/lib/idb";
 import { toUpdatedAtMap } from "@/lib/sync-utils";
 import type { SyncResult, SyncTable } from "@/types";
 import { performUserCleanup } from "./cleanup-helpers";
+import { fetchSyncMeta } from "./meta-cache";
 import {
   applyDeltas,
   createInitialSyncState,
@@ -43,36 +49,64 @@ export const syncUserData = async (
       }
     }
 
-    // Phase 3: Fetch deltas for USER_SPECIFIC_TABLES
+    // Phase 3: Fetch deltas for USER_SPECIFIC_TABLES if dirty
     progressCallback?.("परिष्करोति… · Syncing user data…");
+    const { serverMeta } = await fetchSyncMeta(origin);
     const idbSyncMeta = toUpdatedAtMap(await db.getAll(STORE.SYNC_META));
-    const watermarks: Record<string, string> = Object.fromEntries(
-      (USER_SPECIFIC_TABLES as readonly SyncTable[]).map((t) => [
-        t,
-        idbSyncMeta[t] || "",
-      ]),
+
+    const hasDirtyTables = [...USER_SPECIFIC_TABLES, FEATURE_FLAGS_TABLE].some(
+      (table) => {
+        const serverTime = serverMeta[table];
+        return serverTime && serverTime > (idbSyncMeta[table] || "");
+      },
     );
 
-    const userDeltaResult = await fetchUserSyncDeltas(
-      origin,
-      watermarks,
-      accessToken,
-    );
-
-    if (
-      userDeltaResult?.deltas &&
-      Object.keys(userDeltaResult.deltas).length > 0
-    ) {
-      changedTables = await applyDeltas(
-        db,
-        userDeltaResult.deltas,
-        userDeltaResult.sync_meta || {},
-        idbSyncMeta,
-        changedIds,
-        changedCategoryMeta,
-        newAdditions,
-        STORE.SYNC_META,
+    if (hasDirtyTables) {
+      const watermarks: Record<string, string> = Object.fromEntries(
+        (USER_SPECIFIC_TABLES as readonly SyncTable[]).map((t) => [
+          t,
+          idbSyncMeta[t] || "",
+        ]),
       );
+
+      const userDeltaResult = await fetchUserSyncDeltas(
+        origin,
+        watermarks,
+        accessToken,
+      );
+
+      if (
+        userDeltaResult?.deltas &&
+        Object.keys(userDeltaResult.deltas).length > 0
+      ) {
+        changedTables = await applyDeltas(
+          db,
+          userDeltaResult.deltas,
+          userDeltaResult.sync_meta || {},
+          idbSyncMeta,
+          changedIds,
+          changedCategoryMeta,
+          newAdditions,
+          STORE.SYNC_META,
+        );
+      }
+
+      if (Array.isArray(userDeltaResult?.user_feature_flags)) {
+        await db.put(
+          STORE.ROLE_META,
+          JSON.stringify(userDeltaResult.user_feature_flags),
+          META_KEY.USER_FEATURES,
+        );
+      }
+    } else if (serverMeta && Object.keys(serverMeta).length > 0) {
+      const metaTx = db.transaction(STORE.SYNC_META, "readwrite");
+      for (const table of USER_SPECIFIC_TABLES) {
+        const serverTime = serverMeta[table];
+        if (serverTime && typeof serverTime === "string") {
+          metaTx.store.put({ id: table, updated_at: serverTime });
+        }
+      }
+      await metaTx.done;
     }
   }
 
