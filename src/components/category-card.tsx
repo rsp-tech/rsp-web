@@ -24,7 +24,7 @@ export const CategoryCard = ({
       onKeyDown={onKeyDown}
       prefetch={false}
       data-category-item
-      className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-md hover:shadow-md focus:ring-1 focus:ring-primary focus:outline-hidden transition duration-200 active:scale-98 cursor-pointer"
+      className="group relative flex flex-col overflow-hidden rounded-2xl border border-border bg-card shadow-md hover:shadow-md focus:ring-1 focus:ring-primary focus:outline-hidden transition-all duration-200 active:scale-98 cursor-pointer"
       style={{ height: "15rem" }}
     >
       {imgUrl ? (
@@ -40,7 +40,7 @@ export const CategoryCard = ({
                 // Structural native fallback allocation
                 e.currentTarget.src = "/rsp.webp";
               }}
-              className="absolute inset-0 w-full h-full object-cover group-hover:scale-125 transition-transform duration-200"
+              className="absolute inset-0 w-full h-full object-cover group-hover:scale-125 transition-all duration-200"
             />
           </picture>
         </div>

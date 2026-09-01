@@ -16,7 +16,7 @@ export const HeaderActions = () => (
         href="/settings"
         className={cn(
           buttonVariants({ variant: "ghost", size: "icon" }),
-          "cursor-pointer text-muted-foreground hover:text-primary transition-colors",
+          "cursor-pointer text-muted-foreground hover:text-primary transition-all",
         )}
         title="Settings"
         prefetch={false}

@@ -177,7 +177,7 @@ export const NotificationCenter = () => {
                     key={group.id}
                     value={group.id}
                     className={cn(
-                      "border rounded-xl px-3 transition-colors overflow-hidden",
+                      "border rounded-xl px-3 transition-all overflow-hidden",
                       hasUnread
                         ? "bg-primary/5 border-primary/20"
                         : "bg-card border-border/40",
@@ -232,7 +232,7 @@ export const NotificationCenter = () => {
                           )}
                         >
                           <div className="flex-1">
-                            <p className="text-xs font-semibold truncate group-hover:text-primary transition-colors">
+                            <p className="text-xs font-semibold truncate group-hover:text-primary transition-all">
                               {item.title}
                             </p>
                             {item.subtitle && (

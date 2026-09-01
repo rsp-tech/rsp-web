@@ -35,7 +35,7 @@ export const SpeedControlPopover = () => {
               setSpeedOpen(false);
             }}
             className={cn(
-              "w-full text-left text-xs px-2.5 py-1.5 rounded-md transition-colors cursor-pointer hover:bg-accent hover:text-accent-foreground",
+              "w-full text-left text-xs px-2.5 py-1.5 rounded-md transition-all cursor-pointer hover:bg-accent hover:text-accent-foreground",
               playbackRate === rate
                 ? "bg-muted font-bold text-primary"
                 : "text-muted-foreground",

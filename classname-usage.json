@@ -1,20 +1,21 @@
 {
-  "totalClasses": 401,
-  "timestamp": "2026-08-29T09:35:06.113Z",
-  "baselineCSSBytes": 62228,
-  "baselineBrotliBytes": 9528,
+  "totalClasses": 399,
+  "timestamp": "2026-09-01T13:08:11.090Z",
+  "baselineCSSBytes": 61987,
+  "baselineBrotliBytes": 9584,
+  "newlyAddedClasses": [],
   "nextGeneratedCss": [
     {
-      "file": "b9385daf9313deba.css",
-      "rawBytes": 65938,
-      "brotliBytes": 10119,
-      "gZipBytes": 11721
+      "file": "9f692a918a0b63ed.css",
+      "rawBytes": 65693,
+      "brotliBytes": 10178,
+      "gZipBytes": 11732
     },
     {
-      "file": "a9e39b9f1c0bd045.css",
-      "rawBytes": 18036,
-      "brotliBytes": 3767,
-      "gZipBytes": 4340
+      "file": "c7d7a92c2e6c5f32.css",
+      "rawBytes": 17958,
+      "brotliBytes": 3750,
+      "gZipBytes": 4322
     }
   ],
   "primitiveUsage": {
@@ -33,8 +34,12 @@
       "src\\app\\queries\\_components\\query-list.tsx",
       "src\\app\\queries\\_components\\query-reply-form.tsx",
       "src\\app\\queries\\page.tsx",
+      "src\\components\\admin-feature-flag-bar.tsx",
+      "src\\components\\announcement-banner.tsx",
       "src\\components\\audio-player-panel.tsx",
       "src\\components\\auth-modal.tsx",
+      "src\\components\\featured-section.tsx",
+      "src\\components\\guidance-spotlight.tsx",
       "src\\components\\material-badge.tsx",
       "src\\components\\mobile-drawer-content.tsx",
       "src\\components\\mobile-drawer.tsx",
@@ -100,6 +105,10 @@
     "src\\components\\ui\\dropdown-menu.tsx": [
       "src\\components\\user-nav-dropdown-content.tsx"
     ],
+    "src\\components\\youtube-video-card.tsx": [
+      "src\\components\\videos\\video-sanctuary-client.tsx",
+      "src\\components\\youtube-showcase.tsx"
+    ],
     "src\\components\\ui\\slider.tsx": [
       "src\\components\\player\\timeline-slider.tsx",
       "src\\components\\player\\volume-controls.tsx"
@@ -130,2815 +139,3202 @@
       "src\\app\\profile\\_components\\personal-settings-form.tsx",
       "src\\app\\queries\\_components\\query-reply-form.tsx"
     ],
-    "src\\components\\ui\\badge.tsx": ["src\\app\\queries\\page.tsx"]
+    "src\\components\\ui\\badge.tsx": [
+      "src\\app\\queries\\page.tsx"
+    ]
   },
   "data": [
     {
       "className": "-translate-x-1/2",
-      "frequency": 1,
+      "frequency": 2,
       "length": 16,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "-translate-y-1/2",
-      "frequency": 1,
+      "frequency": 5,
       "length": 16,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "[&_p:not(:last-child)]:mb-4",
       "frequency": 1,
       "length": 27,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "absolute",
-      "frequency": 21,
+      "frequency": 37,
       "length": 8,
       "uncompressedBytes": 28,
-      "brotliBytesUpperLimit": 19
+      "brotliBytesUpperLimit": 19,
+      "isNew": false
     },
     {
       "className": "active:scale-98",
       "frequency": 1,
       "length": 15,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "animate-in",
       "frequency": 3,
       "length": 10,
       "uncompressedBytes": 235,
-      "brotliBytesUpperLimit": 107
+      "brotliBytesUpperLimit": 107,
+      "isNew": false
+    },
+    {
+      "className": "animate-marquee",
+      "frequency": 1,
+      "length": 15,
+      "uncompressedBytes": 79,
+      "brotliBytesUpperLimit": 66,
+      "isNew": false
     },
     {
       "className": "animate-ping",
       "frequency": 2,
       "length": 12,
       "uncompressedBytes": 44,
-      "brotliBytesUpperLimit": 44
+      "brotliBytesUpperLimit": 44,
+      "isNew": false
     },
     {
       "className": "animate-pulse",
       "frequency": 3,
       "length": 13,
       "uncompressedBytes": 46,
-      "brotliBytesUpperLimit": 48
+      "brotliBytesUpperLimit": 48,
+      "isNew": false
     },
     {
       "className": "animate-shimmer",
-      "frequency": 10,
+      "frequency": 11,
       "length": 15,
       "uncompressedBytes": 71,
-      "brotliBytesUpperLimit": 42
+      "brotliBytesUpperLimit": 42,
+      "isNew": false
     },
     {
       "className": "animate-spin",
       "frequency": 12,
       "length": 12,
       "uncompressedBytes": 44,
-      "brotliBytesUpperLimit": 43
+      "brotliBytesUpperLimit": 43,
+      "isNew": false
     },
     {
       "className": "aria-invalid:border-destructive",
       "frequency": 2,
       "length": 31,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "aspect-square",
       "frequency": 1,
       "length": 13,
       "uncompressedBytes": 30,
-      "brotliBytesUpperLimit": 34
+      "brotliBytesUpperLimit": 34,
+      "isNew": false
     },
     {
       "className": "backdrop-blur-xs",
-      "frequency": 5,
+      "frequency": 7,
       "length": 16,
       "uncompressedBytes": 610,
-      "brotliBytesUpperLimit": 135
+      "brotliBytesUpperLimit": 135,
+      "isNew": false
     },
     {
       "className": "bg-background",
       "frequency": 6,
       "length": 13,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "bg-background/50",
       "frequency": 6,
       "length": 16,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "bg-black/10",
       "frequency": 4,
       "length": 11,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "bg-card",
-      "frequency": 14,
+      "frequency": 17,
       "length": 7,
       "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 38
+      "brotliBytesUpperLimit": 38,
+      "isNew": false
     },
     {
       "className": "bg-clip-padding",
       "frequency": 1,
       "length": 15,
       "uncompressedBytes": 45,
-      "brotliBytesUpperLimit": 39
+      "brotliBytesUpperLimit": 39,
+      "isNew": false
     },
     {
       "className": "bg-destructive/10",
       "frequency": 5,
       "length": 17,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "bg-linear-to-r",
       "frequency": 4,
       "length": 14,
       "uncompressedBytes": 182,
-      "brotliBytesUpperLimit": 93
+      "brotliBytesUpperLimit": 93,
+      "isNew": false
     },
     {
       "className": "bg-muted",
-      "frequency": 35,
+      "frequency": 40,
       "length": 8,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "bg-muted/20",
       "frequency": 4,
       "length": 11,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "bg-muted/40",
       "frequency": 3,
       "length": 11,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "bg-muted/5",
       "frequency": 3,
       "length": 10,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "bg-muted/50",
       "frequency": 2,
       "length": 11,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "bg-popover",
       "frequency": 8,
       "length": 10,
       "uncompressedBytes": 44,
-      "brotliBytesUpperLimit": 35
+      "brotliBytesUpperLimit": 35,
+      "isNew": false
     },
     {
       "className": "bg-primary",
       "frequency": 12,
       "length": 10,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "bg-primary/10",
       "frequency": 7,
       "length": 13,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "bg-primary/20",
       "frequency": 2,
       "length": 13,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "bg-primary/5",
       "frequency": 5,
       "length": 12,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "bg-red-600",
       "frequency": 1,
       "length": 10,
       "uncompressedBytes": 50,
-      "brotliBytesUpperLimit": 50
+      "brotliBytesUpperLimit": 50,
+      "isNew": false
     },
     {
       "className": "bg-success/10",
       "frequency": 2,
       "length": 13,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "bg-transparent",
       "frequency": 5,
       "length": 14,
       "uncompressedBytes": 39,
-      "brotliBytesUpperLimit": 31
+      "brotliBytesUpperLimit": 31,
+      "isNew": false
     },
     {
       "className": "bg-warning/10",
       "frequency": 2,
       "length": 13,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "border",
-      "frequency": 51,
+      "frequency": 56,
       "length": 6,
       "uncompressedBytes": 61,
-      "brotliBytesUpperLimit": 61
+      "brotliBytesUpperLimit": 61,
+      "isNew": false
     },
     {
       "className": "border-2",
       "frequency": 2,
       "length": 8,
       "uncompressedBytes": 63,
-      "brotliBytesUpperLimit": 64
+      "brotliBytesUpperLimit": 64,
+      "isNew": false
     },
     {
       "className": "border-b",
-      "frequency": 20,
+      "frequency": 24,
       "length": 8,
       "uncompressedBytes": 179,
-      "brotliBytesUpperLimit": 90
+      "brotliBytesUpperLimit": 90,
+      "isNew": false
     },
     {
       "className": "border-border",
-      "frequency": 67,
+      "frequency": 76,
       "length": 13,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "border-border/40",
       "frequency": 14,
       "length": 16,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "border-dashed",
       "frequency": 5,
       "length": 13,
       "uncompressedBytes": 60,
-      "brotliBytesUpperLimit": 41
+      "brotliBytesUpperLimit": 41,
+      "isNew": false
     },
     {
       "className": "border-destructive/20",
       "frequency": 5,
       "length": 21,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "border-input",
       "frequency": 4,
       "length": 12,
       "uncompressedBytes": 40,
-      "brotliBytesUpperLimit": 42
+      "brotliBytesUpperLimit": 42,
+      "isNew": false
     },
     {
       "className": "border-primary",
       "frequency": 4,
       "length": 14,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "border-primary/10",
       "frequency": 2,
       "length": 17,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "border-primary/20",
       "frequency": 4,
       "length": 17,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "border-success/20",
       "frequency": 2,
       "length": 17,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "border-t",
       "frequency": 16,
       "length": 8,
       "uncompressedBytes": 71,
-      "brotliBytesUpperLimit": 65
+      "brotliBytesUpperLimit": 65,
+      "isNew": false
     },
     {
       "className": "border-transparent",
       "frequency": 3,
       "length": 18,
       "uncompressedBytes": 39,
-      "brotliBytesUpperLimit": 31
+      "brotliBytesUpperLimit": 31,
+      "isNew": false
     },
     {
       "className": "border-warning/20",
       "frequency": 2,
       "length": 17,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "capitalize",
       "frequency": 1,
       "length": 10,
       "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 36
+      "brotliBytesUpperLimit": 36,
+      "isNew": false
     },
     {
       "className": "cursor-pointer",
-      "frequency": 44,
+      "frequency": 56,
       "length": 14,
       "uncompressedBytes": 31,
-      "brotliBytesUpperLimit": 31
+      "brotliBytesUpperLimit": 31,
+      "isNew": false
     },
     {
       "className": "dark",
       "frequency": 1,
       "length": 4,
       "uncompressedBytes": 1063,
-      "brotliBytesUpperLimit": 264
+      "brotliBytesUpperLimit": 264,
+      "isNew": false
     },
     {
       "className": "data-[range-end=true]:bg-primary",
       "frequency": 1,
       "length": 32,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[range-end=true]:text-primary-foreground",
       "frequency": 1,
       "length": 45,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[range-middle=true]:bg-muted",
       "frequency": 1,
       "length": 33,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[range-start=true]:bg-primary",
       "frequency": 1,
       "length": 34,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[range-start=true]:text-primary-foreground",
       "frequency": 1,
       "length": 47,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=bottom]:slide-in-from-top-2",
       "frequency": 2,
       "length": 38,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=left]:border-r",
       "frequency": 1,
       "length": 25,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=left]:data-closed:slide-out-to-left-10",
       "frequency": 1,
       "length": 49,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=left]:data-open:slide-in-from-left-10",
       "frequency": 1,
       "length": 48,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=left]:h-full",
       "frequency": 1,
       "length": 23,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=left]:inset-y-0",
       "frequency": 1,
       "length": 26,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=left]:left-0",
       "frequency": 1,
       "length": 23,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=left]:slide-in-from-right-2",
       "frequency": 2,
       "length": 38,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=left]:sm:max-w-sm",
       "frequency": 1,
       "length": 28,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=left]:w-3/4",
       "frequency": 1,
       "length": 22,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=right]:border-l",
       "frequency": 1,
       "length": 26,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=right]:data-closed:slide-out-to-right-10",
       "frequency": 1,
       "length": 51,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=right]:data-open:slide-in-from-right-10",
       "frequency": 1,
       "length": 50,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=right]:h-full",
       "frequency": 1,
       "length": 24,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=right]:inset-y-0",
       "frequency": 1,
       "length": 27,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=right]:right-0",
       "frequency": 1,
       "length": 25,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=right]:slide-in-from-left-2",
       "frequency": 2,
       "length": 38,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=right]:sm:max-w-sm",
       "frequency": 1,
       "length": 29,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=right]:w-3/4",
       "frequency": 1,
       "length": 23,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[side=top]:slide-in-from-bottom-2",
       "frequency": 2,
       "length": 38,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-[state=closed]:overflow-hidden",
       "frequency": 1,
       "length": 35,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-closed:animate-accordion-up",
       "frequency": 1,
       "length": 32,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-closed:animate-out",
       "frequency": 6,
       "length": 23,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-closed:fade-out-0",
       "frequency": 6,
       "length": 22,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-closed:zoom-out-95",
       "frequency": 3,
       "length": 23,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-horizontal:flex-col",
       "frequency": 1,
       "length": 24,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-open:animate-accordion-down",
       "frequency": 1,
       "length": 32,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-open:animate-in",
       "frequency": 6,
       "length": 20,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-open:fade-in-0",
       "frequency": 6,
       "length": 19,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-open:zoom-in-95",
       "frequency": 3,
       "length": 20,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "data-selected:bg-muted",
       "frequency": 1,
       "length": 22,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "disabled:bg-input/50",
       "frequency": 2,
       "length": 20,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "disabled:cursor-not-allowed",
       "frequency": 4,
       "length": 27,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "disabled:opacity-60",
       "frequency": 7,
       "length": 19,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "disabled:pointer-events-none",
       "frequency": 3,
       "length": 28,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "divide-border/40",
       "frequency": 1,
       "length": 16,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "divide-y",
       "frequency": 1,
       "length": 8,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "duration-200",
-      "frequency": 16,
+      "frequency": 19,
       "length": 12,
       "uncompressedBytes": 56,
-      "brotliBytesUpperLimit": 58
+      "brotliBytesUpperLimit": 58,
+      "isNew": false
     },
     {
       "className": "ease-in-out",
       "frequency": 4,
       "length": 11,
       "uncompressedBytes": 88,
-      "brotliBytesUpperLimit": 62
+      "brotliBytesUpperLimit": 62,
+      "isNew": false
     },
     {
       "className": "fade-in",
       "frequency": 2,
       "length": 7,
       "uncompressedBytes": 30,
-      "brotliBytesUpperLimit": 34
+      "brotliBytesUpperLimit": 34,
+      "isNew": false
     },
     {
       "className": "field-sizing-content",
       "frequency": 1,
       "length": 20,
       "uncompressedBytes": 43,
-      "brotliBytesUpperLimit": 33
+      "brotliBytesUpperLimit": 33,
+      "isNew": false
     },
     {
       "className": "fixed",
-      "frequency": 8,
+      "frequency": 9,
       "length": 5,
       "uncompressedBytes": 22,
-      "brotliBytesUpperLimit": 21
+      "brotliBytesUpperLimit": 21,
+      "isNew": false
     },
     {
       "className": "flex",
-      "frequency": 321,
+      "frequency": 356,
       "length": 4,
       "uncompressedBytes": 19,
-      "brotliBytesUpperLimit": 23
+      "brotliBytesUpperLimit": 23,
+      "isNew": false
     },
     {
       "className": "flex-1",
       "frequency": 14,
       "length": 6,
       "uncompressedBytes": 15,
-      "brotliBytesUpperLimit": 19
+      "brotliBytesUpperLimit": 19,
+      "isNew": false
     },
     {
       "className": "flex-col",
-      "frequency": 173,
+      "frequency": 191,
       "length": 8,
       "uncompressedBytes": 32,
-      "brotliBytesUpperLimit": 33
+      "brotliBytesUpperLimit": 33,
+      "isNew": false
     },
     {
       "className": "flex-grow",
       "frequency": 2,
       "length": 9,
       "uncompressedBytes": 23,
-      "brotliBytesUpperLimit": 27
+      "brotliBytesUpperLimit": 27,
+      "isNew": false
     },
     {
       "className": "flex-row",
       "frequency": 3,
       "length": 8,
       "uncompressedBytes": 29,
-      "brotliBytesUpperLimit": 33
+      "brotliBytesUpperLimit": 33,
+      "isNew": false
     },
     {
       "className": "flex-shrink",
       "frequency": 1,
       "length": 11,
       "uncompressedBytes": 27,
-      "brotliBytesUpperLimit": 29
+      "brotliBytesUpperLimit": 29,
+      "isNew": false
     },
     {
       "className": "flex-wrap",
-      "frequency": 9,
+      "frequency": 10,
       "length": 9,
       "uncompressedBytes": 26,
-      "brotliBytesUpperLimit": 30
+      "brotliBytesUpperLimit": 30,
+      "isNew": false
     },
     {
       "className": "focus-visible:after:border-ring",
       "frequency": 1,
       "length": 31,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "focus-visible:border-primary",
       "frequency": 1,
       "length": 28,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "focus-visible:border-ring",
       "frequency": 3,
       "length": 25,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "focus-visible:ring-1",
-      "frequency": 4,
+      "frequency": 5,
       "length": 20,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "focus-visible:ring-offset-0",
       "frequency": 1,
       "length": 27,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "focus-visible:ring-primary",
-      "frequency": 1,
+      "frequency": 2,
       "length": 26,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "focus-visible:ring-ring/50",
       "frequency": 3,
       "length": 26,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "focus:bg-accent",
       "frequency": 4,
       "length": 15,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "focus:bg-destructive/10",
       "frequency": 1,
       "length": 23,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "focus:outline-hidden",
-      "frequency": 7,
+      "frequency": 8,
       "length": 20,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "focus:ring-1",
-      "frequency": 4,
+      "frequency": 5,
       "length": 12,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "focus:ring-primary",
-      "frequency": 5,
+      "frequency": 6,
       "length": 18,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "focus:text-accent-foreground",
       "frequency": 4,
       "length": 28,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "focus:text-destructive",
       "frequency": 1,
       "length": 22,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "font-bold",
-      "frequency": 106,
+      "frequency": 117,
       "length": 9,
       "uncompressedBytes": 88,
-      "brotliBytesUpperLimit": 57
+      "brotliBytesUpperLimit": 57,
+      "isNew": false
     },
     {
       "className": "font-heading",
-      "frequency": 27,
+      "frequency": 34,
       "length": 12,
       "uncompressedBytes": 50,
-      "brotliBytesUpperLimit": 42
+      "brotliBytesUpperLimit": 42,
+      "isNew": false
     },
     {
       "className": "font-medium",
-      "frequency": 26,
+      "frequency": 29,
       "length": 11,
       "uncompressedBytes": 94,
-      "brotliBytesUpperLimit": 50
+      "brotliBytesUpperLimit": 50,
+      "isNew": false
     },
     {
       "className": "font-semibold",
-      "frequency": 42,
+      "frequency": 52,
       "length": 13,
       "uncompressedBytes": 100,
-      "brotliBytesUpperLimit": 60
+      "brotliBytesUpperLimit": 60,
+      "isNew": false
     },
     {
       "className": "font-serif",
       "frequency": 9,
       "length": 10,
       "uncompressedBytes": 42,
-      "brotliBytesUpperLimit": 46
+      "brotliBytesUpperLimit": 46,
+      "isNew": false
     },
     {
       "className": "from-primary/20",
       "frequency": 4,
       "length": 15,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "gap-1",
-      "frequency": 53,
+      "frequency": 61,
       "length": 5,
       "uncompressedBytes": 26,
-      "brotliBytesUpperLimit": 30
+      "brotliBytesUpperLimit": 30,
+      "isNew": false
     },
     {
       "className": "gap-1.5",
-      "frequency": 56,
+      "frequency": 59,
       "length": 7,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "gap-2",
-      "frequency": 75,
+      "frequency": 83,
       "length": 5,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
+      "brotliBytesUpperLimit": 40,
+      "isNew": false
     },
     {
       "className": "gap-2.5",
       "frequency": 1,
       "length": 7,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "gap-3",
-      "frequency": 36,
+      "frequency": 40,
       "length": 5,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
+      "brotliBytesUpperLimit": 40,
+      "isNew": false
     },
     {
       "className": "gap-4",
-      "frequency": 43,
+      "frequency": 52,
       "length": 5,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
+      "brotliBytesUpperLimit": 40,
+      "isNew": false
     },
     {
       "className": "gap-6",
-      "frequency": 17,
+      "frequency": 19,
       "length": 5,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
+      "brotliBytesUpperLimit": 40,
+      "isNew": false
     },
     {
       "className": "gap-8",
-      "frequency": 9,
+      "frequency": 11,
       "length": 5,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
+      "brotliBytesUpperLimit": 40,
+      "isNew": false
     },
     {
       "className": "ghost",
       "frequency": 1,
       "length": 5,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "grid",
-      "frequency": 17,
+      "frequency": 19,
       "length": 4,
       "uncompressedBytes": 19,
-      "brotliBytesUpperLimit": 23
+      "brotliBytesUpperLimit": 23,
+      "isNew": false
     },
     {
       "className": "grid-cols-1",
-      "frequency": 14,
+      "frequency": 16,
       "length": 11,
       "uncompressedBytes": 59,
-      "brotliBytesUpperLimit": 56
+      "brotliBytesUpperLimit": 56,
+      "isNew": false
     },
     {
       "className": "grid-cols-2",
       "frequency": 1,
       "length": 11,
       "uncompressedBytes": 59,
-      "brotliBytesUpperLimit": 56
+      "brotliBytesUpperLimit": 56,
+      "isNew": false
     },
     {
       "className": "grid-cols-3",
       "frequency": 1,
       "length": 11,
       "uncompressedBytes": 59,
-      "brotliBytesUpperLimit": 56
+      "brotliBytesUpperLimit": 56,
+      "isNew": false
     },
     {
       "className": "group",
-      "frequency": 6,
+      "frequency": 9,
       "length": 5,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "group-aria-expanded/accordion-trigger:hidden",
       "frequency": 1,
       "length": 44,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "group-aria-expanded/accordion-trigger:inline",
       "frequency": 1,
       "length": 44,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "group-data-[focused=true]/day:border-ring",
       "frequency": 1,
       "length": 41,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
+    },
+    {
+      "className": "group-hover:opacity-100",
+      "frequency": 2,
+      "length": 23,
+      "uncompressedBytes": 0,
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "group-hover:scale-125",
-      "frequency": 1,
+      "frequency": 2,
       "length": 21,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "group-hover:text-primary",
-      "frequency": 2,
+      "frequency": 3,
       "length": 24,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "group/accordion-trigger",
       "frequency": 1,
       "length": 23,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "group/calendar",
       "frequency": 1,
       "length": 14,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "group/command-item",
       "frequency": 1,
       "length": 18,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "group/tabs",
       "frequency": 1,
       "length": 10,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "group/theme",
       "frequency": 1,
       "length": 11,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "h-10",
-      "frequency": 2,
+      "frequency": 4,
       "length": 4,
       "uncompressedBytes": 39,
-      "brotliBytesUpperLimit": 43
+      "brotliBytesUpperLimit": 43,
+      "isNew": false
     },
     {
       "className": "h-16",
       "frequency": 4,
       "length": 4,
       "uncompressedBytes": 39,
-      "brotliBytesUpperLimit": 43
+      "brotliBytesUpperLimit": 43,
+      "isNew": false
     },
     {
       "className": "h-2",
       "frequency": 5,
       "length": 3,
       "uncompressedBytes": 37,
-      "brotliBytesUpperLimit": 41
+      "brotliBytesUpperLimit": 41,
+      "isNew": false
     },
     {
       "className": "h-3",
-      "frequency": 51,
+      "frequency": 53,
       "length": 3,
       "uncompressedBytes": 37,
-      "brotliBytesUpperLimit": 41
+      "brotliBytesUpperLimit": 41,
+      "isNew": false
     },
     {
       "className": "h-4",
-      "frequency": 74,
+      "frequency": 87,
       "length": 3,
       "uncompressedBytes": 37,
-      "brotliBytesUpperLimit": 41
+      "brotliBytesUpperLimit": 41,
+      "isNew": false
     },
     {
       "className": "h-5",
-      "frequency": 21,
+      "frequency": 22,
       "length": 3,
       "uncompressedBytes": 37,
-      "brotliBytesUpperLimit": 41
+      "brotliBytesUpperLimit": 41,
+      "isNew": false
     },
     {
       "className": "h-6",
-      "frequency": 8,
+      "frequency": 9,
       "length": 3,
       "uncompressedBytes": 37,
-      "brotliBytesUpperLimit": 41
+      "brotliBytesUpperLimit": 41,
+      "isNew": false
     },
     {
       "className": "h-8",
-      "frequency": 26,
+      "frequency": 31,
       "length": 3,
       "uncompressedBytes": 37,
-      "brotliBytesUpperLimit": 41
+      "brotliBytesUpperLimit": 41,
+      "isNew": false
     },
     {
       "className": "h-9",
       "frequency": 12,
       "length": 3,
       "uncompressedBytes": 37,
-      "brotliBytesUpperLimit": 41
+      "brotliBytesUpperLimit": 41,
+      "isNew": false
     },
     {
       "className": "h-auto",
       "frequency": 1,
       "length": 6,
       "uncompressedBytes": 20,
-      "brotliBytesUpperLimit": 24
+      "brotliBytesUpperLimit": 24,
+      "isNew": false
     },
     {
       "className": "h-full",
-      "frequency": 19,
+      "frequency": 25,
       "length": 6,
       "uncompressedBytes": 20,
-      "brotliBytesUpperLimit": 24
+      "brotliBytesUpperLimit": 24,
+      "isNew": false
     },
     {
       "className": "hidden",
-      "frequency": 13,
+      "frequency": 14,
       "length": 6,
       "uncompressedBytes": 21,
-      "brotliBytesUpperLimit": 18
+      "brotliBytesUpperLimit": 18,
+      "isNew": false
     },
     {
       "className": "hover:bg-accent",
       "frequency": 13,
       "length": 15,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:bg-destructive/10",
       "frequency": 1,
       "length": 23,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:bg-muted",
       "frequency": 1,
       "length": 14,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:bg-muted-foreground/10",
       "frequency": 1,
       "length": 28,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:bg-primary",
       "frequency": 1,
       "length": 16,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:bg-primary/10",
       "frequency": 1,
       "length": 19,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:bg-primary/20",
       "frequency": 4,
       "length": 19,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:bg-red-700",
       "frequency": 1,
       "length": 16,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:border-border",
-      "frequency": 2,
+      "frequency": 3,
       "length": 19,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:gap-2",
       "frequency": 1,
       "length": 11,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:no-underline",
       "frequency": 5,
       "length": 18,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:opacity-95",
-      "frequency": 1,
+      "frequency": 2,
       "length": 16,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:shadow-md",
       "frequency": 2,
       "length": 15,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:text-accent-foreground",
       "frequency": 5,
       "length": 28,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:text-destructive",
       "frequency": 1,
       "length": 22,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:text-primary",
       "frequency": 13,
       "length": 18,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:text-primary/80",
       "frequency": 1,
       "length": 21,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:transition-all",
       "frequency": 5,
       "length": 20,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "hover:underline",
-      "frequency": 1,
+      "frequency": 2,
       "length": 15,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "icon",
       "frequency": 1,
       "length": 4,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "inline-flex",
-      "frequency": 8,
+      "frequency": 13,
       "length": 11,
       "uncompressedBytes": 33,
-      "brotliBytesUpperLimit": 31
+      "brotliBytesUpperLimit": 31,
+      "isNew": false
     },
     {
       "className": "inset-0",
-      "frequency": 10,
+      "frequency": 18,
       "length": 7,
       "uncompressedBytes": 17,
-      "brotliBytesUpperLimit": 21
+      "brotliBytesUpperLimit": 21,
+      "isNew": false
     },
     {
       "className": "isolate",
       "frequency": 2,
       "length": 7,
       "uncompressedBytes": 27,
-      "brotliBytesUpperLimit": 31
+      "brotliBytesUpperLimit": 31,
+      "isNew": false
     },
     {
       "className": "italic",
       "frequency": 12,
       "length": 6,
       "uncompressedBytes": 26,
-      "brotliBytesUpperLimit": 30
+      "brotliBytesUpperLimit": 30,
+      "isNew": false
     },
     {
       "className": "items-center",
-      "frequency": 130,
+      "frequency": 149,
       "length": 12,
       "uncompressedBytes": 33,
-      "brotliBytesUpperLimit": 30
+      "brotliBytesUpperLimit": 30,
+      "isNew": false
     },
     {
       "className": "items-start",
-      "frequency": 17,
+      "frequency": 19,
       "length": 11,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 32
+      "brotliBytesUpperLimit": 32,
+      "isNew": false
     },
     {
       "className": "justify-between",
-      "frequency": 26,
+      "frequency": 32,
       "length": 15,
       "uncompressedBytes": 47,
-      "brotliBytesUpperLimit": 35
+      "brotliBytesUpperLimit": 35,
+      "isNew": false
     },
     {
       "className": "justify-center",
-      "frequency": 27,
+      "frequency": 30,
       "length": 14,
       "uncompressedBytes": 39,
-      "brotliBytesUpperLimit": 31
+      "brotliBytesUpperLimit": 31,
+      "isNew": false
     },
     {
       "className": "justify-end",
       "frequency": 5,
       "length": 11,
       "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 36
+      "brotliBytesUpperLimit": 36,
+      "isNew": false
     },
     {
       "className": "justify-start",
       "frequency": 5,
       "length": 13,
       "uncompressedBytes": 42,
-      "brotliBytesUpperLimit": 35
+      "brotliBytesUpperLimit": 35,
+      "isNew": false
     },
     {
       "className": "leading-none",
       "frequency": 7,
       "length": 12,
       "uncompressedBytes": 43,
-      "brotliBytesUpperLimit": 46
+      "brotliBytesUpperLimit": 46,
+      "isNew": false
     },
     {
       "className": "leading-relaxed",
-      "frequency": 16,
+      "frequency": 17,
       "length": 15,
       "uncompressedBytes": 88,
-      "brotliBytesUpperLimit": 53
+      "brotliBytesUpperLimit": 53,
+      "isNew": false
     },
     {
       "className": "leading-snug",
-      "frequency": 3,
+      "frequency": 4,
       "length": 12,
       "uncompressedBytes": 79,
-      "brotliBytesUpperLimit": 51
+      "brotliBytesUpperLimit": 51,
+      "isNew": false
     },
     {
       "className": "leading-tight",
       "frequency": 2,
       "length": 13,
       "uncompressedBytes": 82,
-      "brotliBytesUpperLimit": 51
+      "brotliBytesUpperLimit": 51,
+      "isNew": false
     },
     {
       "className": "left-1/2",
-      "frequency": 1,
+      "frequency": 2,
       "length": 8,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "left-3",
-      "frequency": 5,
+      "frequency": 7,
       "length": 6,
       "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 42
+      "brotliBytesUpperLimit": 42,
+      "isNew": false
     },
     {
       "className": "lg:col-span-1",
       "frequency": 3,
       "length": 13,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "lg:col-span-2",
       "frequency": 3,
       "length": 13,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "lg:gap-12",
       "frequency": 1,
       "length": 9,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "lg:grid-cols-3",
-      "frequency": 3,
+      "frequency": 5,
       "length": 14,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "lg:pb-4",
       "frequency": 1,
       "length": 7,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "line-clamp-2",
-      "frequency": 1,
+      "frequency": 3,
       "length": 12,
       "uncompressedBytes": 99,
-      "brotliBytesUpperLimit": 57
+      "brotliBytesUpperLimit": 57,
+      "isNew": false
     },
     {
       "className": "max-h-75",
       "frequency": 2,
       "length": 8,
       "uncompressedBytes": 47,
-      "brotliBytesUpperLimit": 51
+      "brotliBytesUpperLimit": 51,
+      "isNew": false
     },
     {
       "className": "max-w-[calc(100%-2rem)]",
       "frequency": 1,
       "length": 23,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "max-w-2xl",
-      "frequency": 6,
+      "frequency": 9,
       "length": 9,
       "uncompressedBytes": 42,
-      "brotliBytesUpperLimit": 41
+      "brotliBytesUpperLimit": 41,
+      "isNew": false
     },
     {
       "className": "max-w-4/5",
       "frequency": 1,
       "length": 9,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "max-w-5xl",
-      "frequency": 4,
+      "frequency": 5,
       "length": 9,
       "uncompressedBytes": 42,
-      "brotliBytesUpperLimit": 41
+      "brotliBytesUpperLimit": 41,
+      "isNew": false
     },
     {
       "className": "max-w-7xl",
       "frequency": 3,
       "length": 9,
       "uncompressedBytes": 42,
-      "brotliBytesUpperLimit": 41
+      "brotliBytesUpperLimit": 41,
+      "isNew": false
     },
     {
       "className": "max-w-lg",
       "frequency": 4,
       "length": 8,
       "uncompressedBytes": 40,
-      "brotliBytesUpperLimit": 44
+      "brotliBytesUpperLimit": 44,
+      "isNew": false
     },
     {
       "className": "max-w-md",
-      "frequency": 6,
+      "frequency": 7,
       "length": 8,
       "uncompressedBytes": 40,
-      "brotliBytesUpperLimit": 37
+      "brotliBytesUpperLimit": 37,
+      "isNew": false
     },
     {
       "className": "max-w-sm",
       "frequency": 3,
       "length": 8,
       "uncompressedBytes": 40,
-      "brotliBytesUpperLimit": 44
+      "brotliBytesUpperLimit": 44,
+      "isNew": false
     },
     {
       "className": "max-w-xs",
       "frequency": 1,
       "length": 8,
       "uncompressedBytes": 40,
-      "brotliBytesUpperLimit": 44
+      "brotliBytesUpperLimit": 44,
+      "isNew": false
     },
     {
       "className": "mb-2",
       "frequency": 3,
       "length": 4,
       "uncompressedBytes": 45,
-      "brotliBytesUpperLimit": 49
+      "brotliBytesUpperLimit": 49,
+      "isNew": false
     },
     {
       "className": "mb-4",
       "frequency": 4,
       "length": 4,
       "uncompressedBytes": 45,
-      "brotliBytesUpperLimit": 49
+      "brotliBytesUpperLimit": 49,
+      "isNew": false
     },
     {
       "className": "mb-6",
       "frequency": 3,
       "length": 4,
       "uncompressedBytes": 45,
-      "brotliBytesUpperLimit": 49
+      "brotliBytesUpperLimit": 49,
+      "isNew": false
     },
     {
       "className": "md:border-none",
       "frequency": 1,
       "length": 14,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:col-span-2",
       "frequency": 1,
       "length": 13,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:flex",
       "frequency": 11,
       "length": 7,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:flex-row",
-      "frequency": 3,
+      "frequency": 4,
       "length": 11,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:gap-8",
       "frequency": 1,
       "length": 8,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:grid-cols-3",
       "frequency": 2,
       "length": 14,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:group-hover/theme:max-w-xs",
       "frequency": 1,
       "length": 29,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:group-hover/theme:opacity-100",
       "frequency": 1,
       "length": 32,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:hidden",
       "frequency": 2,
       "length": 9,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:items-center",
-      "frequency": 2,
+      "frequency": 3,
       "length": 15,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:max-w-0",
       "frequency": 1,
       "length": 10,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:opacity-0",
       "frequency": 1,
       "length": 12,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:pt-0",
       "frequency": 1,
       "length": 7,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:self-auto",
-      "frequency": 1,
+      "frequency": 2,
       "length": 12,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:text-left",
       "frequency": 1,
       "length": 12,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:text-sm",
       "frequency": 2,
       "length": 10,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
-    },
-    {
-      "className": "md:w-64",
-      "frequency": 1,
-      "length": 7,
-      "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:w-72",
       "frequency": 1,
       "length": 7,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "md:w-auto",
-      "frequency": 1,
+      "frequency": 2,
       "length": 9,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "min-h-20",
       "frequency": 2,
       "length": 8,
       "uncompressedBytes": 47,
-      "brotliBytesUpperLimit": 51
+      "brotliBytesUpperLimit": 51,
+      "isNew": false
     },
     {
       "className": "min-h-full",
       "frequency": 1,
       "length": 10,
       "uncompressedBytes": 28,
-      "brotliBytesUpperLimit": 30
+      "brotliBytesUpperLimit": 30,
+      "isNew": false
     },
     {
       "className": "min-w-8",
       "frequency": 3,
       "length": 7,
       "uncompressedBytes": 44,
-      "brotliBytesUpperLimit": 48
+      "brotliBytesUpperLimit": 48,
+      "isNew": false
     },
     {
       "className": "ml-1",
-      "frequency": 2,
+      "frequency": 3,
       "length": 4,
       "uncompressedBytes": 33,
-      "brotliBytesUpperLimit": 32
+      "brotliBytesUpperLimit": 32,
+      "isNew": false
     },
     {
       "className": "ml-1.5",
       "frequency": 1,
       "length": 6,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "ml-2",
       "frequency": 3,
       "length": 4,
       "uncompressedBytes": 43,
-      "brotliBytesUpperLimit": 47
+      "brotliBytesUpperLimit": 47,
+      "isNew": false
     },
     {
       "className": "ml-auto",
       "frequency": 2,
       "length": 7,
       "uncompressedBytes": 26,
-      "brotliBytesUpperLimit": 27
+      "brotliBytesUpperLimit": 27,
+      "isNew": false
     },
     {
       "className": "mr-2",
       "frequency": 7,
       "length": 4,
       "uncompressedBytes": 44,
-      "brotliBytesUpperLimit": 48
+      "brotliBytesUpperLimit": 48,
+      "isNew": false
     },
     {
       "className": "mt-0.5",
       "frequency": 12,
       "length": 6,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "mt-1",
-      "frequency": 7,
+      "frequency": 8,
       "length": 4,
       "uncompressedBytes": 32,
-      "brotliBytesUpperLimit": 32
+      "brotliBytesUpperLimit": 32,
+      "isNew": false
     },
     {
       "className": "mt-1.5",
       "frequency": 1,
       "length": 6,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "mt-2",
       "frequency": 10,
       "length": 4,
       "uncompressedBytes": 42,
-      "brotliBytesUpperLimit": 46
+      "brotliBytesUpperLimit": 46,
+      "isNew": false
     },
     {
       "className": "mt-auto",
       "frequency": 3,
       "length": 7,
       "uncompressedBytes": 25,
-      "brotliBytesUpperLimit": 29
+      "brotliBytesUpperLimit": 29,
+      "isNew": false
     },
     {
       "className": "mx-auto",
-      "frequency": 18,
+      "frequency": 22,
       "length": 7,
       "uncompressedBytes": 28,
-      "brotliBytesUpperLimit": 32
+      "brotliBytesUpperLimit": 32,
+      "isNew": false
     },
     {
       "className": "my-2",
       "frequency": 1,
       "length": 4,
       "uncompressedBytes": 44,
-      "brotliBytesUpperLimit": 48
+      "brotliBytesUpperLimit": 48,
+      "isNew": false
     },
     {
       "className": "object-cover",
-      "frequency": 11,
+      "frequency": 15,
       "length": 12,
       "uncompressedBytes": 31,
-      "brotliBytesUpperLimit": 34
+      "brotliBytesUpperLimit": 34,
+      "isNew": false
     },
     {
       "className": "opacity-0",
-      "frequency": 7,
+      "frequency": 9,
       "length": 9,
       "uncompressedBytes": 21,
-      "brotliBytesUpperLimit": 25
+      "brotliBytesUpperLimit": 25,
+      "isNew": false
     },
     {
       "className": "opacity-100",
       "frequency": 2,
       "length": 11,
       "uncompressedBytes": 23,
-      "brotliBytesUpperLimit": 27
+      "brotliBytesUpperLimit": 27,
+      "isNew": false
     },
     {
       "className": "opacity-60",
       "frequency": 9,
       "length": 10,
       "uncompressedBytes": 23,
-      "brotliBytesUpperLimit": 27
+      "brotliBytesUpperLimit": 27,
+      "isNew": false
     },
     {
       "className": "opacity-80",
       "frequency": 27,
       "length": 10,
       "uncompressedBytes": 23,
-      "brotliBytesUpperLimit": 27
+      "brotliBytesUpperLimit": 27,
+      "isNew": false
     },
     {
       "className": "origin-left",
       "frequency": 1,
       "length": 11,
       "uncompressedBytes": 32,
-      "brotliBytesUpperLimit": 30
+      "brotliBytesUpperLimit": 30,
+      "isNew": false
     },
     {
       "className": "outline-hidden",
       "frequency": 3,
       "length": 14,
       "uncompressedBytes": 119,
-      "brotliBytesUpperLimit": 73
+      "brotliBytesUpperLimit": 73,
+      "isNew": false
     },
     {
       "className": "outline-none",
       "frequency": 5,
       "length": 12,
       "uncompressedBytes": 57,
-      "brotliBytesUpperLimit": 46
+      "brotliBytesUpperLimit": 46,
+      "isNew": false
     },
     {
       "className": "overflow-hidden",
-      "frequency": 25,
+      "frequency": 31,
       "length": 15,
       "uncompressedBytes": 33,
-      "brotliBytesUpperLimit": 24
+      "brotliBytesUpperLimit": 24,
+      "isNew": false
     },
     {
       "className": "overflow-x-auto",
-      "frequency": 1,
+      "frequency": 2,
       "length": 15,
       "uncompressedBytes": 33,
-      "brotliBytesUpperLimit": 37
+      "brotliBytesUpperLimit": 37,
+      "isNew": false
     },
     {
       "className": "overflow-x-hidden",
       "frequency": 2,
       "length": 17,
       "uncompressedBytes": 37,
-      "brotliBytesUpperLimit": 33
+      "brotliBytesUpperLimit": 33,
+      "isNew": false
     },
     {
       "className": "overflow-y-auto",
       "frequency": 8,
       "length": 15,
       "uncompressedBytes": 33,
-      "brotliBytesUpperLimit": 37
+      "brotliBytesUpperLimit": 37,
+      "isNew": false
     },
     {
       "className": "p-0",
       "frequency": 13,
       "length": 3,
       "uncompressedBytes": 15,
-      "brotliBytesUpperLimit": 19
+      "brotliBytesUpperLimit": 19,
+      "isNew": false
     },
     {
       "className": "p-1",
       "frequency": 11,
       "length": 3,
       "uncompressedBytes": 28,
-      "brotliBytesUpperLimit": 32
+      "brotliBytesUpperLimit": 32,
+      "isNew": false
     },
     {
       "className": "p-2",
       "frequency": 10,
       "length": 3,
       "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 42
+      "brotliBytesUpperLimit": 42,
+      "isNew": false
     },
     {
       "className": "p-2.5",
       "frequency": 2,
       "length": 5,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "p-3",
-      "frequency": 11,
+      "frequency": 12,
       "length": 3,
       "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 42
+      "brotliBytesUpperLimit": 42,
+      "isNew": false
     },
     {
       "className": "p-4",
-      "frequency": 16,
+      "frequency": 17,
       "length": 3,
       "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 42
+      "brotliBytesUpperLimit": 42,
+      "isNew": false
     },
     {
       "className": "p-6",
-      "frequency": 3,
+      "frequency": 4,
       "length": 3,
       "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 42
+      "brotliBytesUpperLimit": 42,
+      "isNew": false
     },
     {
       "className": "p-8",
       "frequency": 3,
       "length": 3,
       "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 42
+      "brotliBytesUpperLimit": 42,
+      "isNew": false
     },
     {
       "className": "pb-1",
       "frequency": 2,
       "length": 4,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 32
+      "brotliBytesUpperLimit": 32,
+      "isNew": false
     },
     {
       "className": "pb-2",
       "frequency": 4,
       "length": 4,
       "uncompressedBytes": 46,
-      "brotliBytesUpperLimit": 50
+      "brotliBytesUpperLimit": 50,
+      "isNew": false
     },
     {
       "className": "pb-2.5",
       "frequency": 1,
       "length": 6,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "pb-3",
-      "frequency": 6,
+      "frequency": 8,
       "length": 4,
       "uncompressedBytes": 46,
-      "brotliBytesUpperLimit": 50
+      "brotliBytesUpperLimit": 50,
+      "isNew": false
     },
     {
       "className": "pb-4",
       "frequency": 3,
       "length": 4,
       "uncompressedBytes": 46,
-      "brotliBytesUpperLimit": 50
+      "brotliBytesUpperLimit": 50,
+      "isNew": false
     },
     {
       "className": "pb-6",
-      "frequency": 6,
+      "frequency": 8,
       "length": 4,
       "uncompressedBytes": 46,
-      "brotliBytesUpperLimit": 50
+      "brotliBytesUpperLimit": 50,
+      "isNew": false
     },
     {
       "className": "peer-disabled:cursor-not-allowed",
       "frequency": 1,
       "length": 32,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "peer-disabled:opacity-60",
       "frequency": 1,
       "length": 24,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "pl-6",
       "frequency": 1,
       "length": 4,
       "uncompressedBytes": 44,
-      "brotliBytesUpperLimit": 48
+      "brotliBytesUpperLimit": 48,
+      "isNew": false
     },
     {
       "className": "pl-9",
-      "frequency": 5,
+      "frequency": 6,
       "length": 4,
       "uncompressedBytes": 44,
-      "brotliBytesUpperLimit": 48
+      "brotliBytesUpperLimit": 48,
+      "isNew": false
     },
     {
       "className": "placeholder:text-muted-foreground",
-      "frequency": 1,
+      "frequency": 2,
       "length": 33,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "pointer-events-none",
-      "frequency": 5,
+      "frequency": 9,
       "length": 19,
       "uncompressedBytes": 41,
-      "brotliBytesUpperLimit": 38
+      "brotliBytesUpperLimit": 38,
+      "isNew": false
     },
     {
       "className": "pr-10",
-      "frequency": 2,
+      "frequency": 3,
       "length": 5,
       "uncompressedBytes": 47,
-      "brotliBytesUpperLimit": 51
+      "brotliBytesUpperLimit": 51,
+      "isNew": false
     },
     {
       "className": "pr-4",
-      "frequency": 2,
+      "frequency": 3,
       "length": 4,
       "uncompressedBytes": 45,
-      "brotliBytesUpperLimit": 49
+      "brotliBytesUpperLimit": 49,
+      "isNew": false
     },
     {
       "className": "pt-0",
       "frequency": 1,
       "length": 4,
       "uncompressedBytes": 20,
-      "brotliBytesUpperLimit": 24
+      "brotliBytesUpperLimit": 24,
+      "isNew": false
     },
     {
       "className": "pt-1",
       "frequency": 3,
       "length": 4,
       "uncompressedBytes": 33,
-      "brotliBytesUpperLimit": 32
+      "brotliBytesUpperLimit": 32,
+      "isNew": false
     },
     {
       "className": "pt-2",
       "frequency": 12,
       "length": 4,
       "uncompressedBytes": 43,
-      "brotliBytesUpperLimit": 47
+      "brotliBytesUpperLimit": 47,
+      "isNew": false
     },
     {
       "className": "pt-4",
       "frequency": 5,
       "length": 4,
       "uncompressedBytes": 43,
-      "brotliBytesUpperLimit": 47
+      "brotliBytesUpperLimit": 47,
+      "isNew": false
     },
     {
       "className": "pt-6",
       "frequency": 1,
       "length": 4,
       "uncompressedBytes": 43,
-      "brotliBytesUpperLimit": 47
+      "brotliBytesUpperLimit": 47,
+      "isNew": false
     },
     {
       "className": "px-0",
       "frequency": 1,
       "length": 4,
       "uncompressedBytes": 23,
-      "brotliBytesUpperLimit": 27
+      "brotliBytesUpperLimit": 27,
+      "isNew": false
     },
     {
       "className": "px-1",
       "frequency": 3,
       "length": 4,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 38
+      "brotliBytesUpperLimit": 38,
+      "isNew": false
     },
     {
       "className": "px-1.5",
       "frequency": 2,
       "length": 6,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "px-2",
-      "frequency": 12,
+      "frequency": 14,
       "length": 4,
       "uncompressedBytes": 46,
-      "brotliBytesUpperLimit": 50
+      "brotliBytesUpperLimit": 50,
+      "isNew": false
     },
     {
       "className": "px-2.5",
       "frequency": 7,
       "length": 6,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "px-3",
-      "frequency": 8,
+      "frequency": 11,
       "length": 4,
       "uncompressedBytes": 46,
-      "brotliBytesUpperLimit": 50
+      "brotliBytesUpperLimit": 50,
+      "isNew": false
     },
     {
       "className": "px-4",
-      "frequency": 4,
+      "frequency": 9,
       "length": 4,
       "uncompressedBytes": 46,
-      "brotliBytesUpperLimit": 50
+      "brotliBytesUpperLimit": 50,
+      "isNew": false
     },
     {
       "className": "px-6",
       "frequency": 7,
       "length": 4,
       "uncompressedBytes": 46,
-      "brotliBytesUpperLimit": 50
+      "brotliBytesUpperLimit": 50,
+      "isNew": false
     },
     {
       "className": "py-0.5",
-      "frequency": 8,
+      "frequency": 10,
       "length": 6,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "py-1",
-      "frequency": 9,
+      "frequency": 13,
       "length": 4,
       "uncompressedBytes": 35,
-      "brotliBytesUpperLimit": 39
+      "brotliBytesUpperLimit": 39,
+      "isNew": false
     },
     {
       "className": "py-1.5",
       "frequency": 3,
       "length": 6,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "py-16",
-      "frequency": 6,
+      "frequency": 8,
       "length": 5,
       "uncompressedBytes": 47,
-      "brotliBytesUpperLimit": 51
+      "brotliBytesUpperLimit": 51,
+      "isNew": false
     },
     {
       "className": "py-2",
-      "frequency": 15,
+      "frequency": 21,
       "length": 4,
       "uncompressedBytes": 45,
-      "brotliBytesUpperLimit": 48
+      "brotliBytesUpperLimit": 48,
+      "isNew": false
     },
     {
       "className": "py-24",
       "frequency": 2,
       "length": 5,
       "uncompressedBytes": 47,
-      "brotliBytesUpperLimit": 51
+      "brotliBytesUpperLimit": 51,
+      "isNew": false
     },
     {
       "className": "py-3",
       "frequency": 3,
       "length": 4,
       "uncompressedBytes": 45,
-      "brotliBytesUpperLimit": 48
+      "brotliBytesUpperLimit": 48,
+      "isNew": false
     },
     {
       "className": "py-4",
       "frequency": 7,
       "length": 4,
       "uncompressedBytes": 45,
-      "brotliBytesUpperLimit": 48
+      "brotliBytesUpperLimit": 48,
+      "isNew": false
     },
     {
       "className": "py-6",
-      "frequency": 8,
+      "frequency": 9,
       "length": 4,
       "uncompressedBytes": 45,
-      "brotliBytesUpperLimit": 48
+      "brotliBytesUpperLimit": 48,
+      "isNew": false
     },
     {
       "className": "relative",
-      "frequency": 33,
+      "frequency": 41,
       "length": 8,
       "uncompressedBytes": 28,
-      "brotliBytesUpperLimit": 19
+      "brotliBytesUpperLimit": 19,
+      "isNew": false
     },
     {
       "className": "resize-none",
       "frequency": 1,
       "length": 11,
       "uncompressedBytes": 25,
-      "brotliBytesUpperLimit": 27
+      "brotliBytesUpperLimit": 27,
+      "isNew": false
     },
     {
       "className": "right-3",
-      "frequency": 3,
+      "frequency": 5,
       "length": 7,
       "uncompressedBytes": 40,
-      "brotliBytesUpperLimit": 44
+      "brotliBytesUpperLimit": 44,
+      "isNew": false
     },
     {
       "className": "ring-1",
       "frequency": 6,
       "length": 6,
       "uncompressedBytes": 261,
-      "brotliBytesUpperLimit": 106
+      "brotliBytesUpperLimit": 106,
+      "isNew": false
     },
     {
       "className": "ring-foreground/10",
       "frequency": 3,
       "length": 18,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "ring-primary",
       "frequency": 2,
       "length": 12,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "ring-primary/20",
       "frequency": 1,
       "length": 15,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "rounded",
       "frequency": 1,
       "length": 7,
       "uncompressedBytes": 30,
-      "brotliBytesUpperLimit": 34
+      "brotliBytesUpperLimit": 34,
+      "isNew": false
     },
     {
       "className": "rounded-2xl",
-      "frequency": 8,
+      "frequency": 10,
       "length": 11,
       "uncompressedBytes": 53,
-      "brotliBytesUpperLimit": 57
+      "brotliBytesUpperLimit": 57,
+      "isNew": false
     },
     {
       "className": "rounded-full",
-      "frequency": 46,
+      "frequency": 57,
       "length": 12,
       "uncompressedBytes": 41,
-      "brotliBytesUpperLimit": 45
+      "brotliBytesUpperLimit": 45,
+      "isNew": false
     },
     {
       "className": "rounded-lg",
-      "frequency": 26,
+      "frequency": 29,
       "length": 10,
       "uncompressedBytes": 40,
-      "brotliBytesUpperLimit": 41
+      "brotliBytesUpperLimit": 41,
+      "isNew": false
     },
     {
       "className": "rounded-md",
-      "frequency": 16,
+      "frequency": 17,
       "length": 10,
       "uncompressedBytes": 51,
-      "brotliBytesUpperLimit": 50
+      "brotliBytesUpperLimit": 50,
+      "isNew": false
     },
     {
       "className": "rounded-xl",
-      "frequency": 13,
+      "frequency": 14,
       "length": 10,
       "uncompressedBytes": 52,
-      "brotliBytesUpperLimit": 56
+      "brotliBytesUpperLimit": 56,
+      "isNew": false
     },
     {
       "className": "rounded-xl!",
       "frequency": 1,
       "length": 11,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "select-none",
       "frequency": 7,
       "length": 11,
       "uncompressedBytes": 55,
-      "brotliBytesUpperLimit": 44
+      "brotliBytesUpperLimit": 44,
+      "isNew": false
     },
     {
       "className": "self-center",
       "frequency": 1,
       "length": 11,
       "uncompressedBytes": 31,
-      "brotliBytesUpperLimit": 31
+      "brotliBytesUpperLimit": 31,
+      "isNew": false
     },
     {
       "className": "self-start",
-      "frequency": 2,
+      "frequency": 4,
       "length": 10,
       "uncompressedBytes": 34,
-      "brotliBytesUpperLimit": 34
+      "brotliBytesUpperLimit": 34,
+      "isNew": false
     },
     {
       "className": "self-stretch",
       "frequency": 2,
       "length": 12,
       "uncompressedBytes": 33,
-      "brotliBytesUpperLimit": 33
+      "brotliBytesUpperLimit": 33,
+      "isNew": false
     },
     {
       "className": "shadow-md",
-      "frequency": 24,
+      "frequency": 29,
       "length": 9,
       "uncompressedBytes": 254,
-      "brotliBytesUpperLimit": 106
+      "brotliBytesUpperLimit": 106,
+      "isNew": false
     },
     {
       "className": "shadow-primary/10",
       "frequency": 1,
       "length": 17,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "shrink-0",
-      "frequency": 61,
+      "frequency": 69,
       "length": 8,
       "uncompressedBytes": 24,
-      "brotliBytesUpperLimit": 28
+      "brotliBytesUpperLimit": 28,
+      "isNew": false
     },
     {
       "className": "size-3.5",
       "frequency": 1,
       "length": 8,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "size-4",
       "frequency": 15,
       "length": 6,
       "uncompressedBytes": 71,
-      "brotliBytesUpperLimit": 62
+      "brotliBytesUpperLimit": 62,
+      "isNew": false
     },
     {
       "className": "size-auto",
       "frequency": 1,
       "length": 9,
       "uncompressedBytes": 34,
-      "brotliBytesUpperLimit": 38
+      "brotliBytesUpperLimit": 38,
+      "isNew": false
     },
     {
       "className": "size-full",
       "frequency": 1,
       "length": 9,
       "uncompressedBytes": 34,
-      "brotliBytesUpperLimit": 29
+      "brotliBytesUpperLimit": 29,
+      "isNew": false
     },
     {
       "className": "sm:flex",
-      "frequency": 1,
+      "frequency": 2,
       "length": 7,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "sm:flex-row",
-      "frequency": 3,
+      "frequency": 5,
       "length": 11,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "sm:gap-2",
       "frequency": 2,
       "length": 8,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "sm:gap-4",
       "frequency": 1,
       "length": 8,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "sm:grid-cols-2",
-      "frequency": 10,
+      "frequency": 12,
       "length": 14,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "sm:items-center",
-      "frequency": 3,
+      "frequency": 4,
       "length": 15,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "sm:max-w-md",
       "frequency": 1,
       "length": 11,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "sm:max-w-sm",
       "frequency": 1,
       "length": 11,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "sm:p-12",
       "frequency": 1,
       "length": 7,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "sm:p-8",
-      "frequency": 1,
+      "frequency": 2,
       "length": 6,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "sm:px-4",
       "frequency": 3,
       "length": 7,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "sm:self-center",
       "frequency": 2,
       "length": 14,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "sm:text-2xl",
-      "frequency": 5,
+      "frequency": 7,
       "length": 11,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "sm:text-4xl",
-      "frequency": 5,
+      "frequency": 7,
       "length": 11,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "sm:text-5xl",
       "frequency": 1,
       "length": 11,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "sm:text-sm",
-      "frequency": 3,
+      "frequency": 9,
       "length": 10,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "space-y-2",
       "frequency": 4,
       "length": 9,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "space-y-4",
       "frequency": 3,
       "length": 9,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "space-y-6",
       "frequency": 2,
       "length": 9,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "sr-only",
       "frequency": 2,
       "length": 7,
       "uncompressedBytes": 141,
-      "brotliBytesUpperLimit": 81
+      "brotliBytesUpperLimit": 81,
+      "isNew": false
     },
     {
       "className": "text-2xl",
-      "frequency": 5,
+      "frequency": 8,
       "length": 8,
       "uncompressedBytes": 95,
-      "brotliBytesUpperLimit": 56
+      "brotliBytesUpperLimit": 56,
+      "isNew": false
     },
     {
       "className": "text-3xl",
-      "frequency": 10,
+      "frequency": 12,
       "length": 8,
       "uncompressedBytes": 95,
-      "brotliBytesUpperLimit": 56
+      "brotliBytesUpperLimit": 56,
+      "isNew": false
     },
     {
       "className": "text-4xl",
       "frequency": 1,
       "length": 8,
       "uncompressedBytes": 95,
-      "brotliBytesUpperLimit": 56
+      "brotliBytesUpperLimit": 56,
+      "isNew": false
     },
     {
       "className": "text-card-foreground",
       "frequency": 1,
       "length": 20,
       "uncompressedBytes": 51,
-      "brotliBytesUpperLimit": 48
+      "brotliBytesUpperLimit": 48,
+      "isNew": false
     },
     {
       "className": "text-center",
-      "frequency": 19,
+      "frequency": 22,
       "length": 11,
       "uncompressedBytes": 31,
-      "brotliBytesUpperLimit": 31
+      "brotliBytesUpperLimit": 31,
+      "isNew": false
     },
     {
       "className": "text-destructive",
-      "frequency": 25,
+      "frequency": 27,
       "length": 16,
       "uncompressedBytes": 43,
-      "brotliBytesUpperLimit": 47
+      "brotliBytesUpperLimit": 47,
+      "isNew": false
     },
     {
       "className": "text-destructive-foreground",
       "frequency": 1,
       "length": 27,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "text-foreground",
-      "frequency": 8,
+      "frequency": 13,
       "length": 15,
       "uncompressedBytes": 41,
-      "brotliBytesUpperLimit": 44
+      "brotliBytesUpperLimit": 44,
+      "isNew": false
     },
     {
       "className": "text-left",
-      "frequency": 14,
+      "frequency": 16,
       "length": 9,
       "uncompressedBytes": 27,
-      "brotliBytesUpperLimit": 31
+      "brotliBytesUpperLimit": 31,
+      "isNew": false
     },
     {
       "className": "text-lg",
       "frequency": 7,
       "length": 7,
       "uncompressedBytes": 92,
-      "brotliBytesUpperLimit": 56
+      "brotliBytesUpperLimit": 56,
+      "isNew": false
     },
     {
       "className": "text-muted-foreground",
-      "frequency": 163,
+      "frequency": 174,
       "length": 21,
       "uncompressedBytes": 53,
-      "brotliBytesUpperLimit": 47
+      "brotliBytesUpperLimit": 47,
+      "isNew": false
     },
     {
       "className": "text-popover-foreground",
       "frequency": 6,
       "length": 23,
       "uncompressedBytes": 57,
-      "brotliBytesUpperLimit": 44
+      "brotliBytesUpperLimit": 44,
+      "isNew": false
     },
     {
       "className": "text-primary",
-      "frequency": 52,
+      "frequency": 60,
       "length": 12,
       "uncompressedBytes": 35,
-      "brotliBytesUpperLimit": 35
+      "brotliBytesUpperLimit": 35,
+      "isNew": false
     },
     {
       "className": "text-primary-foreground",
       "frequency": 4,
       "length": 23,
       "uncompressedBytes": 57,
-      "brotliBytesUpperLimit": 50
+      "brotliBytesUpperLimit": 50,
+      "isNew": false
     },
     {
       "className": "text-sm",
-      "frequency": 51,
+      "frequency": 55,
       "length": 7,
       "uncompressedBytes": 92,
-      "brotliBytesUpperLimit": 56
+      "brotliBytesUpperLimit": 56,
+      "isNew": false
     },
     {
       "className": "text-success",
       "frequency": 4,
       "length": 12,
       "uncompressedBytes": 35,
-      "brotliBytesUpperLimit": 34
+      "brotliBytesUpperLimit": 34,
+      "isNew": false
     },
     {
       "className": "text-warning",
       "frequency": 3,
       "length": 12,
       "uncompressedBytes": 35,
-      "brotliBytesUpperLimit": 35
+      "brotliBytesUpperLimit": 35,
+      "isNew": false
     },
     {
       "className": "text-warning-foreground",
       "frequency": 1,
       "length": 23,
       "uncompressedBytes": 57,
-      "brotliBytesUpperLimit": 52
+      "brotliBytesUpperLimit": 52,
+      "isNew": false
     },
     {
       "className": "text-white",
-      "frequency": 3,
+      "frequency": 8,
       "length": 10,
       "uncompressedBytes": 37,
-      "brotliBytesUpperLimit": 41
+      "brotliBytesUpperLimit": 41,
+      "isNew": false
     },
     {
       "className": "text-xl",
-      "frequency": 11,
+      "frequency": 13,
       "length": 7,
       "uncompressedBytes": 92,
-      "brotliBytesUpperLimit": 57
+      "brotliBytesUpperLimit": 57,
+      "isNew": false
     },
     {
       "className": "text-xs",
-      "frequency": 115,
+      "frequency": 130,
       "length": 7,
       "uncompressedBytes": 92,
-      "brotliBytesUpperLimit": 57
+      "brotliBytesUpperLimit": 57,
+      "isNew": false
     },
     {
       "className": "text-xxs",
-      "frequency": 38,
+      "frequency": 40,
       "length": 8,
       "uncompressedBytes": 65,
-      "brotliBytesUpperLimit": 55
+      "brotliBytesUpperLimit": 55,
+      "isNew": false
     },
     {
       "className": "to-transparent",
       "frequency": 4,
       "length": 14,
       "uncompressedBytes": 234,
-      "brotliBytesUpperLimit": 83
+      "brotliBytesUpperLimit": 83,
+      "isNew": false
     },
     {
       "className": "toaster",
       "frequency": 1,
       "length": 7,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "top-1/2",
-      "frequency": 1,
+      "frequency": 5,
       "length": 7,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "top-2",
       "frequency": 2,
       "length": 5,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
+      "brotliBytesUpperLimit": 40,
+      "isNew": false
     },
     {
       "className": "top-3",
-      "frequency": 4,
+      "frequency": 5,
       "length": 5,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
+      "brotliBytesUpperLimit": 40,
+      "isNew": false
     },
     {
       "className": "tracking-tight",
-      "frequency": 14,
+      "frequency": 19,
       "length": 14,
       "uncompressedBytes": 89,
-      "brotliBytesUpperLimit": 56
+      "brotliBytesUpperLimit": 56,
+      "isNew": false
     },
     {
       "className": "tracking-wider",
-      "frequency": 61,
+      "frequency": 65,
       "length": 14,
       "uncompressedBytes": 89,
-      "brotliBytesUpperLimit": 57
-    },
-    {
-      "className": "transition",
-      "frequency": 6,
-      "length": 10,
-      "uncompressedBytes": 477,
-      "brotliBytesUpperLimit": 179
+      "brotliBytesUpperLimit": 57,
+      "isNew": false
     },
     {
       "className": "transition-all",
-      "frequency": 24,
+      "frequency": 56,
       "length": 14,
       "uncompressedBytes": 198,
-      "brotliBytesUpperLimit": 86
-    },
-    {
-      "className": "transition-colors",
-      "frequency": 12,
-      "length": 17,
-      "uncompressedBytes": 335,
-      "brotliBytesUpperLimit": 131
-    },
-    {
-      "className": "transition-transform",
-      "frequency": 2,
-      "length": 20,
-      "uncompressedBytes": 233,
-      "brotliBytesUpperLimit": 96
+      "brotliBytesUpperLimit": 86,
+      "isNew": false
     },
     {
       "className": "truncate",
-      "frequency": 26,
+      "frequency": 28,
       "length": 8,
       "uncompressedBytes": 68,
-      "brotliBytesUpperLimit": 52
+      "brotliBytesUpperLimit": 52,
+      "isNew": false
     },
     {
       "className": "uppercase",
-      "frequency": 60,
+      "frequency": 64,
       "length": 9,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 33
+      "brotliBytesUpperLimit": 33,
+      "isNew": false
     },
     {
       "className": "via-primary/5",
       "frequency": 4,
       "length": 13,
       "uncompressedBytes": 0,
-      "brotliBytesUpperLimit": 0
+      "brotliBytesUpperLimit": 0,
+      "isNew": false
     },
     {
       "className": "w-10",
-      "frequency": 3,
+      "frequency": 5,
       "length": 4,
       "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 42
+      "brotliBytesUpperLimit": 42,
+      "isNew": false
     },
     {
       "className": "w-16",
       "frequency": 5,
       "length": 4,
       "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 42
+      "brotliBytesUpperLimit": 42,
+      "isNew": false
     },
     {
       "className": "w-2",
       "frequency": 4,
       "length": 3,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
+      "brotliBytesUpperLimit": 40,
+      "isNew": false
     },
     {
       "className": "w-3",
-      "frequency": 48,
+      "frequency": 50,
       "length": 3,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
+      "brotliBytesUpperLimit": 40,
+      "isNew": false
     },
     {
       "className": "w-4",
-      "frequency": 73,
+      "frequency": 86,
       "length": 3,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
+      "brotliBytesUpperLimit": 40,
+      "isNew": false
     },
     {
       "className": "w-5",
-      "frequency": 21,
+      "frequency": 22,
       "length": 3,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
+      "brotliBytesUpperLimit": 40,
+      "isNew": false
     },
     {
       "className": "w-6",
-      "frequency": 6,
+      "frequency": 7,
       "length": 3,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
+      "brotliBytesUpperLimit": 40,
+      "isNew": false
     },
     {
       "className": "w-72",
-      "frequency": 1,
+      "frequency": 3,
       "length": 4,
       "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 42
+      "brotliBytesUpperLimit": 42,
+      "isNew": false
     },
     {
       "className": "w-8",
-      "frequency": 20,
+      "frequency": 25,
       "length": 3,
       "uncompressedBytes": 36,
-      "brotliBytesUpperLimit": 40
+      "brotliBytesUpperLimit": 40,
+      "isNew": false
     },
     {
       "className": "w-full",
-      "frequency": 66,
+      "frequency": 81,
       "length": 6,
       "uncompressedBytes": 19,
-      "brotliBytesUpperLimit": 23
+      "brotliBytesUpperLimit": 23,
+      "isNew": false
     },
     {
       "className": "whitespace-nowrap",
       "frequency": 2,
       "length": 17,
       "uncompressedBytes": 38,
-      "brotliBytesUpperLimit": 33
+      "brotliBytesUpperLimit": 33,
+      "isNew": false
     },
     {
       "className": "z-10",
-      "frequency": 2,
+      "frequency": 8,
       "length": 4,
       "uncompressedBytes": 17,
-      "brotliBytesUpperLimit": 21
+      "brotliBytesUpperLimit": 21,
+      "isNew": false
     },
     {
       "className": "z-50",
-      "frequency": 15,
+      "frequency": 16,
       "length": 4,
       "uncompressedBytes": 17,
-      "brotliBytesUpperLimit": 21
+      "brotliBytesUpperLimit": 21,
+      "isNew": false
     }
   ]
 }

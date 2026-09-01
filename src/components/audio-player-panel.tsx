@@ -48,7 +48,7 @@ export function AudioPlayerPanel() {
         <button
           type="button"
           onClick={() => handleMinimizeToggle(false)}
-          className="flex items-center gap-2 cursor-pointer p-2 rounded-full hover:bg-accent text-muted-foreground hover:text-primary transition-colors"
+          className="flex items-center gap-2 cursor-pointer p-2 rounded-full hover:bg-accent text-muted-foreground hover:text-primary transition-all"
           title="Expand player"
         >
           <Music className="w-4 h-4 shrink-0 text-primary animate-pulse" />
@@ -100,7 +100,7 @@ export function AudioPlayerPanel() {
     >
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-3">
         {/* Metadata Section */}
-        <div className="flex flex-col gap-1 w-full md:w-72">
+        <div className="flex flex-col gap-1 w-full md:w-auto">
           <div className="flex items-center gap-1">
             <h4
               className="font-bold text-sm truncate text-primary"
@@ -110,7 +110,7 @@ export function AudioPlayerPanel() {
             </h4>
             <Link
               href={href}
-              className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors cursor-pointer rounded-md p-1 hover:bg-accent shrink-0"
+              className="inline-flex items-center text-muted-foreground hover:text-primary transition-all cursor-pointer rounded-md p-1 hover:bg-accent shrink-0"
               title="Navigate to recording details"
               prefetch={false}
             >

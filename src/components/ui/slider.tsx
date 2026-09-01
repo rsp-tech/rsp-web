@@ -50,7 +50,7 @@ function Slider({
           data-slot="slider-thumb"
           // biome-ignore lint/suspicious/noArrayIndexKey: ok here
           key={index}
-          className="relative flex h-3 w-3 shrink-0 rounded-full border border-border bg-muted transition-colors select-none disabled:pointer-events-none disabled:opacity-60"
+          className="relative flex h-3 w-3 shrink-0 rounded-full border border-border bg-muted transition-all select-none disabled:pointer-events-none disabled:opacity-60"
         />
       ))}
     </SliderPrimitive.Root>

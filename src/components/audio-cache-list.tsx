@@ -48,7 +48,7 @@ export const AudioCacheList = () => {
       {cachedList.map((entry) => (
         <div
           key={entry.audio_id}
-          className="p-4 border border-border bg-muted/5 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-primary/20 transition duration-200"
+          className="p-4 border border-border bg-muted/5 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:bg-primary/20 transition-all duration-200"
         >
           <RecordingMeta rec={entry} showLink />
 
@@ -74,7 +74,7 @@ export const AudioCacheList = () => {
                   handleDelete(entry.audio_id ?? entry.id, entry.name)
                 }
                 disabled={deleteCache.isPending}
-                className="text-destructive hover:bg-destructive/10 p-2 rounded-md cursor-pointer transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                className="text-destructive hover:bg-destructive/10 p-2 rounded-md cursor-pointer transition-all disabled:opacity-60 disabled:cursor-not-allowed"
                 title={`Delete "${entry.name}" from cache`}
               >
                 {deleteCache.isPending &&

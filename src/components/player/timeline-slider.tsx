@@ -10,7 +10,7 @@ const formatTime = (secs: number) => {
   return `${m}:${s < 10 ? "0" : ""}${s}`;
 };
 
-export function TimelineSlider() {
+export const TimelineSlider = () => {
   const { currentTime, duration, seek } = useAudioTimeline();
 
   const handleValueChange = (values: number[]) => {
@@ -21,7 +21,7 @@ export function TimelineSlider() {
 
   return (
     <div
-      className="flex items-center gap-2 md:w-64"
+      className="flex items-center gap-2 md:w-72"
       style={{ minWidth: "160px", flexGrow: 1 }}
     >
       <span

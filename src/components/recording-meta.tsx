@@ -55,7 +55,7 @@ export const RecordingMeta = ({ rec, m, sm, showLink }: RecordingMetaProps) => {
     <div className={cn("flex-1 flex flex-col", sm ? "gap-1" : "gap-2")}>
       <h3
         className={cn(
-          "leading-snug group-hover:text-primary transition-colors flex items-center justify-between gap-2 truncate font-bold text-sm",
+          "leading-snug group-hover:text-primary transition-all flex items-center justify-between gap-2 truncate font-bold text-sm",
           sm && "font-semibold",
         )}
       >
@@ -69,7 +69,7 @@ export const RecordingMeta = ({ rec, m, sm, showLink }: RecordingMetaProps) => {
           <Link
             href={href}
             prefetch={false}
-            className="inline-flex items-center text-muted-foreground hover:text-primary transition-colors cursor-pointer rounded-md p-1 hover:bg-accent shrink-0"
+            className="inline-flex items-center text-muted-foreground hover:text-primary transition-all cursor-pointer rounded-md p-1 hover:bg-accent shrink-0"
             title="Navigate to recording details"
           >
             <ExternalLink className="w-3 h-3" />

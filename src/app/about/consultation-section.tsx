@@ -144,7 +144,7 @@ export const ConsultationSection = () => {
                   </span>
                   <a
                     href="mailto:info@radheshyamdas.com"
-                    className="font-medium hover:text-primary transition-colors"
+                    className="font-medium hover:text-primary transition-all"
                   >
                     info@radheshyamdas.com
                   </a>
@@ -161,7 +161,7 @@ export const ConsultationSection = () => {
                   </span>
                   <a
                     href="tel:+917378709688"
-                    className="font-medium hover:text-primary transition-colors"
+                    className="font-medium hover:text-primary transition-all"
                   >
                     +91 73787 09688
                   </a>
