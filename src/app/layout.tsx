@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import { TopAnnouncementBanner } from "@/components/announcement-banner";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { PageTransition } from "@/components/page-transition";
@@ -51,6 +52,7 @@ export default async function RootLayout({
       </head>
       <body className="min-h-full flex flex-col">
         <Providers>
+          <TopAnnouncementBanner />
           <Header />
           <PageTransition>{children}</PageTransition>
           <Footer />
