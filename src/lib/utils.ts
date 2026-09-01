@@ -4,8 +4,10 @@ import { twMerge } from "tailwind-merge";
 
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export const categoryPath = (urlPath: string) =>
-  urlPath.replaceAll(".", "/").replaceAll("_", "-");
+export const categoryPath = (urlPath: string) => {
+  const clean = urlPath.replaceAll(".", "/").replaceAll("_", "-");
+  return `library/${clean}`;
+};
 
 export const slugToLabel = (slug: string) =>
   slug
@@ -58,11 +60,17 @@ export const sortByDate =
 
 /**
  * Converts a pathname (string or array of slug segments) to a DB urlPath (dot-separated, ltree format).
- * E.g., "/spiritual-discourses/bg" -> "spiritual_discourses.bg"
- * E.g., ["spiritual-discourses", "bg"] -> "spiritual_discourses.bg"
+ * Automatically strips the leading "library" segment if present.
+ * E.g., "/library/spiritual-discourses/bg" -> "spiritual_discourses.bg"
+ * E.g., ["library", "spiritual-discourses", "bg"] -> "spiritual_discourses.bg"
  */
 export const pathToUrlPath = (path: string | string[]): string => {
-  const segments = Array.isArray(path) ? path : path.split("/").filter(Boolean);
+  let segments = Array.isArray(path)
+    ? [...path]
+    : path.split("/").filter(Boolean);
+  if (segments[0] === "library") {
+    segments = segments.slice(1);
+  }
   return segments.join(".").replace(/-/g, "_");
 };
 

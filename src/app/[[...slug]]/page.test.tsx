@@ -30,18 +30,36 @@ vi.mock("@/hooks/use-online-status", () => ({ useOnlineStatus: () => true }));
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 
 describe.concurrent("src/app/[[...slug]]/page.tsx suite", () => {
-  it.concurrent("generateMetadata generates metadata for category routes", async () => {
+  it.concurrent("generateMetadata generates metadata for library category routes", async () => {
     const { generateMetadata } = await import("./page");
     const metadata = await generateMetadata({
-      params: Promise.resolve({ slug: ["gita"] }),
+      params: Promise.resolve({ slug: ["library", "gita"] }),
     });
     expect(metadata).toBeDefined();
   });
 
-  it.concurrent("renders default exported component with structured json-ld", async () => {
+  it.concurrent("generateMetadata generates metadata for library root", async () => {
+    const { generateMetadata } = await import("./page");
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ slug: ["library"] }),
+    });
+    expect(metadata.title).toContain("Spiritual Library");
+  });
+
+  it.concurrent("renders default exported component with structured json-ld under /library", async () => {
     const mod = await import("./page");
     const Comp = mod.default;
-    const tree = await Comp({ params: Promise.resolve({ slug: ["gita"] }) });
+    const tree = await Comp({
+      params: Promise.resolve({ slug: ["library", "gita"] }),
+    });
     expect(tree).toBeDefined();
+  });
+
+  it.concurrent("redirects legacy direct category paths to /library", async () => {
+    const mod = await import("./page");
+    const Comp = mod.default;
+    await expect(
+      Comp({ params: Promise.resolve({ slug: ["gita"] }) }),
+    ).rejects.toThrow("NEXT_REDIRECT");
   });
 });

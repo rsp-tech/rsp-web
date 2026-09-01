@@ -4,6 +4,10 @@ import { ASSET_BASE_URL } from "@/constants";
 import type { CategoryPageData } from "@/hooks/use-category-page";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { pathToUrlPath, slugToLabel } from "@/lib/utils";
+import {
+  getCachedYouTubeVideos,
+  type YouTubeVideo,
+} from "@/lib/youtube-service";
 import { ClientShell } from "@/views/client-shell";
 
 export const revalidate = 604800; // One week - fallback if on demand revalidation failed
@@ -54,6 +58,15 @@ export const generateMetadata = async ({
   const { slug } = await params;
   if (!slug?.length) return homePageMetadata;
 
+  if (slug.length === 1 && slug[0] === "library") {
+    return {
+      title: "Spiritual Library | HG Radheshyam Das Discourses",
+      description:
+        "Explore the comprehensive Vedic library of audio discourses, lecture series, and sacred literature commentaries by HG Radheshyam Das.",
+      alternates: { canonical: "https://radheshyamdas.com/library" },
+    };
+  }
+
   const urlPath = pathToUrlPath(slug);
   const category = await getCategoryDetails(urlPath);
 
@@ -82,6 +95,11 @@ export const generateMetadata = async ({
 
 const generateJsonLdData = async (slug?: string[]) => {
   if (process.env.NODE_ENV === "development") return { structuredData: [] };
+
+  // If old direct category path, redirect to /library/...
+  if (slug?.length && slug[0] !== "library") {
+    redirect(`/library/${slug.join("/")}`);
+  }
 
   const urlPath = pathToUrlPath(slug ?? []);
 
@@ -220,6 +238,15 @@ export default async function CategoryPage({ params }: PageProps) {
   const { slug } = await params;
   const { data, structuredData } = await generateJsonLdData(slug);
 
+  let youtubeVideos: YouTubeVideo[] = [];
+  if (!slug?.length) {
+    try {
+      youtubeVideos = await getCachedYouTubeVideos();
+    } catch {
+      youtubeVideos = [];
+    }
+  }
+
   return (
     <>
       {structuredData.map((schema, idx) => (
@@ -233,6 +260,7 @@ export default async function CategoryPage({ params }: PageProps) {
       ))}
       <ClientShell
         initialData={data || { subcategories: [], recordings: [] }}
+        youtubeVideos={youtubeVideos}
       />
     </>
   );

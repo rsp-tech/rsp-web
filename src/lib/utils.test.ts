@@ -28,11 +28,11 @@ describe.concurrent("utils.ts suite", () => {
     expect(cn("p-4", "p-2")).toBe("p-2");
   });
 
-  it.concurrent("categoryPath converts dot and underscore to slash and hyphen", () => {
+  it.concurrent("categoryPath converts dot and underscore to slash and hyphen under library", () => {
     expect(categoryPath("spiritual_discourses.bhagavad_gita")).toBe(
-      "spiritual-discourses/bhagavad-gita",
+      "library/spiritual-discourses/bhagavad-gita",
     );
-    expect(categoryPath("simple")).toBe("simple");
+    expect(categoryPath("simple")).toBe("library/simple");
   });
 
   it.concurrent("slugToLabel transforms underscore separated slugs into capitalized words", () => {
@@ -154,6 +154,14 @@ describe.concurrent("utils.ts suite", () => {
     expect(pathToUrlPath(["spiritual-discourses", "bg"])).toBe(
       "spiritual_discourses.bg",
     );
+    expect(pathToUrlPath("/library/spiritual-discourses/bg")).toBe(
+      "spiritual_discourses.bg",
+    );
+    expect(pathToUrlPath(["library", "spiritual-discourses", "bg"])).toBe(
+      "spiritual_discourses.bg",
+    );
+    expect(pathToUrlPath("/library")).toBe("");
+    expect(pathToUrlPath(["library"])).toBe("");
     expect(pathToUrlPath("///spiritual-discourses//bg/")).toBe(
       "spiritual_discourses.bg",
     );
