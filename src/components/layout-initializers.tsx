@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { AdminFeatureFlagBar } from "@/components/admin-feature-flag-bar";
 import { OfflineIndicator } from "@/components/offline-indicator";
 import { ProgressBar } from "@/components/progress-bar";
 import { SyncTrigger } from "@/components/sync-trigger";
@@ -14,7 +15,7 @@ const MediaPreviewModal = dynamic(
   { ssr: false },
 );
 
-export function LayoutInitializers() {
+export const LayoutInitializers = () => {
   return (
     <>
       <OfflineIndicator />
@@ -22,6 +23,7 @@ export function LayoutInitializers() {
       <Toaster position="bottom-right" />
       <ProgressBar />
       <MediaPreviewModal />
+      <AdminFeatureFlagBar />
     </>
   );
-}
+};

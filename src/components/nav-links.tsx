@@ -7,6 +7,7 @@ import {
   Info,
   type LucideIcon,
   Mail,
+  Video,
 } from "lucide-react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
@@ -17,6 +18,11 @@ const navLinks: {
   iconColorClass?: string;
   title: string;
 }[] = [
+  {
+    href: "/videos",
+    Icon: Video,
+    title: "Videos",
+  },
   {
     href: "https://voicepublication.in/search?attribute_Author=Radheshyam+Das",
     Icon: BookOpen,

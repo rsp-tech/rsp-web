@@ -1,8 +1,11 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
+import { useSession } from "@/components/providers";
 import { META_KEY, QUERY_KEY, STORE } from "@/constants";
 import { getDB } from "@/lib/idb";
+import { toRoleId } from "@/lib/utils";
+import { useAdminBypass } from "./use-admin-bypass";
 
 export const getPersistedFeatureFlags = async (): Promise<string[]> => {
   // 1. Read persisted public and user features from IDB
@@ -49,5 +52,14 @@ export const useFeatureFlags = () =>
 
 export const useFeatureFlag = (flagId: string): boolean => {
   const { data: allowedFlags = [] } = useFeatureFlags();
-  return allowedFlags.includes(flagId);
+  const { session } = useSession();
+  const { isBypassed } = useAdminBypass();
+
+  const roleId = toRoleId(
+    session?.user?.app_metadata?.["role_id"] ??
+      session?.user?.user_metadata?.["role_id"],
+  );
+  const isAdmin = roleId === 1;
+
+  return (isAdmin && isBypassed) || allowedFlags.includes(flagId);
 };

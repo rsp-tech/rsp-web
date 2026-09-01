@@ -23,6 +23,24 @@ vi.mock("@/lib/idb", () => ({
     ),
 }));
 
+let mockSession: any = null;
+vi.mock("@/components/providers", () => ({
+  useSession: () => ({ session: mockSession, isLoading: false }),
+}));
+
+let mockIsBypassed = false;
+vi.mock("./use-admin-bypass", () => ({
+  useAdminBypass: () => ({
+    isBypassed: mockIsBypassed,
+    setIsBypassed: (val: boolean) => {
+      mockIsBypassed = val;
+    },
+    toggleAdminBypass: () => {
+      mockIsBypassed = !mockIsBypassed;
+    },
+  }),
+}));
+
 vi.mock("@tanstack/react-query", () => ({
   useQuery: () => ({
     data: allAllowed,
@@ -51,5 +69,28 @@ describe.concurrent("use-feature-flags suite", () => {
     expect(flags).toContain("ga_flag");
     expect(flags).toContain("youtube_marquee");
     expect(flags).toContain("beta_user_flag");
+  });
+
+  it("admin with useAdminBypass active can bypass unallowed flags", () => {
+    mockSession = { user: { app_metadata: { role_id: 1 } } };
+    mockIsBypassed = true;
+    expect(useFeatureFlag("completely_disabled_flag")).toBe(true);
+    mockIsBypassed = false;
+    mockSession = null;
+  });
+
+  it("non-admin with useAdminBypass active cannot bypass flags", () => {
+    mockSession = { user: { app_metadata: { role_id: 2 } } };
+    mockIsBypassed = true;
+    expect(useFeatureFlag("completely_disabled_flag")).toBe(false);
+    mockIsBypassed = false;
+    mockSession = null;
+  });
+
+  it("admin with useAdminBypass inactive cannot bypass unallowed flags", () => {
+    mockSession = { user: { app_metadata: { role_id: 1 } } };
+    mockIsBypassed = false;
+    expect(useFeatureFlag("completely_disabled_flag")).toBe(false);
+    mockSession = null;
   });
 });

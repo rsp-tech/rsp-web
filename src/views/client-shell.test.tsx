@@ -36,6 +36,17 @@ vi.mock("@/hooks/use-category-page", () => ({
   }),
 }));
 
+vi.mock("@/hooks/use-homepage", () => ({
+  useHomepage: () => ({
+    data: {
+      announcements: [],
+      spotlights: [],
+      featuredSections: [],
+    },
+    isLoading: false,
+  }),
+}));
+
 describe.concurrent("src/views/client-shell.tsx suite", () => {
   it.concurrent("renders ClientShell category page view", async () => {
     const { ClientShell } = await import("./client-shell");
