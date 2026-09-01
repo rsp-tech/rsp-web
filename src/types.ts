@@ -31,6 +31,7 @@ export type Material = Tables<"materials">;
 export type Event = Tables<"events">;
 export type Redirect = Tables<"redirects">;
 export type Service = Tables<"services">;
+export type FeatureFlag = Tables<"feature_flags">;
 export type UserServiceInterest = Tables<"user_service_interests", "Insert">;
 
 export interface RecordingMaterialMetadata {
@@ -44,6 +45,46 @@ export type FaqCategory = Tables<"faq_categories">;
 export type Faq = Tables<"faqs">;
 export type FeaturedSection = Tables<"featured_sections">;
 export type FeaturedItem = Tables<"featured_items">;
+
+export interface Announcement {
+  id: number;
+  title: string;
+  subtitle?: string | null;
+  badge_text?: string | null;
+  category?:
+    | "event"
+    | "fundraising"
+    | "book_distribution"
+    | "guidance_spotlight"
+    | "general"
+    | null;
+  cta_label?: string | null;
+  cta_url?: string | null;
+  media_path?: string | null;
+  media_type?: "image" | "video" | "gif" | null;
+  bg_gradient?: string | null;
+  start_date?: string | null;
+  end_date?: string | null;
+  is_annual_recurring?: boolean | null;
+  is_active?: boolean | null;
+  order_ind?: number | null;
+  updated_at?: string | null;
+}
+
+export interface EnrichedFeaturedItem {
+  id: number;
+  section_id: number | null;
+  entity_type: string | null;
+  entity_id: number;
+  order_ind: number | null;
+  category?: Category | null;
+  recording?: EnrichedRecording | null;
+}
+
+export interface EnrichedFeaturedSection extends FeaturedSection {
+  items: EnrichedFeaturedItem[];
+}
+
 export type UserQuery = DB_TABLE<"user_queries">;
 export type QueryReply = DB_TABLE<"query_replies">;
 export type DeletedRecord = DB_TABLE<"deleted_records">;
@@ -191,6 +232,7 @@ export interface SyncResponseData {
   changed: boolean;
   sync_meta: Record<string, string>;
   deltas: Partial<Record<SyncTable, unknown[]>>;
+  user_feature_flags?: string[];
 }
 
 export type SyncWorkerMessage =

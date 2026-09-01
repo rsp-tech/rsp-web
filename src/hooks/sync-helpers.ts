@@ -50,6 +50,25 @@ export const handleTableInvalidations = (
       queryKey: [STORE.USER_QUERIES],
     });
   }
+
+  const hasHomepageChanges = changedTables.some((t) =>
+    (
+      [
+        STORE.ANNOUNCEMENTS,
+        STORE.FEATURED_SECTIONS,
+        STORE.FEATURED_ITEMS,
+        STORE.CATEGORIES,
+        STORE.RECORDINGS,
+        STORE.MATERIALS,
+      ] as readonly string[]
+    ).includes(t),
+  );
+
+  if (hasHomepageChanges) {
+    queryClient.invalidateQueries({
+      queryKey: [QUERY_KEY.HOMEPAGE],
+    });
+  }
 };
 
 export const handleCategoryPathInvalidations = (

@@ -50,6 +50,14 @@ describe.concurrent("sync-helpers suite", () => {
     expect(invalidateQueries).toHaveBeenCalledWith({
       queryKey: [STORE.USER_QUERIES],
     });
+
+    handleTableInvalidations(queryClient, [STORE.ANNOUNCEMENTS]);
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: [STORE.ANNOUNCEMENTS],
+    });
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: [QUERY_KEY.HOMEPAGE],
+    });
   });
 
   it.concurrent("handleCategoryPathInvalidations invalidates paths and wildcards", () => {

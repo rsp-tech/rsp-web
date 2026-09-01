@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import { createMockDb } from "@/test-utils/mock-idb";
 import { STORE } from "../constants";
 
 import {
@@ -173,22 +174,7 @@ describe.concurrent("sync-utils suite", () => {
       "@/workers/cleanup-helpers"
     );
 
-    const storeData = new Map<string, any>();
-    const mockDb: any = {
-      getKey: (store: string, key: string) => storeData.get(`${store}:${key}`),
-      get: (store: string, key: string) => storeData.get(`${store}:${key}`),
-      put: (store: string, val: any, key?: string) => {
-        storeData.set(`${store}:${key}`, val);
-      },
-      clear: () => {},
-      transaction: () => ({
-        store: {
-          openCursor: () => null,
-          delete: () => {},
-        },
-        done: Promise.resolve(),
-      }),
-    };
+    const mockDb = createMockDb();
 
     // First run stores the role and returns false
     const res1 = await performRoleCleanup(mockDb, 1);
@@ -275,22 +261,14 @@ describe.concurrent("sync-utils suite", () => {
     const { syncRoleData } = await import("@/workers/sync-role-helpers");
     const { syncUserData } = await import("@/workers/sync-user-helpers");
 
-    const mockDb: any = {
-      get: () => Promise.resolve({ updated_at: "2026-01-01T00:00:00Z" }),
-      getKey: () => Promise.resolve("key"),
-      getAll: () => Promise.resolve([]),
-      put: () => Promise.resolve(),
-      clear: () => Promise.resolve(),
-      transaction: () => ({
-        store: {
-          openCursor: () => Promise.resolve(null),
-          delete: () => {},
-          put: () => {},
-          clear: () => {},
-        },
-        done: Promise.resolve(),
-      }),
-    };
+    const mockDb = createMockDb({
+      [`${STORE.SYNC_META}:${STORE.RECORDINGS}`]: {
+        updated_at: "2026-01-01T00:00:00Z",
+      },
+      [`${STORE.SYNC_META}:${STORE.USERS}`]: {
+        updated_at: "2026-01-01T00:00:00Z",
+      },
+    });
 
     // Mock global fetch for metadata & sync endpoints
     const originalFetch = globalThis.fetch;

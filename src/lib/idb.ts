@@ -1,6 +1,7 @@
 import { type IDBPDatabase, openDB } from "idb";
 import { DB_NAME, DB_VERSION, INDEX, STORE } from "@/constants";
 import type {
+  Announcement,
   AudioCacheLedgerEntry,
   Category,
   ContentType,
@@ -88,6 +89,10 @@ export interface RSP_IDB {
     value: Faq;
     indexes: { [INDEX.BY_CATEGORY_ID]: number };
   };
+  announcements: {
+    key: number;
+    value: Announcement;
+  };
   featured_sections: {
     key: number;
     value: FeaturedSection;
@@ -144,6 +149,9 @@ const IDB_SCHEMA: Record<
   StoreName,
   { keyPath?: string; indexes?: { name: string; keyPath: string }[] }
 > = {
+  [STORE.ANNOUNCEMENTS]: {
+    keyPath: "id",
+  },
   [STORE.CATEGORIES]: {
     keyPath: "id",
     indexes: [

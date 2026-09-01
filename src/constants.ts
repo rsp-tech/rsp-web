@@ -63,6 +63,9 @@ export const ROLE_SYNCED_TABLES = [
   STORE.CATEGORIES,
   STORE.RECORDINGS,
   STORE.MATERIALS,
+  STORE.ANNOUNCEMENTS,
+  STORE.FEATURED_SECTIONS,
+  STORE.FEATURED_ITEMS,
 ] as const;
 
 export const SEARCH_LOOKUP_TABLES = [
@@ -197,6 +200,7 @@ export const SYNC_COLUMNS = {
 
   [STORE.ANNOUNCEMENTS]: `
     id,
+    allowed_roles,
     title,
     subtitle,
     badge_text,
@@ -215,6 +219,7 @@ export const SYNC_COLUMNS = {
 
   [STORE.FEATURED_SECTIONS]: `
     id,
+    allowed_roles,
     title,
     layout,
     is_active,
@@ -223,6 +228,7 @@ export const SYNC_COLUMNS = {
 
   [STORE.FEATURED_ITEMS]: `
     id,
+    allowed_roles,
     entity_id,
     entity_type,
     order_ind,
@@ -361,6 +367,7 @@ export const WORKER_MSG = {
 
 // Query keys
 export const QUERY_KEY = {
+  HOMEPAGE: "homepage",
   CATEGORY_PAGE: "category-page",
   ALL_CATEGORIES: "categories",
   SYNC_PUBLIC: "sync-public",
@@ -421,4 +428,5 @@ export const PHILOSOPHICAL_CONCEPTS = [
 
 export const FEATURE_FLAGS = {
   VIDEOS: "video_sanctuary",
+  YOUTUBE_MARQUEE: "youtube_marquee",
 };
