@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       announcements: {
         Row: {
+          allowed_roles: number[];
           badge_text: string | null;
           bg_gradient: string | null;
           category: string | null;
@@ -34,6 +35,7 @@ export type Database = {
           updated_at: string | null;
         };
         Insert: {
+          allowed_roles?: number[];
           badge_text?: string | null;
           bg_gradient?: string | null;
           category?: string | null;
@@ -52,6 +54,7 @@ export type Database = {
           updated_at?: string | null;
         };
         Update: {
+          allowed_roles?: number[];
           badge_text?: string | null;
           bg_gradient?: string | null;
           category?: string | null;
@@ -296,6 +299,7 @@ export type Database = {
       };
       featured_items: {
         Row: {
+          allowed_roles: number[];
           entity_id: number;
           entity_type: string | null;
           id: number;
@@ -304,6 +308,7 @@ export type Database = {
           updated_at: string | null;
         };
         Insert: {
+          allowed_roles?: number[];
           entity_id: number;
           entity_type?: string | null;
           id?: number;
@@ -312,6 +317,7 @@ export type Database = {
           updated_at?: string | null;
         };
         Update: {
+          allowed_roles?: number[];
           entity_id?: number;
           entity_type?: string | null;
           id?: number;
@@ -331,6 +337,7 @@ export type Database = {
       };
       featured_sections: {
         Row: {
+          allowed_roles: number[];
           id: number;
           is_active: boolean | null;
           layout: string | null;
@@ -339,6 +346,7 @@ export type Database = {
           updated_at: string | null;
         };
         Insert: {
+          allowed_roles?: number[];
           id?: never;
           is_active?: boolean | null;
           layout?: string | null;
@@ -347,6 +355,7 @@ export type Database = {
           updated_at?: string | null;
         };
         Update: {
+          allowed_roles?: number[];
           id?: never;
           is_active?: boolean | null;
           layout?: string | null;
@@ -1077,6 +1086,7 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      clear_trash: { Args: never; Returns: undefined };
       get_category_page_data: { Args: { p_url_path: string }; Returns: Json };
       is_admin: { Args: never; Returns: boolean };
       my_role: { Args: never; Returns: number };

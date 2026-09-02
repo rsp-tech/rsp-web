@@ -46,4 +46,4 @@ export const TimelineSlider = () => {
       </span>
     </div>
   );
-}
+};
