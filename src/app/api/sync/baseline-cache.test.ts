@@ -18,7 +18,10 @@ vi.mock("fflate", () => ({
 }));
 
 vi.mock("@/lib/sync-utils", () => ({
-  toCSVRows: () => [],
+  toCSVRows: () => [
+    ["id", "name", "updated_at"],
+    ["1", "Cat 1", "2026-01-01T00:00:00Z"],
+  ],
   parseCSVTable: () => [
     { id: 1, name: "Cat 1", updated_at: "2026-01-01T00:00:00Z" },
   ],

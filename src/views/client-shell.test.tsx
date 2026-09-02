@@ -47,6 +47,13 @@ vi.mock("@/hooks/use-homepage", () => ({
   }),
 }));
 
+vi.mock("@/hooks/use-public-sync", () => ({
+  usePublicSync: () => ({
+    isFetching: false,
+    refetch: vi.fn(),
+  }),
+}));
+
 describe.concurrent("src/views/client-shell.tsx suite", () => {
   it.concurrent("renders ClientShell category page view", async () => {
     const { ClientShell } = await import("./client-shell");
