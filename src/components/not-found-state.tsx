@@ -2,13 +2,13 @@
 
 import { ArrowLeft, Compass, Home, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
-import type { CSSProperties } from "react";
+import { type CSSProperties, useState } from "react";
 import { Button } from "@/components/ui/button";
 
 interface NotFoundStateProps {
   title?: string;
   message?: string;
-  onRetry?: () => void;
+  onRetry?: () => void | Promise<void>;
 }
 
 export const NotFoundState = ({
@@ -17,6 +17,17 @@ export const NotFoundState = ({
   onRetry,
 }: NotFoundStateProps) => {
   const router = useRouter();
+  const [isRetrying, setIsRetrying] = useState(false);
+
+  const handleRetryClick = async () => {
+    if (!onRetry || isRetrying) return;
+    setIsRetrying(true);
+    try {
+      await onRetry();
+    } finally {
+      setIsRetrying(false);
+    }
+  };
 
   return (
     <div
@@ -112,11 +123,14 @@ export const NotFoundState = ({
               {onRetry && (
                 <Button
                   variant="ghost"
-                  onClick={onRetry}
+                  onClick={handleRetryClick}
+                  disabled={isRetrying}
                   className="flex items-center gap-2 text-muted-foreground hover:bg-accent transition-all"
                 >
-                  <RefreshCw className="w-4 h-4" />
-                  Try Again
+                  <RefreshCw
+                    className={`w-4 h-4 ${isRetrying ? "animate-spin text-primary" : ""}`}
+                  />
+                  {isRetrying ? "Syncing..." : "Try Again"}
                 </Button>
               )}
             </div>

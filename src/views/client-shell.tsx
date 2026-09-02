@@ -19,6 +19,7 @@ import {
   useCategoryPage,
 } from "@/hooks/use-category-page";
 import { useHomepage } from "@/hooks/use-homepage";
+import { usePublicSync } from "@/hooks/use-public-sync";
 import { slugToLabel } from "@/lib/utils";
 import type { YouTubeVideo } from "@/lib/youtube-service";
 import { CategoryBreadcrumbs } from "./category-breadcrumbs";
@@ -40,15 +41,23 @@ export const ClientShell = ({
     initialData,
   );
   const { data: homepageData } = useHomepage();
+  const { isFetching: isSyncing, refetch: syncPublicData } = usePublicSync();
+
+  const handleRetry = async () => {
+    await syncPublicData();
+    await refetch();
+  };
 
   if (data?.redirectTo) {
     redirect(data.redirectTo);
   }
 
-  if (isPending) return <Loading />;
+  if (isPending || (slug.length > 0 && !data?.category && isSyncing)) {
+    return <Loading />;
+  }
 
   if (error) {
-    return <NotFoundState onRetry={() => refetch()} message={error?.message} />;
+    return <NotFoundState onRetry={handleRetry} message={error?.message} />;
   }
 
   if (slug.length === 0) {
@@ -120,7 +129,7 @@ export const ClientShell = ({
   }
 
   if (!data?.category) {
-    return <NotFoundState onRetry={() => refetch()} />;
+    return <NotFoundState onRetry={handleRetry} />;
   }
 
   const { category, subcategories, recordings } = data;

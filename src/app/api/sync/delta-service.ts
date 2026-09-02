@@ -69,7 +69,9 @@ const resolvePublicTableDelta = async (
     null;
 
   // If client watermark is older than the oldest row in our cached 1,000-row window, fallback to unzipped full table
-  const oldestCachedUpdatedAt = publicRows[0]?.["updated_at"] as string | undefined;
+  const oldestCachedUpdatedAt = publicRows[0]?.["updated_at"] as
+    | string
+    | undefined;
   const isClientBehindWindow = Boolean(
     clientWatermark &&
       oldestCachedUpdatedAt &&

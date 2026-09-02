@@ -41,7 +41,13 @@ export const fetchBackupAsset = async (
   const releaseJson = (await releaseRes.json()) as {
     tag_name?: string;
     published_at?: string;
-    assets?: Array<{ id: number; name: string; url: string; size?: number; updated_at?: string }>;
+    assets?: Array<{
+      id: number;
+      name: string;
+      url: string;
+      size?: number;
+      updated_at?: string;
+    }>;
   };
 
   const asset = releaseJson.assets?.find((a) => a.name === targetResource);
