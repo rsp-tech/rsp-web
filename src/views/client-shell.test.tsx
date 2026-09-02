@@ -1,6 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
 
 // Common UI and hook mocks to enable shallow/functional component execution
+vi.mock("@tanstack/react-query", () => ({
+  useQueryClient: () => ({
+    invalidateQueries: vi.fn(),
+  }),
+}));
 vi.mock("@/hooks/use-is-mobile", () => ({ useIsMobile: () => false }));
 vi.mock("@/hooks/use-online-status", () => ({ useOnlineStatus: () => true }));
 vi.mock("@/lib/supabase-browser", () => ({
@@ -50,6 +55,14 @@ vi.mock("@/hooks/use-homepage", () => ({
 vi.mock("@/hooks/use-public-sync", () => ({
   usePublicSync: () => ({
     isFetching: false,
+    refetch: vi.fn(),
+  }),
+}));
+
+vi.mock("@/hooks/use-role-sync", () => ({
+  useRoleSync: () => ({
+    isSyncingOrPendingAuth: false,
+    hasRole: false,
     refetch: vi.fn(),
   }),
 }));

@@ -4,9 +4,9 @@ export interface CachedSyncMeta {
   cachedAt: number;
 }
 
-export const SYNC_META_TTL_MS = 30_000; // 30 seconds
+export const SYNC_META_TTL_MS = 5_000; // 5 seconds
 
-const CACHE_NAME = "rsp-sync-meta-cache";
+export const CACHE_NAME = "rsp-sync-meta-cache";
 
 let inFlightPromise: Promise<CachedSyncMeta> | null = null;
 let memoryCache: CachedSyncMeta | null = null;
@@ -41,6 +41,7 @@ const getCache = async (): Promise<Cache | null> => {
 export const clearSyncMetaCache = () => {
   inFlightPromise = null;
   memoryCache = null;
+  getCache().then((cache) => cache?.delete(CACHE_NAME));
 };
 
 export const fetchSyncMeta = async (

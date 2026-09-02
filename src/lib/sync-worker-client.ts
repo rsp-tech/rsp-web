@@ -1,5 +1,6 @@
 import { WORKER_MSG } from "@/constants";
 import type { SyncResult, SyncWorkerMessage } from "@/types";
+import { CACHE_NAME } from "@/workers/meta-cache";
 
 interface JobPromise {
   resolve: (result: SyncResult) => void;
@@ -26,6 +27,13 @@ export const terminateWorker = () => {
     workerInstance.terminate();
     workerInstance = null;
   }
+};
+
+export const clearSyncMetaCache = async () => {
+  if (typeof window !== "undefined" && window.caches) {
+    await window.caches.delete(CACHE_NAME).catch(() => {});
+  }
+  terminateWorker();
 };
 
 const checkIdleAndScheduleTermination = () => {

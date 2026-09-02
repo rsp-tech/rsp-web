@@ -1,7 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { WORKER_MSG } from "@/constants";
 import type { SyncResult, SyncWorkerMessage } from "@/types";
-import { dispatchSyncJob, terminateWorker } from "./sync-worker-client";
+import {
+  clearSyncMetaCache,
+  dispatchSyncJob,
+  terminateWorker,
+} from "./sync-worker-client";
 
 class MockWorker {
   onmessage: ((e: MessageEvent<SyncWorkerMessage>) => void) | null = null;
@@ -267,5 +271,17 @@ describe("sync-worker-client", () => {
     const { useOnlineStatus } = await import("@/hooks/use-online-status");
     expect(typeof useIsMobile).toBe("function");
     expect(typeof useOnlineStatus).toBe("function");
+  });
+
+  it("clearSyncMetaCache deletes CacheStorage and terminates worker", async () => {
+    const deleteSpy = vi.fn().mockResolvedValue(true);
+    vi.stubGlobal("window", {
+      caches: {
+        delete: deleteSpy,
+      },
+    });
+
+    await clearSyncMetaCache();
+    expect(deleteSpy).toHaveBeenCalledWith("rsp-sync-meta-cache");
   });
 });

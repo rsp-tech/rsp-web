@@ -48,7 +48,9 @@ export const useRoleSync = () => {
   const userId = session?.user?.id;
   const accessToken = session?.access_token ?? "";
 
-  return useQuery({
+  const hasRole = Boolean(userId && roleId) && !isPublic;
+
+  const query = useQuery({
     queryKey: [QUERY_KEY.SYNC_ROLE, roleId, userId],
     queryFn: () =>
       runRoleSync({
@@ -61,6 +63,12 @@ export const useRoleSync = () => {
     refetchOnMount: "always",
     refetchInterval: SYNC_INTERVAL,
     networkMode: "online",
-    enabled: !isLoading && Boolean(userId && roleId) && !isPublic,
+    enabled: !isLoading && hasRole,
   });
+
+  return {
+    ...query,
+    hasRole,
+    isSyncingOrPendingAuth: query.isFetching || (isLoading && !session),
+  };
 };

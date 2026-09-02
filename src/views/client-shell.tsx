@@ -20,6 +20,8 @@ import {
 } from "@/hooks/use-category-page";
 import { useHomepage } from "@/hooks/use-homepage";
 import { usePublicSync } from "@/hooks/use-public-sync";
+import { useRoleSync } from "@/hooks/use-role-sync";
+import { clearSyncMetaCache } from "@/lib/sync-worker-client";
 import { slugToLabel } from "@/lib/utils";
 import type { YouTubeVideo } from "@/lib/youtube-service";
 import { CategoryBreadcrumbs } from "./category-breadcrumbs";
@@ -41,10 +43,18 @@ export const ClientShell = ({
     initialData,
   );
   const { data: homepageData } = useHomepage();
-  const { isFetching: isSyncing, refetch: syncPublicData } = usePublicSync();
+  const { isFetching: isPublicSyncing, refetch: syncPublic } = usePublicSync();
+  const {
+    isSyncingOrPendingAuth: isRoleSyncing,
+    hasRole,
+    refetch: syncRole,
+  } = useRoleSync();
+
+  const isSyncing = isPublicSyncing || isRoleSyncing;
 
   const handleRetry = async () => {
-    await syncPublicData();
+    await clearSyncMetaCache();
+    await Promise.all([syncPublic(), hasRole ? syncRole() : Promise.resolve()]);
     await refetch();
   };
 
