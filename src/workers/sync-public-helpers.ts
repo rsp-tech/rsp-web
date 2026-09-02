@@ -36,7 +36,7 @@ export const syncPublicData = async (
       }
     } catch (zipErr) {
       console.error(
-        "Static sync ZIP seed failed, falling back to dynamic sync:",
+        "[Sync Worker] Static sync ZIP seed failed, falling back to dynamic sync:",
         zipErr,
       );
     }

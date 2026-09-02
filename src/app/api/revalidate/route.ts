@@ -4,12 +4,21 @@ import { API_PATH, CACHE_TAG } from "@/app/api/constants";
 import { verifyRevalidateAuth } from "./auth";
 
 export const POST = async (req: NextRequest) => {
+  const origin =
+    req.headers.get("origin") || req.headers.get("host") || "unknown";
+
   const authError = await verifyRevalidateAuth(req);
-  if (authError) return authError;
+  if (authError) {
+    console.error(
+      `[API /api/revalidate] Auth verification failed for request from: ${origin}`,
+    );
+    return authError;
+  }
 
   // Flush live sync metadata
   revalidateTag(CACHE_TAG.SYNC_META, {});
   revalidatePath(API_PATH.SYNC_META);
+  revalidatePath(API_PATH.SYNC);
 
   const body = (await req.json().catch(() => ({}))) as {
     paths?: string[];
@@ -18,7 +27,7 @@ export const POST = async (req: NextRequest) => {
     tags?: string[];
   };
 
-  const revalidated: string[] = [API_PATH.SYNC_META];
+  const revalidated: string[] = [API_PATH.SYNC_META, API_PATH.SYNC];
 
   if (
     body.tag === CACHE_TAG.FEATURE_FLAGS ||
@@ -38,6 +47,11 @@ export const POST = async (req: NextRequest) => {
     revalidatePath(path);
     revalidated.push(path);
   }
+
+  console.log(
+    `[API /api/revalidate] Flushed targets (${origin}):`,
+    revalidated,
+  );
 
   return NextResponse.json({
     success: true,

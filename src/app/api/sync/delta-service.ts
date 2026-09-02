@@ -16,6 +16,7 @@ import {
   getCachedPublicTable,
   getCachedRoleExtraTable,
   getCachedUserTable,
+  getFullPublicTable,
 } from "./baseline-cache";
 import { getCachedLiveDiff } from "./live-diff-fetcher";
 import { getCachedSyncMeta } from "./meta-service";
@@ -67,9 +68,21 @@ const resolvePublicTableDelta = async (
     (publicRows[publicRows.length - 1]?.["updated_at"] as string | undefined) ??
     null;
 
+  // If client watermark is older than the oldest row in our cached 1,000-row window, fallback to unzipped full table
+  const oldestCachedUpdatedAt = publicRows[0]?.["updated_at"] as string | undefined;
+  const isClientBehindWindow = Boolean(
+    clientWatermark &&
+      oldestCachedUpdatedAt &&
+      clientWatermark < oldestCachedUpdatedAt,
+  );
+
+  const baselineSourceRows = isClientBehindWindow
+    ? await getFullPublicTable(table)
+    : publicRows;
+
   const liveDiffRows = await getCachedLiveDiff(table, highestBaselineUpdatedAt);
   const mergedRows = mergeAndPickTableRows(
-    publicRows,
+    baselineSourceRows,
     liveDiffRows,
     clientWatermark,
     highestBaselineUpdatedAt,
@@ -78,6 +91,7 @@ const resolvePublicTableDelta = async (
   const resultDelta = stripUpdatedAt(
     mergedRows.map((r) => pickSyncColumns(r, table)).sort(sortByDate()),
   );
+
   return [table, resultDelta];
 };
 

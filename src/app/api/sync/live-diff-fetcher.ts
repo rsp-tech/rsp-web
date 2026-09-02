@@ -48,8 +48,18 @@ export const getCachedLiveDiff = unstable_cache(
 
     const { data, error } = await query;
     if (error) {
+      console.error(
+        `[Live Diff Fetcher] Query failed for ${table}:`,
+        error.message,
+      );
       throw new Error(
         `Failed to fetch live diff for ${table}: ${error.message}`,
+      );
+    }
+
+    if (data && data.length === 1000) {
+      console.warn(
+        `[Live Diff Fetcher] Warning: query for table "${table}" hit Supabase 1,000-row limit!`,
       );
     }
 

@@ -9,6 +9,9 @@ export const verifyRevalidateAuth = async (
   req: NextRequest,
 ): Promise<NextResponse | null> => {
   if (!JWT_SECRET || !JWT_ISSUER || !JWT_AUDIENCE) {
+    console.error(
+      "[Revalidate Auth] Server missing JWT environment variables!",
+    );
     return NextResponse.json(
       { error: "Missing JWT environment variables" },
       { status: 500 },
@@ -18,6 +21,10 @@ export const verifyRevalidateAuth = async (
   const authHeader = req.headers.get("authorization");
 
   if (!authHeader?.startsWith("Bearer ")) {
+    console.warn(
+      "[Revalidate Auth] Missing or invalid Authorization header:",
+      authHeader,
+    );
     return NextResponse.json(
       { error: "Missing Bearer token" },
       { status: 401 },
@@ -31,7 +38,8 @@ export const verifyRevalidateAuth = async (
       audience: JWT_AUDIENCE,
     });
     return null; // Auth successful
-  } catch {
+  } catch (jwtErr) {
+    console.error("[Revalidate Auth] JWT verification failed:", jwtErr);
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });
   }
 };

@@ -25,6 +25,7 @@ export const runPublicSync = async ({
     handleSyncSuccess(result, queryClient, undefined, TOAST_ID);
     return 1;
   } catch (err) {
+    console.error("[Client Sync] Sync job failed:", err);
     toast.error(`Sync error: ${(err as Error).message}`, { id: TOAST_ID });
     throw err;
   }

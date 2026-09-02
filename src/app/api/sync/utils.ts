@@ -19,7 +19,7 @@ if (!SYNC_ENDPOINT) {
 export const fetchBackupAsset = async (
   targetResource: string,
 ): Promise<Response> => {
-  const assetUrl = await fetch(SYNC_ENDPOINT, {
+  const releaseRes = await fetch(SYNC_ENDPOINT, {
     headers: {
       Authorization: `Bearer ${BACKUP_TOKEN}`,
     },
@@ -27,17 +27,30 @@ export const fetchBackupAsset = async (
       tags: [CACHE_TAG.BACKUP_RESOURCES],
       revalidate: REVALIDATE_24_HOURS,
     },
-  })
-    .then((res) => res.json())
-    .then(
-      ({ assets }) =>
-        assets?.find(
-          (a: { id: number; name: string }) => a.name === targetResource,
-        )?.url,
+  });
+
+  if (!releaseRes.ok) {
+    console.error(
+      `[Backup Asset] Failed to fetch release metadata: status=${releaseRes.status} ${releaseRes.statusText}`,
     );
+    return new Response("Failed to fetch release metadata", {
+      status: releaseRes.status,
+    });
+  }
+
+  const releaseJson = (await releaseRes.json()) as {
+    tag_name?: string;
+    published_at?: string;
+    assets?: Array<{ id: number; name: string; url: string; size?: number; updated_at?: string }>;
+  };
+
+  const asset = releaseJson.assets?.find((a) => a.name === targetResource);
+  const assetUrl = asset?.url;
 
   if (!assetUrl) {
-    console.error(`Asset ${targetResource} not found`);
+    console.error(
+      `[Backup Asset] Target asset "${targetResource}" not found in release assets list!`,
+    );
     return new Response("Asset not found", { status: 404 });
   }
 
@@ -54,7 +67,9 @@ export const fetchBackupAsset = async (
   });
 
   if (!assetRes.ok) {
-    console.error(`Failed to download ${targetResource}:`, assetRes.statusText);
+    console.error(
+      `[Backup Asset] Failed to download asset "${targetResource}": status=${assetRes.status} ${assetRes.statusText}`,
+    );
     return new Response("Failed to download seed", {
       status: assetRes.status,
     });
