@@ -144,6 +144,7 @@ export const handleSyncSuccess = (
   if (result.clearedRole) handleRoleCleanup(queryClient);
 
   handleTableInvalidations(queryClient, result.changedTables);
+  queryClient.invalidateQueries({ queryKey: [QUERY_KEY.FEATURE_CONFIG] });
 
   handleCategoryPathInvalidations(queryClient, result.changedCategoryPaths);
   handleNotifications(queryClient, result.newAdditions, userId);

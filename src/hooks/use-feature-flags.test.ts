@@ -19,6 +19,7 @@ vi.mock("@/lib/idb", () => ({
           JSON.stringify(mockPublicFlags),
         [`${STORE.ROLE_META}:${META_KEY.USER_FEATURES}`]:
           JSON.stringify(mockUserFlags),
+        [`${STORE.ROLE_META}:${META_KEY.CLEANUP_USER_ID}`]: "test_user_1",
       }),
     ),
 }));

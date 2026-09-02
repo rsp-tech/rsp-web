@@ -86,6 +86,9 @@ export const performUserCleanup = async (
 
   if (!hasStoredUserId) {
     await db.put(STORE.ROLE_META, userId, META_KEY.CLEANUP_USER_ID);
+    if (!userId) {
+      await db.delete(STORE.ROLE_META, META_KEY.USER_FEATURES);
+    }
     return { clearedUser: false };
   }
 

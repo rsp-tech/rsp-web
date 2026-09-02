@@ -49,7 +49,7 @@ export const syncPublicData = async (
     ? (GENERIC_TABLES as readonly string[]).slice()
     : [];
 
-  // Persist public feature flags sent along with public metadata
+  // Ensure public feature flags are always overwritten from server
   if (Array.isArray(publicFeatureFlags)) {
     await db.put(
       STORE.ROLE_META,
