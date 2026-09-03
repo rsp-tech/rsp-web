@@ -259,7 +259,10 @@ describe("sync-worker-client", () => {
       "rsp-audio-settings",
       JSON.stringify({ maxCacheSizeMB: 500 }),
     );
-    expect(getAudioCacheSettings()).toEqual({ maxCacheSizeMB: 500 });
+    expect(getAudioCacheSettings()).toEqual({
+      maxCacheSizeMB: 500,
+      enableMaterialsCache: true,
+    });
 
     localStorage.setItem("rsp-audio-settings", "invalid-json");
     expect(getAudioCacheSettings()).toEqual(DEFAULT_SETTINGS);

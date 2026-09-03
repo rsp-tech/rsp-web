@@ -7,6 +7,7 @@ import {
   ArrowUpAZ,
   CalendarArrowDown,
   CalendarArrowUp,
+  Download,
 } from "lucide-react";
 import { SearchableSelect } from "@/components/search/searchable-select";
 import { Button } from "./ui/button";
@@ -20,15 +21,17 @@ interface RecordingSortControlsProps {
   sortOrder: "asc" | "desc";
   setSortOrder: (sortOrder: "asc" | "desc") => void;
   totalCount: number;
+  onOpenDownloadModal?: () => void;
 }
 
-export function RecordingSortControls({
+export const RecordingSortControls = ({
   sortBy,
   setSortBy,
   sortOrder,
   setSortOrder,
   totalCount,
-}: RecordingSortControlsProps) {
+  onOpenDownloadModal,
+}: RecordingSortControlsProps) => {
   let UpArrow = ArrowUp;
   let DownArrow = ArrowDown;
   if (sortBy === "name") {
@@ -40,9 +43,25 @@ export function RecordingSortControls({
   }
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 pb-3 border-b border-border/40 mb-2">
-      <span className="text-xs font-semibold text-muted-foreground">
-        {totalCount} {totalCount === 1 ? "recording" : "recordings"} found
-      </span>
+      <div className="flex items-center gap-3">
+        <span className="text-xs font-semibold text-muted-foreground">
+          {totalCount} {totalCount === 1 ? "recording" : "recordings"} found
+        </span>
+
+        {onOpenDownloadModal && totalCount > 0 && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={onOpenDownloadModal}
+            className="text-xs font-semibold h-8 px-2.5 gap-1.5 cursor-pointer"
+            title="Download or offline cache recordings and materials"
+          >
+            <Download className="w-4 h-4 text-primary" />
+            <span>Download All</span>
+          </Button>
+        )}
+      </div>
 
       <div className="flex items-center gap-3">
         <Label className="text-muted-foreground font-bold">Sort by:</Label>
@@ -73,4 +92,4 @@ export function RecordingSortControls({
       </div>
     </div>
   );
-}
+};

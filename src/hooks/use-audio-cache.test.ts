@@ -44,7 +44,10 @@ describe.concurrent("use-audio-cache hook suite", () => {
       "rsp-audio-settings",
       JSON.stringify({ maxCacheSizeMB: 300 }),
     );
-    expect(getAudioCacheSettings()).toEqual({ maxCacheSizeMB: 300 });
+    expect(getAudioCacheSettings()).toEqual({
+      maxCacheSizeMB: 300,
+      enableMaterialsCache: true,
+    });
 
     localStorage.setItem("rsp-audio-settings", "corrupt");
     expect(getAudioCacheSettings()).toEqual(DEFAULT_SETTINGS);

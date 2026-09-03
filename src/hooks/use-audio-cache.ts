@@ -2,7 +2,12 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useCallback, useEffect, useState } from "react";
-import { AUDIO_CACHE_NAME, QUERY_KEY, STORE } from "@/constants";
+import {
+  AUDIO_CACHE_NAME,
+  MATERIALS_CACHE_NAME,
+  QUERY_KEY,
+  STORE,
+} from "@/constants";
 import { getDB } from "@/lib/idb";
 import type {
   AudioCacheLedgerEntry,
@@ -18,10 +23,12 @@ export interface CachedRecording extends EnrichedRecording {
 
 export interface AudioCacheSettings {
   maxCacheSizeMB: number;
+  enableMaterialsCache?: boolean;
 }
 
 export const DEFAULT_SETTINGS: AudioCacheSettings = {
   maxCacheSizeMB: 200,
+  enableMaterialsCache: true,
 };
 
 export const getAudioCacheSettings = (): AudioCacheSettings => {
@@ -166,6 +173,109 @@ export const useClearAllAudioCache = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY.AUDIO_CACHE_LIST] });
+    },
+  });
+};
+
+export interface CachedMaterialItem {
+  uri: string;
+  name: string;
+  type?: string | null;
+  size: number;
+}
+
+const loadMaterialsCacheList = async (): Promise<CachedMaterialItem[]> => {
+  if (typeof window === "undefined" || !("caches" in window)) return [];
+  try {
+    const cache = await caches.open(MATERIALS_CACHE_NAME);
+    const requests = await cache.keys();
+    const db = await getDB();
+    const allMaterials = (await db?.getAll(STORE.MATERIALS)) ?? [];
+    const matMap = new Map<string, (typeof allMaterials)[0]>();
+    for (const m of allMaterials) {
+      if (m.uri) matMap.set(m.uri, m);
+    }
+
+    const items: CachedMaterialItem[] = [];
+    for (const req of requests) {
+      const url = req.url;
+      let matchedUri = url;
+      let matchedMat = matMap.get(url);
+      if (!matchedMat) {
+        for (const [uri, m] of matMap.entries()) {
+          if (url.includes(uri) || uri.includes(url)) {
+            matchedUri = uri;
+            matchedMat = m;
+            break;
+          }
+        }
+      }
+
+      const response = await cache.match(req);
+      let size = matchedMat?.size ?? 0;
+      if (!size && response) {
+        const blob = await response.clone().blob();
+        size = blob.size;
+      }
+
+      items.push({
+        uri: matchedUri,
+        name: matchedMat?.name ?? url.split("/").pop() ?? "Study Material",
+        type: matchedMat?.type ?? null,
+        size,
+      });
+    }
+    return items;
+  } catch (err) {
+    console.error("Failed to load materials cache list:", err);
+    return [];
+  }
+};
+
+export const useMaterialsCacheList = () => {
+  return useQuery({
+    queryKey: [QUERY_KEY.MATERIALS_CACHE_LIST],
+    queryFn: loadMaterialsCacheList,
+  });
+};
+
+export const useDeleteMaterialCache = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (uri: string) => {
+      if (typeof window !== "undefined" && "caches" in window) {
+        const cache = await caches.open(MATERIALS_CACHE_NAME);
+        const requests = await cache.keys();
+        for (const req of requests) {
+          if (req.url === uri || req.url.includes(uri)) {
+            await cache.delete(req);
+          }
+        }
+        await cache.delete(uri);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.MATERIALS_CACHE_LIST],
+      });
+    },
+  });
+};
+
+export const useClearAllMaterialsCache = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async () => {
+      if (typeof window !== "undefined" && "caches" in window) {
+        await caches.delete(MATERIALS_CACHE_NAME);
+      }
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEY.MATERIALS_CACHE_LIST],
+      });
     },
   });
 };

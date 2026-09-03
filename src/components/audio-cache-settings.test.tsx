@@ -34,10 +34,18 @@ vi.mock("@/hooks/use-audio-cache", () => ({
     quotaMB: 5000,
     freeMB: 4000,
   }),
+  useMaterialsCacheList: () => ({
+    data: [{ uri: "mat_1", name: "Doc 1", size: 1024 }],
+    isLoading: false,
+  }),
 }));
 
 vi.mock("./audio-cache-list", () => ({
   AudioCacheList: () => <div data-testid="cache-list" />,
+}));
+
+vi.mock("./materials-cache-list", () => ({
+  MaterialsCacheList: () => <div data-testid="materials-cache-list" />,
 }));
 
 describe.concurrent("src/components/audio-cache-settings.tsx suite", () => {

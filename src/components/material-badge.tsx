@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  BookOpen,
-  ExternalLink,
-  Eye,
-  FileDown,
-  FileText,
-  GraduationCap,
-  Presentation,
-} from "lucide-react";
+import { ExternalLink, Eye, FileDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Tooltip,
@@ -16,6 +8,7 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useMaterialPreview } from "@/hooks/use-material-preview";
+import { getMaterialIcon, isMaterialLink } from "@/lib/material-utils";
 import { getAssetUrl } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 import type { Material } from "@/types";
@@ -25,28 +18,10 @@ interface MaterialBadgeProps {
   isHighlighted?: boolean;
 }
 
-export function MaterialBadge({ mat, isHighlighted }: MaterialBadgeProps) {
+export const MaterialBadge = ({ mat, isHighlighted }: MaterialBadgeProps) => {
   const { name, uri } = mat;
   const { openPreview } = useMaterialPreview();
-  const lowerName = name.toLowerCase();
-
-  const isLink = /^https?:\/\//.test((uri || "").toLowerCase());
-
-  const getMaterialIcon = () => {
-    if (isLink) {
-      return <ExternalLink className="w-3 h-3 shrink-0" />;
-    }
-    if (lowerName.includes("teacher")) {
-      return <GraduationCap className="w-3 h-3 text-success shrink-0" />;
-    }
-    if (lowerName.includes("student") || lowerName.includes("handout")) {
-      return <BookOpen className="w-3 h-3 text-primary shrink-0" />;
-    }
-    if (lowerName.includes("ppt")) {
-      return <Presentation className="w-3 h-3 text-primary shrink-0" />;
-    }
-    return <FileText className="w-3 h-3 text-muted-foreground shrink-0" />;
-  };
+  const isLink = isMaterialLink(uri);
 
   const handlePreviewClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -79,7 +54,7 @@ export function MaterialBadge({ mat, isHighlighted }: MaterialBadgeProps) {
               isLink && "pointer-events-none",
             )}
           >
-            {getMaterialIcon()}
+            {getMaterialIcon(mat)}
             <span className="truncate" style={{ maxWidth: "8.5rem" }}>
               {name}
             </span>
@@ -111,4 +86,4 @@ export function MaterialBadge({ mat, isHighlighted }: MaterialBadgeProps) {
       </Tooltip>
     </div>
   );
-}
+};

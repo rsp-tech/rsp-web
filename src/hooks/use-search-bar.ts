@@ -160,6 +160,7 @@ export function useSearchBar() {
                   recording_id: h.recording_id,
                   allowed_roles: [],
                   type: "",
+                  size: null,
                   uri: "",
                   recording: null,
                   category: null,

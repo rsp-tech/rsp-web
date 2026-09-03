@@ -1,23 +1,40 @@
 "use client";
 
-import { HardDrive } from "lucide-react";
+import { FileText, HardDrive, Info, Music } from "lucide-react";
+import { useState } from "react";
 import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   useAudioCacheList,
   useAudioCacheSettings,
   useAudioCacheStats,
+  useMaterialsCacheList,
 } from "@/hooks/use-audio-cache";
 import { AudioCacheList } from "./audio-cache-list";
+import { MaterialsCacheList } from "./materials-cache-list";
 
-export function AudioCacheSettings() {
+export const AudioCacheSettings = () => {
   const { settings, updateSettings } = useAudioCacheSettings();
   const { data: cachedList = [] } = useAudioCacheList();
+  const { data: cachedMaterials = [] } = useMaterialsCacheList();
   const { totalSizeMB, quotaMB, freeMB } = useAudioCacheStats();
+  const [activeTab, setActiveTab] = useState<"audio" | "materials">("audio");
 
   const handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const size = parseInt(e.target.value, 10);
     updateSettings({ maxCacheSizeMB: size });
     toast.success(`Max cache size set to ${size} MB`);
+  };
+
+  const handleToggleMaterialsCache = (checked: boolean | "indeterminate") => {
+    const enabled = Boolean(checked);
+    updateSettings({ enableMaterialsCache: enabled });
+    toast.success(
+      enabled
+        ? "Study materials offline caching enabled"
+        : "Study materials offline caching disabled",
+    );
   };
 
   const percentUsed = Math.min(
@@ -32,12 +49,12 @@ export function AudioCacheSettings() {
         <div className="flex items-center justify-between border-b border-border pb-3">
           <h3 className="font-bold text-sm">Cache Config</h3>
           <span className="text-xxs font-bold tracking-wider uppercase text-muted-foreground">
-            Offline Caching
+            Offline Storage
           </span>
         </div>
 
         <div className="flex flex-col gap-2">
-          <span className="text-xs font-semibold">Max Cache Limit</span>
+          <span className="text-xs font-semibold">Max Audio Cache Limit</span>
           <select
             value={settings.maxCacheSizeMB}
             onChange={handleSizeChange}
@@ -47,7 +64,46 @@ export function AudioCacheSettings() {
             <option value="500">500 MB</option>
             <option value="1024">1024 MB (1 GB)</option>
             <option value="2048">2048 MB (2 GB)</option>
+            <option value="5120">5120 MB (5 GB)</option>
+            {quotaMB > 0 && (
+              <option value={quotaMB.toString()}>
+                MAX Available ({Math.round(quotaMB / 1024)} GB)
+              </option>
+            )}
           </select>
+        </div>
+
+        {/* Study Materials Cache Toggle */}
+        <div className="flex items-start gap-2.5 p-3 rounded-xl border border-border bg-muted/20">
+          <Checkbox
+            id="enable-materials-cache"
+            checked={settings.enableMaterialsCache !== false}
+            onCheckedChange={handleToggleMaterialsCache}
+            className="mt-0.5"
+          />
+          <div className="flex flex-col gap-1">
+            <label
+              htmlFor="enable-materials-cache"
+              className="text-xs font-semibold cursor-pointer select-none"
+            >
+              Cache Study Materials
+            </label>
+            <span className="text-xxs text-muted-foreground leading-snug">
+              Save documents and handouts locally for offline access and faster
+              ZIP packaging.
+            </span>
+          </div>
+        </div>
+
+        {/* Materials Disclaimer */}
+        <div className="p-3 bg-muted/20 border border-border rounded-xl flex items-start gap-2 text-xxs text-muted-foreground leading-snug">
+          <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+          <span>
+            <strong>Note:</strong> While some document formats cannot be
+            previewed directly in-browser, cached materials can always be
+            downloaded offline or bundled into batch archives without
+            re-fetching.
+          </span>
         </div>
 
         {quotaMB > 0 && (
@@ -65,7 +121,7 @@ export function AudioCacheSettings() {
 
         <div className="flex flex-col gap-2 pt-2">
           <div className="flex justify-between text-xxs font-bold uppercase text-muted-foreground">
-            <span>Storage Used</span>
+            <span>Audio Storage Used</span>
             <span>
               {totalSizeMB} MB / {settings.maxCacheSizeMB} MB
             </span>
@@ -79,16 +135,40 @@ export function AudioCacheSettings() {
         </div>
       </div>
 
-      {/* Column 2: Cached Files List */}
+      {/* Column 2: Cached Files List with Tabs */}
       <div className="lg:col-span-2 p-4 border rounded-2xl bg-card border-border shadow-md flex flex-col gap-4">
         <div className="flex items-center justify-between border-b border-border pb-3">
-          <h3 className="font-bold text-sm">Cached Audio Files</h3>
-          <span className="text-xxs font-bold tracking-wider uppercase text-muted-foreground">
-            {cachedList.length} Files
+          <div className="flex items-center gap-2">
+            <Button
+              type="button"
+              variant={activeTab === "audio" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setActiveTab("audio")}
+              className="text-xs font-semibold h-8 gap-1.5 cursor-pointer"
+            >
+              <Music className="w-4 h-4" />
+              Audio Files ({cachedList.length})
+            </Button>
+            <Button
+              type="button"
+              variant={activeTab === "materials" ? "default" : "outline"}
+              size="sm"
+              onClick={() => setActiveTab("materials")}
+              className="text-xs font-semibold h-8 gap-1.5 cursor-pointer"
+            >
+              <FileText className="w-4 h-4" />
+              Study Materials ({cachedMaterials.length})
+            </Button>
+          </div>
+          <span className="text-xxs font-bold tracking-wider uppercase text-muted-foreground hidden md:flex">
+            {activeTab === "audio"
+              ? `${cachedList.length} Cached`
+              : `${cachedMaterials.length} Cached`}
           </span>
         </div>
-        <AudioCacheList />
+
+        {activeTab === "audio" ? <AudioCacheList /> : <MaterialsCacheList />}
       </div>
     </div>
   );
-}
+};

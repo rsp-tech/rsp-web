@@ -29,6 +29,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import { useNotifications } from "@/hooks/use-notifications";
 import { cn } from "@/lib/utils";
 import type { ResolvedNotificationGroup } from "@/types";
@@ -53,6 +54,7 @@ const getGroupIcon = (type: ResolvedNotificationGroup["type"]) => {
 export const NotificationCenter = () => {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const isMobile = useIsMobile();
   const {
     groups,
     unreadCount,
@@ -104,7 +106,7 @@ export const NotificationCenter = () => {
 
       <SheetContent
         side="right"
-        className="flex flex-col w-full sm:max-w-md p-0"
+        className={cn("flex flex-col w-full p-0", isMobile ? "" : "max-w-md")}
       >
         <SheetHeader className="border-b border-border p-4 flex flex-row items-center justify-between">
           <SheetTitle className="flex items-center gap-2 font-bold">

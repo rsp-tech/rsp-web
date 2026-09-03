@@ -4,6 +4,7 @@ import { Music } from "lucide-react";
 import { useMemo, useState } from "react";
 import { sortByDate, sortByOrderInd } from "@/lib/utils";
 import type { EnrichedRecording } from "@/types";
+import { DownloadRecordingsModal } from "./download-recordings-modal";
 import { RecordingCards } from "./recording-cards";
 import {
   RecordingSortControls,
@@ -18,6 +19,7 @@ export const RecordingsSection = ({ recordings }: RecordingListProps) => {
   "use no memo";
   const [sortBy, setSortBy] = useState<SortOption>("order_ind");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
+  const [isDownloadModalOpen, setIsDownloadModalOpen] = useState(false);
 
   const sortedRecordings = useMemo(() => {
     const order = sortOrder === "asc" ? 1 : -1;
@@ -48,10 +50,19 @@ export const RecordingsSection = ({ recordings }: RecordingListProps) => {
           sortOrder={sortOrder}
           setSortOrder={setSortOrder}
           totalCount={recordings.length}
+          onOpenDownloadModal={() => setIsDownloadModalOpen(true)}
         />
 
         <RecordingCards {...{ sortedRecordings }} />
       </div>
+
+      {isDownloadModalOpen && (
+        <DownloadRecordingsModal
+          isOpen={isDownloadModalOpen}
+          onClose={() => setIsDownloadModalOpen(false)}
+          recordings={sortedRecordings}
+        />
+      )}
     </section>
   );
 };
