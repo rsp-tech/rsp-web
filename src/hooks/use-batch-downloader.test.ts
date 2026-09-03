@@ -22,9 +22,11 @@ vi.mock("@/lib/audio-idb-ledger", () => ({
 
 import {
   buildZipHierarchy,
+  extractGoogleDriveConfirmUrl,
   type FetchedFileResult,
   getMaterialExtension,
   guessExtensionFromBytesAndMime,
+  isGoogleDriveVirusWarning,
   isMaterialLink,
   prepareDistinctTasks,
   resolveMaterialFileName,
@@ -94,6 +96,32 @@ describe.concurrent("use-batch-downloader hook suite", () => {
         "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
       ),
     ).toBe(".docx");
+  });
+
+  it.concurrent("isGoogleDriveVirusWarning and extractGoogleDriveConfirmUrl parse virus warning HTML", () => {
+    const warningHtml = `
+      <!DOCTYPE html><html><head><title>Google Drive - Virus scan warning</title></head>
+      <body>
+        <p class="uc-warning-caption">Google Drive can't scan this file for viruses.</p>
+        <p class="uc-warning-subcaption"><span>SPHURTI GEV 2023.pptx (401M)</span> is too large for Google to scan for viruses.</p>
+        <form id="download-form" action="https://drive.usercontent.google.com/download" method="get">
+          <input type="hidden" name="id" value="10GByRcNZyM9ap0XzJ7aSDuQxsXRvznS7">
+          <input type="hidden" name="export" value="download">
+          <input type="hidden" name="confirm" value="t">
+          <input type="hidden" name="uuid" value="f6ccf9c9-f699-4567-909c-f2c1784551ff">
+        </form>
+      </body></html>`;
+
+    expect(isGoogleDriveVirusWarning(warningHtml)).toBe(true);
+    expect(isGoogleDriveVirusWarning("Regular file contents here")).toBe(false);
+
+    const confirmUrl = extractGoogleDriveConfirmUrl(warningHtml);
+    expect(confirmUrl).toContain(
+      "https://drive.usercontent.google.com/download?",
+    );
+    expect(confirmUrl).toContain("id=10GByRcNZyM9ap0XzJ7aSDuQxsXRvznS7");
+    expect(confirmUrl).toContain("confirm=t");
+    expect(confirmUrl).toContain("uuid=f6ccf9c9-f699-4567-909c-f2c1784551ff");
   });
 
   it.concurrent("resolveMaterialFileName appends guessed extension when missing", () => {
@@ -269,5 +297,55 @@ describe.concurrent("use-batch-downloader hook suite", () => {
     expect(rec1MdText).toContain(
       "[Online Audio Stream](https://vedabase.io/verse)",
     );
+  });
+
+  it.concurrent("buildZipHierarchy includes direct links in reference-materials.md for skipped large materials", () => {
+    const recordings = [
+      {
+        id: 1,
+        name: "Lecture 1",
+        audio_id: "aud_1",
+        materials: [
+          { id: 10, name: "Huge Presentation.pptx", uri: "large_drive_id" },
+        ],
+      },
+    ];
+
+    const fileResultMap = new Map<string, FetchedFileResult>();
+    fileResultMap.set("audio:aud_1", {
+      key: "audio:aud_1",
+      data: new Uint8Array([1, 2, 3]),
+      mimeType: "audio/mpeg",
+    });
+    fileResultMap.set("mat:large_drive_id", {
+      key: "mat:large_drive_id",
+      data: new Uint8Array(),
+      mimeType: "text/html",
+      skipped: true,
+      skippedItem: {
+        name: "Huge Presentation.pptx",
+        uri: "large_drive_id",
+        type: "material",
+        reason: "File is too large for automated scanning (>100MB)",
+      },
+    });
+
+    const zipData = buildZipHierarchy({
+      recordings: recordings as any[],
+      selectedAudioIds: new Set(["aud_1"]),
+      selectedMaterialIds: new Set([10]),
+      fileResultMap,
+    });
+
+    const zipKeys = Object.keys(zipData);
+    expect(zipKeys).toContain("Lecture 1/Lecture 1.mp3");
+    expect(zipKeys).toContain("Lecture 1/reference-materials.md");
+    expect(zipKeys).not.toContain("Lecture 1/Huge Presentation.pptx");
+
+    const mdBytes = zipData["Lecture 1/reference-materials.md"] as Uint8Array;
+    const mdText = new TextDecoder().decode(mdBytes);
+    expect(mdText).toContain("Large Study Materials (Direct Download)");
+    expect(mdText).toContain("[Huge Presentation.pptx]");
+    expect(mdText).toContain("large_drive_id");
   });
 });

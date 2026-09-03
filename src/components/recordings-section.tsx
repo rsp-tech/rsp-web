@@ -13,9 +13,13 @@ import {
 
 interface RecordingListProps {
   recordings: EnrichedRecording[];
+  categoryName: string;
 }
 
-export const RecordingsSection = ({ recordings }: RecordingListProps) => {
+export const RecordingsSection = ({
+  recordings,
+  categoryName,
+}: RecordingListProps) => {
   "use no memo";
   const [sortBy, setSortBy] = useState<SortOption>("order_ind");
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc");
@@ -61,6 +65,7 @@ export const RecordingsSection = ({ recordings }: RecordingListProps) => {
           isOpen={isDownloadModalOpen}
           onClose={() => setIsDownloadModalOpen(false)}
           recordings={sortedRecordings}
+          categoryName={categoryName}
         />
       )}
     </section>

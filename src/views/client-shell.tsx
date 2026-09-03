@@ -180,7 +180,9 @@ export const ClientShell = ({
       )}
 
       {/* Recordings Section */}
-      {recordings.length > 0 && <RecordingsSection {...{ recordings }} />}
+      {recordings.length > 0 && (
+        <RecordingsSection {...{ recordings }} categoryName={category.name} />
+      )}
     </div>
   );
 };

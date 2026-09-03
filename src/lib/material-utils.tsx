@@ -182,6 +182,59 @@ export const resolveMaterialFileName = (
   return safeName;
 };
 
+export const isGoogleDriveVirusWarning = (
+  textOrBytes: string | Uint8Array,
+): boolean => {
+  const text =
+    typeof textOrBytes === "string"
+      ? textOrBytes
+      : new TextDecoder("utf-8", { fatal: false }).decode(
+          textOrBytes.subarray(0, Math.min(textOrBytes.length, 4096)),
+        );
+  return (
+    text.includes("Google Drive - Virus scan warning") ||
+    text.includes("can't scan this file for viruses") ||
+    text.includes("is too large for Google to scan for viruses") ||
+    (text.includes("uc-download-link") && text.includes("download-form"))
+  );
+};
+
+export const extractGoogleDriveConfirmUrl = (html: string): string | null => {
+  try {
+    const formMatch =
+      html.match(
+        /<form[^>]*id=["']download-form["'][^>]*action=["']([^"']+)["']/i,
+      ) ||
+      html.match(
+        /<form[^>]*action=["']([^"']+)["'][^>]*id=["']download-form["']/i,
+      );
+    const actionUrl = formMatch?.[1];
+    if (!actionUrl) return null;
+
+    const inputRegex =
+      /<input[^>]*name=["']([^"']+)["'][^>]*value=["']([^"']*)["']/gi;
+    const params = new URLSearchParams();
+    let match = inputRegex.exec(html);
+
+    while (match !== null) {
+      if (match[1]) {
+        params.set(match[1], match[2] || "");
+      }
+      match = inputRegex.exec(html);
+    }
+
+    if (!params.has("confirm")) {
+      params.set("confirm", "t");
+    }
+
+    const separator = actionUrl.includes("?") ? "&" : "?";
+    return `${actionUrl}${separator}${params.toString()}`;
+  } catch (err) {
+    console.warn("Failed to extract Google Drive confirm URL:", err);
+    return null;
+  }
+};
+
 export const getMaterialIcon = (mat: Material) => {
   const isLink = isMaterialLink(mat.uri);
   const lowerName = mat.name.toLowerCase();

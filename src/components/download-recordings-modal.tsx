@@ -31,6 +31,7 @@ import {
 } from "@/hooks/use-audio-cache";
 import { useBatchDownloader } from "@/hooks/use-batch-downloader";
 import { getMaterialIcon } from "@/lib/material-utils";
+import { getAssetUrl } from "@/lib/storage";
 import { cn } from "@/lib/utils";
 import type { EnrichedRecording } from "@/types";
 
@@ -51,7 +52,7 @@ export const DownloadRecordingsModal = ({
   isOpen,
   onClose,
   recordings,
-  categoryName = "Discourses",
+  categoryName = "RSP_Discourses",
 }: DownloadRecordingsModalProps) => {
   const { data: cachedList = [] } = useAudioCacheList();
   const { settings } = useAudioCacheSettings();
@@ -89,6 +90,7 @@ export const DownloadRecordingsModal = ({
     status,
     progress,
     errorMessage,
+    skippedItems,
     startZipDownload,
     startCacheOnly,
     cancel,
@@ -212,7 +214,7 @@ export const DownloadRecordingsModal = ({
         recordings,
         selectedAudioIds,
         selectedMaterialIds,
-        zipFileName: `${safeCat || "Discourses"}_Files.zip`,
+        zipFileName: `${safeCat}.zip`,
         shouldCache: preserveInCache,
       });
     } else if (preserveInCache) {
@@ -398,7 +400,7 @@ export const DownloadRecordingsModal = ({
                 onClick={cancel}
                 className="text-xs h-6 px-3 text-destructive hover:bg-destructive/10 cursor-pointer"
               >
-                Cancel Process
+                Cancel
               </Button>
             </div>
           </div>
@@ -409,6 +411,58 @@ export const DownloadRecordingsModal = ({
           <div className="p-3 bg-success/10 border border-success/20 rounded-xl flex items-center gap-2 text-xs text-success">
             <Check className="w-4 h-4 shrink-0" />
             <span className="font-semibold">{progress.currentName}</span>
+          </div>
+        )}
+
+        {/* Skipped Large Files Banner */}
+        {skippedItems.length > 0 && !isProcessing && (
+          <div className="p-3 bg-warning/10 border border-warning/20 rounded-xl flex flex-col gap-2 text-xs">
+            <div className="flex items-center gap-2 text-warning font-bold">
+              <AlertTriangle className="w-4 h-4 shrink-0" />
+              <span>
+                {skippedItems.length} large file(s) require direct download
+              </span>
+            </div>
+            <p className="text-xxs text-muted-foreground leading-snug">
+              Files exceeding 100MB cannot be bundled in-browser. You can
+              download them directly via Google Drive:
+            </p>
+            <div className="flex flex-col gap-1.5 pt-1">
+              {skippedItems.map((item) => {
+                const itemUri = item.uri;
+                return (
+                  <div
+                    key={item.name}
+                    className="flex items-center justify-between gap-2 bg-background/50 p-2 rounded-lg border border-border"
+                  >
+                    <span
+                      className="text-xxs font-semibold truncate flex-1"
+                      style={{ minWidth: 0 }}
+                    >
+                      {item.name}
+                    </span>
+                    {itemUri && (
+                      <Button
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="h-6 px-2 text-xxs gap-1 text-primary cursor-pointer shrink-0"
+                        onClick={() =>
+                          window.open(
+                            getAssetUrl(itemUri),
+                            "_blank",
+                            "noopener,noreferrer",
+                          )
+                        }
+                      >
+                        <ExternalLink className="w-3 h-3" />
+                        <span>Download</span>
+                      </Button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
         )}
 

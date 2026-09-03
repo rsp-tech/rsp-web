@@ -7,18 +7,22 @@ import { AUDIO_CACHE_NAME, MATERIALS_CACHE_NAME, QUERY_KEY } from "@/constants";
 import { getAudioCacheSettings } from "@/hooks/use-audio-cache";
 import { enforceLRUWatermark, touchTrackMeta } from "@/lib/audio-idb-ledger";
 import {
+  extractGoogleDriveConfirmUrl,
   getMaterialExtension,
   guessExtensionFromBytesAndMime,
+  isGoogleDriveVirusWarning,
   isMaterialLink,
   resolveMaterialFileName,
   sanitizeFileName,
 } from "@/lib/material-utils";
-import { getAudioUrl } from "@/lib/storage";
+import { getAssetUrl, getAudioUrl } from "@/lib/storage";
 import type { EnrichedRecording, Material } from "@/types";
 
 export {
+  extractGoogleDriveConfirmUrl,
   getMaterialExtension,
   guessExtensionFromBytesAndMime,
+  isGoogleDriveVirusWarning,
   isMaterialLink,
   resolveMaterialFileName,
   sanitizeFileName,
@@ -31,11 +35,19 @@ export interface BatchDownloadProgress {
   currentName: string;
 }
 
+export interface SkippedDownloadItem {
+  name: string;
+  uri?: string;
+  type: "audio" | "material";
+  reason: string;
+}
+
 export interface UseBatchDownloaderReturn {
   isProcessing: boolean;
   status: "idle" | "downloading" | "zipping" | "completed" | "error";
   progress: BatchDownloadProgress;
   errorMessage: string | null;
+  skippedItems: SkippedDownloadItem[];
   startZipDownload: (options: {
     recordings: EnrichedRecording[];
     selectedAudioIds: Set<string>;
@@ -68,6 +80,8 @@ export interface FetchedFileResult {
   key: string;
   data: Uint8Array;
   mimeType: string;
+  skipped?: boolean;
+  skippedItem?: SkippedDownloadItem;
 }
 
 const CONCURRENCY_LIMIT = 3;
@@ -101,6 +115,71 @@ const fetchItemData = async (
       );
     }
     mimeType = res.headers.get("content-type") || "";
+    blob = await res.blob();
+
+    // Check if Google Drive returned a virus scan warning HTML page instead of binary
+    if (
+      mimeType.includes("text/html") ||
+      blob.type.includes("text/html") ||
+      blob.size < 50000
+    ) {
+      const sampleBuffer = await blob.slice(0, 4096).arrayBuffer();
+      const sampleText = new TextDecoder("utf-8", { fatal: false }).decode(
+        sampleBuffer,
+      );
+
+      if (isGoogleDriveVirusWarning(sampleText)) {
+        const fullHtml = await blob.text();
+        const confirmUrl = extractGoogleDriveConfirmUrl(fullHtml);
+
+        if (confirmUrl) {
+          try {
+            const confirmRes = await fetch(confirmUrl, { signal });
+            if (confirmRes.ok) {
+              const confirmBlob = await confirmRes.blob();
+              const confirmSample = await confirmBlob
+                .slice(0, 4096)
+                .arrayBuffer();
+              const confirmText = new TextDecoder("utf-8", {
+                fatal: false,
+              }).decode(confirmSample);
+
+              if (!isGoogleDriveVirusWarning(confirmText)) {
+                blob = confirmBlob;
+                mimeType =
+                  confirmRes.headers.get("content-type") || confirmBlob.type;
+              }
+            }
+          } catch (retryErr) {
+            console.warn(
+              "Failed automatic confirm retry for Google Drive large file:",
+              retryErr,
+            );
+          }
+        }
+
+        // If it's STILL the HTML virus warning page, skip binary bundling gracefully
+        const finalSample = await blob.slice(0, 4096).arrayBuffer();
+        const finalText = new TextDecoder("utf-8", { fatal: false }).decode(
+          finalSample,
+        );
+        if (isGoogleDriveVirusWarning(finalText)) {
+          return {
+            key: task.key,
+            data: new Uint8Array(),
+            mimeType: "text/html",
+            skipped: true,
+            skippedItem: {
+              name: task.name,
+              uri: task.material?.uri || String(task.cacheKey),
+              type: task.type,
+              reason:
+                "File is too large for automated scanning (>100MB). Requires direct download.",
+            },
+          };
+        }
+      }
+    }
 
     if (shouldCache && typeof window !== "undefined" && "caches" in window) {
       try {
@@ -110,20 +189,19 @@ const fetchItemData = async (
 
         if (canCache) {
           const cache = await caches.open(task.cacheName);
-          await cache.put(task.cacheKey, res.clone());
+          const responseToCache = new Response(blob, {
+            headers: { "content-type": mimeType || blob.type },
+          });
+          await cache.put(task.cacheKey, responseToCache);
 
           if (task.type === "audio" && task.recId) {
-            const contentLength = res.headers.get("content-length");
-            const size = contentLength ? parseInt(contentLength, 10) : 0;
-            await touchTrackMeta(String(task.cacheKey), task.recId, size);
+            await touchTrackMeta(String(task.cacheKey), task.recId, blob.size);
           }
         }
       } catch (err) {
         console.warn("Failed to write to cache for", task.name, err);
       }
     }
-
-    blob = await res.blob();
   }
 
   if (!mimeType && blob.type) {
@@ -177,7 +255,7 @@ export const prepareDistinctTasks = (
             key,
             type: "material",
             name: mat.name,
-            // Use getAudioUrl for materials as well to avoid CORS restrictions
+            // Route through Cloudflare proxy for CORS support
             url: getAudioUrl(mat.uri),
             cacheKey: mat.uri,
             cacheName: MATERIALS_CACHE_NAME,
@@ -220,9 +298,13 @@ export const buildZipHierarchy = ({
         !isMaterialLink(mat.uri)
       ) {
         const uri = mat.uri.trim();
-        matRefCount.set(uri, (matRefCount.get(uri) || 0) + 1);
-        if (!matSampleMap.has(uri)) {
-          matSampleMap.set(uri, mat);
+        const fileRes = fileResultMap.get(`mat:${uri}`);
+        // Only count if not skipped
+        if (fileRes && !fileRes.skipped) {
+          matRefCount.set(uri, (matRefCount.get(uri) || 0) + 1);
+          if (!matSampleMap.has(uri)) {
+            matSampleMap.set(uri, mat);
+          }
         }
       }
     }
@@ -236,9 +318,9 @@ export const buildZipHierarchy = ({
       const mat = matSampleMap.get(uri);
       if (mat) {
         const fileRes = fileResultMap.get(`mat:${uri}`);
-        const resolvedFileName = resolveMaterialFileName(mat, fileRes);
-        const sharedPath = `shared-materials/${resolvedFileName}`;
-        if (fileRes?.data) {
+        if (fileRes && !fileRes.skipped && fileRes.data.length > 0) {
+          const resolvedFileName = resolveMaterialFileName(mat, fileRes);
+          const sharedPath = `shared-materials/${resolvedFileName}`;
           zipData[sharedPath] = fileRes.data;
         }
       }
@@ -250,6 +332,16 @@ export const buildZipHierarchy = ({
     const hasAudioSelected = Boolean(
       rec.audio_id && selectedAudioIds.has(rec.audio_id),
     );
+    const audioRes = rec.audio_id
+      ? fileResultMap.get(`audio:${rec.audio_id}`)
+      : null;
+    const isAudioValid = Boolean(
+      hasAudioSelected &&
+        audioRes &&
+        !audioRes.skipped &&
+        audioRes.data.length > 0,
+    );
+
     const recMats = (rec.materials ?? []).filter((m) =>
       selectedMaterialIds.has(m.id),
     );
@@ -258,41 +350,63 @@ export const buildZipHierarchy = ({
     );
     const linkMats = recMats.filter((m) => isMaterialLink(m.uri));
 
-    const exclusiveMats = downloadableMats.filter((m) => !isShared(m.uri));
-    const sharedMatsForRec = downloadableMats.filter((m) => isShared(m.uri));
+    const validDownloadableMats = downloadableMats.filter((m) => {
+      const res = fileResultMap.get(`mat:${m.uri?.trim()}`);
+      return res && !res.skipped && res.data.length > 0;
+    });
+
+    const skippedMats = downloadableMats.filter((m) => {
+      const res = fileResultMap.get(`mat:${m.uri?.trim()}`);
+      return res?.skipped;
+    });
+
+    const exclusiveMats = validDownloadableMats.filter((m) =>
+      Boolean(m.uri && !isShared(m.uri)),
+    );
+    const sharedMatsForRec = validDownloadableMats.filter((m) =>
+      Boolean(m.uri && isShared(m.uri)),
+    );
 
     const safeRecName = sanitizeFileName(rec.name);
     const hasAnyMatsForRec = recMats.length > 0;
 
     // Rule: If only audio is selected for a recording -> add it to the zip root
-    if (hasAudioSelected && !hasAnyMatsForRec) {
-      const audioRes = fileResultMap.get(`audio:${rec.audio_id}`);
-      if (audioRes?.data) {
-        zipData[`${safeRecName}.mp3`] = audioRes.data;
-      }
-    } else if (hasAudioSelected || hasAnyMatsForRec) {
-      // Create a folder for the recording
+    if (isAudioValid && !hasAnyMatsForRec && audioRes?.data) {
+      zipData[`${safeRecName}.mp3`] = audioRes.data;
+    } else if (isAudioValid || hasAnyMatsForRec) {
       const folder = safeRecName;
 
-      if (hasAudioSelected) {
-        const audioRes = fileResultMap.get(`audio:${rec.audio_id}`);
-        if (audioRes?.data) {
-          zipData[`${folder}/${safeRecName}.mp3`] = audioRes.data;
-        }
+      if (isAudioValid && audioRes?.data) {
+        zipData[`${folder}/${safeRecName}.mp3`] = audioRes.data;
       }
 
       // Add exclusive materials to recording folder with resolved extension
       for (const mat of exclusiveMats) {
         const fileRes = fileResultMap.get(`mat:${mat.uri?.trim()}`);
-        const resolvedFileName = resolveMaterialFileName(mat, fileRes);
-        if (fileRes?.data) {
+        if (fileRes && !fileRes.skipped && fileRes.data.length > 0) {
+          const resolvedFileName = resolveMaterialFileName(mat, fileRes);
           zipData[`${folder}/${resolvedFileName}`] = fileRes.data;
         }
       }
 
-      // Generate reference-materials.md if this recording has shared materials or links
-      if (sharedMatsForRec.length > 0 || linkMats.length > 0) {
+      // Generate reference-materials.md if this recording has shared materials, links, or skipped large files
+      if (
+        sharedMatsForRec.length > 0 ||
+        linkMats.length > 0 ||
+        skippedMats.length > 0
+      ) {
         let md = `# Reference Materials for ${rec.name}\n\n`;
+
+        if (skippedMats.length > 0) {
+          md += `## Large Study Materials (Direct Download)\n`;
+          md += `*These files are too large (>100MB) for automated packaging. Please download them directly:*\n`;
+          for (const skm of skippedMats) {
+            if (skm.uri) {
+              md += `- [${skm.name}](${getAssetUrl(skm.uri)})\n`;
+            }
+          }
+          md += `\n`;
+        }
 
         if (sharedMatsForRec.length > 0) {
           md += `## Shared Study Materials\n`;
@@ -326,8 +440,12 @@ const executeQueue = async (
   signal: AbortSignal,
   onProgress: (completed: number, currentName: string) => void,
   shouldCache = true,
-): Promise<Map<string, FetchedFileResult>> => {
+): Promise<{
+  fileResultMap: Map<string, FetchedFileResult>;
+  skippedList: SkippedDownloadItem[];
+}> => {
   const resultsMap = new Map<string, FetchedFileResult>();
+  const skippedList: SkippedDownloadItem[] = [];
   let completedCount = 0;
   let nextIndex = 0;
 
@@ -344,6 +462,9 @@ const executeQueue = async (
 
       const result = await fetchItemData(task, signal, shouldCache);
       resultsMap.set(result.key, result);
+      if (result.skipped && result.skippedItem) {
+        skippedList.push(result.skippedItem);
+      }
 
       completedCount += 1;
       onProgress(completedCount, task.name);
@@ -356,7 +477,7 @@ const executeQueue = async (
   );
 
   await Promise.all(workers);
-  return resultsMap;
+  return { fileResultMap: resultsMap, skippedList };
 };
 
 export const useBatchDownloader = (): UseBatchDownloaderReturn => {
@@ -371,6 +492,7 @@ export const useBatchDownloader = (): UseBatchDownloaderReturn => {
     currentName: "",
   });
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [skippedItems, setSkippedItems] = useState<SkippedDownloadItem[]>([]);
 
   const abortControllerRef = useRef<AbortController | null>(null);
   const queryClient = useQueryClient();
@@ -380,6 +502,7 @@ export const useBatchDownloader = (): UseBatchDownloaderReturn => {
     setStatus("idle");
     setProgress({ completed: 0, total: 0, percent: 0, currentName: "" });
     setErrorMessage(null);
+    setSkippedItems([]);
   }, []);
 
   const cancel = useCallback(() => {
@@ -397,6 +520,7 @@ export const useBatchDownloader = (): UseBatchDownloaderReturn => {
     setIsProcessing(true);
     setStatus("downloading");
     setErrorMessage(null);
+    setSkippedItems([]);
     setProgress({
       completed: 0,
       total: tasks.length,
@@ -461,7 +585,7 @@ export const useBatchDownloader = (): UseBatchDownloaderReturn => {
       const controller = initSession(tasks);
 
       try {
-        const fileResultMap = await executeQueue(
+        const { fileResultMap, skippedList } = await executeQueue(
           tasks,
           controller.signal,
           (completed, currentName) => {
@@ -476,12 +600,26 @@ export const useBatchDownloader = (): UseBatchDownloaderReturn => {
         );
 
         if (controller.signal.aborted) return;
+        setSkippedItems(skippedList);
 
         // SINGLE FILE DIRECT DOWNLOAD
-        if (tasks.length === 1) {
+        if (tasks.length === 1 && tasks[0]) {
           const singleTask = tasks[0];
           const fileRes = fileResultMap.get(singleTask.key);
-          if (fileRes?.data) {
+
+          if (fileRes?.skipped) {
+            // Open direct download URL in a new tab
+            const targetUri = singleTask.material?.uri || singleTask.cacheKey;
+            window.open(
+              getAssetUrl(targetUri),
+              "_blank",
+              "noopener,noreferrer",
+            );
+            await finalizeSession("Opened direct download link!");
+            return;
+          }
+
+          if (fileRes?.data && fileRes.data.length > 0) {
             let finalFileName = singleTask.downloadFileName;
             let mimeType =
               fileRes.mimeType ||
@@ -517,45 +655,55 @@ export const useBatchDownloader = (): UseBatchDownloaderReturn => {
         }
 
         // MULTI-FILE ZIP DOWNLOAD
-        setStatus("zipping");
-        setProgress((prev) => ({
-          ...prev,
-          percent: 92,
-          currentName: "Compressing into ZIP...",
-        }));
+        const validEntries = Array.from(fileResultMap.values()).filter(
+          (r) => !r.skipped && r.data.length > 0,
+        );
 
-        const zipData = buildZipHierarchy({
-          recordings,
-          selectedAudioIds,
-          selectedMaterialIds,
-          fileResultMap,
-        });
+        if (validEntries.length > 0) {
+          setStatus("zipping");
+          setProgress((prev) => ({
+            ...prev,
+            percent: 92,
+            currentName: "Compressing into ZIP...",
+          }));
 
-        const zippedBlob = await new Promise<Blob>((resolve, reject) => {
-          zip(zipData, { level: 0 }, (err, data) => {
-            if (err) return reject(err);
-            resolve(
-              new Blob([data.buffer as ArrayBuffer], {
-                type: "application/zip",
-              }),
-            );
+          const zipData = buildZipHierarchy({
+            recordings,
+            selectedAudioIds,
+            selectedMaterialIds,
+            fileResultMap,
           });
-        });
 
-        if (controller.signal.aborted) return;
+          const zippedBlob = await new Promise<Blob>((resolve, reject) => {
+            zip(zipData, { level: 0 }, (err, data) => {
+              if (err) return reject(err);
+              resolve(
+                new Blob([data.buffer as ArrayBuffer], {
+                  type: "application/zip",
+                }),
+              );
+            });
+          });
 
-        // Trigger browser file download
-        const downloadUrl = URL.createObjectURL(zippedBlob);
-        const link = document.createElement("a");
-        link.href = downloadUrl;
-        link.download = zipFileName;
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+          if (controller.signal.aborted) return;
 
-        setTimeout(() => URL.revokeObjectURL(downloadUrl), 5000);
+          // Trigger browser file download
+          const downloadUrl = URL.createObjectURL(zippedBlob);
+          const link = document.createElement("a");
+          link.href = downloadUrl;
+          link.download = zipFileName;
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
 
-        await finalizeSession("Download completed successfully!");
+          setTimeout(() => URL.revokeObjectURL(downloadUrl), 5000);
+        }
+
+        await finalizeSession(
+          skippedList.length > 0
+            ? "Download finished with some large files skipped"
+            : "Download completed successfully!",
+        );
       } catch (err: unknown) {
         handleSessionError(controller, err, "Download failed");
       } finally {
@@ -586,7 +734,7 @@ export const useBatchDownloader = (): UseBatchDownloaderReturn => {
       const controller = initSession(tasks);
 
       try {
-        await executeQueue(
+        const { skippedList } = await executeQueue(
           tasks,
           controller.signal,
           (completed, currentName) => {
@@ -601,8 +749,13 @@ export const useBatchDownloader = (): UseBatchDownloaderReturn => {
         );
 
         if (controller.signal.aborted) return;
+        setSkippedItems(skippedList);
 
-        await finalizeSession("All selected tracks cached for offline use!");
+        await finalizeSession(
+          skippedList.length > 0
+            ? "Caching completed (large files skipped)"
+            : "All selected tracks cached for offline use!",
+        );
       } catch (err: unknown) {
         handleSessionError(controller, err, "Caching failed");
       } finally {
@@ -618,6 +771,7 @@ export const useBatchDownloader = (): UseBatchDownloaderReturn => {
     status,
     progress,
     errorMessage,
+    skippedItems,
     startZipDownload,
     startCacheOnly,
     cancel,
