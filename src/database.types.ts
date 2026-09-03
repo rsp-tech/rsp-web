@@ -392,6 +392,7 @@ export type Database = {
           id: number;
           name: string;
           recording_id: number;
+          size: number | null;
           type: string | null;
           updated_at: string | null;
           uri: string;
@@ -401,6 +402,7 @@ export type Database = {
           id?: number;
           name: string;
           recording_id: number;
+          size?: number | null;
           type?: string | null;
           updated_at?: string | null;
           uri: string;
@@ -410,6 +412,7 @@ export type Database = {
           id?: number;
           name?: string;
           recording_id?: number;
+          size?: number | null;
           type?: string | null;
           updated_at?: string | null;
           uri?: string;
@@ -475,6 +478,7 @@ export type Database = {
           name: string;
           order_ind: number | null;
           recorded_at: string | null;
+          size: number | null;
           speaker_ids: number[] | null;
           type_id: number | null;
           updated_at: string | null;
@@ -492,6 +496,7 @@ export type Database = {
           name: string;
           order_ind?: number | null;
           recorded_at?: string | null;
+          size?: number | null;
           speaker_ids?: number[] | null;
           type_id?: number | null;
           updated_at?: string | null;
@@ -509,6 +514,7 @@ export type Database = {
           name?: string;
           order_ind?: number | null;
           recorded_at?: string | null;
+          size?: number | null;
           speaker_ids?: number[] | null;
           type_id?: number | null;
           updated_at?: string | null;

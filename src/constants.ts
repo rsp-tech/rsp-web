@@ -126,6 +126,7 @@ export const SYNC_COLUMNS = {
     name,
     order_ind,
     recorded_at,
+    size,
     speaker_ids,
     type_id,
     venues_id,
@@ -137,6 +138,7 @@ export const SYNC_COLUMNS = {
     allowed_roles,
     name,
     recording_id,
+    size,
     uri,
     type
   `,
@@ -378,6 +380,7 @@ export const QUERY_KEY = {
   VENUES: "venues",
   EVENTS: "events",
   AUDIO_CACHE_LIST: "audio-cache-list",
+  MATERIALS_CACHE_LIST: "materials-cache-list",
   FEATURE_CONFIG: "feature-config",
 } as const;
 
@@ -412,6 +415,7 @@ export const ENGAGEMENT_TYPES = [
 export type EngagementType = (typeof ENGAGEMENT_TYPES)[number];
 
 export const AUDIO_CACHE_NAME = "rsp-audio-cache";
+export const MATERIALS_CACHE_NAME = "rsp-materials-cache";
 
 export const PHILOSOPHICAL_CONCEPTS = [
   "Bhakti — Path of Devotion",
