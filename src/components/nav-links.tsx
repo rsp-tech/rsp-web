@@ -10,6 +10,8 @@ import {
   Video,
 } from "lucide-react";
 import Link from "next/link";
+import { FEATURE_FLAGS } from "@/constants";
+import { useFeatureFlag } from "@/hooks/use-feature-flags";
 import { cn } from "@/lib/utils";
 
 const navLinks: {
@@ -66,12 +68,14 @@ interface NavLinksProps {
   onItemClick?: () => void;
 }
 
-export const NavLinks = ({ onItemClick }: NavLinksProps) =>
-  navLinks.map(({ href, Icon, iconColorClass, title }) => (
+export const NavLinks = ({ onItemClick }: NavLinksProps) => {
+  const showVideos = useFeatureFlag(FEATURE_FLAGS.VIDEOS);
+  return navLinks.map(({ href, Icon, iconColorClass, title }) => (
     <Link
       key={href}
       href={href}
       className="hover:text-primary transition-all flex items-center gap-1.5"
+      style={!showVideos && href === "/videos" ? { display: "none" } : {}}
       aria-label={title}
       prefetch={false}
       onClick={onItemClick}
@@ -83,3 +87,4 @@ export const NavLinks = ({ onItemClick }: NavLinksProps) =>
       <span>{title}</span>
     </Link>
   ));
+};
