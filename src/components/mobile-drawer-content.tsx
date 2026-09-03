@@ -26,7 +26,7 @@ export const MobileDrawerContent = ({ setOpen }: MobileDrawerContentProps) => {
 
   const handleLogout = async () => {
     const supabase = getSupabaseClient();
-    await supabase.auth.signOut();
+    await supabase.auth.signOut({ scope: "local" });
     setOpen(false);
   };
 

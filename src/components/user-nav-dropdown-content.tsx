@@ -23,7 +23,7 @@ export const UserNavDropdownContent = ({
   const router = useRouter();
   const handleLogout = async () => {
     const supabase = getSupabaseClient();
-    await supabase.auth.signOut();
+    await supabase.auth.signOut({ scope: "local" });
   };
   return (
     <DropdownMenuContent align="end" style={{ width: "16rem" }}>
