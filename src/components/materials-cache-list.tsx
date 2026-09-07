@@ -54,9 +54,10 @@ export const MaterialsCacheList = () => {
     return (
       <div className="py-16 text-center text-xs text-muted-foreground border border-dashed border-border rounded-xl flex flex-col items-center justify-center gap-2">
         <span>No study materials cached yet.</span>
-        <span className="text-xxs text-muted-foreground opacity-80">
-          Downloaded study materials and handouts will be saved here for offline
-          viewing.
+        <span className="text-xxs text-muted-foreground opacity-80 max-w-xs">
+          Cached study materials optimize future downloads and batch ZIP
+          packaging. Previewing materials always requires an active internet
+          connection.
         </span>
       </div>
     );

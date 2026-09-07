@@ -3,7 +3,12 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { type AsyncZippable, zip } from "fflate";
 import { useCallback, useRef, useState } from "react";
-import { AUDIO_CACHE_NAME, MATERIALS_CACHE_NAME, QUERY_KEY } from "@/constants";
+import {
+  AUDIO_CACHE_NAME,
+  MATERIALS_CACHE_NAME,
+  QUERY_KEY,
+  STREAM_LIMIT_BYTES,
+} from "@/constants";
 import { getAudioCacheSettings } from "@/hooks/use-audio-cache";
 import { enforceLRUWatermark, touchTrackMeta } from "@/lib/audio-idb-ledger";
 import {
@@ -16,6 +21,7 @@ import {
   sanitizeFileName,
 } from "@/lib/material-utils";
 import { getAssetUrl, getAudioUrl } from "@/lib/storage";
+import { parseSize } from "@/lib/utils";
 import type { EnrichedRecording, Material } from "@/types";
 
 export {
@@ -74,6 +80,7 @@ export interface FetchTask {
   recId?: number;
   material?: Material;
   downloadFileName: string;
+  size?: number | null;
 }
 
 export interface FetchedFileResult {
@@ -86,11 +93,31 @@ export interface FetchedFileResult {
 
 const CONCURRENCY_LIMIT = 3;
 
+const createSkippedLargeFileResult = (
+  task: FetchTask,
+  reason = "File is too large for automated scanning (>100MB). Requires direct download.",
+): FetchedFileResult => ({
+  key: task.key,
+  data: new Uint8Array(),
+  mimeType: "text/html",
+  skipped: true,
+  skippedItem: {
+    name: task.name,
+    uri: task.material?.uri || String(task.cacheKey),
+    type: task.type,
+    reason,
+  },
+});
+
 const fetchItemData = async (
   task: FetchTask,
   signal: AbortSignal,
   shouldCache = true,
 ): Promise<FetchedFileResult> => {
+  if (parseSize(task.size) > STREAM_LIMIT_BYTES) {
+    return createSkippedLargeFileResult(task);
+  }
+
   let blob: Blob | null = null;
   let mimeType = "";
 
@@ -164,19 +191,7 @@ const fetchItemData = async (
           finalSample,
         );
         if (isGoogleDriveVirusWarning(finalText)) {
-          return {
-            key: task.key,
-            data: new Uint8Array(),
-            mimeType: "text/html",
-            skipped: true,
-            skippedItem: {
-              name: task.name,
-              uri: task.material?.uri || String(task.cacheKey),
-              type: task.type,
-              reason:
-                "File is too large for automated scanning (>100MB). Requires direct download.",
-            },
-          };
+          return createSkippedLargeFileResult(task);
         }
       }
     }
@@ -236,6 +251,7 @@ export const prepareDistinctTasks = (
           cacheKey: rec.audio_id,
           cacheName: AUDIO_CACHE_NAME,
           recId: rec.id,
+          size: rec.size,
           downloadFileName: `${safeName}.mp3`,
         });
       }
@@ -260,6 +276,7 @@ export const prepareDistinctTasks = (
             cacheKey: mat.uri,
             cacheName: MATERIALS_CACHE_NAME,
             material: mat,
+            size: mat.size,
             downloadFileName: `${safeMatName}${ext}`,
           });
         }

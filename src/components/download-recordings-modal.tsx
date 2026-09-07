@@ -25,6 +25,7 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { STREAM_LIMIT_BYTES } from "@/constants";
 import {
   useAudioCacheList,
   useAudioCacheSettings,
@@ -32,8 +33,10 @@ import {
 import { useBatchDownloader } from "@/hooks/use-batch-downloader";
 import { getMaterialIcon } from "@/lib/material-utils";
 import { getAssetUrl } from "@/lib/storage";
-import { cn } from "@/lib/utils";
+import { cn, formatSize, parseSize } from "@/lib/utils";
 import type { EnrichedRecording } from "@/types";
+
+export { formatSize };
 
 interface DownloadRecordingsModalProps {
   isOpen: boolean;
@@ -42,11 +45,11 @@ interface DownloadRecordingsModalProps {
   categoryName?: string;
 }
 
-const formatSize = (bytes?: number | null): string => {
-  if (!bytes || bytes <= 0) return "";
-  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} KB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
-};
+const isAudioOverLimit = (rec: { size?: unknown }): boolean =>
+  parseSize(rec.size) > STREAM_LIMIT_BYTES;
+
+const isMaterialOverLimit = (mat: { size?: unknown }): boolean =>
+  parseSize(mat.size) > STREAM_LIMIT_BYTES;
 
 export const DownloadRecordingsModal = ({
   isOpen,
@@ -116,6 +119,44 @@ export const DownloadRecordingsModal = ({
     return set;
   }, [recordings]);
 
+  // Selected files exceeding streaming limit (>100MB)
+  const selectedLargeFiles = useMemo(() => {
+    const items: Array<{
+      id: string | number;
+      name: string;
+      size?: number | null;
+      type: "audio" | "material";
+      uri?: string;
+    }> = [];
+    for (const rec of recordings) {
+      if (
+        rec.audio_id &&
+        selectedAudioIds.has(rec.audio_id) &&
+        isAudioOverLimit(rec)
+      ) {
+        items.push({
+          id: rec.audio_id,
+          name: rec.name,
+          size: rec.size,
+          type: "audio",
+          uri: rec.audio_id,
+        });
+      }
+      for (const mat of rec.materials ?? []) {
+        if (selectedMaterialIds.has(mat.id) && isMaterialOverLimit(mat)) {
+          items.push({
+            id: mat.id,
+            name: mat.name,
+            size: mat.size,
+            type: "material",
+            uri: mat.uri,
+          });
+        }
+      }
+    }
+    return items;
+  }, [recordings, selectedAudioIds, selectedMaterialIds]);
+
   const totalAudioCount = allAudioIds.size;
   const totalMaterialCount = allMaterialIds.size;
   const selectedAudioCount = selectedAudioIds.size;
@@ -128,11 +169,11 @@ export const DownloadRecordingsModal = ({
     let bytes = 0;
     for (const rec of recordings) {
       if (rec.audio_id && selectedAudioIds.has(rec.audio_id)) {
-        bytes += rec.size || 0;
+        bytes += parseSize(rec.size);
       }
       for (const mat of rec.materials ?? []) {
         if (selectedMaterialIds.has(mat.id)) {
-          bytes += mat.size || 0;
+          bytes += parseSize(mat.size);
         }
       }
     }
@@ -178,7 +219,7 @@ export const DownloadRecordingsModal = ({
 
   const handleSelectAll = () => {
     if (isProcessing) return;
-    if (totalSelectedCount === allCount) {
+    if (totalSelectedCount === allCount && allCount > 0) {
       setSelectedAudioIds(new Set());
       setSelectedMaterialIds(new Set());
     } else {
@@ -189,7 +230,7 @@ export const DownloadRecordingsModal = ({
 
   const handleToggleAllAudio = () => {
     if (isProcessing) return;
-    if (selectedAudioCount === totalAudioCount) {
+    if (selectedAudioCount === totalAudioCount && totalAudioCount > 0) {
       setSelectedAudioIds(new Set());
     } else {
       setSelectedAudioIds(new Set(allAudioIds));
@@ -198,7 +239,10 @@ export const DownloadRecordingsModal = ({
 
   const handleToggleAllMaterials = () => {
     if (isProcessing) return;
-    if (selectedMaterialCount === totalMaterialCount) {
+    if (
+      selectedMaterialCount === totalMaterialCount &&
+      totalMaterialCount > 0
+    ) {
       setSelectedMaterialIds(new Set());
     } else {
       setSelectedMaterialIds(new Set(allMaterialIds));
@@ -207,6 +251,20 @@ export const DownloadRecordingsModal = ({
 
   const handlePrimaryAction = async () => {
     if (totalSelectedCount === 0 || isProcessing) return;
+
+    // Trigger direct downloads for selected files exceeding streaming limit (>100MB)
+    if (selectedLargeFiles.length > 0 && (downloadZip || preserveInCache)) {
+      for (const item of selectedLargeFiles) {
+        if (item.type === "audio") {
+          window.open(getAssetUrl(String(item.id)), "_blank");
+        } else if (item.uri) {
+          const url = item.uri.startsWith("http")
+            ? item.uri
+            : getAssetUrl(item.uri);
+          window.open(url, "_blank");
+        }
+      }
+    }
 
     if (downloadZip) {
       const safeCat = categoryName.replace(/[/\\?%*:|"<>]/g, "_").trim();
@@ -224,19 +282,16 @@ export const DownloadRecordingsModal = ({
         selectedMaterialIds,
       });
     } else {
-      // Both unchecked: Direct Google Drive download popup fallback
+      // Both unchecked: Direct download popup fallback
       for (const rec of recordings) {
         if (rec.audio_id && selectedAudioIds.has(rec.audio_id)) {
-          window.open(
-            `https://drive.google.com/uc?export=download&id=${rec.audio_id}`,
-            "_blank",
-          );
+          window.open(getAssetUrl(rec.audio_id), "_blank");
         }
         for (const mat of rec.materials ?? []) {
           if (selectedMaterialIds.has(mat.id) && mat.uri) {
             const url = mat.uri.startsWith("http")
               ? mat.uri
-              : `https://drive.google.com/uc?export=download&id=${mat.uri}`;
+              : getAssetUrl(mat.uri);
             window.open(url, "_blank");
           }
         }
@@ -323,10 +378,29 @@ export const DownloadRecordingsModal = ({
           <div className="flex items-center gap-2 text-muted-foreground font-medium">
             <span>
               {totalSelectedCount} files
-              {totalBytesSelected > 0 && ` (${totalSelectedMB} MB)`}
+              {totalBytesSelected > 0 && ` (${formatSize(totalBytesSelected)})`}
             </span>
           </div>
         </div>
+
+        {/* Dynamic Warning: Selected Large Files (>100MB) */}
+        {selectedLargeFiles.length > 0 && (downloadZip || preserveInCache) && (
+          <div className="p-3 bg-warning/10 border border-border rounded-xl flex items-start gap-2.5 text-xs text-muted-foreground">
+            <AlertTriangle className="w-4 h-4 text-warning shrink-0 mt-0.5" />
+            <div className="flex flex-col gap-1 leading-snug">
+              <span className="font-bold text-foreground">
+                Large Files Notice ({selectedLargeFiles.length} file(s)
+                &gt;100MB)
+              </span>
+              <span>
+                Files over 100MB cannot be bundled into the in-browser ZIP or
+                offline cache. When you start the download, eligible files will
+                be packaged in the ZIP, and large file(s) will automatically
+                download directly in your browser.
+              </span>
+            </div>
+          </div>
+        )}
 
         {/* Cache Exceeded Prompt / Warning */}
         {exceedsCacheLimit && (
@@ -449,14 +523,13 @@ export const DownloadRecordingsModal = ({
                         className="h-6 px-2 text-xxs gap-1 text-primary cursor-pointer shrink-0"
                         onClick={() =>
                           window.open(
-                            getAssetUrl(itemUri),
+                            `https://drive.google.com/uc?export=download&id=${itemUri}`,
                             "_blank",
-                            "noopener,noreferrer",
                           )
                         }
                       >
                         <ExternalLink className="w-3 h-3" />
-                        <span>Download</span>
+                        Download
                       </Button>
                     )}
                   </div>
@@ -474,6 +547,7 @@ export const DownloadRecordingsModal = ({
               hasAudio && selectedAudioIds.has(rec.audio_id as string);
             const isAudioCached =
               hasAudio && cachedAudioIdSet.has(rec.audio_id as string);
+            const isRecOverLimit = isAudioOverLimit(rec);
             const recMaterials = rec.materials ?? [];
 
             return (
@@ -528,10 +602,34 @@ export const DownloadRecordingsModal = ({
                         <Check className="w-3 h-3" /> Cached
                       </span>
                     )}
-                    {hasAudio && (
-                      <span className="text-xxs text-muted-foreground font-medium">
-                        {formatSize(rec.size) || "Audio"}
-                      </span>
+                    {isRecOverLimit ? (
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        <span className="inline-flex items-center text-xxs font-bold text-warning bg-warning/10 px-2 py-0.5 rounded-md">
+                          {formatSize(rec.size)} (Direct)
+                        </span>
+                        <Button
+                          type="button"
+                          variant="ghost"
+                          size="sm"
+                          className="h-6 px-2 text-xxs gap-1 text-primary cursor-pointer shrink-0"
+                          title="Direct download"
+                          onClick={() => {
+                            window.open(
+                              getAssetUrl(rec.audio_id as string),
+                              "_blank",
+                            );
+                          }}
+                        >
+                          <ExternalLink className="w-3 h-3" />
+                          Direct
+                        </Button>
+                      </div>
+                    ) : (
+                      hasAudio && (
+                        <span className="text-xxs text-muted-foreground font-medium">
+                          {formatSize(rec.size) || "Audio"}
+                        </span>
+                      )
                     )}
                   </div>
                 </div>
@@ -541,6 +639,7 @@ export const DownloadRecordingsModal = ({
                   <div className="pl-6 pt-2 border-t border-border/40 flex flex-col gap-1.5">
                     {recMaterials.map((mat) => {
                       const isMatSelected = selectedMaterialIds.has(mat.id);
+                      const isMatOverLimit = isMaterialOverLimit(mat);
                       return (
                         <div
                           key={mat.id}
@@ -578,9 +677,33 @@ export const DownloadRecordingsModal = ({
                             </Tooltip>
                           </div>
 
-                          <span className="text-xxs uppercase tracking-wider opacity-80 shrink-0">
-                            {formatSize(mat.size) || mat.type || "Document"}
-                          </span>
+                          {isMatOverLimit ? (
+                            <div className="flex items-center gap-1.5 shrink-0">
+                              <span className="inline-flex items-center text-xxs font-bold text-warning bg-warning/10 px-2 py-0.5 rounded-md">
+                                {formatSize(mat.size)} (Direct)
+                              </span>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 px-2 text-xxs gap-1 text-primary cursor-pointer shrink-0"
+                                title="Direct download"
+                                onClick={() => {
+                                  const url = mat.uri.startsWith("http")
+                                    ? mat.uri
+                                    : getAssetUrl(mat.uri);
+                                  window.open(url, "_blank");
+                                }}
+                              >
+                                <ExternalLink className="w-3 h-3" />
+                                Direct
+                              </Button>
+                            </div>
+                          ) : (
+                            <span className="text-xxs uppercase tracking-wider opacity-80 shrink-0">
+                              {formatSize(mat.size) || mat.type || "Document"}
+                            </span>
+                          )}
                         </div>
                       );
                     })}

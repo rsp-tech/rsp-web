@@ -110,3 +110,34 @@ export const formatConsultationMessage = (
   ]
     .filter(Boolean)
     .join("\n");
+
+export const parseSize = (size?: unknown): number => {
+  if (size == null) return 0;
+  if (typeof size === "number") {
+    return Number.isFinite(size) ? Math.max(0, size) : 0;
+  }
+  if (typeof size === "string") {
+    const trimmed = size.trim();
+    if (!trimmed) return 0;
+    const parsed = Number(trimmed);
+    return Number.isFinite(parsed) ? Math.max(0, parsed) : 0;
+  }
+  return 0;
+};
+
+export const formatSize = (bytes?: unknown): string => {
+  const num = parseSize(bytes);
+  if (num <= 0) return "";
+  const k = 1024;
+  if (num < k) return `${num}B`;
+  if (num < k * k) {
+    const kb = num / k;
+    return `${Math.round(kb)}kB`;
+  }
+  if (num < k * k * k) {
+    const mb = num / (k * k);
+    return `${mb >= 10 ? Math.round(mb) : mb.toFixed(1).replace(/\.0$/, "")}MB`;
+  }
+  const gb = num / (k * k * k);
+  return `${gb.toFixed(1).replace(/\.0$/, "")}GB`;
+};

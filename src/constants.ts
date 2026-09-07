@@ -16,6 +16,7 @@ export const ASSET_BASE_URL = process.env[
   "NEXT_PUBLIC_ASSET_BASE_URL"
 ] as string;
 export const AUDIO_BASE_URL = process.env["NEXT_PUBLIC_AUDIO_BASE_URL"];
+export const STREAM_LIMIT_BYTES = 100 * 1024 * 1024; // 100MB
 
 // IndexedDB
 export const DB_NAME = "k";

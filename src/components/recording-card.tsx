@@ -3,11 +3,12 @@
 import { Check, FileDown, Loader2, Pause, Play } from "lucide-react";
 import { useEffect, useState } from "react";
 import { SiYoutube } from "react-icons/si";
+import { STREAM_LIMIT_BYTES } from "@/constants";
 import { useAudioPlayback } from "@/hooks/use-audio";
 import { useVideo } from "@/hooks/use-video";
 import { audioEngine } from "@/lib/audio-engine";
 import { getAssetUrl, getAudioUrl } from "@/lib/storage";
-import { cn } from "@/lib/utils";
+import { cn, parseSize } from "@/lib/utils";
 import type { EnrichedRecording } from "@/types";
 import { RecordingMeta } from "./recording-meta";
 import { Button } from "./ui/button";
@@ -21,7 +22,7 @@ interface RecordingCardProps {
 
 const CACHE_NAME = "rsp-audio-cache";
 
-export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
+export const RecordingCard = ({ rec, q, m, onKeyDown }: RecordingCardProps) => {
   const { isPlaying, currentAudioId } = useAudioPlayback();
   const [isCached, setIsCached] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -41,6 +42,7 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
   const isHighlighted = q != null && Number(q) === rec.id;
   const isActiveTrack =
     rec.audio_id !== undefined && currentAudioId === rec.audio_id;
+  const isOverStreamLimit = parseSize(rec.size) > STREAM_LIMIT_BYTES;
 
   const handlePlayClick = async () => {
     if (!rec.audio_id || isLoading) return;
@@ -122,39 +124,41 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
       <div className="flex items-center gap-2 self-stretch md:self-auto justify-end border-t md:border-none border-border pt-2 md:pt-0 shrink-0">
         {rec.audio_id && (
           <>
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handlePlayClick}
-              disabled={isLoading}
-              className="font-bold text-xs cursor-pointer"
-              title={
-                isLoading
-                  ? "Loading..."
-                  : isActiveTrack && isPlaying
-                    ? "Pause Audio"
-                    : "Play Audio"
-              }
-            >
-              {isLoading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : isActiveTrack && isPlaying ? (
-                <Pause className="w-4 h-4" />
-              ) : (
-                <Play className="w-4 h-4" />
-              )}
-              <span>
-                {isLoading
-                  ? "Loading..."
-                  : isActiveTrack && isPlaying
-                    ? "Pause"
-                    : "Play"}
-              </span>
-              {isCached && !isLoading && (
-                <Check className="w-3 h-3 text-success shrink-0" />
-              )}
-            </Button>
+            {!isOverStreamLimit && (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handlePlayClick}
+                disabled={isLoading}
+                className="font-bold text-xs cursor-pointer"
+                title={
+                  isLoading
+                    ? "Loading..."
+                    : isActiveTrack && isPlaying
+                      ? "Pause Audio"
+                      : "Play Audio"
+                }
+              >
+                {isLoading ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : isActiveTrack && isPlaying ? (
+                  <Pause className="w-4 h-4" />
+                ) : (
+                  <Play className="w-4 h-4" />
+                )}
+                <span>
+                  {isLoading
+                    ? "Loading..."
+                    : isActiveTrack && isPlaying
+                      ? "Pause"
+                      : "Play"}
+                </span>
+                {isCached && !isLoading && (
+                  <Check className="w-3 h-3 text-success shrink-0" />
+                )}
+              </Button>
+            )}
 
             <Button
               type="button"
@@ -186,4 +190,4 @@ export function RecordingCard({ rec, q, m, onKeyDown }: RecordingCardProps) {
       </div>
     </div>
   );
-}
+};
