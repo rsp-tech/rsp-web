@@ -89,8 +89,8 @@ export const AudioCacheSettings = () => {
               Cache Study Materials
             </label>
             <span className="text-xxs text-muted-foreground leading-snug">
-              Save documents and handouts locally for offline access and faster
-              ZIP packaging.
+              Save documents and handouts locally to optimize future downloads
+              and batch ZIP packaging.
             </span>
           </div>
         </div>
@@ -98,12 +98,22 @@ export const AudioCacheSettings = () => {
         {/* Materials Disclaimer */}
         <div className="p-3 bg-muted/20 border border-border rounded-xl flex items-start gap-2 text-xxs text-muted-foreground leading-snug">
           <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-          <span>
-            <strong>Note:</strong> While some document formats cannot be
-            previewed directly in-browser, cached materials can always be
-            downloaded offline or bundled into batch archives without
-            re-fetching.
-          </span>
+          <div className="flex flex-col gap-1.5">
+            <span>
+              <strong className="text-foreground">Audio Caching:</strong> Once
+              an audio lecture is cached, it plays completely offline and is not
+              downloaded again.
+            </span>
+            <span>
+              <strong className="text-foreground">
+                Materials Preview &amp; Cache:
+              </strong>{" "}
+              Material previews use an embedded iframe, which{" "}
+              <em>always requires an active internet connection</em>. Local
+              caching does not enable offline in-browser preview; it helps only
+              to optimize and accelerate future file and batch ZIP downloads.
+            </span>
+          </div>
         </div>
 
         {quotaMB > 0 && (
