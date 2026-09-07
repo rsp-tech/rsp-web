@@ -1,15 +1,8 @@
 import type { IDBPDatabase } from "idb";
-import { META_KEY, STORE, USER_SPECIFIC_TABLES } from "@/constants";
+import { META_KEY, ROLE_SYNCED_TABLES, STORE, USER_SPECIFIC_TABLES } from "@/constants";
 import type { RSP_IDB } from "@/lib/idb";
 
-type CleanupTable = "categories" | "recordings" | "materials";
-
-// Leaf-to-root reverse order: materials -> recordings -> categories
-const ROLE_TABLES: CleanupTable[] = [
-  STORE.MATERIALS,
-  STORE.RECORDINGS,
-  STORE.CATEGORIES,
-];
+type CleanupTable = (typeof ROLE_SYNCED_TABLES)[number];
 
 const isAllowed = (
   allowedRoles: number[] | undefined,
@@ -64,7 +57,7 @@ export const performRoleCleanup = async (
   }
 
   if (storedRole !== roleId) {
-    for (const t of ROLE_TABLES) {
+    for (const t of ROLE_SYNCED_TABLES) {
       await cleanupTable(db, t, roleId);
     }
     await db.clear(STORE.ROLE_SYNC_META);
