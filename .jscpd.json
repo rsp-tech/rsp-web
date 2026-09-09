@@ -4,6 +4,7 @@
     "**/node_modules/**",
     "**/.next/**",
     "**/pnpm-lock.yaml",
-    "**/*.test.*"
+    "**/*.test.*",
+    "**/*.svg"
   ]
 }
