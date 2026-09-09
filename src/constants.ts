@@ -216,6 +216,7 @@ export const SYNC_COLUMNS = {
     start_date,
     end_date,
     is_annual_recurring,
+    ui_props,
     is_active,
     order_ind
   `,

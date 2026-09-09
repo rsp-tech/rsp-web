@@ -32,6 +32,7 @@ export type Database = {
           start_date: string | null;
           subtitle: string | null;
           title: string;
+          ui_props?: Json | null;
           updated_at: string | null;
         };
         Insert: {
@@ -51,6 +52,7 @@ export type Database = {
           start_date?: string | null;
           subtitle?: string | null;
           title: string;
+          ui_props?: Json | null;
           updated_at?: string | null;
         };
         Update: {
@@ -70,6 +72,7 @@ export type Database = {
           start_date?: string | null;
           subtitle?: string | null;
           title?: string;
+          ui_props?: Json | null;
           updated_at?: string | null;
         };
         Relationships: [];
