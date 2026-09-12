@@ -1,5 +1,10 @@
 import type { IDBPDatabase } from "idb";
-import { META_KEY, ROLE_SYNCED_TABLES, STORE, USER_SPECIFIC_TABLES } from "@/constants";
+import {
+  META_KEY,
+  ROLE_SYNCED_TABLES,
+  STORE,
+  USER_SPECIFIC_TABLES,
+} from "@/constants";
 import type { RSP_IDB } from "@/lib/idb";
 
 type CleanupTable = (typeof ROLE_SYNCED_TABLES)[number];
