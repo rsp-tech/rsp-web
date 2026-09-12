@@ -31,5 +31,6 @@ This version has breaking changes — APIs, conventions, and file structure may 
 - **Design**: Mobile-first layouts. Use adaptive UX components (e.g., bottom sheets/drawers on mobile, standard dialogs on desktop).
 - **Styling**: **Never hardcode color tokens** (e.g., `bg-zinc-50`). Use semantic CSS variables (`bg-background`, `text-destructive`).
 - **Theming**: Support dynamic runtime theme-swapping (`monk`, `clean`, `dark`, `compact`) via `globals.css` variable updates.
+- **Shadcn & CSS Variables**: When adding a new Shadcn component (or when appropriate), check whether all corresponding CSS variables it relies on are defined in `globals.css` across all themes. If a required variable is missing or has been consolidated/eliminated, prompt the user for which class to use instead, e.g., card instead of popover.
 - **Feedback**: Implement robust loading feedback. Use `sonner` toasts for background sync progress, and skeletons/shimmers for content hydration states.
 - **Performance**: Ensure best coding practices and performance. e.g., prefer utility functions out side the render function, do not use huge context, use react query effectively, etc.

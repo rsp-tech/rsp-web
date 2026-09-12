@@ -13,7 +13,7 @@ export const CategoryHero = () => {
         <BookOpen className="w-4 h-4" />
         <span>Vedic Wisdom Online</span>
       </div>
-      <h1 className="text-4xl sm:text-5xl font-bold font-heading tracking-tight max-w-2xl leading-tight">
+      <h1 className="text-3xl sm:text-5xl font-bold font-heading tracking-tight max-w-2xl leading-tight">
         Spiritual Discourses by{" "}
         <span className="text-primary" style={{ whiteSpace: "nowrap" }}>
           HG Radheshyam Das

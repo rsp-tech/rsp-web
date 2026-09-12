@@ -58,7 +58,7 @@ export const AudioCacheSettings = () => {
           <select
             value={settings.maxCacheSizeMB}
             onChange={handleSizeChange}
-            className="w-full px-3 py-2 border border-border rounded-lg bg-background text-sm focus:outline-hidden focus:ring-1 focus:ring-primary focus:bg-accent focus:text-accent-foreground"
+            className="w-full px-3 py-2 border border-border rounded-lg bg-background text-sm focus:outline-none focus:ring-1 focus:ring-primary focus:bg-accent focus:text-accent-foreground"
           >
             <option value="200">200 MB (Min Limit)</option>
             <option value="500">500 MB</option>

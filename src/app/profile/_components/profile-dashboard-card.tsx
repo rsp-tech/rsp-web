@@ -31,7 +31,7 @@ export function ProfileDashboardCard({
         style={{ marginTop: "-2.5rem" }}
       >
         <div
-          className="rounded-full bg-card border-2 border-primary flex items-center justify-center text-primary font-bold text-2xl shadow-md mb-4"
+          className="rounded-full bg-card border border-primary flex items-center justify-center text-primary font-bold text-2xl shadow-md mb-4"
           style={{ height: "5rem", width: "5rem" }}
         >
           {fullName
@@ -67,7 +67,10 @@ export function ProfileDashboardCard({
               </span>
             )}
             {ashram && (
-              <span className="font-bold bg-muted px-2.5 py-0.5 rounded-full capitalize">
+              <span
+                className="font-bold bg-muted px-2.5 py-0.5 rounded-full"
+                style={{ textTransform: "capitalize" }}
+              >
                 {ashram}
               </span>
             )}

@@ -162,14 +162,14 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
 
         {/* Divider */}
         <div className="relative flex py-1 items-center">
-          <div className="flex-grow border-t border-border" />
+          <div className="grow border-t border-border" />
           <span
-            className="flex-shrink text-xs text-muted-foreground font-medium"
+            className="shrink-0 text-xs text-muted-foreground font-medium"
             style={{ marginInline: "1rem" }}
           >
             or continue with
           </span>
-          <div className="flex-grow border-t border-border" />
+          <div className="grow border-t border-border" />
         </div>
 
         {/* Google */}
@@ -215,7 +215,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
             variant="link"
             size="xs"
             onClick={() => setIsSignUp(!isSignUp)}
-            className="font-bold px-0"
+            className="font-bold p-0"
           >
             {isSignUp ? "Log In" : "Sign Up"}
           </Button>

@@ -123,7 +123,7 @@ export default function UserQueriesPage() {
 
   if (!session) {
     return (
-      <div className="max-w-2xl mx-auto py-24 text-center flex flex-col items-center gap-6">
+      <div className="max-w-2xl mx-auto py-16 text-center flex flex-col items-center gap-6">
         <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary">
           <MessageSquare className="w-8 h-8" />
         </div>
@@ -235,7 +235,10 @@ export default function UserQueriesPage() {
             status.
           </CardDescription>
         </CardHeader>
-        <CardContent className="pt-6 flex flex-col gap-6">
+        <CardContent
+          className="flex flex-col gap-6"
+          style={{ paddingTop: "1.5rem" }}
+        >
           <QueryFilters
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}

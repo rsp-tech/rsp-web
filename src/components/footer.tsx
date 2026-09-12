@@ -4,7 +4,7 @@ import { NavLinks } from "./nav-links";
 
 export function Footer() {
   return (
-    <footer className="w-full border-t border-border bg-background/50 text-card-foreground mt-auto">
+    <footer className="w-full border-t border-border bg-background/50 text-foreground mt-auto">
       <div
         className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6"
         style={{ padding: "2rem 1rem" }}

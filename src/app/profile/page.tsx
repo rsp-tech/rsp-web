@@ -88,7 +88,7 @@ export default function ProfilePage() {
 
   if (!session) {
     return (
-      <div className="max-w-2xl mx-auto py-24 text-center flex flex-col items-center gap-6">
+      <div className="max-w-2xl mx-auto py-16 text-center flex flex-col items-center gap-6">
         <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center text-primary">
           <User className="w-8 h-8" />
         </div>
@@ -141,7 +141,7 @@ export default function ProfilePage() {
         {/* Right Column: Settings & Requests */}
         <div className="lg:col-span-2 flex flex-col gap-8">
           {pendingRequest && (
-            <div className="bg-warning/10 border border-warning/20 rounded-lg p-4 text-sm text-warning-foreground flex gap-3 items-start shadow-md">
+            <div className="bg-warning/10 border border-warning/20 rounded-lg p-4 text-sm text-warning flex gap-3 items-start shadow-md">
               <Clock className="w-5 h-5 mt-0.5 shrink-0 text-warning" />
               <div className="flex flex-col gap-1">
                 <p className="font-semibold">Update Request Pending Approval</p>

@@ -248,7 +248,7 @@ export function PersonalSettingsForm({
               checked={isVoiceLeader}
               onChange={(e) => setIsVoiceLeader(e.target.checked)}
               disabled={hasPendingRequest}
-              className="mt-0.5 h-4 w-4 rounded border-input text-primary focus:ring-primary cursor-pointer disabled:opacity-60"
+              className="mt-0.5 h-4 w-4 rounded-md border-input text-primary focus:ring-primary cursor-pointer disabled:opacity-60"
             />
             <div className="flex flex-col gap-1">
               <Label

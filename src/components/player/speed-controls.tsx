@@ -21,7 +21,7 @@ export const SpeedControlPopover = () => {
         </Button>
       </PopoverTrigger>
       <PopoverContent
-        className="p-2 flex flex-col gap-1 bg-popover"
+        className="p-2 flex flex-col gap-1 bg-card"
         align="center"
         side="top"
         style={{ width: "8rem" }}

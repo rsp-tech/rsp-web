@@ -12,7 +12,7 @@ function Command({
     <CommandPrimitive
       data-slot="command"
       className={cn(
-        "flex size-full flex-col overflow-hidden rounded-xl! bg-popover p-1 text-popover-foreground",
+        "flex w-full h-full flex-col overflow-hidden rounded-xl bg-card p-1 text-foreground",
         className,
       )}
       {...props}
@@ -34,7 +34,7 @@ function CommandInput({
       <CommandPrimitive.Input
         data-slot="command-input"
         className={cn(
-          "w-full text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-60",
+          "w-full text-sm outline-none disabled:cursor-not-allowed disabled:opacity-60",
           className,
         )}
         {...props}
@@ -94,7 +94,7 @@ function CommandItem({
     <CommandPrimitive.Item
       data-slot="command-item"
       className={cn(
-        "group/command-item relative flex items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-hidden select-none data-selected:bg-muted",
+        "group/command-item relative flex items-center gap-2 rounded-md px-2 py-1.5 text-sm outline-none select-none data-selected:bg-muted",
         className,
       )}
       {...props}

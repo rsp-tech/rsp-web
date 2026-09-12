@@ -39,7 +39,7 @@ export const VolunteerItem = ({
   return (
     <Card
       className={cn(
-        "transition-all duration-200 border-2",
+        "transition-all duration-200 border",
         isChecked ? "border-primary bg-primary/5 shadow-md" : "border-border",
       )}
     >

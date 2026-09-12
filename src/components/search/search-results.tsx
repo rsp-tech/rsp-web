@@ -135,7 +135,7 @@ export function SearchResults({
                       });
                       onSelectRecording(rec);
                     }}
-                    className="relative w-full text-left flex gap-2 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all border border-transparent hover:border-border cursor-pointer opacity-0"
+                    className="relative w-full text-left flex gap-2 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none transition-all border border-transparent hover:border-border cursor-pointer opacity-0"
                     style={{
                       animation:
                         "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
@@ -190,7 +190,7 @@ export function SearchResults({
                         });
                         onSelectCategory(cat);
                       }}
-                      className="w-full text-left justify-start gap-2 flex items-center px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all cursor-pointer opacity-0"
+                      className="w-full text-left justify-start gap-2 flex items-center px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none transition-all cursor-pointer opacity-0"
                       style={{
                         animation:
                           "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
@@ -244,7 +244,7 @@ export function SearchResults({
                       });
                       onSelectMaterial(mat);
                     }}
-                    className="w-full text-left flex flex-col gap-1 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-hidden transition-all cursor-pointer opacity-0"
+                    className="w-full text-left flex flex-col gap-1 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none transition-all cursor-pointer opacity-0"
                     style={{
                       animation:
                         "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",

@@ -112,7 +112,7 @@ export const RecordingCard = ({ rec, q, m, onKeyDown }: RecordingCardProps) => {
       data-recording-item
       onKeyDown={onKeyDown}
       className={cn(
-        "p-4 border rounded-2xl shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-2 group focus:ring-1 focus:ring-primary focus:outline-hidden transition-all duration-200 ease-in-out",
+        "p-4 border rounded-2xl shadow-md flex flex-col md:flex-row justify-between items-start md:items-center gap-2 group focus:ring-1 focus:ring-primary focus:outline-none transition-all duration-200 ease-in-out",
         isHighlighted
           ? "border-primary bg-primary/5 ring-1 ring-primary"
           : "border-border bg-card hover:shadow-md",
@@ -179,7 +179,7 @@ export const RecordingCard = ({ rec, q, m, onKeyDown }: RecordingCardProps) => {
             type="button"
             variant="destructive"
             size="sm"
-            className="font-bold text-xs cursor-pointer bg-red-600 hover:bg-red-700 text-white border-transparent"
+            className="font-bold text-xs cursor-pointer bg-destructive text-white border-transparent"
             title="Watch on YouTube"
             onClick={() => setYt(rec.yt_id ?? "", rec.name)}
           >

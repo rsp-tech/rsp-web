@@ -72,7 +72,10 @@ export function QueryFilters({
         </div>
       </div>
 
-      <div className="w-full border-t border-border my-2" />
+      <div
+        className="w-full border-t border-border"
+        style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}
+      />
 
       {/* Tabs for Ticket State (All, Active, Closed) */}
       <div className="flex items-center justify-between gap-4 mb-2">
@@ -82,7 +85,10 @@ export function QueryFilters({
           onValueChange={onStatusChange}
           style={{ width: "20rem" }}
         >
-          <TabsList className="grid grid-cols-3 w-full">
+          <TabsList
+            className="grid w-full"
+            style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}
+          >
             <TabsTrigger type="button" value="all" className="cursor-pointer">
               All
             </TabsTrigger>

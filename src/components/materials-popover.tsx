@@ -21,7 +21,7 @@ export function MaterialsPopover({
       <PopoverContent
         align="start"
         side="top"
-        className="flex flex-col gap-2 p-3 bg-popover border border-border shadow-md rounded-xl z-50"
+        className="flex flex-col gap-2 p-3 bg-card border border-border shadow-md rounded-xl z-50"
         style={{ width: "20rem", maxWidth: "calc(100vw - 2rem)" }}
       >
         <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground pb-1 border-b border-border">

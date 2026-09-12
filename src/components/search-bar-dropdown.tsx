@@ -94,7 +94,10 @@ export const SearchBarDropdownContent = ({
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div
+            className="grid gap-3"
+            style={{ gridTemplateColumns: "repeat(2, minmax(0, 1fr))" }}
+          >
             {/* Speaker select */}
             <div className="flex flex-col gap-1">
               <Label className="text-xxs font-bold text-muted-foreground uppercase">

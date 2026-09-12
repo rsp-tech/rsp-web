@@ -104,7 +104,7 @@ export const VideoSanctuaryClient = ({
             placeholder="Search discourses..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm rounded-lg border border-border bg-card placeholder:text-muted-foreground focus:outline-hidden focus:ring-1 focus:ring-primary transition-all"
+            className="w-full pl-9 pr-4 py-2 text-xs sm:text-sm rounded-lg border border-border bg-card placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-primary transition-all"
           />
         </div>
       </div>

@@ -293,7 +293,8 @@ export const ContactUsClient = () => {
                   <Button
                     size="sm"
                     variant="link"
-                    className="h-auto p-0 font-bold gap-1 text-primary hover:text-primary/80 self-start sm:self-center shrink-0 cursor-pointer"
+                    className="p-0 font-bold gap-1 text-primary hover:text-primary/80 self-start sm:self-center shrink-0 cursor-pointer"
+                    style={{ height: "auto" }}
                     onClick={() => router.push("/queries")}
                   >
                     <span>View Queries</span>
@@ -452,7 +453,7 @@ export const ContactUsClient = () => {
                         onChange={(e) =>
                           consult.setEngagementType(e.target.value)
                         }
-                        className="h-9 px-3 rounded-lg bg-muted border border-input text-sm text-foreground focus:outline-hidden focus:ring-1 focus:ring-primary"
+                        className="h-9 px-3 rounded-lg bg-muted border border-input text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
                       >
                         {ENGAGEMENT_TYPES.map((type) => (
                           <option key={type} value={type}>
