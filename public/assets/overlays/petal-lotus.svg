@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" aria-label="Lotus Petal">
+  <defs>
+    <linearGradient id="lotusPetalGrad" x1="16" y1="4" x2="16" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F472B6"/>
+      <stop offset="50%" stop-color="#FDF2F8"/>
+      <stop offset="100%" stop-color="#FBCFE8"/>
+    </linearGradient>
+  </defs>
+  <path d="M16 4C10 12 8 20 12 26C16 29 20 28 22 24C25 18 22 10 16 4Z" fill="url(#lotusPetalGrad)" opacity="0.95"/>
+  <path d="M16 6C14 13 14 20 16 26" stroke="#EC4899" stroke-width="0.8" opacity="0.6"/>
+</svg>

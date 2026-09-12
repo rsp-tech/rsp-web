@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" aria-label="Rose Petal">
+  <defs>
+    <linearGradient id="roseGrad" x1="16" y1="4" x2="16" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#E11D48"/>
+      <stop offset="60%" stop-color="#BE123C"/>
+      <stop offset="100%" stop-color="#881337"/>
+    </linearGradient>
+  </defs>
+  <path d="M16 4C9 8 8 18 11 24C14 29 22 28 24 22C26 16 23 8 16 4Z" fill="url(#roseGrad)" opacity="0.95"/>
+  <path d="M16 6C14 12 15 20 18 25" stroke="#FDA4AF" stroke-width="0.8" opacity="0.5"/>
+</svg>

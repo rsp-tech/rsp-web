@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" aria-label="Jasmine Flower">
+  <defs>
+    <linearGradient id="jasmineGrad" x1="16" y1="6" x2="16" y2="26" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="70%" stop-color="#F9FAFB"/>
+      <stop offset="100%" stop-color="#FEF08A"/>
+    </linearGradient>
+  </defs>
+  <!-- 5-petaled small white flower star -->
+  <path d="M16 6C17 11 18 13 22 12C18 15 17 17 20 21C16 19 14 19 12 22C13 18 12 15 8 15C12 13 13 11 16 6Z" fill="url(#jasmineGrad)" opacity="0.95"/>
+  <circle cx="15.5" cy="15.5" r="2" fill="#FBBF24"/>
+</svg>

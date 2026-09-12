@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none" aria-label="Marigold Petal">
+  <defs>
+    <linearGradient id="marigoldGrad" x1="16" y1="4" x2="16" y2="28" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="50%" stop-color="#FDE047"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </linearGradient>
+  </defs>
+  <path d="M16 4C11 9 10 18 13 24C16 28 20 27 22 23C24 17 21 8 16 4Z" fill="url(#marigoldGrad)" opacity="0.95"/>
+  <path d="M16 6C15 12 15 19 17 25" stroke="#D97706" stroke-width="0.8" opacity="0.7"/>
+</svg>
