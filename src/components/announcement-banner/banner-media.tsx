@@ -22,6 +22,8 @@ export const BannerMedia = ({
   const isGif = item.media_type === "gif";
   const imageLoading = isActive ? "eager" : "lazy";
 
+  const maxWidth = "1600px";
+
   return (
     <div className="absolute inset-0 w-full h-full overflow-hidden pointer-events-none">
       {/* Blurred background underlay for ultrawide / large screens */}
@@ -56,7 +58,7 @@ export const BannerMedia = ({
               className="w-full h-full object-cover"
               style={{
                 objectPosition: focalPoint,
-                maxWidth: "1440px",
+                maxWidth,
                 margin: "0 auto",
               }}
               src={getBannerRawMediaUrl(mediaPath)}
@@ -73,7 +75,7 @@ export const BannerMedia = ({
               className="w-full h-full object-cover"
               style={{
                 objectPosition: focalPoint,
-                maxWidth: "1440px",
+                maxWidth,
                 margin: "0 auto",
               }}
             />
@@ -86,7 +88,7 @@ export const BannerMedia = ({
             className="w-full h-full object-cover"
             style={{
               objectPosition: focalPoint,
-              maxWidth: "1440px",
+              maxWidth,
               margin: "0 auto",
             }}
           />
@@ -113,7 +115,7 @@ export const BannerMedia = ({
               className="w-full h-full object-cover"
               style={{
                 objectPosition: focalPoint,
-                maxWidth: "1600px",
+                maxWidth,
                 margin: "0 auto",
               }}
             />

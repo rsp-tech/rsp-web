@@ -29,7 +29,7 @@ export function Header() {
         {/* Brand */}
         <Link
           href="/"
-          className="flex items-center gap-1.5 sm:gap-2 hover:opacity-95 transition-all shrink-0"
+          className="flex items-center gap-1.5 sm:gap-2 transition-all shrink-0"
           aria-label="Home"
           prefetch={false}
         >

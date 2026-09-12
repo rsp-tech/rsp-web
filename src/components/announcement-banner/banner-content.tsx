@@ -1,11 +1,15 @@
+"use client";
+
 import { Sparkles } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import { getAssetById } from "@/lib/asset-registry";
 import type { BannerContentProps } from "./banner-types";
 
 export const BannerContent = ({ item }: BannerContentProps) => {
   const motif = getAssetById(item.ui_props?.motif_id);
+  const isMobile = useIsMobile();
   const motifPlacement = item.ui_props?.motif_placement || "badge_prefix";
   const layout = item.ui_props?.layout;
   const isStacked = layout?.stack ?? false;
@@ -39,7 +43,7 @@ export const BannerContent = ({ item }: BannerContentProps) => {
       style={
         isCtaBottomRight
           ? {
-              right: "3.25rem",
+              right: "0.5rem",
               bottom: "0.5rem",
               zIndex: 10,
             }
@@ -48,12 +52,7 @@ export const BannerContent = ({ item }: BannerContentProps) => {
             : undefined
       }
     >
-      <Button
-        asChild
-        size="sm"
-        className="font-semibold text-xs px-3 py-1 transition-all hover:opacity-95 cursor-pointer"
-        style={{ backgroundColor: "#ffffff", color: "#18181b" }}
-      >
+      <Button asChild size="sm">
         <Link href={item.cta_url || "#"}>
           <span>{item.cta_label}</span>
         </Link>
@@ -63,9 +62,9 @@ export const BannerContent = ({ item }: BannerContentProps) => {
 
   return (
     <div
-      className="relative z-10 flex flex-col w-full h-full flex-1 justify-center"
+      className="z-10 flex flex-col w-full h-full flex-1 justify-center"
       style={{
-        maxWidth: "1440px",
+        maxWidth: isMobile ? "calc(100% - 0.5rem)" : "1600px",
         margin: "0 auto",
       }}
     >

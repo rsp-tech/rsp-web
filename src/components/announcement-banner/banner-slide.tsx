@@ -86,7 +86,7 @@ export const BannerSlide = ({
 
       {/* Dynamic Additive Elements / Motif */}
       {(isActive || isAdjacent) &&
-        (item.ui_props?.elements && item.ui_props.elements.length > 0 ? (
+        (item.ui_props?.elements?.length ? (
           <BannerElementRenderer elements={item.ui_props.elements} />
         ) : motif && motifPlacement === "banner_right" ? (
           <div

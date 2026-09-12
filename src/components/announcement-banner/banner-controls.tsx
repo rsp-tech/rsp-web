@@ -70,7 +70,7 @@ export const BannerControls = ({
       )}
 
       {/* Dismiss Button */}
-      <div className="absolute right-3 top-1/2 -translate-y-1/2 z-10">
+      <div className="absolute right-3 top-3 z-10">
         <Button
           size="icon"
           variant="ghost"
