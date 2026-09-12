@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" fill="none">
+  <defs>
+    <radialGradient id="flameGlow" cx="50%" cy="40%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="25%" stop-color="#FEF08A"/>
+      <stop offset="60%" stop-color="#F59E0B" stop-opacity="0.9"/>
+      <stop offset="90%" stop-color="#EA580C" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#D97706" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="clayBase" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#C2410C"/>
+      <stop offset="100%" stop-color="#7C2D12"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Radiant Warm Aura -->
+  <circle cx="30" cy="22" r="20" fill="url(#flameGlow)"/>
+
+  <!-- Clay Diya Base -->
+  <path d="M12 36 C12 48, 48 48, 48 36 C50 34, 46 32, 38 34 C34 35, 26 35, 22 34 C14 32, 10 34, 12 36 Z" fill="url(#clayBase)" stroke="#431407" stroke-width="1"/>
+  <!-- Diya Rim with warm oil reflection -->
+  <ellipse cx="30" cy="35" rx="16" ry="3.5" fill="#EA580C" stroke="#FEF08A" stroke-width="0.6" stroke-dasharray="1 2"/>
+
+  <!-- Flame (Ghee Lamp Flame with Pointed Tip) -->
+  <path d="M30 10 C34 18, 38 24, 34 30 C32 33, 28 33, 26 30 C22 24, 26 18, 30 10 Z" fill="#FBBF24"/>
+  <!-- Inner Bright White-Hot Core -->
+  <path d="M30 15 C32 20, 34 24, 32 28 C31 30, 29 30, 28 28 C26 24, 28 20, 30 15 Z" fill="#FFFFFF"/>
+</svg>
