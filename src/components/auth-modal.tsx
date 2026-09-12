@@ -95,7 +95,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
               Email Address
             </label>
             <div className="relative">
-              <Mail className="absolute left-3 top-2 w-4 h-4 text-muted-foreground" />
+              <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 id="auth-email"
                 type="email"
@@ -116,7 +116,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
               Password
             </label>
             <div className="relative">
-              <Lock className="absolute left-3 top-2 w-4 h-4 text-muted-foreground" />
+              <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
               <Input
                 id="auth-password"
                 type={showPassword ? "text" : "password"}

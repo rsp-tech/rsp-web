@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { AdminFeatureFlagBar } from "@/components/admin-feature-flag-bar";
+import { FestiveOverlays } from "@/components/festive-overlays";
 import { OfflineIndicator } from "@/components/offline-indicator";
 import { ProgressBar } from "@/components/progress-bar";
 import { SyncTrigger } from "@/components/sync-trigger";
@@ -24,6 +25,7 @@ export const LayoutInitializers = () => {
       <ProgressBar />
       <MediaPreviewModal />
       <AdminFeatureFlagBar />
+      <FestiveOverlays />
     </>
   );
 };

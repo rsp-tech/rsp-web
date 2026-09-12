@@ -20,6 +20,7 @@ vi.mock("./announcement-banner/use-announcement-carousel", () => ({
 
 import {
   AnnouncementBanner,
+  GRADIENT_STYLES,
   getBannerMediaUrl,
   getBannerRawMediaUrl,
   isExternalUrl,
@@ -133,12 +134,16 @@ describe.concurrent("src/components/announcement-banner suite", () => {
       expect(tree?.props["aria-roledescription"]).toBe("carousel");
       expect(tree?.props["aria-label"]).toBe("Announcements & Highlights");
 
-      // Verify dynamic minHeight applied directly on container style without dynamic <style> injection
-      expect(tree?.props.style.minHeight).toBeDefined();
+      // Verify data-announcement-section attribute and style element for responsive heights
+      expect(tree?.props["data-announcement-section"]).toBeDefined();
+      const styleChild = tree?.props.children[0];
+      expect(styleChild.type).toBe("style");
+      expect(styleChild.props.children).toContain(
+        "[data-announcement-section]",
+      );
 
       // Verify live region exists in tree
-      const children = tree?.props.children;
-      const liveRegion = children[0];
+      const liveRegion = tree?.props.children[1];
       expect(liveRegion.props["aria-live"]).toBe("polite");
       expect(liveRegion.props["aria-atomic"]).toBe("true");
     });
@@ -177,6 +182,65 @@ describe.concurrent("src/components/announcement-banner suite", () => {
 
       expect(inactiveSlide.props["aria-hidden"]).toBe(true);
       expect(inactiveSlide.props.inert).toBe(true);
+    });
+
+    it.concurrent("handles gradient overlay accurately for none, black_vignette and presets", () => {
+      const baseItem = mockAnnouncements[0];
+      if (!baseItem) throw new Error("Missing mock announcement");
+
+      // Case 1: none -> No overlay
+      const noneSlide = BannerSlide({
+        item: { ...baseItem, bg_gradient: "none" },
+        index: 0,
+        total: 1,
+        isActive: true,
+        isAdjacent: false,
+        prefersReducedMotion: false,
+      });
+      // The second child of BannerSlide is the overlay
+      expect(noneSlide.props.children[1]).toBeNull();
+
+      // Case 2: null -> No overlay
+      const nullSlide = BannerSlide({
+        item: { ...baseItem, bg_gradient: null },
+        index: 0,
+        total: 1,
+        isActive: true,
+        isAdjacent: false,
+        prefersReducedMotion: false,
+      });
+      expect(nullSlide.props.children[1]).toBeNull();
+
+      // Case 3: black_vignette -> Black gradient overlay
+      const vignetteSlide = BannerSlide({
+        item: { ...baseItem, bg_gradient: "black_vignette" },
+        index: 0,
+        total: 1,
+        isActive: true,
+        isAdjacent: false,
+        prefersReducedMotion: false,
+      });
+      expect(vignetteSlide.props.children[1]).not.toBeNull();
+      expect(vignetteSlide.props.children[1]?.props.style.background).toContain(
+        "linear-gradient(to right, rgba(0,0,0,0.85)",
+      );
+
+      // Case 4: Preset gradient
+      const presetSlide = BannerSlide({
+        item: {
+          ...baseItem,
+          bg_gradient: "from-amber-600/90 via-orange-600/80 to-amber-700/90",
+        },
+        index: 0,
+        total: 1,
+        isActive: true,
+        isAdjacent: false,
+        prefersReducedMotion: false,
+      });
+      expect(presetSlide.props.children[1]).not.toBeNull();
+      expect(presetSlide.props.children[1]?.props.style.background).toBe(
+        GRADIENT_STYLES["from-amber-600/90 via-orange-600/80 to-amber-700/90"],
+      );
     });
   });
 

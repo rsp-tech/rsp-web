@@ -32,7 +32,7 @@ const PETAL_ASSETS = [
 
 export const PushpaVrishtiOverlay = () => {
   const initParticles = useCallback((w: number, h: number) => {
-    const count = Math.min(45, Math.floor((w * h) / 25000));
+    const count = Math.min(200, Math.floor((w * h) / 2500));
     const list: PetalParticle[] = [];
 
     for (let i = 0; i < count; i++) {

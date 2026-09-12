@@ -46,6 +46,49 @@ export type Faq = Tables<"faqs">;
 export type FeaturedSection = Tables<"featured_sections">;
 export type FeaturedItem = Tables<"featured_items">;
 
+import type { BannerElement } from "@/lib/asset-registry";
+
+export type { BannerElement };
+
+export interface ResponsiveBannerHeights {
+  mobile: number;
+  tablet: number;
+  desktop: number;
+  ultrawide: number;
+}
+
+export interface AnnouncementContentLayout {
+  stack?: boolean;
+  align?: "left" | "center" | "right";
+  valign?: "top" | "center" | "bottom";
+  cta?: "auto" | "below" | "right" | "bottom_right";
+  maxWidth?: "sm" | "md" | "lg" | "full";
+}
+
+export interface AnnouncementUIProps {
+  focal_point?: { x: number; y: number } | null;
+  layout?: AnnouncementContentLayout | null;
+  elements?: BannerElement[] | null;
+  motif_id?: string | null;
+  motif_placement?: "badge_prefix" | "banner_right" | "floating_edge" | null;
+  overlay_theme?:
+    | "none"
+    | "pushpa_vrishti"
+    | "deepotsava"
+    | "celestial_dust"
+    | null;
+  event_key?: string | null;
+  floating_greeting?: {
+    enabled: boolean;
+    text?: string;
+    icon?: string;
+    action_label?: string;
+  } | null;
+  video_poster?: string | null;
+  banner_height?: number | ResponsiveBannerHeights | null;
+  alt_text?: string | null;
+}
+
 export interface Announcement {
   id: number;
   title: string;
@@ -69,6 +112,7 @@ export interface Announcement {
   is_active?: boolean | null;
   order_ind?: number | null;
   updated_at?: string | null;
+  ui_props?: AnnouncementUIProps | null;
 }
 
 export interface EnrichedFeaturedItem {
