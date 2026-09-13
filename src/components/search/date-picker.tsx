@@ -2,7 +2,7 @@
 
 import { format } from "date-fns";
 import { Calendar as CalendarIcon } from "lucide-react";
-import * as React from "react";
+import { useMemo } from "react";
 import type { DateRange } from "react-day-picker";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -28,7 +28,7 @@ export function DateRangePicker({
   placeholder,
   className,
 }: DateRangePickerProps) {
-  const selectedRange = React.useMemo<DateRange | undefined>(() => {
+  const selectedRange = useMemo<DateRange | undefined>(() => {
     const from = startDate ? new Date(startDate) : undefined;
     const to = endDate ? new Date(endDate) : undefined;
     return { from, to };

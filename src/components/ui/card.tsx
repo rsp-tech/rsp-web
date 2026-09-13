@@ -1,9 +1,8 @@
 import { cva, type VariantProps } from "class-variance-authority";
-import * as React from "react";
-
+import { type ComponentProps, createContext, useContext } from "react";
 import { cn } from "@/lib/utils";
 
-const CardContext = React.createContext<{
+const CardContext = createContext<{
   size?: "default" | "sm" | null;
 }>({
   size: "default",
@@ -28,7 +27,7 @@ function Card({
   className,
   size = "default",
   ...props
-}: React.ComponentProps<"div"> & VariantProps<typeof cardVariants>) {
+}: ComponentProps<"div"> & VariantProps<typeof cardVariants>) {
   return (
     <CardContext.Provider value={{ size }}>
       <div
@@ -56,8 +55,8 @@ const cardHeaderVariants = cva(
   },
 );
 
-function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
-  const { size } = React.useContext(CardContext);
+function CardHeader({ className, ...props }: ComponentProps<"div">) {
+  const { size } = useContext(CardContext);
   return (
     <div
       data-slot="card-header"
@@ -79,8 +78,8 @@ const cardTitleVariants = cva("font-heading leading-snug font-medium", {
   },
 });
 
-function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
-  const { size } = React.useContext(CardContext);
+function CardTitle({ className, ...props }: ComponentProps<"div">) {
+  const { size } = useContext(CardContext);
   return (
     <div
       data-slot="card-title"
@@ -90,7 +89,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   );
 }
 
-function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
+function CardDescription({ className, ...props }: ComponentProps<"div">) {
   return (
     <div
       data-slot="card-description"
@@ -112,8 +111,8 @@ const cardContentVariants = cva("px-4", {
   },
 });
 
-function CardContent({ className, ...props }: React.ComponentProps<"div">) {
-  const { size } = React.useContext(CardContext);
+function CardContent({ className, ...props }: ComponentProps<"div">) {
+  const { size } = useContext(CardContext);
   return (
     <div
       data-slot="card-content"
@@ -138,8 +137,8 @@ const cardFooterVariants = cva(
   },
 );
 
-function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
-  const { size } = React.useContext(CardContext);
+function CardFooter({ className, ...props }: ComponentProps<"div">) {
+  const { size } = useContext(CardContext);
   return (
     <div
       data-slot="card-footer"

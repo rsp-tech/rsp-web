@@ -1,7 +1,7 @@
 "use client";
 
 import { Check, ChevronsUpDown } from "lucide-react";
-import * as React from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -46,7 +46,7 @@ export function SearchableSelect({
   style,
   searchable,
 }: SearchableSelectProps) {
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
 
   const selectedOption = options.find((opt) => opt.value === value);
   const showSearch = searchable ?? options.length >= MIN_SEARCHABLE;
