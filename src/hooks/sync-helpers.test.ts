@@ -1,5 +1,10 @@
 import { describe, expect, it, vi } from "vitest";
-import { QUERY_KEY, STORE } from "@/constants";
+import {
+  QUERY_KEY,
+  ROLE_SYNCED_TABLES,
+  STORE,
+  USER_SPECIFIC_TABLES,
+} from "@/constants";
 import {
   handleCategoryPathInvalidations,
   handleRoleCleanup,
@@ -33,10 +38,42 @@ describe.concurrent("sync-helpers suite", () => {
     const queryClient: any = { invalidateQueries };
 
     handleUserCleanup(queryClient);
-    expect(invalidateQueries).toHaveBeenCalled();
+    for (const table of USER_SPECIFIC_TABLES) {
+      expect(invalidateQueries).toHaveBeenCalledWith({
+        queryKey: [table],
+      });
+    }
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: [QUERY_KEY.FEATURE_CONFIG],
+    });
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: [QUERY_KEY.SYNC_USER],
+    });
+    expect(invalidateQueries).toHaveBeenCalledWith({
+      queryKey: [STORE.USERS, "notifications"],
+    });
+
+    invalidateQueries.mockClear();
 
     handleRoleCleanup(queryClient);
-    expect(invalidateQueries).toHaveBeenCalled();
+    for (const table of ROLE_SYNCED_TABLES) {
+      expect(invalidateQueries).toHaveBeenCalledWith({
+        queryKey: [table],
+      });
+    }
+    for (const key of [
+      QUERY_KEY.ALL_CATEGORIES,
+      QUERY_KEY.CATEGORY_PAGE,
+      QUERY_KEY.HOMEPAGE,
+      QUERY_KEY.FEATURE_CONFIG,
+      QUERY_KEY.SYNC_ROLE,
+      QUERY_KEY.AUDIO_CACHE_LIST,
+      QUERY_KEY.MATERIALS_CACHE_LIST,
+    ]) {
+      expect(invalidateQueries).toHaveBeenCalledWith({
+        queryKey: [key],
+      });
+    }
   });
 
   it.concurrent("handleTableInvalidations invalidates modified query keys", () => {

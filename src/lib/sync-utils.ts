@@ -21,7 +21,13 @@ export const NUMERIC_FIELDS = [
   "requested_role_id",
 ];
 
-export type CastValueType = number | boolean | number[] | string | null;
+export type CastValueType =
+  | number
+  | boolean
+  | number[]
+  | string
+  | Record<string, unknown>
+  | null;
 
 export const getSyncColumnList = (table: string): string[] => {
   const cols = SYNC_COLUMNS[table as keyof typeof SYNC_COLUMNS];
@@ -53,6 +59,8 @@ export const castValue = (
   val: string | null | undefined,
 ): CastValueType => {
   if (val === undefined || val === null) return null;
+  const trimmed = val.trim();
+  if (trimmed === "NULL" || trimmed === "\\N") return null;
 
   // Special case: string IDs for redirects and user tables
   if (STRING_KEY_TABLES.has(tableName) && fieldName === "id") {
@@ -61,15 +69,17 @@ export const castValue = (
 
   // Boolean fields
   if (["is_public", "is_published", "is_active"].includes(fieldName)) {
-    if (val === "") return null;
-    return val === "true" || val === "t" || val === "1";
+    if (trimmed === "") return null;
+    return (
+      trimmed.toLowerCase() === "true" || trimmed === "t" || trimmed === "1"
+    );
   }
 
   // Array fields (like allowed_roles, lang_ids, speaker_ids)
   if (fieldName === "allowed_roles" || fieldName.endsWith("_ids")) {
-    if (val === "" || val === "{}" || val === "[]") return [];
+    if (trimmed === "" || trimmed === "{}" || trimmed === "[]") return [];
     // Remove quotes, brackets, braces
-    const clean = val.replace(/[{}[\]"]/g, "");
+    const clean = trimmed.replace(/[{}[\]"]/g, "");
     if (clean === "") return [];
     return clean
       .split(",")
@@ -79,9 +89,29 @@ export const castValue = (
 
   // Numeric fields (id, or ending with _id, _ind)
   if (NUMERIC_FIELDS.includes(fieldName)) {
-    if (val === "") return null;
-    const num = Number.parseInt(val, 10);
+    if (trimmed === "") return null;
+    const num = Number.parseInt(trimmed, 10);
     return Number.isNaN(num) ? null : num;
+  }
+
+  if (
+    fieldName === "ui_props" ||
+    (trimmed.startsWith("{") && trimmed.endsWith("}"))
+  ) {
+    if (trimmed === "" || trimmed === "null") return null;
+    try {
+      const parsed = JSON.parse(trimmed);
+      if (typeof parsed === "string") {
+        try {
+          return JSON.parse(parsed);
+        } catch {
+          return parsed;
+        }
+      }
+      return parsed;
+    } catch {
+      return fieldName === "ui_props" ? null : val;
+    }
   }
 
   return val;

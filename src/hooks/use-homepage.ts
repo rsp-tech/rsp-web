@@ -120,6 +120,24 @@ export const useHomepage = () =>
 
       // 1. Filter active announcements
       const activeAnnouncements = announcementsRaw
+        .map((a) => {
+          if (typeof a.ui_props === "string") {
+            try {
+              let parsed = JSON.parse(a.ui_props);
+              if (typeof parsed === "string") {
+                try {
+                  parsed = JSON.parse(parsed);
+                } catch {
+                  // ignore
+                }
+              }
+              return { ...a, ui_props: parsed };
+            } catch {
+              return { ...a, ui_props: null };
+            }
+          }
+          return a;
+        })
         .filter((a) => isAnnouncementCurrentlyActive(a, now))
         .sort(sortByOrderInd());
 

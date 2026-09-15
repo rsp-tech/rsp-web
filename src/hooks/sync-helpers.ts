@@ -1,6 +1,11 @@
 import type { QueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { QUERY_KEY, STORE, USER_SPECIFIC_TABLES } from "@/constants";
+import {
+  QUERY_KEY,
+  ROLE_SYNCED_TABLES,
+  STORE,
+  USER_SPECIFIC_TABLES,
+} from "@/constants";
 import {
   addSyncNotifications,
   clearNotificationStorage,
@@ -17,12 +22,28 @@ export const handleUserCleanup = (queryClient: QueryClient) => {
   for (const table of USER_SPECIFIC_TABLES) {
     queryClient.invalidateQueries({ queryKey: [table] });
   }
-  queryClient.invalidateQueries({ queryKey: [QUERY_KEY.FEATURE_CONFIG] });
+  for (const key of [QUERY_KEY.FEATURE_CONFIG, QUERY_KEY.SYNC_USER]) {
+    queryClient.invalidateQueries({ queryKey: [key] });
+  }
+  queryClient.invalidateQueries({
+    queryKey: [STORE.USERS, "notifications"],
+  });
 };
 
 export const handleRoleCleanup = (queryClient: QueryClient) => {
   terminateSearchWorker();
-  for (const key of [QUERY_KEY.ALL_CATEGORIES, QUERY_KEY.CATEGORY_PAGE]) {
+  for (const table of ROLE_SYNCED_TABLES) {
+    queryClient.invalidateQueries({ queryKey: [table] });
+  }
+  for (const key of [
+    QUERY_KEY.ALL_CATEGORIES,
+    QUERY_KEY.CATEGORY_PAGE,
+    QUERY_KEY.HOMEPAGE,
+    QUERY_KEY.FEATURE_CONFIG,
+    QUERY_KEY.SYNC_ROLE,
+    QUERY_KEY.AUDIO_CACHE_LIST,
+    QUERY_KEY.MATERIALS_CACHE_LIST,
+  ]) {
     queryClient.invalidateQueries({ queryKey: [key] });
   }
   rebuildSearchIndex(queryClient);

@@ -76,6 +76,18 @@ describe.concurrent("sync-utils suite", () => {
     );
     expect(castValue(STORE.REDIRECTS, "id", "/about-us")).toBe("/about-us");
     expect(castValue(STORE.USERS, "id", "usr_108")).toBe("usr_108");
+
+    expect(
+      castValue("announcements", "ui_props", '{"banner_height":200}'),
+    ).toEqual({ banner_height: 200 });
+    expect(castValue("announcements", "ui_props", "{}")).toEqual({});
+    expect(castValue("announcements", "ui_props", "")).toBeNull();
+    expect(castValue("announcements", "ui_props", "null")).toBeNull();
+    expect(castValue("announcements", "ui_props", "NULL")).toBeNull();
+    expect(castValue("announcements", "ui_props", null)).toBeNull();
+    expect(
+      castValue("announcements", "ui_props", '"{\\"banner_height\\":200}"'),
+    ).toEqual({ banner_height: 200 });
   });
 
   it.concurrent("toCSVRows & parseCSVTable parses CSV archives into records", () => {
