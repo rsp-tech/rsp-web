@@ -185,16 +185,10 @@ export const ContactUsClient = () => {
                 <div className="flex flex-col">
                   <span className="font-bold">Email</span>
                   <a
-                    href={
-                      isConsultation
-                        ? "mailto:info@radheshyamdas.com"
-                        : "mailto:contact@radheshyamdas.com"
-                    }
+                    href="mailto:info@radheshyamdas.com"
                     className="text-muted-foreground hover:text-primary transition-all text-xs"
                   >
-                    {isConsultation
-                      ? "info@radheshyamdas.com"
-                      : "contact@radheshyamdas.com"}
+                    info@radheshyamdas.com
                   </a>
                 </div>
               </div>
