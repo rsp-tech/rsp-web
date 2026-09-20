@@ -17,6 +17,7 @@ export const POST = async (req: NextRequest) => {
 
   // Flush live sync metadata
   revalidateTag(CACHE_TAG.SYNC_META, {});
+  revalidateTag(CACHE_TAG.LIVE_DIFF, {});
   revalidatePath(API_PATH.SYNC_META);
   revalidatePath(API_PATH.SYNC);
 
@@ -27,14 +28,17 @@ export const POST = async (req: NextRequest) => {
     tags?: string[];
   };
 
-  const revalidated: string[] = [API_PATH.SYNC_META, API_PATH.SYNC];
+  const revalidated: string[] = [
+    API_PATH.SYNC_META,
+    API_PATH.SYNC,
+    `tag:${CACHE_TAG.SYNC_META}`,
+    `tag:${CACHE_TAG.LIVE_DIFF}`,
+  ];
 
-  if (
-    body.tag === CACHE_TAG.FEATURE_FLAGS ||
-    body.tags?.includes(CACHE_TAG.FEATURE_FLAGS)
-  ) {
-    revalidateTag(CACHE_TAG.FEATURE_FLAGS, {});
-    revalidated.push(`tag:${CACHE_TAG.FEATURE_FLAGS}`);
+  const tags = body.tags ?? (body.tag ? [body.tag] : []);
+  for (const tag of tags) {
+    revalidateTag(tag, {});
+    revalidated.push(`tag:${tag}`);
   }
 
   const paths = body.paths ?? (body.path ? [body.path] : []);

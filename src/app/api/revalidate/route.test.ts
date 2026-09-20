@@ -31,4 +31,20 @@ describe.concurrent("api/revalidate/route suite", () => {
     const json = await res.json();
     expect(json.revalidated).toContain("tag:feature-flags");
   });
+
+  it.concurrent("POST revalidates queries path and live diff cache", async () => {
+    const { POST } = await import("./route");
+    const req = new Request("https://localhost/api/revalidate", {
+      method: "POST",
+      body: JSON.stringify({
+        paths: ["/queries"],
+        tags: ["sync-meta", "sync-live-diff"],
+      }),
+    });
+    const res = await POST(req as any);
+    expect(res.status).toBe(200);
+    const json = await res.json();
+    expect(json.revalidated).toContain("/queries");
+    expect(json.revalidated).toContain("tag:sync-live-diff");
+  });
 });

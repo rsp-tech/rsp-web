@@ -6,6 +6,7 @@ export const CACHE_TAG = {
   SYNC_META: "sync-meta",
   BACKUP_RESOURCES: "backup-resources",
   FEATURE_FLAGS: "feature-flags",
+  LIVE_DIFF: "sync-live-diff",
 } as const;
 
 // Internal API Paths

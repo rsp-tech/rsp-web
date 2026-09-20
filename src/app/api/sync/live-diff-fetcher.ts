@@ -1,4 +1,5 @@
 import { unstable_cache } from "next/cache";
+import { CACHE_TAG } from "@/app/api/constants";
 import { STORE, SYNC_COLUMNS } from "@/constants";
 import type { Database } from "@/database.types";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
@@ -65,9 +66,9 @@ export const getCachedLiveDiff = unstable_cache(
 
     return (data as unknown as Array<Record<string, unknown>>) || [];
   },
-  ["sync-live-diff"],
+  [CACHE_TAG.LIVE_DIFF],
   {
     revalidate: REVALIDATE_5_MINUTES,
-    tags: ["sync-live-diff"],
+    tags: [CACHE_TAG.LIVE_DIFF],
   },
 );
