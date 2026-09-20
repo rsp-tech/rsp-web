@@ -4,10 +4,6 @@ import { ASSET_BASE_URL } from "@/constants";
 import type { CategoryPageData } from "@/hooks/use-category-page";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { pathToUrlPath, slugToLabel } from "@/lib/utils";
-import {
-  getCachedYouTubeVideos,
-  type YouTubeVideo,
-} from "@/lib/youtube-service";
 import { ClientShell } from "@/views/client-shell";
 
 export const revalidate = 604800; // One week - fallback if on demand revalidation failed
@@ -238,15 +234,6 @@ export default async function CategoryPage({ params }: PageProps) {
   const { slug } = await params;
   const { data, structuredData } = await generateJsonLdData(slug);
 
-  let youtubeVideos: YouTubeVideo[] = [];
-  if (!slug?.length) {
-    try {
-      youtubeVideos = await getCachedYouTubeVideos();
-    } catch {
-      youtubeVideos = [];
-    }
-  }
-
   return (
     <>
       {structuredData.map((schema, idx) => (
@@ -260,7 +247,6 @@ export default async function CategoryPage({ params }: PageProps) {
       ))}
       <ClientShell
         initialData={data || { subcategories: [], recordings: [] }}
-        youtubeVideos={youtubeVideos}
       />
     </>
   );

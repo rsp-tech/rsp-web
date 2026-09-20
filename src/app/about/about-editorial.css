@@ -118,6 +118,16 @@
   }
 }
 
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
 /* --- 2. Scroll Reveal & 3D Tilt Animations --- */
 .reveal-on-scroll,
 .reveal-3d,

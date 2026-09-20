@@ -432,7 +432,4 @@ export const PHILOSOPHICAL_CONCEPTS = [
   "Dharma — Eternal Duty",
 ] as const;
 
-export const FEATURE_FLAGS = {
-  VIDEOS: "video_sanctuary",
-  YOUTUBE_MARQUEE: "youtube_marquee",
-};
+export const FEATURE_FLAGS = {};

@@ -1,7 +1,6 @@
 "use client";
 
 import { FolderOpen } from "lucide-react";
-import dynamic from "next/dynamic";
 import { redirect, usePathname } from "next/navigation";
 import { CategoryList } from "@/components/category-list";
 import { FeaturedSection } from "@/components/featured-section";
@@ -9,10 +8,6 @@ import { GuidanceSpotlight } from "@/components/guidance-spotlight";
 import { Loading } from "@/components/loading";
 import { NotFoundState } from "@/components/not-found-state";
 import { RecordingsSection } from "@/components/recordings-section";
-
-const YouTubeShowcase = dynamic(() =>
-  import("@/components/youtube-showcase").then((m) => m.YouTubeShowcase),
-);
 
 import {
   type CategoryPageData,
@@ -23,19 +18,14 @@ import { usePublicSync } from "@/hooks/use-public-sync";
 import { useRoleSync } from "@/hooks/use-role-sync";
 import { clearSyncMetaCache } from "@/lib/sync-worker-client";
 import { slugToLabel } from "@/lib/utils";
-import type { YouTubeVideo } from "@/lib/youtube-service";
 import { CategoryBreadcrumbs } from "./category-breadcrumbs";
 import { CategoryHero } from "./category-hero";
 
 interface ClientShellProps {
   initialData?: CategoryPageData;
-  youtubeVideos?: YouTubeVideo[];
 }
 
-export const ClientShell = ({
-  initialData,
-  youtubeVideos,
-}: ClientShellProps) => {
+export const ClientShell = ({ initialData }: ClientShellProps) => {
   const pathname = usePathname();
   const slug = pathname.split("/").filter(Boolean);
   const { data, isPending, error, refetch } = useCategoryPage(
@@ -84,9 +74,6 @@ export const ClientShell = ({
         {homepageData?.featuredSections?.map((section) => (
           <FeaturedSection key={section.id} section={section} />
         ))}
-
-        {/* YouTube Discourses Showcase */}
-        <YouTubeShowcase initialVideos={youtubeVideos} />
 
         {/* Root Categories Section */}
         <section className="flex flex-col gap-6">
