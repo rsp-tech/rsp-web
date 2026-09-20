@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
+import Script from "next/script";
 import { TopAnnouncementBanner } from "@/components/announcement-banner";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
@@ -48,6 +49,7 @@ export default async function RootLayout({
           href={process.env["NEXT_PUBLIC_POSTHOG_HOST"]}
           crossOrigin="anonymous"
         />
+        <link rel="preconnect" href="https://static.cloudflareinsights.com" />
         <link rel="preconnect" href="https://www.youtube-nocookie.com" />
       </head>
       <body className="min-h-full flex flex-col">
@@ -59,6 +61,11 @@ export default async function RootLayout({
           <GlobalAudioPlayer />
           <LayoutInitializers />
         </Providers>
+        <Script
+          strategy="afterInteractive"
+          src="https://static.cloudflareinsights.com/beacon.min.js"
+          data-cf-beacon='{"token": "8653613367ad4261b5ec0deebc7b37c1", "spa": true}'
+        />
       </body>
     </html>
   );
