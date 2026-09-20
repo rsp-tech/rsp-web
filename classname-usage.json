@@ -1,6 +1,6 @@
 {
   "totalClasses": 369,
-  "timestamp": "2026-09-20T08:59:49.907Z",
+  "timestamp": "2026-09-20T09:13:47.297Z",
   "baselineCSSBytes": 67197,
   "baselineBrotliBytes": 9886,
   "newlyAddedClasses": [],
@@ -19,6 +19,9 @@
     }
   ],
   "primitiveUsage": {
+    "src\\components\\ui\\checkbox.tsx": [
+      "src\\components\\audio-cache-settings.tsx"
+    ],
     "src\\components\\ui\\button.tsx": [
       "src\\app\\about\\about-charcoal-bio.tsx",
       "src\\app\\about\\about-hero.tsx",
@@ -34,7 +37,6 @@
       "src\\app\\queries\\_components\\query-list.tsx",
       "src\\app\\queries\\_components\\query-reply-form.tsx",
       "src\\app\\queries\\page.tsx",
-      "src\\components\\admin-feature-flag-bar.tsx",
       "src\\components\\announcement-banner\\banner-controls.tsx",
       "src\\components\\audio-cache-settings.tsx",
       "src\\components\\audio-player-panel.tsx",
@@ -63,9 +65,6 @@
       "src\\components\\ui\\dialog.tsx",
       "src\\components\\ui\\sheet.tsx",
       "src\\components\\user-nav.tsx"
-    ],
-    "src\\components\\ui\\checkbox.tsx": [
-      "src\\components\\audio-cache-settings.tsx"
     ],
     "src\\components\\ui\\dialog.tsx": [
       "src\\components\\auth-modal.tsx",
@@ -118,16 +117,16 @@
     "src\\components\\ui\\dropdown-menu.tsx": [
       "src\\components\\user-nav-dropdown-content.tsx"
     ],
-    "src\\components\\ui\\slider.tsx": [
-      "src\\components\\player\\timeline-slider.tsx",
-      "src\\components\\player\\volume-controls.tsx"
-    ],
     "src\\components\\ui\\tabs.tsx": [
       "src\\app\\queries\\_components\\query-filters.tsx",
       "src\\components\\search\\search-scope-tabs.tsx"
     ],
     "src\\components\\ui\\command.tsx": [
       "src\\components\\search\\searchable-select.tsx"
+    ],
+    "src\\components\\ui\\slider.tsx": [
+      "src\\components\\player\\timeline-slider.tsx",
+      "src\\components\\player\\volume-controls.tsx"
     ],
     "src\\components\\ui\\card.tsx": [
       "src\\app\\contact-us\\contact-us-client.tsx",
@@ -523,7 +522,7 @@
     },
     {
       "className": "cursor-pointer",
-      "frequency": 73,
+      "frequency": 72,
       "length": 14,
       "uncompressedBytes": 31,
       "brotliBytesUpperLimit": 31,
@@ -923,7 +922,7 @@
     },
     {
       "className": "fixed",
-      "frequency": 13,
+      "frequency": 12,
       "length": 5,
       "uncompressedBytes": 22,
       "brotliBytesUpperLimit": 21,
@@ -1083,7 +1082,7 @@
     },
     {
       "className": "font-bold",
-      "frequency": 123,
+      "frequency": 122,
       "length": 9,
       "uncompressedBytes": 88,
       "brotliBytesUpperLimit": 57,
@@ -1107,7 +1106,7 @@
     },
     {
       "className": "font-semibold",
-      "frequency": 58,
+      "frequency": 57,
       "length": 13,
       "uncompressedBytes": 100,
       "brotliBytesUpperLimit": 60,
@@ -1355,7 +1354,7 @@
     },
     {
       "className": "h-4",
-      "frequency": 103,
+      "frequency": 102,
       "length": 3,
       "uncompressedBytes": 37,
       "brotliBytesUpperLimit": 41,
@@ -2539,7 +2538,7 @@
     },
     {
       "className": "rounded-full",
-      "frequency": 58,
+      "frequency": 57,
       "length": 12,
       "uncompressedBytes": 41,
       "brotliBytesUpperLimit": 45,
@@ -2603,7 +2602,7 @@
     },
     {
       "className": "shadow-md",
-      "frequency": 28,
+      "frequency": 27,
       "length": 9,
       "uncompressedBytes": 254,
       "brotliBytesUpperLimit": 106,
@@ -2843,7 +2842,7 @@
     },
     {
       "className": "text-muted-foreground",
-      "frequency": 182,
+      "frequency": 181,
       "length": 21,
       "uncompressedBytes": 53,
       "brotliBytesUpperLimit": 47,
@@ -2851,7 +2850,7 @@
     },
     {
       "className": "text-primary",
-      "frequency": 70,
+      "frequency": 68,
       "length": 12,
       "uncompressedBytes": 35,
       "brotliBytesUpperLimit": 35,
@@ -2907,7 +2906,7 @@
     },
     {
       "className": "text-xs",
-      "frequency": 147,
+      "frequency": 146,
       "length": 7,
       "uncompressedBytes": 92,
       "brotliBytesUpperLimit": 57,
@@ -3035,7 +3034,7 @@
     },
     {
       "className": "w-4",
-      "frequency": 102,
+      "frequency": 101,
       "length": 3,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40,
@@ -3099,7 +3098,7 @@
     },
     {
       "className": "z-50",
-      "frequency": 20,
+      "frequency": 19,
       "length": 4,
       "uncompressedBytes": 17,
       "brotliBytesUpperLimit": 21,
