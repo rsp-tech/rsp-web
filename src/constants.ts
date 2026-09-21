@@ -297,6 +297,7 @@ export const SYNC_COLUMNS = {
     message,
     category,
     status,
+    attachments,
     created_at,
     updated_at
   `,
@@ -306,6 +307,7 @@ export const SYNC_COLUMNS = {
     query_id,
     user_id,
     message,
+    attachments,
     updated_at
   `,
 
