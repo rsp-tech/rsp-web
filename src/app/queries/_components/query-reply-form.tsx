@@ -5,21 +5,28 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 
+import type { QueryAttachment } from "@/types";
+import { QueryAttachmentPicker } from "./query-attachment-picker";
+
 interface QueryReplyFormProps {
   queryId: string;
   replyText: string;
   onReplyTextChange: (text: string) => void;
+  attachments?: QueryAttachment[];
+  onAttachmentsChange?: (attachments: QueryAttachment[]) => void;
   onSendReply: () => void;
   sending: boolean;
 }
 
-export function QueryReplyForm({
+export const QueryReplyForm = ({
   queryId,
   replyText,
   onReplyTextChange,
+  attachments = [],
+  onAttachmentsChange,
   onSendReply,
   sending,
-}: QueryReplyFormProps) {
+}: QueryReplyFormProps) => {
   return (
     <div className="border-t border-border/40 pt-4 flex flex-col gap-2">
       <Label
@@ -40,7 +47,7 @@ export function QueryReplyForm({
         <Button
           type="button"
           onClick={onSendReply}
-          disabled={sending || !replyText.trim()}
+          disabled={sending || (!replyText.trim() && attachments.length === 0)}
           className="shrink-0 cursor-pointer"
           style={{ height: "3rem", width: "4rem" }}
         >
@@ -51,6 +58,13 @@ export function QueryReplyForm({
           )}
         </Button>
       </div>
+      {onAttachmentsChange && (
+        <QueryAttachmentPicker
+          attachments={attachments}
+          onChange={onAttachmentsChange}
+          disabled={sending}
+        />
+      )}
     </div>
   );
-}
+};

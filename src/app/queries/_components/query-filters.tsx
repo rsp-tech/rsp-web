@@ -3,7 +3,6 @@
 import { Search } from "lucide-react";
 import { SearchableSelect } from "@/components/search/searchable-select";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { QUERY_CATEGORIES } from "@/constants";
 
@@ -22,96 +21,73 @@ interface QueryFiltersProps {
   totalMatches: number;
 }
 
-export function QueryFilters({
+export const QueryFilters = ({
   searchTerm,
   onSearchChange,
   categoryFilter,
   onCategoryChange,
   statusFilter,
   onStatusChange,
-  totalMatches,
-}: QueryFiltersProps) {
+  totalMatches: _totalMatches,
+}: QueryFiltersProps) => {
   return (
-    <div className="flex flex-col gap-6">
-      {/* Controls Bar */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="flex flex-col gap-1.5 md:col-span-2">
-          <Label
-            htmlFor="search-queries"
-            className="text-xs font-bold text-muted-foreground uppercase tracking-wider"
-          >
-            Search Tickets
-          </Label>
-          <div className="relative">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground opacity-60" />
-            <Input
-              type="text"
-              id="search-queries"
-              placeholder="Search subject or message content..."
-              value={searchTerm}
-              onChange={(e) => onSearchChange(e.target.value)}
-              className="pl-9"
-            />
-          </div>
-        </div>
-
-        <div className="flex flex-col gap-1.5">
-          <Label
-            htmlFor="filter-category"
-            className="text-xs font-bold text-muted-foreground uppercase tracking-wider"
-          >
-            Topic Category
-          </Label>
-          <SearchableSelect
-            options={CATEGORY_OPTIONS}
-            value={categoryFilter}
-            onChange={onCategoryChange}
-            placeholder="All Categories"
-            className="h-9 bg-card cursor-pointer"
-          />
-        </div>
+    <div className="flex flex-col gap-2.5">
+      {/* Search Input */}
+      <div className="relative">
+        <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground opacity-60" />
+        <Input
+          type="text"
+          id="search-queries"
+          placeholder="Search tickets..."
+          value={searchTerm}
+          onChange={(e) => onSearchChange(e.target.value)}
+          className="pl-9 text-xs"
+        />
       </div>
 
-      <div
-        className="w-full border-t border-border"
-        style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }}
+      {/* Category Select */}
+      <SearchableSelect
+        options={CATEGORY_OPTIONS}
+        value={categoryFilter}
+        onChange={onCategoryChange}
+        placeholder="All Categories"
+        className="h-9 bg-card cursor-pointer text-xs"
       />
 
       {/* Tabs for Ticket State (All, Active, Closed) */}
-      <div className="flex items-center justify-between gap-4 mb-2">
-        <Tabs
-          defaultValue="all"
-          value={statusFilter}
-          onValueChange={onStatusChange}
-          style={{ width: "20rem" }}
+      <Tabs
+        defaultValue="all"
+        value={statusFilter}
+        onValueChange={onStatusChange}
+        className="w-full"
+      >
+        <TabsList
+          className="grid w-full"
+          style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}
         >
-          <TabsList
-            className="grid w-full"
-            style={{ gridTemplateColumns: "repeat(3, minmax(0, 1fr))" }}
+          <TabsTrigger
+            type="button"
+            value="all"
+            className="cursor-pointer text-xs"
           >
-            <TabsTrigger type="button" value="all" className="cursor-pointer">
-              All
-            </TabsTrigger>
-            <TabsTrigger
-              type="button"
-              value="active"
-              className="cursor-pointer"
-            >
-              Active
-            </TabsTrigger>
-            <TabsTrigger
-              type="button"
-              value="closed"
-              className="cursor-pointer"
-            >
-              Closed
-            </TabsTrigger>
-          </TabsList>
-        </Tabs>
-        <span className="text-xs font-semibold text-muted-foreground">
-          Matches found: <span className="font-bold">{totalMatches}</span>
-        </span>
-      </div>
+            All
+          </TabsTrigger>
+          <TabsTrigger
+            type="button"
+            value="active"
+            className="cursor-pointer text-xs"
+          >
+            Active
+          </TabsTrigger>
+          <TabsTrigger
+            type="button"
+            value="closed"
+            className="cursor-pointer text-xs"
+          >
+            Closed
+          </TabsTrigger>
+        </TabsList>
+      </Tabs>
     </div>
   );
-}
+};

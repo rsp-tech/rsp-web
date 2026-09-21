@@ -1,17 +1,18 @@
 "use client";
 
 import { MessageSquare } from "lucide-react";
-import type { QueryReplyWithUser } from "@/types";
+import type { QueryAttachment, QueryReplyWithUser } from "@/types";
+import { QueryAttachmentList } from "./query-attachment-list";
 
 interface QueryReplyThreadProps {
   replies: QueryReplyWithUser[];
   currentUserId: string;
 }
 
-export function QueryReplyThread({
+export const QueryReplyThread = ({
   replies,
   currentUserId,
-}: QueryReplyThreadProps) {
+}: QueryReplyThreadProps) => {
   return (
     <div className="flex flex-col gap-3">
       <h5 className="text-xs font-bold text-muted-foreground uppercase tracking-wider flex items-center gap-1.5 px-1">
@@ -25,10 +26,7 @@ export function QueryReplyThread({
           answer.
         </p>
       ) : (
-        <div
-          className="flex flex-col gap-3 max-h-75 overflow-y-auto"
-          style={{ paddingRight: "0.25rem" }}
-        >
+        <div className="flex flex-col gap-3">
           {replies.map((reply) => {
             const isAdminReply = reply.user_id !== currentUserId;
             const replierName =
@@ -37,12 +35,15 @@ export function QueryReplyThread({
             return (
               <div
                 key={reply.id}
-                className={`flex flex-col gap-1 p-3 rounded-lg max-w-4/5 border ${
+                className={`flex flex-col gap-1 p-3 rounded-lg border ${
                   isAdminReply
                     ? "bg-primary/5 border-primary/20 self-start"
-                    : "bg-muted/40 border-border self-end text-right"
+                    : "bg-muted/40 border-border self-end"
                 }`}
-                style={isAdminReply ? {} : { textAlign: "right" }}
+                style={{
+                  maxWidth: "85%",
+                  ...(isAdminReply ? {} : { textAlign: "right" }),
+                }}
               >
                 <div
                   className={`flex items-center gap-2 text-xxs text-muted-foreground font-semibold ${
@@ -67,6 +68,11 @@ export function QueryReplyThread({
                 <p className="text-xs leading-relaxed mt-0.5 text-left">
                   {reply.message}
                 </p>
+                <QueryAttachmentList
+                  attachments={
+                    reply.attachments as unknown as QueryAttachment[]
+                  }
+                />
               </div>
             );
           })}
@@ -74,4 +80,4 @@ export function QueryReplyThread({
       )}
     </div>
   );
-}
+};

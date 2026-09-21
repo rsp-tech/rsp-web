@@ -1,30 +1,25 @@
 "use client";
 
 import { useQueryClient } from "@tanstack/react-query";
-import { ExternalLink, MessageSquare, Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { LogIn, MessageSquare, Plus } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
+import { AuthModal } from "@/components/auth-modal";
 import { Loading } from "@/components/loading";
 import { useSession } from "@/components/providers";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { STORE } from "@/constants";
+import { useIsMobile } from "@/hooks/use-is-mobile";
 import { useUserQueriesAndReplies } from "@/hooks/use-user-queries-and-replies";
 import { getDB } from "@/lib/idb";
+import type { QueryAttachment } from "@/types";
+import { NewQueryDialog } from "./_components/new-query-dialog";
 import { QueryFilters } from "./_components/query-filters";
+import { QueryItem } from "./_components/query-item";
 import { QueryList } from "./_components/query-list";
 
-export default function UserQueriesPage() {
-  const router = useRouter();
+const UserQueriesPage = () => {
   const queryClient = useQueryClient();
   const { session, isLoading: sessionLoading } = useSession();
 
@@ -36,19 +31,81 @@ export default function UserQueriesPage() {
   const replies = qData?.replies || {};
 
   // Search & Filter state
+  const isMobile = useIsMobile();
+  const [selectedQueryId, setSelectedQueryId] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
   const [categoryFilter, setCategoryFilter] = useState("all");
 
+  // Dialog states
+  const [isNewQueryOpen, setIsNewQueryOpen] = useState(false);
+  const [authOpen, setAuthOpen] = useState(false);
+
   // Reply submission states
   const [replyTexts, setReplyTexts] = useState<Record<string, string>>({});
+  const [replyAttachments, setReplyAttachments] = useState<
+    Record<string, QueryAttachment[]>
+  >({});
   const [sendingReply, setSendingReply] = useState<string | null>(null);
   const [submitErrors, setSubmitErrors] = useState<Record<string, string>>({});
+  const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
+
+  const handleStatusChange = async (
+    queryId: string,
+    newStatus: "open" | "resolved" | "closed",
+  ) => {
+    if (!session?.user) return;
+    setUpdatingStatus(queryId);
+    try {
+      const res = await fetch("/api/queries", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          query_id: queryId,
+          status: newStatus,
+          user_id: session.user.id,
+        }),
+      });
+
+      const json = await res.json();
+      if (!res.ok || json.error) {
+        throw new Error(json.error || "Failed to update ticket status");
+      }
+
+      // Update local IndexedDB
+      const db = await getDB();
+      if (db && json.data) {
+        await db.put(STORE.USER_QUERIES, json.data);
+      }
+
+      // Invalidate React Query cache to reflect IDB updates
+      queryClient.invalidateQueries({
+        queryKey: [STORE.USER_QUERIES, session.user.id],
+      });
+
+      const statusLabels: Record<string, string> = {
+        open: "reopened",
+        resolved: "marked as resolved",
+        closed: "closed",
+      };
+      toast.success(
+        `Ticket ${statusLabels[newStatus] || newStatus} successfully.`,
+      );
+    } catch (err: unknown) {
+      console.error("Error updating ticket status:", err);
+      const errMsg =
+        err instanceof Error ? err.message : "Failed to update ticket status";
+      toast.error(errMsg);
+    } finally {
+      setUpdatingStatus(null);
+    }
+  };
 
   const handleSendReply = async (queryId: string) => {
     if (!session?.user) return;
-    const text = replyTexts[queryId]?.trim();
-    if (!text) return;
+    const text = replyTexts[queryId]?.trim() || "";
+    const attachments = replyAttachments[queryId] || [];
+    if (!text && attachments.length === 0) return;
 
     setSubmitErrors((prev) => {
       const copy = { ...prev };
@@ -64,6 +121,7 @@ export default function UserQueriesPage() {
           query_id: queryId,
           user_id: session.user.id,
           message: text,
+          attachments,
         }),
       });
 
@@ -87,10 +145,14 @@ export default function UserQueriesPage() {
 
       toast.success("Reply sent successfully!");
 
-      setReplyTexts({
-        ...replyTexts,
+      setReplyTexts((prev) => ({
+        ...prev,
         [queryId]: "",
-      });
+      }));
+      setReplyAttachments((prev) => ({
+        ...prev,
+        [queryId]: [],
+      }));
     } catch (e: unknown) {
       console.error("Error sending reply:", e);
       const errMsg = e instanceof Error ? e.message : "Unknown error occurred.";
@@ -105,10 +167,20 @@ export default function UserQueriesPage() {
   };
 
   const handleReplyTextChange = (queryId: string, text: string) => {
-    setReplyTexts({
-      ...replyTexts,
+    setReplyTexts((prev) => ({
+      ...prev,
       [queryId]: text,
-    });
+    }));
+  };
+
+  const handleReplyAttachmentsChange = (
+    queryId: string,
+    attachments: QueryAttachment[],
+  ) => {
+    setReplyAttachments((prev) => ({
+      ...prev,
+      [queryId]: attachments,
+    }));
   };
 
   const handleResetFilters = () => {
@@ -138,11 +210,13 @@ export default function UserQueriesPage() {
         </div>
         <Button
           type="button"
-          onClick={() => router.push("/profile")}
-          className="gap-2"
+          onClick={() => setAuthOpen(true)}
+          className="gap-2 cursor-pointer"
         >
-          <span>Go to Login</span>
+          <LogIn className="w-4 h-4" />
+          <span>Login to View Queries</span>
         </Button>
+        <AuthModal isOpen={authOpen} onClose={() => setAuthOpen(false)} />
       </div>
     );
   }
@@ -158,13 +232,20 @@ export default function UserQueriesPage() {
 
     let matchesStatus = true;
     if (statusFilter === "active") {
-      matchesStatus = q.status === "open";
+      matchesStatus = q.status === "open" || q.status === "in_progress";
     } else if (statusFilter === "closed") {
       matchesStatus = q.status === "resolved" || q.status === "closed";
     }
 
     return matchesSearch && matchesCategory && matchesStatus;
   });
+
+  const activeQueryId =
+    selectedQueryId ?? (!isMobile ? (filteredQueries[0]?.id ?? null) : null);
+  const selectedQuery =
+    filteredQueries.find((q) => q.id === activeQueryId) ??
+    queries.find((q) => q.id === activeQueryId) ??
+    null;
 
   const getStatusBadge = (status: string) => {
     switch (status) {
@@ -174,7 +255,16 @@ export default function UserQueriesPage() {
             variant="outline"
             className="bg-warning/10 text-warning border-warning/20"
           >
-            Active / Pending
+            Open
+          </Badge>
+        );
+      case "in_progress":
+        return (
+          <Badge
+            variant="outline"
+            className="bg-primary/10 text-primary border-primary/20"
+          >
+            In Progress
           </Badge>
         );
       case "resolved":
@@ -201,44 +291,32 @@ export default function UserQueriesPage() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto py-6 flex flex-col gap-8">
-      {/* Header and Back Link */}
-      <div className="flex flex-col gap-4 border-b border-border pb-6">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="flex flex-col gap-1">
-            <h1 className="text-3xl sm:text-4xl font-bold font-heading tracking-tight flex items-center gap-2">
-              <MessageSquare className="w-8 h-8 text-primary shrink-0" />
-              <span>Query Dashboard</span>
-            </h1>
-            <p className="text-muted-foreground text-sm">
-              View, filter, and track support requests, spiritual questions, and
-              role requests.
-            </p>
-          </div>
+    <div
+      className="w-full h-full flex flex-col md:flex-row overflow-hidden"
+      style={{ height: "calc(100dvh - 3.8rem)" }}
+    >
+      {/* Left Sidebar: New Query Action, Filters & Tickets List */}
+      <div
+        className={`w-full shrink-0 flex flex-col h-full overflow-hidden ${
+          selectedQueryId && isMobile ? "hidden" : "flex"
+        }`}
+        style={{
+          width: isMobile ? "100%" : "340px",
+          borderRight: "1px solid var(--border)",
+        }}
+      >
+        {/* Top Sidebar Bar with + New Query and Filters */}
+        <div className="p-3 border-b border-border/40 bg-muted/20 flex flex-col gap-2.5 shrink-0">
           <Button
             type="button"
-            onClick={() => router.push("/contact-us")}
-            className="gap-1.5 self-start sm:self-center cursor-pointer"
+            onClick={() => setIsNewQueryOpen(true)}
+            className="w-full gap-2 cursor-pointer text-xs font-semibold py-2"
+            size="sm"
           >
             <Plus className="w-4 h-4" />
-            <span>Submit New Query</span>
+            <span>New Query</span>
           </Button>
-        </div>
-      </div>
 
-      {/* Main Dashboard Panel */}
-      <Card className="border-border">
-        <CardHeader className="pb-3 border-b border-border/40 bg-muted/20">
-          <CardTitle className="text-lg font-bold">Ticket Filters</CardTitle>
-          <CardDescription>
-            Narrow down queries by search term, topic category, or active
-            status.
-          </CardDescription>
-        </CardHeader>
-        <CardContent
-          className="flex flex-col gap-6"
-          style={{ paddingTop: "1.5rem" }}
-        >
           <QueryFilters
             searchTerm={searchTerm}
             onSearchChange={setSearchTerm}
@@ -248,37 +326,76 @@ export default function UserQueriesPage() {
             onStatusChange={setStatusFilter}
             totalMatches={filteredQueries.length}
           />
+        </div>
 
-          <QueryList
-            queries={filteredQueries}
-            replies={replies}
+        {/* Scrollable Ticket List */}
+        <QueryList
+          queries={filteredQueries}
+          replies={replies}
+          selectedQueryId={activeQueryId}
+          onSelectQuery={(id) => setSelectedQueryId(id)}
+          getStatusBadge={getStatusBadge}
+          onResetFilters={handleResetFilters}
+          onSubmitQueryClick={() => setIsNewQueryOpen(true)}
+        />
+      </div>
+
+      {/* Right Reading Pane: Conversation & Composer */}
+      <div
+        className={`flex-1 flex flex-col h-full overflow-hidden ${
+          !selectedQueryId && isMobile ? "hidden" : "flex"
+        }`}
+        style={{ minHeight: 0 }}
+      >
+        {selectedQuery ? (
+          <QueryItem
+            q={selectedQuery}
+            replies={replies[selectedQuery.id] || []}
             currentUserId={session.user.id}
-            replyTexts={replyTexts}
-            onReplyTextChange={handleReplyTextChange}
-            onSendReply={handleSendReply}
-            sendingReply={sendingReply}
+            replyText={replyTexts[selectedQuery.id] || ""}
+            onReplyTextChange={(val) =>
+              handleReplyTextChange(selectedQuery.id, val)
+            }
+            replyAttachments={replyAttachments[selectedQuery.id] || []}
+            onReplyAttachmentsChange={(atts) =>
+              handleReplyAttachmentsChange(selectedQuery.id, atts)
+            }
+            onSendReply={() => handleSendReply(selectedQuery.id)}
+            sending={sendingReply === selectedQuery.id}
             getStatusBadge={getStatusBadge}
-            onResetFilters={handleResetFilters}
-            onSubmitQueryClick={() => router.push("/contact-us")}
-            submitErrors={submitErrors}
+            submitError={submitErrors[selectedQuery.id]}
+            onBack={() => setSelectedQueryId(null)}
+            onStatusChange={(newStatus) =>
+              handleStatusChange(selectedQuery.id, newStatus)
+            }
+            statusUpdating={updatingStatus === selectedQuery.id}
           />
-        </CardContent>
-        <CardFooter className="flex justify-between border-t border-border/40 pt-4 bg-muted/5">
-          <p className="text-xs text-muted-foreground">
-            View volunteering opportunities or manage skills?
-          </p>
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            onClick={() => router.push("/get-involved")}
-            className="gap-1.5 cursor-pointer"
-          >
-            <span>Get Involved</span>
-            <ExternalLink className="w-3 h-3" />
-          </Button>
-        </CardFooter>
-      </Card>
+        ) : (
+          <div className="flex-1 flex flex-col items-center justify-center p-8 text-center gap-3">
+            <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center text-primary">
+              <MessageSquare className="w-8 h-8" />
+            </div>
+            <h3 className="font-bold text-lg">No Query Selected</h3>
+            <p className="text-xs text-muted-foreground max-w-xs">
+              Select a ticket from the sidebar to view the conversation and
+              reply.
+            </p>
+          </div>
+        )}
+      </div>
+
+      {session?.user && (
+        <NewQueryDialog
+          open={isNewQueryOpen}
+          onOpenChange={setIsNewQueryOpen}
+          userId={session.user.id}
+          onSuccess={(newQuery) => {
+            setSelectedQueryId(newQuery.id);
+          }}
+        />
+      )}
     </div>
   );
-}
+};
+
+export default UserQueriesPage;
