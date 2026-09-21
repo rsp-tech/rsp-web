@@ -101,4 +101,34 @@ function DialogTitle({
   );
 }
 
-export { Dialog, DialogContent, DialogHeader, DialogTitle };
+const DialogDescription = ({
+  className,
+  ...props
+}: React.ComponentProps<typeof DialogPrimitive.Description>) => {
+  return (
+    <DialogPrimitive.Description
+      data-slot="dialog-description"
+      className={cn("text-xs text-muted-foreground", className)}
+      {...props}
+    />
+  );
+};
+
+const DialogFooter = ({ className, ...props }: React.ComponentProps<"div">) => {
+  return (
+    <div
+      data-slot="dialog-footer"
+      className={cn("flex items-center justify-end gap-2", className)}
+      {...props}
+    />
+  );
+};
+
+export {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+};

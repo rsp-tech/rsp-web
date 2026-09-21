@@ -1,6 +1,14 @@
 "use client";
 
-import { Home, LogIn, LogOut, Paintbrush, Settings, User } from "lucide-react";
+import {
+  Home,
+  LogIn,
+  LogOut,
+  MessageSquare,
+  Paintbrush,
+  Settings,
+  User,
+} from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -83,6 +91,15 @@ export const MobileDrawerContent = ({ setOpen }: MobileDrawerContentProps) => {
               >
                 <User className="w-4 h-4 text-muted-foreground" />
                 Profile
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="justify-start p-0"
+                onClick={() => handleNavigate("/queries")}
+              >
+                <MessageSquare className="w-4 h-4 text-muted-foreground" />
+                My Queries
               </Button>
               <Button
                 variant="ghost"

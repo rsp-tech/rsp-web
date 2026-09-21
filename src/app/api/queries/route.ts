@@ -5,6 +5,9 @@ import {
   handleMutationResult,
 } from "@/lib/supabase-server";
 import type { QueryAttachment } from "@/types";
+import { FEATURE_FLAGS } from "@/constants";
+import { isFeatureFlagEnabled } from "@/lib/feature-flags-service";
+import { validateAttachments } from "./query-utils";
 
 interface QueryRequestBody {
   guest_name?: string | null;
@@ -15,10 +18,6 @@ interface QueryRequestBody {
   message: string;
   attachments?: QueryAttachment[];
 }
-
-import { FEATURE_FLAGS } from "@/constants";
-import { isFeatureFlagEnabled } from "@/lib/feature-flags-service";
-import { validateAttachments } from "./query-utils";
 
 export const POST = async (req: NextRequest) => {
   try {
