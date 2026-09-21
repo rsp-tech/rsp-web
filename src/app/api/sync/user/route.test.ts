@@ -51,4 +51,20 @@ describe.concurrent("api/sync/user route suite", () => {
     const json = await res.json();
     expect(json.user_feature_flags).toEqual(["beta_flag"]);
   });
+
+  it.concurrent("GET returns user seed data from delta-service", async () => {
+    const { GET } = await import("./route");
+    const req = new Request("https://localhost/api/sync/user", {
+      method: "GET",
+    });
+
+    const res = await GET(req as any);
+    expect(res.status).toBe(200);
+
+    const json = await res.json();
+    expect(json.user_feature_flags).toEqual(["beta_flag"]);
+    expect(Array.isArray(json.users)).toBe(true);
+    expect(Array.isArray(json.user_queries)).toBe(true);
+    expect(Array.isArray(json.query_replies)).toBe(true);
+  });
 });

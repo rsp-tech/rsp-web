@@ -18,8 +18,11 @@ export const getCachedLiveDiff = unstable_cache(
   ): Promise<Array<Record<string, unknown>>> => {
     const supabase = getSupabaseServerClient();
 
-    let columns = SYNC_COLUMNS[table]
-      ? `${SYNC_COLUMNS[table]}, updated_at`
+    const syncCols = SYNC_COLUMNS[table];
+    let columns = syncCols
+      ? syncCols.includes("updated_at")
+        ? syncCols
+        : `${syncCols}, updated_at`
       : "*, updated_at";
 
     if (table === STORE.DELETED_RECORDS || table === STORE.RESTRICTED_RECORDS) {

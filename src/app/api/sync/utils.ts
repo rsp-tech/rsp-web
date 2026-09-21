@@ -1,3 +1,4 @@
+import { revalidateTag } from "next/cache";
 import Papa from "papaparse";
 import {
   CACHE_TAG,
@@ -16,42 +17,70 @@ if (!SYNC_ENDPOINT) {
   throw new Error("Missing SYNC_ENDPOINT");
 }
 
+interface ReleaseAsset {
+  id: number;
+  name: string;
+  url: string;
+  size?: number;
+  updated_at?: string;
+}
+
+interface ReleaseMetadata {
+  tag_name?: string;
+  published_at?: string;
+  assets?: ReleaseAsset[];
+}
+
+const getReleaseMetadata = async (
+  forceFresh = false,
+): Promise<ReleaseMetadata | null> => {
+  const fetchOptions: RequestInit = {
+    headers: {
+      Authorization: `Bearer ${BACKUP_TOKEN}`,
+      "User-Agent": "rsp-web",
+      Accept: "application/vnd.github+json",
+    },
+    ...(forceFresh
+      ? { cache: "no-store" }
+      : {
+          next: {
+            tags: [CACHE_TAG.BACKUP_RESOURCES],
+            revalidate: REVALIDATE_24_HOURS,
+          },
+        }),
+  };
+
+  const res = await fetch(SYNC_ENDPOINT as string, fetchOptions);
+  if (!res.ok) {
+    console.error(
+      `[Backup Asset] Failed to fetch release metadata (fresh=${forceFresh}): status=${res.status} ${res.statusText}`,
+    );
+    return null;
+  }
+  return (await res.json()) as ReleaseMetadata;
+};
+
 export const fetchBackupAsset = async (
   targetResource: string,
 ): Promise<Response> => {
-  const releaseRes = await fetch(SYNC_ENDPOINT, {
-    headers: {
-      Authorization: `Bearer ${BACKUP_TOKEN}`,
-    },
-    next: {
-      tags: [CACHE_TAG.BACKUP_RESOURCES],
-      revalidate: REVALIDATE_24_HOURS,
-    },
-  });
+  let releaseJson = await getReleaseMetadata(false);
+  let asset = releaseJson?.assets?.find((a) => a.name === targetResource);
+  let assetUrl = asset?.url;
 
-  if (!releaseRes.ok) {
-    console.error(
-      `[Backup Asset] Failed to fetch release metadata: status=${releaseRes.status} ${releaseRes.statusText}`,
+  // If not found in cached metadata, retry with fresh metadata and invalidate backup cache
+  if (!assetUrl) {
+    console.warn(
+      `[Backup Asset] Target asset "${targetResource}" not found in cached release. Invalidating backup cache and refetching fresh metadata...`,
     );
-    return new Response("Failed to fetch release metadata", {
-      status: releaseRes.status,
-    });
+    try {
+      revalidateTag(CACHE_TAG.BACKUP_RESOURCES, {});
+    } catch (e) {
+      console.warn("[Backup Asset] Failed to revalidate backup tag:", e);
+    }
+    releaseJson = await getReleaseMetadata(true);
+    asset = releaseJson?.assets?.find((a) => a.name === targetResource);
+    assetUrl = asset?.url;
   }
-
-  const releaseJson = (await releaseRes.json()) as {
-    tag_name?: string;
-    published_at?: string;
-    assets?: Array<{
-      id: number;
-      name: string;
-      url: string;
-      size?: number;
-      updated_at?: string;
-    }>;
-  };
-
-  const asset = releaseJson.assets?.find((a) => a.name === targetResource);
-  const assetUrl = asset?.url;
 
   if (!assetUrl) {
     console.error(
@@ -60,9 +89,10 @@ export const fetchBackupAsset = async (
     return new Response("Asset not found", { status: 404 });
   }
 
-  const assetRes = await fetch(assetUrl, {
+  let assetRes = await fetch(assetUrl, {
     headers: {
       Authorization: `Bearer ${BACKUP_TOKEN}`,
+      "User-Agent": "rsp-web",
       Accept: "application/octet-stream",
     },
     next: {
@@ -71,6 +101,38 @@ export const fetchBackupAsset = async (
     },
     redirect: "follow",
   });
+
+  // Self-healing fallback on 404: If the asset ID was stale/deleted, invalidate cache and retry with fresh metadata
+  if (assetRes.status === 404) {
+    console.warn(
+      `[Backup Asset] Asset fetch for "${targetResource}" returned 404 (stale asset ID). Invalidating backup cache and refetching fresh metadata...`,
+    );
+    try {
+      revalidateTag(CACHE_TAG.BACKUP_RESOURCES, {});
+    } catch (e) {
+      console.warn("[Backup Asset] Failed to revalidate backup tag:", e);
+    }
+    const freshReleaseJson = await getReleaseMetadata(true);
+    const freshAsset = freshReleaseJson?.assets?.find(
+      (a) => a.name === targetResource,
+    );
+    const freshAssetUrl = freshAsset?.url;
+
+    if (freshAssetUrl && freshAssetUrl !== assetUrl) {
+      assetRes = await fetch(freshAssetUrl, {
+        headers: {
+          Authorization: `Bearer ${BACKUP_TOKEN}`,
+          "User-Agent": "rsp-web",
+          Accept: "application/octet-stream",
+        },
+        next: {
+          tags: [CACHE_TAG.BACKUP_RESOURCES],
+          revalidate: REVALIDATE_24_HOURS,
+        },
+        redirect: "follow",
+      });
+    }
+  }
 
   if (!assetRes.ok) {
     console.error(
