@@ -2,7 +2,7 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import type { EnrichedMaterialSearchResult } from "@/components/search/search-results";
+import type { EnrichedMaterialSearchResult } from "@/types";
 import type { SearchScope } from "@/components/search-bar";
 import { INDEX, STORE } from "@/constants";
 import { useSearch } from "@/hooks/use-search";

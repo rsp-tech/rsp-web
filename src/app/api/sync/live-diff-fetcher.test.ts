@@ -6,7 +6,9 @@ vi.mock("next/cache", () => ({
 }));
 
 let mockError: { message: string } | null = null;
-let mockData: any = [{ id: 2, name: "New Cat", updated_at: "2026-01-05T00:00:00Z" }];
+let mockData: any = [
+  { id: 2, name: "New Cat", updated_at: "2026-01-05T00:00:00Z" },
+];
 
 const mockQuery: any = {
   order: () => mockQuery,
@@ -46,7 +48,9 @@ describe("api/sync/live-diff-fetcher suite", () => {
     const { getCachedLiveDiff } = await import("./live-diff-fetcher");
     await expect(
       getCachedLiveDiff(STORE.CATEGORIES, "2026-01-01T00:00:00Z"),
-    ).rejects.toThrow("Failed to fetch live diff for categories: Database connection failed");
+    ).rejects.toThrow(
+      "Failed to fetch live diff for categories: Database connection failed",
+    );
     mockError = null;
     mockData = [{ id: 2, name: "New Cat", updated_at: "2026-01-05T00:00:00Z" }];
   });

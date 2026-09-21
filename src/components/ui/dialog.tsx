@@ -40,11 +40,11 @@ function DialogContent({
   children,
   showCloseButton = true,
   style,
-  maxW = '24rem',
+  maxW = "24rem",
   ...props
 }: React.ComponentProps<typeof DialogPrimitive.Content> & {
   showCloseButton?: boolean;
-  maxW?: string | number
+  maxW?: string | number;
 }) {
   const isMobile = useIsMobile();
   return (

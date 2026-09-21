@@ -8,13 +8,11 @@ import {
   Paperclip,
   Search,
 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Badge } from "@/components/ui/badge";
+import { useEffect, useMemo, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
-  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
@@ -22,11 +20,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { STORE } from "@/constants";
+import { useCategories } from "@/hooks/use-categories";
 import { useSearch } from "@/hooks/use-search";
 import { getDB } from "@/lib/idb";
 import { slugToLabel } from "@/lib/utils";
 import type {
   CategorySearchDocument,
+  EnrichedMaterialSearchResult,
   MaterialSearchDocument,
   QueryAttachment,
   RecordingSearchDocument,
@@ -55,6 +55,12 @@ export const AttachmentContentDialog = ({
   onOpenChange,
   onSelect,
 }: AttachmentContentDialogProps) => {
+  const { data: allCategories = [] } = useCategories();
+  const catMap = useMemo(
+    () => new Map(allCategories.map((c) => [c.id, c])),
+    [allCategories],
+  );
+
   const { searchAll } = useSearch();
   const [searchTerm, setSearchTerm] = useState("");
   const [filterScope, setFilterScope] = useState<
@@ -64,7 +70,7 @@ export const AttachmentContentDialog = ({
   const [searchResults, setSearchResults] = useState<{
     recordings: RecordingSearchDocument[];
     categories: CategorySearchDocument[];
-    materials: MaterialSearchDocument[];
+    materials: EnrichedMaterialSearchResult[];
   }>({
     recordings: [],
     categories: [],
@@ -99,10 +105,43 @@ export const AttachmentContentDialog = ({
           ?.hits || []) as CategorySearchDocument[];
         const matHits = (results.find((r) => r.target === STORE.MATERIALS)
           ?.hits || []) as MaterialSearchDocument[];
+
+        const db = await getDB();
+        const enrichedMatHits: EnrichedMaterialSearchResult[] =
+          await Promise.all(
+            matHits.map(async (h) => {
+              const mat = db
+                ? await db.get(STORE.MATERIALS, Number(h.id))
+                : null;
+              if (!mat) {
+                return {
+                  id: Number(h.id),
+                  name: h.name,
+                  recording_id: h.recording_id,
+                  allowed_roles: [],
+                  type: "",
+                  size: null,
+                  uri: "",
+                  recording: null,
+                  category: catMap.get(h.category_id) ?? null,
+                } as EnrichedMaterialSearchResult;
+              }
+              const rec = await db?.get(STORE.RECORDINGS, mat.recording_id);
+              const cat = rec
+                ? (catMap.get(rec.category_id) ?? null)
+                : (catMap.get(mat.category_id) ?? null);
+              return {
+                ...mat,
+                recording: rec ?? null,
+                category: cat,
+              };
+            }),
+          );
+
         setSearchResults({
           recordings: recHits,
           categories: catHits,
-          materials: matHits,
+          materials: enrichedMatHits,
         });
       } catch (err) {
         console.error("Attachment Orama search error:", err);
@@ -115,27 +154,16 @@ export const AttachmentContentDialog = ({
       isCancelled = true;
       clearTimeout(timeoutId);
     };
-  }, [searchTerm, searchAll]);
+  }, [searchTerm, searchAll, catMap]);
 
-  const handleAttachRecording = async (rec: RecordingSearchDocument) => {
-    let categoryPathVal: string | undefined;
-    if (rec.category_id) {
-      try {
-        const db = await getDB();
-        const cat = await db?.get(STORE.CATEGORIES, rec.category_id);
-        if (cat?.url_path) {
-          categoryPathVal = cat.url_path;
-        }
-      } catch (err) {
-        console.error("Failed to lookup category:", err);
-      }
-    }
+  const handleAttachRecording = (rec: RecordingSearchDocument) => {
+    const cat = rec.category_id ? catMap.get(rec.category_id) : undefined;
     onSelect({
       type: "recording",
       id: Number(rec.id),
       name: rec.name,
       category_id: rec.category_id,
-      category_path: categoryPathVal,
+      category_path: cat?.url_path,
     });
     onOpenChange(false);
   };
@@ -150,15 +178,16 @@ export const AttachmentContentDialog = ({
     onOpenChange(false);
   };
 
-  const handleAttachMaterial = async (mat: MaterialSearchDocument) => {
-    const db = await getDB();
-    const fullMat = db ? await db.get(STORE.MATERIALS, Number(mat.id)) : null;
+  const handleAttachMaterial = (mat: EnrichedMaterialSearchResult) => {
     onSelect({
       type: "material",
       id: Number(mat.id),
       name: mat.name,
-      uri: fullMat?.uri,
-      material_type: fullMat?.type,
+      uri: mat.uri ?? undefined,
+      material_type: mat.type ?? undefined,
+      recording_id: mat.recording_id,
+      category_id: mat.category?.id,
+      category_path: mat.category?.url_path,
     });
     onOpenChange(false);
   };
@@ -184,7 +213,10 @@ export const AttachmentContentDialog = ({
         <DialogHeader>
           <DialogTitle>Select Content</DialogTitle>
         </DialogHeader>
-        <div className="flex flex-col gap-3 py-2 overflow-hidden" style={{ minWidth: 0 }}>
+        <div
+          className="flex flex-col gap-3 py-2 overflow-hidden"
+          style={{ minWidth: 0 }}
+        >
           <div className="relative flex items-center">
             <Search className="absolute left-3 w-4 h-4 text-muted-foreground" />
             <Input
@@ -322,6 +354,22 @@ export const AttachmentContentDialog = ({
                         {mat.name}
                       </span>
                     </div>
+                    {(mat.category || mat.recording) && (
+                      <div
+                        className="text-xxs text-muted-foreground pl-6 flex items-center gap-1 font-medium truncate w-full"
+                        style={{ minWidth: 0 }}
+                      >
+                        {mat.category && (
+                          <span className="shrink-0">{mat.category.name}</span>
+                        )}
+                        {mat.category && mat.recording && (
+                          <ChevronRight className="w-3 h-3 shrink-0" />
+                        )}
+                        {mat.recording && (
+                          <span className="truncate">{mat.recording.name}</span>
+                        )}
+                      </div>
+                    )}
                   </Button>
                 ))}
               </>

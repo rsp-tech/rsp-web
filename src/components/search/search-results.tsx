@@ -11,13 +11,13 @@ import {
 import { trackEvent } from "@/lib/analytics";
 import { getCategoryImageUrl } from "@/lib/storage";
 import { categoryPath } from "@/lib/utils";
-import type { Category, EnrichedRecording, Material, Recording } from "@/types";
+import type {
+  Category,
+  EnrichedMaterialSearchResult,
+  EnrichedRecording,
+  Recording,
+} from "@/types";
 import { RecordingMeta } from "../recording-meta";
-
-export interface EnrichedMaterialSearchResult extends Material {
-  recording: Recording | null;
-  category: Category | null;
-}
 
 interface SearchResultsProps {
   categories: Category[];

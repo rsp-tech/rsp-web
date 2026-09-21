@@ -28,6 +28,10 @@ export type Language = Tables<"languages">;
 export type ContentType = Tables<"content_types">;
 export type Venue = Tables<"venues">;
 export type Material = Tables<"materials">;
+export interface EnrichedMaterialSearchResult extends Material {
+  recording: Recording | null;
+  category: Category | null;
+}
 export type Event = Tables<"events">;
 export type Redirect = Tables<"redirects">;
 export type Service = Tables<"services">;
@@ -168,6 +172,9 @@ export type QueryAttachment =
       name: string;
       uri?: string;
       material_type?: string;
+      recording_id?: number;
+      category_id?: number;
+      category_path?: string;
     };
 
 export type UserQuery = DB_TABLE<"user_queries">;

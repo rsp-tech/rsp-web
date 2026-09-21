@@ -1,12 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { FEATURE_FLAGS } from "@/constants";
 import type { Json } from "@/database.types";
+import { isFeatureFlagEnabled } from "@/lib/feature-flags-service";
 import {
   getSupabaseServerClient,
   handleMutationResult,
 } from "@/lib/supabase-server";
 import type { QueryAttachment } from "@/types";
-import { FEATURE_FLAGS } from "@/constants";
-import { isFeatureFlagEnabled } from "@/lib/feature-flags-service";
 import { validateAttachments } from "./query-utils";
 
 interface QueryRequestBody {

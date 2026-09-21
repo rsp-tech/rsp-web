@@ -149,6 +149,38 @@ export const QueryAttachmentList = ({
         }
 
         if (att.type === "material") {
+          const catPath =
+            att.category_path ||
+            (att.category_id
+              ? categories?.find((c) => c.id === att.category_id)?.url_path
+              : undefined);
+
+          const href = att.recording_id
+            ? catPath
+              ? `/${categoryPath(catPath)}?q=${att.recording_id}&m=${att.id}`
+              : `/?q=${att.recording_id}&m=${att.id}`
+            : undefined;
+
+          if (href) {
+            return (
+              <Link
+                key={key}
+                href={href}
+                className="inline-flex cursor-pointer"
+              >
+                <Badge
+                  variant="outline"
+                  className="gap-1.5 py-0.5 px-2 text-xs"
+                >
+                  <Paperclip className="w-3 h-3 text-primary" />
+                  <span className="max-w-xs truncate">
+                    Material: {att.name}
+                  </span>
+                </Badge>
+              </Link>
+            );
+          }
+
           return (
             <Button
               key={key}
