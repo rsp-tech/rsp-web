@@ -1,15 +1,15 @@
 {
   "totalClasses": 366,
-  "timestamp": "2026-09-21T07:24:53.732Z",
-  "baselineCSSBytes": 67069,
-  "baselineBrotliBytes": 9877,
+  "timestamp": "2026-09-21T08:40:39.470Z",
+  "baselineCSSBytes": 67111,
+  "baselineBrotliBytes": 9851,
   "newlyAddedClasses": [],
   "nextGeneratedCss": [
     {
-      "file": "4d179dc63fe60bda.css",
-      "rawBytes": 70696,
-      "brotliBytes": 10444,
-      "gZipBytes": 12200
+      "file": "9f3d5dc016898382.css",
+      "rawBytes": 70738,
+      "brotliBytes": 10440,
+      "gZipBytes": 12210
     },
     {
       "file": "b937c0a36a6b17c3.css",
@@ -531,7 +531,7 @@
     },
     {
       "className": "cursor-pointer",
-      "frequency": 91,
+      "frequency": 93,
       "length": 14,
       "uncompressedBytes": 31,
       "brotliBytesUpperLimit": 31,
@@ -1107,7 +1107,7 @@
     },
     {
       "className": "font-medium",
-      "frequency": 33,
+      "frequency": 35,
       "length": 11,
       "uncompressedBytes": 94,
       "brotliBytesUpperLimit": 50,
@@ -1651,7 +1651,7 @@
     },
     {
       "className": "leading-relaxed",
-      "frequency": 19,
+      "frequency": 17,
       "length": 15,
       "uncompressedBytes": 88,
       "brotliBytesUpperLimit": 53,
@@ -2835,7 +2835,7 @@
     },
     {
       "className": "text-primary",
-      "frequency": 86,
+      "frequency": 88,
       "length": 12,
       "uncompressedBytes": 35,
       "brotliBytesUpperLimit": 35,
@@ -2851,7 +2851,7 @@
     },
     {
       "className": "text-sm",
-      "frequency": 52,
+      "frequency": 51,
       "length": 7,
       "uncompressedBytes": 92,
       "brotliBytesUpperLimit": 56,
@@ -2891,7 +2891,7 @@
     },
     {
       "className": "text-xs",
-      "frequency": 179,
+      "frequency": 178,
       "length": 7,
       "uncompressedBytes": 92,
       "brotliBytesUpperLimit": 57,

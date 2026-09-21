@@ -45,7 +45,7 @@ border-success/20,3,17,0,0
 border-t,17,8,71,65
 border-transparent,3,18,39,31
 border-warning/20,3,17,0,0
-cursor-pointer,91,14,31,31
+cursor-pointer,93,14,31,31
 dark,1,4,900,249
 data-[range-end=true]:bg-primary,1,32,0,0
 data-[range-end=true]:text-primary-foreground,1,45,0,0
@@ -117,7 +117,7 @@ focus:text-accent-foreground,4,28,0,0
 focus:text-destructive,1,22,0,0
 font-bold,121,9,88,57
 font-heading,32,12,50,42
-font-medium,33,11,94,50
+font-medium,35,11,94,50
 font-semibold,62,13,100,60
 font-serif,9,10,42,46
 from-primary/20,4,15,0,0
@@ -185,7 +185,7 @@ justify-center,38,14,39,31
 justify-end,8,11,38,36
 justify-start,7,13,42,35
 leading-none,8,12,43,46
-leading-relaxed,19,15,88,53
+leading-relaxed,17,15,88,53
 leading-snug,9,12,79,51
 leading-tight,2,13,82,51
 left-1/2,2,8,0,0
@@ -333,14 +333,14 @@ text-foreground,24,15,41,44
 text-left,17,9,27,31
 text-lg,9,7,92,56
 text-muted-foreground,193,21,53,47
-text-primary,86,12,35,35
+text-primary,88,12,35,35
 text-primary-foreground,4,23,57,50
-text-sm,52,7,92,56
+text-sm,51,7,92,56
 text-success,6,12,35,34
 text-warning,9,12,35,35
 text-white,8,10,37,41
 text-xl,13,7,92,57
-text-xs,179,7,92,57
+text-xs,178,7,92,57
 text-xxs,60,8,65,55
 to-transparent,4,14,234,83
 toaster,1,7,0,0

@@ -3,6 +3,7 @@
 import { MessageSquare } from "lucide-react";
 import type { QueryAttachment, QueryReplyWithUser } from "@/types";
 import { QueryAttachmentList } from "./query-attachment-list";
+import { QueryMarkdown } from "./query-markdown";
 
 interface QueryReplyThreadProps {
   replies: QueryReplyWithUser[];
@@ -65,9 +66,9 @@ export const QueryReplyThread = ({
                       : ""}
                   </span>
                 </div>
-                <p className="text-xs leading-relaxed mt-0.5 text-left">
-                  {reply.message}
-                </p>
+                <div className="mt-0.5 text-left">
+                  <QueryMarkdown content={reply.message} />
+                </div>
                 <QueryAttachmentList
                   attachments={
                     reply.attachments as unknown as QueryAttachment[]

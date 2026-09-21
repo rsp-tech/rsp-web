@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { formatQueryDate } from "@/lib/utils";
 import type { QueryAttachment, QueryReplyWithUser, UserQuery } from "@/types";
 import { QueryAttachmentList } from "./query-attachment-list";
+import { QueryMarkdown } from "./query-markdown";
 import { QueryReplyForm } from "./query-reply-form";
 import { QueryReplyThread } from "./query-reply-thread";
 
@@ -149,12 +150,7 @@ export const QueryItem = ({
               <span suppressHydrationWarning>{formattedCreated}</span>
             )}
           </div>
-          <p
-            className="text-sm leading-relaxed p-2"
-            style={{ whiteSpace: "pre-wrap" }}
-          >
-            {q.message}
-          </p>
+          <QueryMarkdown content={q.message} className="p-2" />
           <QueryAttachmentList
             attachments={q.attachments as unknown as QueryAttachment[]}
           />
