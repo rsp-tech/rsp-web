@@ -32,7 +32,7 @@ export type Database = {
           start_date: string | null;
           subtitle: string | null;
           title: string;
-          ui_props?: Json | null;
+          ui_props: Json | null;
           updated_at: string | null;
         };
         Insert: {
@@ -432,6 +432,7 @@ export type Database = {
       };
       query_replies: {
         Row: {
+          attachments: Json;
           id: string;
           message: string;
           query_id: string;
@@ -439,6 +440,7 @@ export type Database = {
           user_id: string | null;
         };
         Insert: {
+          attachments?: Json;
           id?: string;
           message: string;
           query_id: string;
@@ -446,6 +448,7 @@ export type Database = {
           user_id?: string | null;
         };
         Update: {
+          attachments?: Json;
           id?: string;
           message?: string;
           query_id?: string;
@@ -763,6 +766,7 @@ export type Database = {
       };
       user_queries: {
         Row: {
+          attachments: Json;
           category: string;
           created_at: string | null;
           guest_email: string | null;
@@ -775,6 +779,7 @@ export type Database = {
           user_id: string | null;
         };
         Insert: {
+          attachments?: Json;
           category: string;
           created_at?: string | null;
           guest_email?: string | null;
@@ -787,6 +792,7 @@ export type Database = {
           user_id?: string | null;
         };
         Update: {
+          attachments?: Json;
           category?: string;
           created_at?: string | null;
           guest_email?: string | null;
