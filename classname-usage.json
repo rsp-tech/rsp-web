@@ -1,6 +1,6 @@
 {
   "totalClasses": 366,
-  "timestamp": "2026-09-21T01:56:58.731Z",
+  "timestamp": "2026-09-21T03:43:04.678Z",
   "baselineCSSBytes": 67069,
   "baselineBrotliBytes": 9877,
   "newlyAddedClasses": [],
@@ -34,6 +34,7 @@
       "src\\app\\get-involved\\volunteer-item.tsx",
       "src\\app\\profile\\_components\\personal-settings-form.tsx",
       "src\\app\\profile\\page.tsx",
+      "src\\app\\queries\\_components\\new-query-dialog.tsx",
       "src\\app\\queries\\_components\\query-attachment-picker.tsx",
       "src\\app\\queries\\_components\\query-item.tsx",
       "src\\app\\queries\\_components\\query-list.tsx",
@@ -69,6 +70,7 @@
       "src\\components\\user-nav.tsx"
     ],
     "src\\components\\ui\\dialog.tsx": [
+      "src\\app\\queries\\_components\\new-query-dialog.tsx",
       "src\\app\\queries\\_components\\query-attachment-picker.tsx",
       "src\\components\\auth-modal.tsx",
       "src\\components\\download-recordings-modal.tsx",
@@ -77,6 +79,7 @@
     "src\\components\\ui\\input.tsx": [
       "src\\app\\contact-us\\contact-us-client.tsx",
       "src\\app\\profile\\_components\\personal-settings-form.tsx",
+      "src\\app\\queries\\_components\\new-query-dialog.tsx",
       "src\\app\\queries\\_components\\query-attachment-picker.tsx",
       "src\\app\\queries\\_components\\query-filters.tsx",
       "src\\components\\auth-modal.tsx",
@@ -111,6 +114,7 @@
       "src\\app\\about\\consultation-section.tsx",
       "src\\app\\contact-us\\contact-us-client.tsx",
       "src\\app\\profile\\_components\\personal-settings-form.tsx",
+      "src\\app\\queries\\_components\\new-query-dialog.tsx",
       "src\\app\\queries\\_components\\query-reply-form.tsx",
       "src\\components\\recording-sort-controls.tsx",
       "src\\components\\search-bar-dropdown.tsx"
@@ -140,12 +144,14 @@
       "src\\app\\contact-us\\contact-us-client.tsx",
       "src\\app\\get-involved\\volunteer-item.tsx",
       "src\\app\\profile\\_components\\personal-settings-form.tsx",
+      "src\\app\\queries\\_components\\new-query-dialog.tsx",
       "src\\app\\queries\\_components\\query-filters.tsx"
     ],
     "src\\components\\ui\\textarea.tsx": [
       "src\\app\\contact-us\\contact-us-client.tsx",
       "src\\app\\get-involved\\volunteer-item.tsx",
       "src\\app\\profile\\_components\\personal-settings-form.tsx",
+      "src\\app\\queries\\_components\\new-query-dialog.tsx",
       "src\\app\\queries\\_components\\query-reply-form.tsx"
     ],
     "src\\components\\ui\\badge.tsx": [
@@ -230,7 +236,7 @@
     },
     {
       "className": "animate-spin",
-      "frequency": 18,
+      "frequency": 19,
       "length": 12,
       "uncompressedBytes": 44,
       "brotliBytesUpperLimit": 43,
@@ -286,7 +292,7 @@
     },
     {
       "className": "bg-card",
-      "frequency": 25,
+      "frequency": 26,
       "length": 7,
       "uncompressedBytes": 38,
       "brotliBytesUpperLimit": 38,
@@ -302,7 +308,7 @@
     },
     {
       "className": "bg-destructive/10",
-      "frequency": 6,
+      "frequency": 7,
       "length": 17,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0,
@@ -414,7 +420,7 @@
     },
     {
       "className": "border",
-      "frequency": 71,
+      "frequency": 72,
       "length": 6,
       "uncompressedBytes": 61,
       "brotliBytesUpperLimit": 61,
@@ -438,7 +444,7 @@
     },
     {
       "className": "border-border/40",
-      "frequency": 17,
+      "frequency": 18,
       "length": 16,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0,
@@ -454,7 +460,7 @@
     },
     {
       "className": "border-destructive/20",
-      "frequency": 6,
+      "frequency": 7,
       "length": 21,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0,
@@ -502,7 +508,7 @@
     },
     {
       "className": "border-t",
-      "frequency": 17,
+      "frequency": 18,
       "length": 8,
       "uncompressedBytes": 71,
       "brotliBytesUpperLimit": 65,
@@ -526,7 +532,7 @@
     },
     {
       "className": "cursor-pointer",
-      "frequency": 89,
+      "frequency": 93,
       "length": 14,
       "uncompressedBytes": 31,
       "brotliBytesUpperLimit": 31,
@@ -934,7 +940,7 @@
     },
     {
       "className": "flex",
-      "frequency": 425,
+      "frequency": 433,
       "length": 4,
       "uncompressedBytes": 19,
       "brotliBytesUpperLimit": 23,
@@ -950,7 +956,7 @@
     },
     {
       "className": "flex-col",
-      "frequency": 211,
+      "frequency": 217,
       "length": 8,
       "uncompressedBytes": 32,
       "brotliBytesUpperLimit": 33,
@@ -1086,7 +1092,7 @@
     },
     {
       "className": "font-bold",
-      "frequency": 120,
+      "frequency": 121,
       "length": 9,
       "uncompressedBytes": 88,
       "brotliBytesUpperLimit": 57,
@@ -1110,7 +1116,7 @@
     },
     {
       "className": "font-semibold",
-      "frequency": 62,
+      "frequency": 66,
       "length": 13,
       "uncompressedBytes": 100,
       "brotliBytesUpperLimit": 60,
@@ -1134,7 +1140,7 @@
     },
     {
       "className": "gap-1",
-      "frequency": 68,
+      "frequency": 69,
       "length": 5,
       "uncompressedBytes": 26,
       "brotliBytesUpperLimit": 30,
@@ -1142,7 +1148,7 @@
     },
     {
       "className": "gap-1.5",
-      "frequency": 81,
+      "frequency": 85,
       "length": 7,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0,
@@ -1150,7 +1156,7 @@
     },
     {
       "className": "gap-2",
-      "frequency": 112,
+      "frequency": 115,
       "length": 5,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40,
@@ -1174,7 +1180,7 @@
     },
     {
       "className": "gap-4",
-      "frequency": 44,
+      "frequency": 46,
       "length": 5,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40,
@@ -1358,7 +1364,7 @@
     },
     {
       "className": "h-4",
-      "frequency": 113,
+      "frequency": 118,
       "length": 3,
       "uncompressedBytes": 37,
       "brotliBytesUpperLimit": 41,
@@ -1366,7 +1372,7 @@
     },
     {
       "className": "h-5",
-      "frequency": 24,
+      "frequency": 25,
       "length": 3,
       "uncompressedBytes": 37,
       "brotliBytesUpperLimit": 41,
@@ -1390,7 +1396,7 @@
     },
     {
       "className": "h-9",
-      "frequency": 12,
+      "frequency": 13,
       "length": 3,
       "uncompressedBytes": 37,
       "brotliBytesUpperLimit": 41,
@@ -1398,7 +1404,7 @@
     },
     {
       "className": "h-full",
-      "frequency": 37,
+      "frequency": 39,
       "length": 6,
       "uncompressedBytes": 20,
       "brotliBytesUpperLimit": 24,
@@ -1590,7 +1596,7 @@
     },
     {
       "className": "items-center",
-      "frequency": 194,
+      "frequency": 196,
       "length": 12,
       "uncompressedBytes": 33,
       "brotliBytesUpperLimit": 30,
@@ -1622,7 +1628,7 @@
     },
     {
       "className": "justify-end",
-      "frequency": 7,
+      "frequency": 8,
       "length": 11,
       "uncompressedBytes": 38,
       "brotliBytesUpperLimit": 36,
@@ -1630,7 +1636,7 @@
     },
     {
       "className": "justify-start",
-      "frequency": 5,
+      "frequency": 6,
       "length": 13,
       "uncompressedBytes": 42,
       "brotliBytesUpperLimit": 35,
@@ -1646,7 +1652,7 @@
     },
     {
       "className": "leading-relaxed",
-      "frequency": 19,
+      "frequency": 20,
       "length": 15,
       "uncompressedBytes": 88,
       "brotliBytesUpperLimit": 53,
@@ -2014,7 +2020,7 @@
     },
     {
       "className": "mr-2",
-      "frequency": 6,
+      "frequency": 7,
       "length": 4,
       "uncompressedBytes": 44,
       "brotliBytesUpperLimit": 48,
@@ -2150,7 +2156,7 @@
     },
     {
       "className": "p-0",
-      "frequency": 17,
+      "frequency": 18,
       "length": 3,
       "uncompressedBytes": 15,
       "brotliBytesUpperLimit": 19,
@@ -2182,7 +2188,7 @@
     },
     {
       "className": "p-3",
-      "frequency": 23,
+      "frequency": 24,
       "length": 3,
       "uncompressedBytes": 38,
       "brotliBytesUpperLimit": 42,
@@ -2198,7 +2204,7 @@
     },
     {
       "className": "p-6",
-      "frequency": 4,
+      "frequency": 5,
       "length": 3,
       "uncompressedBytes": 38,
       "brotliBytesUpperLimit": 42,
@@ -2326,7 +2332,7 @@
     },
     {
       "className": "pt-2",
-      "frequency": 15,
+      "frequency": 16,
       "length": 4,
       "uncompressedBytes": 43,
       "brotliBytesUpperLimit": 47,
@@ -2534,7 +2540,7 @@
     },
     {
       "className": "rounded-lg",
-      "frequency": 28,
+      "frequency": 29,
       "length": 10,
       "uncompressedBytes": 40,
       "brotliBytesUpperLimit": 41,
@@ -2782,7 +2788,7 @@
     },
     {
       "className": "text-destructive",
-      "frequency": 29,
+      "frequency": 32,
       "length": 16,
       "uncompressedBytes": 43,
       "brotliBytesUpperLimit": 47,
@@ -2822,7 +2828,7 @@
     },
     {
       "className": "text-muted-foreground",
-      "frequency": 191,
+      "frequency": 193,
       "length": 21,
       "uncompressedBytes": 53,
       "brotliBytesUpperLimit": 47,
@@ -2830,7 +2836,7 @@
     },
     {
       "className": "text-primary",
-      "frequency": 88,
+      "frequency": 89,
       "length": 12,
       "uncompressedBytes": 35,
       "brotliBytesUpperLimit": 35,
@@ -2878,7 +2884,7 @@
     },
     {
       "className": "text-xl",
-      "frequency": 12,
+      "frequency": 13,
       "length": 7,
       "uncompressedBytes": 92,
       "brotliBytesUpperLimit": 57,
@@ -2886,7 +2892,7 @@
     },
     {
       "className": "text-xs",
-      "frequency": 177,
+      "frequency": 188,
       "length": 7,
       "uncompressedBytes": 92,
       "brotliBytesUpperLimit": 57,
@@ -3014,7 +3020,7 @@
     },
     {
       "className": "w-4",
-      "frequency": 112,
+      "frequency": 117,
       "length": 3,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40,
@@ -3022,7 +3028,7 @@
     },
     {
       "className": "w-5",
-      "frequency": 24,
+      "frequency": 25,
       "length": 3,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40,

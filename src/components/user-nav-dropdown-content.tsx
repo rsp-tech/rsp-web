@@ -1,7 +1,7 @@
 "use client";
 
 import type { Session } from "@supabase/supabase-js";
-import { LogOut, User } from "lucide-react";
+import { LogOut, MessageSquare, User } from "lucide-react";
 import { useRouter } from "next/navigation";
 import {
   DropdownMenuContent,
@@ -42,6 +42,10 @@ export const UserNavDropdownContent = ({
         <DropdownMenuItem onClick={() => router.push("/profile")}>
           <User className="mr-2 h-4 w-4" />
           Profile
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => router.push("/queries")}>
+          <MessageSquare className="mr-2 h-4 w-4" />
+          My Queries
         </DropdownMenuItem>
       </DropdownMenuGroup>
       <DropdownMenuItem
