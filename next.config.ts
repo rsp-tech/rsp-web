@@ -54,7 +54,7 @@ const nextConfig: NextConfig = {
         headers: [
           {
             key: "Content-Security-Policy",
-            value: `default-src 'self'; script-src 'self'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""} 'unsafe-inline' https://*.mayankchaudhari.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com https://i.ytimg.com; media-src 'self' blob: https://*.mayankchaudhari.com; connect-src 'self' https://bfiyqzcnmkpczkmgounm.supabase.co wss://bfiyqzcnmkpczkmgounm.supabase.co https://*.mayankchaudhari.com https://*.google.com; font-src 'self' data:; frame-src 'self' https://www.youtube-nocookie.com https://www.youtube.com https://*.google.com https://accounts.google.com; frame-ancestors 'self'; object-src 'none';`,
+            value: `default-src 'self'; script-src 'self'${process.env.NODE_ENV === "development" ? " 'unsafe-eval'" : ""} 'unsafe-inline' https://*.mayankchaudhari.com https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https://lh3.googleusercontent.com https://i.ytimg.com; media-src 'self' blob: https://*.mayankchaudhari.com; connect-src 'self' https://bfiyqzcnmkpczkmgounm.supabase.co https://cloudflareinsights.com wss://bfiyqzcnmkpczkmgounm.supabase.co https://*.mayankchaudhari.com https://*.google.com; font-src 'self' data:; frame-src 'self' https://www.youtube-nocookie.com https://www.youtube.com https://*.google.com https://accounts.google.com; frame-ancestors 'self'; object-src 'none';`,
           },
           {
             key: "Cross-Origin-Opener-Policy",
