@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { STORE } from "@/constants";
 import { getDB } from "@/lib/idb";
+import { sortByDate } from "@/lib/utils";
 import type { QueryReplyWithUser, UserQuery } from "@/types";
 
 export const useUserQueriesAndReplies = (userId: string | undefined) =>
@@ -39,13 +40,9 @@ export const useUserQueriesAndReplies = (userId: string | undefined) =>
         });
       }
 
-      // Sort replies ascending
+      // Sort replies ascending by updated_at (oldest first, newest last)
       for (const qId of Object.keys(replies)) {
-        replies[qId].sort(
-          (a, b) =>
-            new Date(a.updated_at ?? 0).getTime() -
-            new Date(b.updated_at ?? 0).getTime(),
-        );
+        replies[qId].sort(sortByDate());
       }
 
       return { queries, replies };

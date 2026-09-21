@@ -267,9 +267,12 @@ export const computeUserSyncDelta = async (
         return row["user_id"] === userId;
       });
 
-      const resultDelta = stripUpdatedAt(
-        userRows.map((r) => pickSyncColumns(r, table)).sort(sortByDate()),
-      );
+      const resultDelta =
+        table === STORE.QUERY_REPLIES
+          ? userRows.map((r) => pickSyncColumns(r, table)).sort(sortByDate())
+          : stripUpdatedAt(
+              userRows.map((r) => pickSyncColumns(r, table)).sort(sortByDate()),
+            );
       return [table, resultDelta] as [SyncTable, unknown[]];
     }),
   );

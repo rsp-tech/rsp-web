@@ -380,9 +380,14 @@ export const loadUserSeeds = async (
       continue;
     }
 
-    const cleanRows = stripUpdatedAt(
-      rows as Array<RSP_IDB[IDBTable]["value"] & { updated_at?: unknown }>,
-    );
+    const cleanRows =
+      table === STORE.QUERY_REPLIES
+        ? rows
+        : stripUpdatedAt(
+            rows as Array<
+              RSP_IDB[IDBTable]["value"] & { updated_at?: unknown }
+            >,
+          );
     const tx = db.transaction(table as IDBTable, "readwrite");
     for (const record of cleanRows) {
       tx.store.put(record as RSP_IDB[IDBTable]["value"]);

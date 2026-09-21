@@ -1,6 +1,7 @@
 "use client";
 
 import { MessageSquare } from "lucide-react";
+import { formatQueryDate } from "@/lib/utils";
 import type { QueryAttachment, QueryReplyWithUser } from "@/types";
 import { QueryAttachmentList } from "./query-attachment-list";
 import { QueryMarkdown } from "./query-markdown";
@@ -58,12 +59,7 @@ export const QueryReplyThread = ({
                   </span>
                   <span>•</span>
                   <span suppressHydrationWarning>
-                    {reply.updated_at
-                      ? new Date(reply.updated_at).toLocaleString(undefined, {
-                          dateStyle: "short",
-                          timeStyle: "short",
-                        })
-                      : ""}
+                    {formatQueryDate(reply.updated_at)}
                   </span>
                 </div>
                 <div className="mt-0.5 text-left">
