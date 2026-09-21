@@ -129,6 +129,47 @@ export interface EnrichedFeaturedSection extends FeaturedSection {
   items: EnrichedFeaturedItem[];
 }
 
+export type QueryAttachment =
+  | {
+      type: "image";
+      name: string;
+      uri: string;
+      mime_type: string;
+      size?: number;
+    }
+  | {
+      type: "pdf";
+      name: string;
+      uri: string;
+      mime_type: string;
+      size?: number;
+    }
+  | {
+      type: "link";
+      title: string;
+      uri: string;
+    }
+  | {
+      type: "recording";
+      id: number;
+      name: string;
+      category_id?: number;
+      category_path?: string;
+    }
+  | {
+      type: "category";
+      id: number;
+      name: string;
+      url_path?: string;
+    }
+  | {
+      type: "material";
+      id: number;
+      name: string;
+      uri?: string;
+      material_type?: string;
+    };
+
 export type UserQuery = DB_TABLE<"user_queries">;
 export type QueryReply = DB_TABLE<"query_replies">;
 export type DeletedRecord = DB_TABLE<"deleted_records">;

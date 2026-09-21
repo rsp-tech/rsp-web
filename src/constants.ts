@@ -434,4 +434,6 @@ export const PHILOSOPHICAL_CONCEPTS = [
   "Dharma — Eternal Duty",
 ] as const;
 
-export const FEATURE_FLAGS = {};
+export const FEATURE_FLAGS = {
+  QUERY_FILE_UPLOADS: "query_file_uploads",
+} as const;

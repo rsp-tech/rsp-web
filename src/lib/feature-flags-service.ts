@@ -72,3 +72,39 @@ export const evaluateUserFlags = (
 
   return allowed;
 };
+
+export const isFeatureFlagEnabled = async (
+  flagId: string,
+  userOrUserId?: User | string | null,
+): Promise<boolean> => {
+  const flags = await getCachedFeatureFlags();
+  const publicFlags = evaluatePublicFlags(flags);
+  if (publicFlags.includes(flagId)) return true;
+
+  if (!userOrUserId) return false;
+
+  if (typeof userOrUserId === "string") {
+    const supabase = getSupabaseServerClient();
+    const { data: dbUser } = await supabase
+      .from("users")
+      .select("role_id, email")
+      .eq("id", userOrUserId)
+      .maybeSingle();
+
+    if (!dbUser) return false;
+
+    const userLike: User = {
+      id: userOrUserId,
+      email: dbUser.email ?? undefined,
+      app_metadata: { role_id: dbUser.role_id },
+      user_metadata: {},
+      aud: "",
+      created_at: "",
+    };
+    const userFlags = evaluateUserFlags(flags, userLike);
+    return userFlags.includes(flagId);
+  }
+
+  const userFlags = evaluateUserFlags(flags, userOrUserId);
+  return userFlags.includes(flagId);
+};
