@@ -1,6 +1,25 @@
 import { describe, expect, it, vi } from "vitest";
 import type { Announcement } from "@/types";
 
+vi.mock("next/navigation", () => ({
+  usePathname: () => "/queries",
+}));
+
+vi.mock("@/hooks/use-homepage", () => ({
+  useHomepage: () => ({
+    data: {
+      announcements: [
+        {
+          id: 1,
+          title: "Test Announcement",
+          is_active: true,
+          order_ind: 1,
+        },
+      ],
+    },
+  }),
+}));
+
 vi.mock("./announcement-banner/use-announcement-carousel", () => ({
   useAnnouncementCarousel: () => ({
     currentIndex: 0,
@@ -73,6 +92,12 @@ describe.concurrent("src/components/announcement-banner suite", () => {
   it.concurrent("exports AnnouncementBanner and TopAnnouncementBanner components", () => {
     expect(typeof AnnouncementBanner).toBe("function");
     expect(typeof TopAnnouncementBanner).toBe("function");
+  });
+
+  it.concurrent("TopAnnouncementBanner returns null when on /queries route", () => {
+    // If pathname is /queries or no announcements, TopAnnouncementBanner returns null
+    const result = TopAnnouncementBanner();
+    expect(result).toBeNull();
   });
 
   describe.concurrent("URL and Height normalization helpers", () => {

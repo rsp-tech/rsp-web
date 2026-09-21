@@ -1,5 +1,6 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { useHomepage } from "@/hooks/use-homepage";
 import { AnnouncementBanner } from "./announcement-banner/announcement-banner-carousel";
 
@@ -14,9 +15,10 @@ export {
 export { useAnnouncementCarousel } from "./announcement-banner/use-announcement-carousel";
 
 export const TopAnnouncementBanner = () => {
+  const pathname = usePathname();
   const { data: homepageData } = useHomepage();
 
-  if (!homepageData?.announcements?.length) {
+  if (pathname === "/queries" || !homepageData?.announcements?.length) {
     return null;
   }
 
