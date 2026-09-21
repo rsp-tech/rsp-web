@@ -141,3 +141,55 @@ export const formatSize = (bytes?: unknown): string => {
   const gb = num / (k * k * k);
   return `${gb.toFixed(1).replace(/\.0$/, "")}GB`;
 };
+
+export const isSameDay = (d1: Date, d2: Date = new Date()): boolean =>
+  d1.getDate() === d2.getDate() &&
+  d1.getMonth() === d2.getMonth() &&
+  d1.getFullYear() === d2.getFullYear();
+
+export const formatQueryDate = (dateStr?: string | null): string => {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const now = new Date();
+  const timeStr = date.toLocaleTimeString(undefined, {
+    hour: "numeric",
+    minute: "2-digit",
+  });
+
+  if (isSameDay(date, now)) {
+    return `Today, ${timeStr}`;
+  }
+
+  const yesterday = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (isSameDay(date, yesterday)) {
+    return `Yesterday, ${timeStr}`;
+  }
+
+  return `${date.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+    year: date.getFullYear() !== now.getFullYear() ? "numeric" : undefined,
+  })}, ${timeStr}`;
+};
+
+export const formatCompactDate = (dateStr?: string | null): string => {
+  if (!dateStr) return "";
+  const date = new Date(dateStr);
+  if (Number.isNaN(date.getTime())) return "";
+
+  const now = new Date();
+  if (isSameDay(date, now)) {
+    return date.toLocaleTimeString(undefined, {
+      hour: "numeric",
+      minute: "2-digit",
+    });
+  }
+
+  return date.toLocaleDateString(undefined, {
+    month: "short",
+    day: "numeric",
+  });
+};

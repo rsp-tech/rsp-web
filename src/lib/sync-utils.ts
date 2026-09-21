@@ -96,9 +96,12 @@ export const castValue = (
 
   if (
     fieldName === "ui_props" ||
+    fieldName === "attachments" ||
     (trimmed.startsWith("{") && trimmed.endsWith("}"))
   ) {
-    if (trimmed === "" || trimmed === "null") return null;
+    if (trimmed === "" || trimmed === "null") {
+      return fieldName === "attachments" ? [] : null;
+    }
     try {
       const parsed = JSON.parse(trimmed);
       if (typeof parsed === "string") {
@@ -110,7 +113,11 @@ export const castValue = (
       }
       return parsed;
     } catch {
-      return fieldName === "ui_props" ? null : val;
+      return fieldName === "attachments"
+        ? []
+        : fieldName === "ui_props"
+          ? null
+          : val;
     }
   }
 
