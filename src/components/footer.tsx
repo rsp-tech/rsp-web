@@ -1,8 +1,12 @@
 "use client";
 
+import { usePathname } from "next/navigation";
 import { NavLinks } from "./nav-links";
 
-export function Footer() {
+export const Footer = () => {
+  const pathname = usePathname();
+  if (pathname === "/queries") return null;
+
   return (
     <footer className="w-full border-t border-border bg-background/50 text-foreground mt-auto">
       <div
@@ -26,4 +30,4 @@ export function Footer() {
       </div>
     </footer>
   );
-}
+};
