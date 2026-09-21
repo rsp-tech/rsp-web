@@ -76,7 +76,11 @@ export const castValue = (
   }
 
   // Array fields (like allowed_roles, lang_ids, speaker_ids)
-  if (fieldName === "allowed_roles" || fieldName.endsWith("_ids")) {
+  if (
+    fieldName === "allowed_roles" ||
+    fieldName === "allowed_emails" ||
+    fieldName.endsWith("_ids")
+  ) {
     if (trimmed === "" || trimmed === "{}" || trimmed === "[]") return [];
     // Remove quotes, brackets, braces
     const clean = trimmed.replace(/[{}[\]"]/g, "");
