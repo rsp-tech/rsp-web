@@ -47,6 +47,7 @@ export const RecordingCards = ({ sortedRecordings }: RecordingCardsProps) => {
     if (!q) return;
 
     let timer: NodeJS.Timeout;
+    let timer2: NodeJS.Timeout;
     const animFrame = requestAnimationFrame(() => {
       const element = document.getElementById(`recording-${q}`);
       if (!element) return;
@@ -59,12 +60,14 @@ export const RecordingCards = ({ sortedRecordings }: RecordingCardsProps) => {
       };
 
       scrollToEl();
-      timer = setTimeout(scrollToEl, 150);
+      timer = setTimeout(scrollToEl, 250);
+      timer2 = setTimeout(scrollToEl, 450);
     });
 
     return () => {
       animFrame && cancelAnimationFrame(animFrame);
       timer && clearTimeout(timer);
+      timer2 && clearTimeout(timer2);
     };
   }, [q]);
 
