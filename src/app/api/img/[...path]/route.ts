@@ -1,6 +1,9 @@
 import type { NextRequest } from "next/server";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
+export const dynamic = "force-static";
+export const revalidate = 31536000;
+
 const VALID_FILENAME_REGEX = /^[a-zA-Z0-9_-]+\.(webp|avif|png|jpg|jpeg)$/i;
 
 const getContentType = (filename: string, blobType?: string): string => {
