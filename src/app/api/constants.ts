@@ -1,5 +1,6 @@
 // Revalidation intervals (in seconds)
 export const REVALIDATE_24_HOURS = 86400; // 24 hours
+export const REVALIDATE_30_DAYS = 2592000; // 30 days
 
 // Cache tags & keys (unified for cache storage slots and on-demand revalidation)
 export const CACHE_TAG = {

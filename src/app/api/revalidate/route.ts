@@ -1,6 +1,7 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 import { API_PATH, CACHE_TAG } from "@/app/api/constants";
+import { pathToUrlPath } from "@/lib/utils";
 import { verifyRevalidateAuth } from "./auth";
 
 export const POST = async (req: NextRequest) => {
@@ -50,6 +51,13 @@ export const POST = async (req: NextRequest) => {
 
     revalidatePath(path);
     revalidated.push(path);
+
+    const slugParts = path.split("/").filter(Boolean);
+    const urlPath = pathToUrlPath(slugParts);
+    if (urlPath) {
+      revalidateTag(`category:${urlPath}`, {});
+      revalidated.push(`tag:category:${urlPath}`);
+    }
   }
 
   console.log(

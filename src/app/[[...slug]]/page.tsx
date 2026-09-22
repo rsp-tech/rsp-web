@@ -1,17 +1,38 @@
 import type { Metadata } from "next";
+import { unstable_cache } from "next/cache";
 import { redirect } from "next/navigation";
+import { cache } from "react";
+import { REVALIDATE_30_DAYS } from "@/app/api/constants";
 import { ASSET_BASE_URL } from "@/constants";
 import type { CategoryPageData } from "@/hooks/use-category-page";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { pathToUrlPath, slugToLabel } from "@/lib/utils";
 import { ClientShell } from "@/views/client-shell";
 
-export const revalidate = 604800; // One week - fallback if on demand revalidation failed
+export const revalidate = 2592000; // 30 days fallback if on-demand revalidation fails
 export const dynamicParams = true;
 
 interface PageProps {
   params: Promise<{ slug?: string[] }>;
 }
+
+const getCachedCategoryPageData = cache(
+  async (urlPath: string): Promise<CategoryPageData | null> =>
+    unstable_cache(
+      async () => {
+        const { data } = await getSupabaseServerClient().rpc(
+          "get_category_page_data",
+          { p_url_path: urlPath },
+        );
+        return (data as unknown as CategoryPageData) || null;
+      },
+      ["category-page-data", urlPath],
+      {
+        revalidate: REVALIDATE_30_DAYS,
+        tags: ["category-page-data", `category:${urlPath}`],
+      },
+    )(),
+);
 
 const homePageMetadata: Metadata = {
   title: "Radheshyam Das Spiritual Discourses | Home",
@@ -38,15 +59,6 @@ const homePageMetadata: Metadata = {
   },
 };
 
-const getCategoryDetails = async (urlPath: string) => {
-  const { data } = await getSupabaseServerClient()
-    .from("categories")
-    .select("name, img_id")
-    .eq("url_path", urlPath)
-    .single();
-  return data || null;
-};
-
 export const generateMetadata = async ({
   params,
 }: PageProps): Promise<Metadata> => {
@@ -64,7 +76,8 @@ export const generateMetadata = async ({
   }
 
   const urlPath = pathToUrlPath(slug);
-  const category = await getCategoryDetails(urlPath);
+  const rpcData = await getCachedCategoryPageData(urlPath);
+  const category = rpcData?.category;
 
   const title = category?.name
     ? `${category.name} | Radheshyam Das Spiritual Discourses`
@@ -98,12 +111,7 @@ const generateJsonLdData = async (slug?: string[]) => {
   }
 
   const urlPath = pathToUrlPath(slug ?? []);
-
-  const { data } = await getSupabaseServerClient().rpc(
-    "get_category_page_data",
-    { p_url_path: urlPath },
-  );
-  const rpcData = data as unknown as CategoryPageData;
+  const rpcData = await getCachedCategoryPageData(urlPath);
 
   if (rpcData?.redirectTo) redirect(rpcData.redirectTo);
   const { category, recordings = [], subcategories = [] } = rpcData ?? {};
