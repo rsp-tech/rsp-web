@@ -61,7 +61,6 @@ const nextConfig: NextConfig = {
                 "'self'",
                 process.env.NODE_ENV === "development" ? "'unsafe-eval'" : "",
                 "'unsafe-inline'",
-                "https://*.mayankchaudhari.com",
                 "https://*.radheshyamdas.com",
                 "https://static.cloudflareinsights.com",
               ]
@@ -76,7 +75,6 @@ const nextConfig: NextConfig = {
                 "https://bfiyqzcnmkpczkmgounm.supabase.co",
                 "https://cloudflareinsights.com",
                 "wss://bfiyqzcnmkpczkmgounm.supabase.co",
-                "https://*.mayankchaudhari.com",
                 "https://*.radheshyamdas.com",
                 process.env["NEXT_PUBLIC_AUDIO_BASE_URL"],
                 "https://*.google.com",
