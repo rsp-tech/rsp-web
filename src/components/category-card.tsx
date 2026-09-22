@@ -18,9 +18,16 @@ export const CategoryCard = ({
   const avifUrl = imgUrl?.replace(".webp", ".avif");
   const href = `/${categoryPath(cat.url_path)}`;
 
+  const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
+    e.preventDefault();
+    window.history.pushState(null, "", href);
+    window.scrollTo({ top: 0, behavior: "instant" });
+  };
+
   return (
     <Link
       href={href}
+      onClick={handleClick}
       onKeyDown={onKeyDown}
       prefetch={false}
       data-category-item

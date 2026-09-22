@@ -11,6 +11,13 @@ export const CategoryBreadcrumbs = ({
 }: {
   breadcrumbs: Breadcrumb[];
 }) => {
+  const handleCrumbClick =
+    (href: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
+      e.preventDefault();
+      window.history.pushState(null, "", href);
+      window.scrollTo({ top: 0, behavior: "instant" });
+    };
+
   return (
     <nav className="flex items-center gap-1.5 text-xs font-semibold text-muted-foreground opacity-80 overflow-x-auto whitespace-nowrap py-1">
       <Link
@@ -27,6 +34,7 @@ export const CategoryBreadcrumbs = ({
           <Link
             prefetch={false}
             href={crumb.href}
+            onClick={handleCrumbClick(crumb.href)}
             className={`hover:transition-all ${
               idx === breadcrumbs.length - 1 ? "font-bold" : ""
             }`}
