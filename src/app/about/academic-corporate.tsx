@@ -50,8 +50,11 @@ export const AcademicCorporate = () => {
               </p>
               <div className="about-academic-logos reveal-blur">
                 {["mit", "harvard", "stanford", "cornell"].map((logo) => (
-                  <picture>
-                    <source srcSet={`/assets/about/logo-${logo}.avif`} type="image/avif" />
+                  <picture key={logo}>
+                    <source
+                      srcSet={`/assets/about/logo-${logo}.avif`}
+                      type="image/avif"
+                    />
                     <img
                       src={`/assets/about/logo-${logo}.webp`}
                       alt={logo.toUpperCase()}

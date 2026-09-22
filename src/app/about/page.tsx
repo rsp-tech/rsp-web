@@ -45,7 +45,10 @@ const jsonLd = {
   mainEntity: {
     "@type": "Person",
     name: "Radheshyam Das",
-    alternateName: ["HG Radheshyam Das", "Radheshyam Das Brahmacari at NVCC Pune"],
+    alternateName: [
+      "HG Radheshyam Das",
+      "Radheshyam Das Brahmacari at NVCC Pune",
+    ],
     description:
       "President of ISKCON NVCC Pune, Founder of VOICE Youth Initiative, Global Duty Officer for Youth Outreach, M. Tech. from IIT Bombay, and author of bestselling spiritual books.",
     image: "https://radheshyamdas.com/assets/about/about-profile.jpg",
