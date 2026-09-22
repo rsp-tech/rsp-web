@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="saffronGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FB923C"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FED7AA"/>
+      <stop offset="100%" stop-color="#FDBA74"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Aura -->
+  <circle cx="50" cy="22" r="15" fill="#FEF08A" opacity="0.35"/>
+
+  <!-- Head bowed respectfully -->
+  <g transform="rotate(5 50 22)">
+    <circle cx="50" cy="22" r="8" fill="url(#skinGrad)" stroke="#C2410C" stroke-width="1"/>
+    <!-- Shikha -->
+    <path d="M46 16 Q41 14 43 20 Q47 18 46 16 Z" fill="#78350F"/>
+    <!-- Tilak -->
+    <path d="M50 18 L50 23 M49 20 L51 20" stroke="#FBBF24" stroke-width="1.2" stroke-linecap="round"/>
+    <!-- Eyes closed in meditation/respect -->
+    <path d="M48 24 Q50 26 52 24" stroke="#9A3412" stroke-width="1" stroke-linecap="round" fill="none"/>
+  </g>
+
+  <!-- Folded Palms (Anjali Mudra / Pranama) -->
+  <g>
+    <!-- Left Hand -->
+    <path d="M49 33 C47 31, 46 27, 49 25 C51 27, 50 31, 49 33 Z" fill="url(#skinGrad)" stroke="#C2410C" stroke-width="0.8"/>
+    <!-- Right Hand -->
+    <path d="M51 33 C49 31, 50 27, 52 25 C54 27, 53 31, 51 33 Z" fill="url(#skinGrad)" stroke="#C2410C" stroke-width="0.8"/>
+    <!-- Arms meeting at chest -->
+    <path d="M38 34 Q42 42 48 34" stroke="#EA580C" stroke-width="3" stroke-linecap="round" fill="none"/>
+    <path d="M62 34 Q58 42 52 34" stroke="#EA580C" stroke-width="3" stroke-linecap="round" fill="none"/>
+  </g>
+
+  <!-- Torso in Saffron Chadar -->
+  <path d="M38 34 L62 34 L64 56 L36 56 Z" fill="url(#saffronGrad)" stroke="#C2410C" stroke-width="1"/>
+  <path d="M42 34 Q50 48 58 34" stroke="#FDBA74" stroke-width="1.5" stroke-dasharray="1 2" fill="none"/>
+
+  <!-- Lower Garment / Dhoti -->
+  <path d="M36 56 C32 70 32 88 42 96 C48 97 50 82 50 66 C50 82 52 97 58 96 C68 88 68 70 64 56 Z" fill="url(#saffronGrad)" stroke="#C2410C" stroke-width="1"/>
+
+  <!-- Bare Feet -->
+  <ellipse cx="44" cy="96" rx="3.5" ry="2" fill="url(#skinGrad)"/>
+  <ellipse cx="56" cy="96" rx="3.5" ry="2" fill="url(#skinGrad)"/>
+</svg>

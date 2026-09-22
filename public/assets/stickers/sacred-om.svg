@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <radialGradient id="omGrad" cx="45%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#FEF08A"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Aura -->
+  <circle cx="50" cy="50" r="42" fill="#FEF08A" opacity="0.15" stroke="#F59E0B" stroke-width="1" stroke-dasharray="2 3"/>
+
+  <!-- Sacred Omkara Symbol -->
+  <path d="M42 34 C36 28, 26 28, 22 36 C18 44, 24 54, 34 54 C24 54, 18 64, 20 74 C22 84, 34 88, 44 82 C52 76, 54 66, 50 60 C46 54, 40 54, 38 54 M34 54 C46 54, 60 56, 68 70 C72 78, 80 82, 86 78 C90 74, 90 68, 86 64 M62 38 C70 48, 80 44, 82 34" stroke="url(#omGrad)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+  <!-- Chandra Bindu (Crescent & Dot) -->
+  <path d="M60 26 C68 32, 80 30, 84 22" stroke="url(#omGrad)" stroke-width="4.5" stroke-linecap="round" fill="none"/>
+  <circle cx="72" cy="14" r="3.5" fill="url(#omGrad)"/>
+</svg>

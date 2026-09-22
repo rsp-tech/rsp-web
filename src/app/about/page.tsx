@@ -45,7 +45,7 @@ const jsonLd = {
   mainEntity: {
     "@type": "Person",
     name: "Radheshyam Das",
-    alternateName: ["HG Radheshyam Das", "Radheshyam Das Brahmacari"],
+    alternateName: ["HG Radheshyam Das", "Radheshyam Das Brahmacari at NVCC Pune"],
     description:
       "President of ISKCON NVCC Pune, Founder of VOICE Youth Initiative, Global Duty Officer for Youth Outreach, M. Tech. from IIT Bombay, and author of bestselling spiritual books.",
     image: "https://radheshyamdas.com/assets/about/about-profile.jpg",
@@ -133,7 +133,7 @@ export default function AboutPage() {
       <ArticleTracker
         contentProps={{
           slug: "about",
-          title: "About HG Radheshyam Das",
+          title: "About Radheshyam Das",
           category: "About",
           tags: [
             "Biography",

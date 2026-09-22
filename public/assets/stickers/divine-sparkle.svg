@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" fill="none">
+  <defs>
+    <radialGradient id="sparkleGrad" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="30%" stop-color="#FEF08A"/>
+      <stop offset="70%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#D97706" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- 4-point holy radiance starburst -->
+  <path d="M30 4 C29 22, 22 29, 4 30 C22 31, 29 38, 30 56 C31 38, 38 31, 56 30 C38 29, 31 22, 30 4 Z" fill="url(#sparkleGrad)"/>
+  
+  <!-- Diagonal smaller rays -->
+  <path d="M30 18 C28 26, 26 28, 18 30 C26 32, 28 34, 30 42 C32 34, 34 32, 42 30 C34 28, 32 26, 30 18 Z" fill="#FEF9C3" opacity="0.8"/>
+
+  <circle cx="30" cy="30" r="3" fill="#FFFFFF"/>
+</svg>

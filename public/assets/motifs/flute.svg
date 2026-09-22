@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-label="Divine Flute">
+  <defs>
+    <linearGradient id="fluteGold" x1="10" y1="18" x2="54" y2="46" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FEF08A"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+  </defs>
+  <!-- Peacock Feather Accent on Flute Tip -->
+  <circle cx="15" cy="18" r="4" fill="#059669"/>
+  <circle cx="15" cy="18" r="2" fill="#2563EB"/>
+  <!-- Main Flute Shaft -->
+  <rect x="12" y="24" width="44" height="6" rx="3" transform="rotate(-25 12 24)" fill="url(#fluteGold)"/>
+  <!-- Finger Holes -->
+  <circle cx="28" cy="27" r="1.3" fill="#78350F"/>
+  <circle cx="34" cy="30" r="1.3" fill="#78350F"/>
+  <circle cx="40" cy="33" r="1.3" fill="#78350F"/>
+  <circle cx="46" cy="36" r="1.3" fill="#78350F"/>
+  <!-- Decorative Tassels (Pattuka) -->
+  <path d="M16 26C15 32 14 38 12 44" stroke="#EF4444" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M17 26C18 33 19 40 22 45" stroke="#F59E0B" stroke-width="1.8" stroke-linecap="round"/>
+  <circle cx="12" cy="45" r="2" fill="#DC2626"/>
+  <circle cx="22" cy="46" r="2" fill="#D97706"/>
+</svg>

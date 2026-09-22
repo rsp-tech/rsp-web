@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" fill="none">
+  <defs>
+    <radialGradient id="petalGrad" cx="30%" cy="30%" r="70%">
+      <stop offset="0%" stop-color="#FDE047"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Golden Marigold Petal with soft curve -->
+  <path d="M30 6 C20 16, 12 28, 16 42 C20 54, 38 56, 44 44 C50 30, 42 16, 30 6 Z" fill="url(#petalGrad)" stroke="#B45309" stroke-width="1"/>
+  <!-- Delicate center vein -->
+  <path d="M30 14 Q32 32 30 46" stroke="#FEF08A" stroke-width="1.2" stroke-linecap="round" opacity="0.8"/>
+  <path d="M31 24 Q24 28 20 32" stroke="#FEF08A" stroke-width="0.8" stroke-linecap="round" opacity="0.6"/>
+  <path d="M31 28 Q38 32 40 36" stroke="#FEF08A" stroke-width="0.8" stroke-linecap="round" opacity="0.6"/>
+</svg>

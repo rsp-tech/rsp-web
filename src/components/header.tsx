@@ -38,7 +38,7 @@ export function Header() {
               <source srcSet="/icon-192x192.avif" type="image/avif" />
               <img
                 src="/icon-192x192.webp"
-                alt="Radheshyamdas"
+                alt="Radheshyam Das"
                 width={32}
                 height={32}
                 className="w-full h-full object-cover"
@@ -49,7 +49,7 @@ export function Header() {
           </div>
           <div className="hidden sm:flex flex-col">
             <span className="font-bold text-sm font-heading leading-tight text-foreground">
-              HG Radheshyam Das
+              Radheshyam Das
             </span>
             <span className="text-xxs text-muted-foreground font-semibold leading-none">
               Spiritual Discourses

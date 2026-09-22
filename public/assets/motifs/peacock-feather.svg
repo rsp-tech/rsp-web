@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-label="Mayur Pankh Peacock Feather">
+  <defs>
+    <linearGradient id="featherSpine" x1="16" y1="56" x2="48" y2="8" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#CA8A04"/>
+      <stop offset="100%" stop-color="#FEF08A"/>
+    </linearGradient>
+    <radialGradient id="featherEyeOuter" cx="38" cy="22" r="18" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#047857"/>
+      <stop offset="50%" stop-color="#059669"/>
+      <stop offset="85%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </radialGradient>
+    <radialGradient id="featherEyeCore" cx="38" cy="22" r="8" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#1E3A8A"/>
+      <stop offset="50%" stop-color="#2563EB"/>
+      <stop offset="85%" stop-color="#0284C7"/>
+      <stop offset="100%" stop-color="#38BDF8"/>
+    </radialGradient>
+  </defs>
+  <!-- Feather Whisps/Barbs Outer -->
+  <path d="M22 42C24 32 30 26 38 22C46 18 52 14 54 8C50 14 46 16 38 22C30 28 24 34 22 42Z" fill="#10B981" opacity="0.6"/>
+  <path d="M28 48C30 38 34 30 42 24C48 20 54 18 58 12C52 18 48 22 40 26C34 32 30 38 28 48Z" fill="#047857" opacity="0.5"/>
+  <path d="M16 46C18 38 24 32 34 24C30 30 24 36 20 44C18 48 17 50 16 46Z" fill="#059669" opacity="0.7"/>
+  <!-- Central Feather Eye Oval -->
+  <ellipse cx="38" cy="22" rx="14" ry="11" transform="rotate(-30 38 22)" fill="url(#featherEyeOuter)"/>
+  <ellipse cx="38" cy="22" rx="9" ry="7" transform="rotate(-30 38 22)" fill="#D97706"/>
+  <ellipse cx="38" cy="22" rx="6.5" ry="5" transform="rotate(-30 38 22)" fill="url(#featherEyeCore)"/>
+  <circle cx="36.5" cy="21" r="1.5" fill="#FFFFFF" opacity="0.9"/>
+  <!-- Central Golden Shaft Spine -->
+  <path d="M14 58C20 48 28 36 40 22C46 16 52 10 56 6" stroke="url(#featherSpine)" stroke-width="2" stroke-linecap="round"/>
+</svg>

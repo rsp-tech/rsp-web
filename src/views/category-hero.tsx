@@ -16,7 +16,7 @@ export const CategoryHero = () => {
       <h1 className="text-3xl sm:text-5xl font-bold font-heading tracking-tight max-w-2xl leading-tight">
         Spiritual Discourses by{" "}
         <span className="text-primary" style={{ whiteSpace: "nowrap" }}>
-          HG Radheshyam Das
+          Radheshyam Das
         </span>
       </h1>
       <p className="text-muted-foreground max-w-lg leading-relaxed font-medium">

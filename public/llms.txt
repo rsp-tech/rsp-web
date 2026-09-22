@@ -1,4 +1,4 @@
-# Radheshyamdas Spiritual Discourses
+# Radheshyam Das Spiritual Discourses
 
 > A high-performance media distribution and indexing platform for the spiritual discourses of Radheshyamdas. Built with Next.js, Supabase, IndexedDB, Orama Search, and Tailwind CSS to provide fast, resilient access to audio and video content.
 

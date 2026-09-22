@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-label="Kirtan Mridanga">
+  <defs>
+    <linearGradient id="clayBody" x1="12" y1="20" x2="52" y2="44" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#C2410C"/>
+      <stop offset="50%" stop-color="#EA580C"/>
+      <stop offset="100%" stop-color="#9A3412"/>
+    </linearGradient>
+  </defs>
+  <!-- Main Barrel Body (clay / terracotta drum) -->
+  <path d="M14 26C18 18 46 18 50 26C52 30 52 34 50 38C46 46 18 46 14 38C12 34 12 30 14 26Z" fill="url(#clayBody)"/>
+  <!-- Leather Straps (Baddhi) Crisscrossing -->
+  <path d="M16 26L48 38M16 38L48 26M24 22L40 42M24 42L40 22" stroke="#FEF08A" stroke-width="1.2" opacity="0.8"/>
+  <!-- Left Small Head (Dayan) -->
+  <ellipse cx="14" cy="32" rx="3.5" ry="6" fill="#78350F"/>
+  <ellipse cx="14" cy="32" rx="1.8" ry="3" fill="#1F2937"/>
+  <!-- Right Large Bass Head (Bayan) -->
+  <ellipse cx="50" cy="32" rx="4" ry="7" fill="#78350F"/>
+  <ellipse cx="50" cy="32" rx="2.2" ry="4" fill="#1F2937"/>
+  <!-- Central Ring/Band -->
+  <ellipse cx="32" cy="32" rx="2" ry="8" stroke="#FDE047" stroke-width="1.5" fill="none"/>
+</svg>

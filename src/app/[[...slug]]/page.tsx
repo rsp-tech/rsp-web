@@ -14,25 +14,25 @@ interface PageProps {
 }
 
 const homePageMetadata: Metadata = {
-  title: "Radheshyamdas Spiritual Discourses | Home",
+  title: "Radheshyam Das Spiritual Discourses | Home",
   description:
-    "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by Radheshyamdas.",
+    "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by Radheshyam Das.",
   alternates: {
     canonical: `https://${process.env["VERCEL_PROJECT_PRODUCTION_URL"] || "radheshyamdas.com"}`,
   },
   openGraph: {
-    title: "Radheshyamdas Spiritual Discourses",
+    title: "Radheshyam Das Spiritual Discourses",
     description:
-      "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by Radheshyamdas.",
+      "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by Radheshyam Das.",
     url: "https://radheshyamdas.com",
-    siteName: "Radheshyamdas Spiritual Discourses",
+    siteName: "Radheshyam Das Spiritual Discourses",
     type: "website",
     images: [
       {
         url: "https://radheshyamdas.com/rsp.webp",
         width: 512,
         height: 512,
-        alt: "Radheshyamdas",
+        alt: "Radheshyam Das",
       },
     ],
   },
@@ -56,9 +56,9 @@ export const generateMetadata = async ({
 
   if (slug.length === 1 && slug[0] === "library") {
     return {
-      title: "Spiritual Library | HG Radheshyam Das Discourses",
+      title: "Spiritual Library | Radheshyam Das Discourses",
       description:
-        "Explore the comprehensive Vedic library of audio discourses, lecture series, and sacred literature commentaries by HG Radheshyam Das.",
+        "Explore the comprehensive Vedic library of audio discourses, lecture series, and sacred literature commentaries by Radheshyam Das.",
       alternates: { canonical: "https://radheshyamdas.com/library" },
     };
   }
@@ -67,10 +67,10 @@ export const generateMetadata = async ({
   const category = await getCategoryDetails(urlPath);
 
   const title = category?.name
-    ? `${category.name} | Radheshyamdas Spiritual Discourses`
+    ? `${category.name} | Radheshyam Das Spiritual Discourses`
     : "Spiritual Discourses";
   const description = category?.name
-    ? `Explore lectures on ${category.name} by Radheshyamdas.`
+    ? `Explore lectures on ${category.name} by Radheshyam Das.`
     : "Spiritual lectures.";
   const imgPath = category?.img_id
     ? `https://radheshyamdas.com/img/${category.img_id.toString(36)}.webp`

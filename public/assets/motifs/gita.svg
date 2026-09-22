@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-label="Bhagavad Gita Shastra">
+  <defs>
+    <linearGradient id="bookCover" x1="12" y1="16" x2="52" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#DC2626"/>
+      <stop offset="60%" stop-color="#991B1B"/>
+      <stop offset="100%" stop-color="#7F1D1D"/>
+    </linearGradient>
+  </defs>
+  <!-- Open Sacred Scripture Pages -->
+  <path d="M32 20C24 16 16 18 10 22V48C16 44 24 42 32 46C40 42 48 44 54 48V22C48 18 40 16 32 20Z" fill="#FFFBEB"/>
+  <path d="M32 20V46" stroke="#D97706" stroke-width="2"/>
+  <!-- Text lines imitation on left and right page -->
+  <line x1="14" y1="26" x2="28" y2="24" stroke="#D1D5DB" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="14" y1="31" x2="28" y2="29" stroke="#D1D5DB" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="14" y1="36" x2="26" y2="34" stroke="#D1D5DB" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="36" y1="24" x2="50" y2="26" stroke="#D1D5DB" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="36" y1="29" x2="50" y2="31" stroke="#D1D5DB" stroke-width="1.5" stroke-linecap="round"/>
+  <line x1="36" y1="34" x2="48" y2="36" stroke="#D1D5DB" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Golden Bookstand (Vyasa-asana) Base -->
+  <path d="M18 48L32 58L46 48" stroke="#F59E0B" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/>
+  <circle cx="32" cy="14" r="3.5" fill="#FBBF24"/>
+</svg>

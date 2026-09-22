@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-label="Devotee Vignette">
+  <defs>
+    <linearGradient id="sadhuSaffron" x1="16" y1="28" x2="48" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#F97316"/>
+      <stop offset="60%" stop-color="#EA580C"/>
+      <stop offset="100%" stop-color="#C2410C"/>
+    </linearGradient>
+  </defs>
+  <!-- Halo / Aura behind Head -->
+  <circle cx="32" cy="18" r="14" fill="#FEF08A" opacity="0.6"/>
+  <!-- Head with Sikha / Shaven Head -->
+  <circle cx="32" cy="18" r="8" fill="#FDE68A"/>
+  <!-- Tilak on Forehead -->
+  <path d="M31.5 13V18" stroke="#EA580C" stroke-width="1"/>
+  <!-- Sikha Tuft at back of head -->
+  <path d="M36 12C38 10 40 12 40 14" stroke="#451A03" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Tulasi Kanthi Mala Beads on Neck -->
+  <path d="M28 26C30 28 34 28 36 26" stroke="#92400E" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- Folded Anjali Mudra (Pranama hands) -->
+  <path d="M32 30C30 33 29 36 32 40C35 36 34 33 32 30Z" fill="#FDE68A"/>
+  <!-- Saffron Robe (Kurta / Chadar / Dhoti) -->
+  <path d="M22 34C24 28 40 28 42 34L46 54C46 56 42 58 32 58C22 58 18 56 18 54L22 34Z" fill="url(#sadhuSaffron)"/>
+  <path d="M24 38L32 46L40 38" stroke="#FED7AA" stroke-width="1.5" fill="none"/>
+</svg>

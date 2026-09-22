@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <radialGradient id="mandalaGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#FEF08A"/>
+      <stop offset="50%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Center Flower -->
+  <circle cx="50" cy="50" r="8" fill="url(#mandalaGlow)" stroke="#78350F" stroke-width="1"/>
+  <circle cx="50" cy="50" r="3" fill="#FFFBEB"/>
+
+  <!-- 8 Primary Petals -->
+  <g stroke="#92400E" stroke-width="0.8" fill="#FBBF24" opacity="0.9">
+    <path d="M50 38 C46 42, 46 46, 50 50 C54 46, 54 42, 50 38 Z"/>
+    <path d="M50 38 C46 42, 46 46, 50 50 C54 46, 54 42, 50 38 Z" transform="rotate(45 50 50)"/>
+    <path d="M50 38 C46 42, 46 46, 50 50 C54 46, 54 42, 50 38 Z" transform="rotate(90 50 50)"/>
+    <path d="M50 38 C46 42, 46 46, 50 50 C54 46, 54 42, 50 38 Z" transform="rotate(135 50 50)"/>
+    <path d="M50 38 C46 42, 46 46, 50 50 C54 46, 54 42, 50 38 Z" transform="rotate(180 50 50)"/>
+    <path d="M50 38 C46 42, 46 46, 50 50 C54 46, 54 42, 50 38 Z" transform="rotate(225 50 50)"/>
+    <path d="M50 38 C46 42, 46 46, 50 50 C54 46, 54 42, 50 38 Z" transform="rotate(270 50 50)"/>
+    <path d="M50 38 C46 42, 46 46, 50 50 C54 46, 54 42, 50 38 Z" transform="rotate(315 50 50)"/>
+  </g>
+
+  <!-- Middle Concentric Ring with dots -->
+  <circle cx="50" cy="50" r="22" stroke="#F59E0B" stroke-width="1.2" stroke-dasharray="2 3"/>
+  <circle cx="50" cy="50" r="26" stroke="#CA8A04" stroke-width="0.8"/>
+
+  <!-- Outer Petals (16 Petals) -->
+  <g stroke="#92400E" stroke-width="0.8" fill="#FDE047" opacity="0.85">
+    <path d="M50 20 C47 24, 47 28, 50 32 C53 28, 53 24, 50 20 Z"/>
+    <path d="M50 20 C47 24, 47 28, 50 32 C53 28, 53 24, 50 20 Z" transform="rotate(22.5 50 50)"/>
+    <path d="M50 20 C47 24, 47 28, 50 32 C53 28, 53 24, 50 20 Z" transform="rotate(45 50 50)"/>
+    <path d="M50 20 C47 24, 47 28, 50 32 C53 28, 53 24, 50 20 Z" transform="rotate(67.5 50 50)"/>
+    <path d="M50 20 C47 24, 47 28, 50 32 C53 28, 53 24, 50 20 Z" transform="rotate(90 50 50)"/>
+    <path d="M50 20 C47 24, 47 28, 50 32 C53 28, 53 24, 50 20 Z" transform="rotate(112.5 50 50)"/>
+    <path d="M50 20 C47 24, 47 28, 50 32 C53 28, 53 24, 50 20 Z" transform="rotate(135 50 50)"/>
+    <path d="M50 20 C47 24, 47 28, 50 32 C53 28, 53 24, 50 20 Z" transform="rotate(157.5 50 50)"/>
+    <path d="M50 20 C47 24, 47 28, 50 32 C53 28, 53 24, 50 20 Z" transform="rotate(180 50 50)"/>
+    <path d="M50 20 C47 24, 47 28, 50 32 C53 28, 53 24, 50 20 Z" transform="rotate(202.5 50 50)"/>
+    <path d="M50 20 C47 24, 47 28, 50 32 C53 28, 53 24, 50 20 Z" transform="rotate(225 50 50)"/>
+    <path d="M50 20 C47 24, 47 28, 50 32 C53 28, 53 24, 50 20 Z" transform="rotate(247.5 50 50)"/>
+    <path d="M50 20 C47 24, 47 28, 50 32 C53 28, 53 24, 50 20 Z" transform="rotate(270 50 50)"/>
+    <path d="M50 20 C47 24, 47 28, 50 32 C53 28, 53 24, 50 20 Z" transform="rotate(292.5 50 50)"/>
+    <path d="M50 20 C47 24, 47 28, 50 32 C53 28, 53 24, 50 20 Z" transform="rotate(315 50 50)"/>
+    <path d="M50 20 C47 24, 47 28, 50 32 C53 28, 53 24, 50 20 Z" transform="rotate(337.5 50 50)"/>
+  </g>
+
+  <!-- Outer Ring -->
+  <circle cx="50" cy="50" r="38" stroke="#F59E0B" stroke-width="1.2"/>
+</svg>

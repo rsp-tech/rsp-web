@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-label="Surabhi Cow">
+  <defs>
+    <linearGradient id="cowBody" x1="10" y1="20" x2="54" y2="48" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FFFFFF"/>
+      <stop offset="70%" stop-color="#F3F4F6"/>
+      <stop offset="100%" stop-color="#E5E7EB"/>
+    </linearGradient>
+  </defs>
+  <!-- Decorative Bell Garland around Neck -->
+  <path d="M26 30C28 36 36 36 38 30" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round"/>
+  <circle cx="32" cy="36" r="2.5" fill="#DC2626"/>
+  <!-- Cow Face Silhouette -->
+  <path d="M24 20C22 18 16 16 14 20C12 24 16 26 22 24L24 20Z" fill="url(#cowBody)"/> <!-- Left Ear -->
+  <path d="M40 20C42 18 48 16 50 20C52 24 48 26 42 24L40 20Z" fill="url(#cowBody)"/> <!-- Right Ear -->
+  <!-- Cute Curved Horns -->
+  <path d="M25 18C23 12 20 10 18 8C22 10 26 14 26 18Z" fill="#D97706"/>
+  <path d="M39 18C41 12 44 10 46 8C42 10 38 14 38 18Z" fill="#D97706"/>
+  <!-- Head & Muzzle -->
+  <path d="M24 18H40C42 22 44 28 42 38C40 44 38 46 32 46C26 46 24 44 22 38C20 28 22 22 24 18Z" fill="url(#cowBody)"/>
+  <!-- Muzzle Pink -->
+  <ellipse cx="32" cy="40" rx="6" ry="4" fill="#FBCFE8"/>
+  <circle cx="30" cy="40" r="1" fill="#831843"/>
+  <circle cx="34" cy="40" r="1" fill="#831843"/>
+  <!-- Gentle Big Eyes -->
+  <ellipse cx="26" cy="26" rx="2.5" ry="3.5" fill="#1F2937"/>
+  <circle cx="25" cy="25" r="1" fill="#FFFFFF"/>
+  <ellipse cx="38" cy="26" rx="2.5" ry="3.5" fill="#1F2937"/>
+  <circle cx="37" cy="25" r="1" fill="#FFFFFF"/>
+  <!-- Tilak on Forehead -->
+  <path d="M32 18V23" stroke="#DC2626" stroke-width="1.2" stroke-linecap="round"/>
+</svg>

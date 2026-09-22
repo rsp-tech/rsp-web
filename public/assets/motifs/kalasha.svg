@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-label="Auspicious Kalasha">
+  <defs>
+    <linearGradient id="potBrass" x1="16" y1="28" x2="48" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#FDE047"/>
+      <stop offset="40%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#B45309"/>
+    </linearGradient>
+  </defs>
+  <!-- Coconut on Top -->
+  <path d="M32 8C27 12 25 18 28 24H36C39 18 37 12 32 8Z" fill="#78350F"/>
+  <!-- Mango Leaves Arranged in Neck -->
+  <path d="M22 26C18 20 20 14 26 18C28 20 28 24 28 26H22Z" fill="#059669"/>
+  <path d="M42 26C46 20 44 14 38 18C36 20 36 24 36 26H42Z" fill="#059669"/>
+  <path d="M32 26C30 18 31 12 32 10C33 12 34 18 32 26Z" fill="#10B981"/>
+  <!-- Pot Rim -->
+  <ellipse cx="32" cy="26" rx="12" ry="3.5" fill="#FEF08A"/>
+  <!-- Pot Body -->
+  <path d="M20 28C14 34 14 46 22 52C26 55 38 55 42 52C50 46 50 34 44 28H20Z" fill="url(#potBrass)"/>
+  <!-- Red Sacred Thread (Moli/Kalava) tied around neck -->
+  <rect x="22" y="27.5" width="20" height="2" fill="#DC2626"/>
+  <!-- Swastik or Tilak mark on Pot -->
+  <circle cx="32" cy="40" r="3.5" fill="#DC2626"/>
+  <!-- Pot Base -->
+  <ellipse cx="32" cy="53" rx="8" ry="2.5" fill="#92400E"/>
+</svg>

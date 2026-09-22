@@ -15,7 +15,7 @@ export const Footer = () => {
       >
         <div className="flex flex-col gap-1 text-center md:text-left">
           <span className="font-bold tracking-tight ">
-            Radheshyamdas Spiritual Discourses
+            Radheshyam Das Spiritual Discourses
           </span>
           <p className="text-xs text-muted-foreground">
             © {new Date().getFullYear()} Radheshyamdas.com. All rights reserved.

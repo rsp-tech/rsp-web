@@ -4,16 +4,16 @@ import { Loading } from "@/components/loading";
 import { ContactUsClient } from "./contact-us-client";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Radheshyamdas Discourses",
+  title: "Contact Us | Radheshyam Das Discourses",
   description:
-    "Get in touch with support, submit questions regarding online certified courses, or request spiritual guidance from HG Radheshyam Das.",
+    "Get in touch with support, submit questions regarding online certified courses, or request spiritual guidance from Radheshyam Das.",
   alternates: {
     canonical: "https://radheshyamdas.com/contact-us",
   },
   openGraph: {
-    title: "Contact Us | Radheshyamdas Discourses",
+    title: "Contact Us | Radheshyam Das Discourses",
     description:
-      "Get in touch with support, submit questions regarding online certified courses, or request spiritual guidance from HG Radheshyam Das.",
+      "Get in touch with support, submit questions regarding online certified courses, or request spiritual guidance from Radheshyam Das.",
     url: "https://radheshyamdas.com/contact-us",
     type: "website",
     images: [
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
         url: "https://radheshyamdas.com/rsp.webp",
         width: 512,
         height: 512,
-        alt: "Radheshyamdas",
+        alt: "Radheshyam Das",
       },
     ],
   },

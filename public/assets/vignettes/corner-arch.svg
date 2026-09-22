@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="goldArch" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FDE047"/>
+      <stop offset="50%" stop-color="#EAB308"/>
+      <stop offset="100%" stop-color="#CA8A04"/>
+    </linearGradient>
+  </defs>
+  <!-- Ornate corner flourish anchored at top-left (0,0) -->
+  <path d="M0 0 L40 0 C40 18, 18 40, 0 40 Z" fill="url(#goldArch)" opacity="0.25"/>
+
+  <!-- Intricate floral vines -->
+  <path d="M0 0 L65 0 C60 25, 45 45, 25 55 C12 60, 0 65, 0 65 Z" fill="none" stroke="#EAB308" stroke-width="2"/>
+  <path d="M0 12 C18 12, 32 24, 34 42" stroke="#FDE047" stroke-width="1.5" fill="none"/>
+  <path d="M12 0 C12 18, 24 32, 42 34" stroke="#FDE047" stroke-width="1.5" fill="none"/>
+
+  <!-- Corner Lotus Bud / Petals -->
+  <path d="M0 0 Q20 20 28 28 Q18 20 0 0 Z" fill="url(#goldArch)"/>
+  <circle cx="18" cy="18" r="3" fill="#FEF08A"/>
+
+  <!-- Floral scrolls & tendrils -->
+  <circle cx="48" cy="14" r="4" stroke="#EAB308" stroke-width="1.5" fill="none"/>
+  <circle cx="14" cy="48" r="4" stroke="#EAB308" stroke-width="1.5" fill="none"/>
+  <path d="M48 10 Q58 14 52 24" stroke="#CA8A04" stroke-width="1.2" fill="none"/>
+  <path d="M10 48 Q14 58 24 52" stroke="#CA8A04" stroke-width="1.2" fill="none"/>
+
+  <!-- Hanging Pearl / Bell bead -->
+  <circle cx="28" cy="28" r="2.5" fill="#FEF08A" stroke="#CA8A04" stroke-width="0.8"/>
+  <line x1="28" y1="28" x2="36" y2="36" stroke="#EAB308" stroke-width="1"/>
+  <circle cx="36" cy="36" r="3" fill="#FDE047"/>
+</svg>

@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" aria-label="Tulasi Devi">
+  <defs>
+    <linearGradient id="vrindaPot" x1="20" y1="38" x2="44" y2="58" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EA580C"/>
+      <stop offset="100%" stop-color="#9A3412"/>
+    </linearGradient>
+  </defs>
+  <!-- Tulasi Leaves & Manjaris (Seed Spikes) -->
+  <path d="M32 10V38" stroke="#047857" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Central Manjari Spikes on Top -->
+  <circle cx="32" cy="8" r="1.5" fill="#A855F7"/>
+  <circle cx="32" cy="12" r="1.8" fill="#9333EA"/>
+  <circle cx="30" cy="14" r="1.5" fill="#7E22CE"/>
+  <circle cx="34" cy="14" r="1.5" fill="#7E22CE"/>
+  <!-- Tulasi Leaves Pairs -->
+  <path d="M32 18C26 14 22 18 20 20C24 22 30 20 32 20Z" fill="#059669"/>
+  <path d="M32 18C38 14 42 18 44 20C40 22 34 20 32 20Z" fill="#059669"/>
+  <path d="M32 26C24 22 20 26 18 29C22 31 30 28 32 28Z" fill="#10B981"/>
+  <path d="M32 26C40 22 44 26 46 29C42 31 34 28 32 28Z" fill="#10B981"/>
+  <!-- Vrindavan Tulasi Mancha / Pot -->
+  <path d="M22 38H42L40 56H24L22 38Z" fill="url(#vrindaPot)"/>
+  <rect x="20" y="37" width="24" height="3" rx="1.5" fill="#F97316"/>
+  <!-- Pot Niche / Window -->
+  <path d="M28 46C28 44 36 44 36 46V52H28V46Z" fill="#7C2D12"/>
+</svg>

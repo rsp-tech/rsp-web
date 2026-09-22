@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="saffronGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FB923C"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FED7AA"/>
+      <stop offset="100%" stop-color="#FDBA74"/>
+    </linearGradient>
+    <linearGradient id="clayGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#B45309"/>
+      <stop offset="50%" stop-color="#D97706"/>
+      <stop offset="100%" stop-color="#92400E"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Aura -->
+  <circle cx="48" cy="20" r="14" fill="#FEF08A" opacity="0.3"/>
+
+  <!-- Head & Shikha -->
+  <circle cx="48" cy="20" r="8" fill="url(#skinGrad)" stroke="#C2410C" stroke-width="1"/>
+  <path d="M44 14 Q39 12 41 18 Q45 16 44 14 Z" fill="#78350F"/>
+  <path d="M48 16 L48 21" stroke="#FBBF24" stroke-width="1.2" stroke-linecap="round"/>
+
+  <!-- Torso in Saffron Kurta -->
+  <path d="M40 28 L56 28 L60 52 L36 52 Z" fill="url(#saffronGrad)" stroke="#C2410C" stroke-width="1"/>
+
+  <!-- Mridanga Strap across shoulder -->
+  <path d="M42 28 Q50 42 58 54" stroke="#78350F" stroke-width="2.5" fill="none"/>
+
+  <!-- Mridanga Drum held in front -->
+  <g transform="rotate(-15 48 52)">
+    <!-- Main Body -->
+    <path d="M26 50 C26 44, 70 42, 72 49 C74 56, 30 58, 26 50 Z" fill="url(#clayGrad)" stroke="#78350F" stroke-width="1"/>
+    <ellipse cx="26" cy="50" rx="3" ry="5" fill="#451A03"/>
+    <ellipse cx="72" cy="49" rx="5" ry="7" fill="#451A03"/>
+    <!-- Syahi / Black center spots -->
+    <ellipse cx="26" cy="50" rx="1.5" ry="2.5" fill="#18181B"/>
+    <ellipse cx="72" cy="49" rx="2.5" ry="3.5" fill="#18181B"/>
+    <!-- Leather straps -->
+    <line x1="26" y1="46" x2="72" y2="44" stroke="#FDE68A" stroke-width="0.8" opacity="0.8"/>
+    <line x1="26" y1="54" x2="72" y2="54" stroke="#FDE68A" stroke-width="0.8" opacity="0.8"/>
+  </g>
+
+  <!-- Arms playing Mridanga -->
+  <!-- Left hand playing Dayan -->
+  <path d="M40 29 Q30 38 28 48 Q32 50 36 44" fill="url(#skinGrad)" stroke="#C2410C" stroke-width="1"/>
+  <!-- Right hand playing Bayan -->
+  <path d="M56 29 Q68 38 68 47 Q64 49 60 43" fill="url(#skinGrad)" stroke="#C2410C" stroke-width="1"/>
+
+  <!-- Dhoti -->
+  <path d="M36 52 C32 68 30 85 40 94 C46 95 48 80 48 64 C48 80 50 95 56 94 C66 85 64 68 60 52 Z" fill="url(#saffronGrad)" stroke="#C2410C" stroke-width="1"/>
+  <!-- Feet -->
+  <ellipse cx="41" cy="95" rx="3.5" ry="2" fill="url(#skinGrad)"/>
+  <ellipse cx="55" cy="95" rx="3.5" ry="2" fill="url(#skinGrad)"/>
+</svg>

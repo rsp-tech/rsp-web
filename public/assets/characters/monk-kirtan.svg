@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="saffronGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FB923C"/>
+      <stop offset="100%" stop-color="#EA580C"/>
+    </linearGradient>
+    <linearGradient id="skinGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FED7AA"/>
+      <stop offset="100%" stop-color="#FDBA74"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Golden Aura / Halo -->
+  <circle cx="50" cy="24" r="16" fill="#FEF08A" opacity="0.35"/>
+
+  <!-- Raised Arms (Left & Right) in Harinama Ecstasy -->
+  <!-- Left Arm -->
+  <path d="M43 32 Q26 22 22 8 Q27 6 32 14 Q37 22 47 30 Z" fill="url(#skinGrad)" stroke="#C2410C" stroke-width="1"/>
+  <!-- Right Arm -->
+  <path d="M57 32 Q74 22 78 8 Q73 6 68 14 Q63 22 53 30 Z" fill="url(#skinGrad)" stroke="#C2410C" stroke-width="1"/>
+  <!-- Open hands/palms facing up -->
+  <circle cx="23" cy="8" r="3.5" fill="url(#skinGrad)"/>
+  <circle cx="77" cy="8" r="3.5" fill="url(#skinGrad)"/>
+
+  <!-- Head & Shaven Shikha -->
+  <circle cx="50" cy="24" r="9" fill="url(#skinGrad)" stroke="#C2410C" stroke-width="1"/>
+  <!-- Shikha (tuft of hair at back) -->
+  <path d="M49 15 Q43 12 44 19 Q48 17 49 15 Z" fill="#78350F"/>
+  <!-- Vaishnava Tilak on forehead -->
+  <path d="M50 18 L50 24 M49 20 L51 20" stroke="#FBBF24" stroke-width="1.2" stroke-linecap="round"/>
+
+  <!-- Smiling face details -->
+  <path d="M48 26 Q50 28 52 26" stroke="#9A3412" stroke-width="1" stroke-linecap="round" fill="none"/>
+
+  <!-- Tulasi Kanthi Mala around neck -->
+  <path d="M45 33 Q50 37 55 33" stroke="#B45309" stroke-width="1.5" stroke-dasharray="1.5 1.5" fill="none"/>
+
+  <!-- Torso & Dhoti/Kurta/Chadar -->
+  <!-- Saffron Upper cloth / Angavastra draped across chest -->
+  <path d="M42 33 Q50 35 58 33 L62 55 Q50 58 38 55 Z" fill="url(#saffronGrad)" stroke="#C2410C" stroke-width="1"/>
+  <!-- Flowing Angavastra ends fluttering in motion -->
+  <path d="M38 42 Q28 48 30 62 Q35 54 42 48 Z" fill="#F97316" opacity="0.9"/>
+  <path d="M62 44 Q72 50 68 64 Q64 56 58 50 Z" fill="#F97316" opacity="0.9"/>
+
+  <!-- Flowing Saffron Dhoti (Kachha style) -->
+  <path d="M38 55 C35 70 32 88 42 96 C48 97 50 82 50 66 C50 82 52 97 58 96 C68 88 65 70 62 55 Z" fill="url(#saffronGrad)" stroke="#C2410C" stroke-width="1"/>
+  <path d="M49 55 L50 95" stroke="#C2410C" stroke-width="1.2"/>
+
+  <!-- Devotee bare feet dancing -->
+  <ellipse cx="43" cy="96" rx="4" ry="2" fill="url(#skinGrad)"/>
+  <ellipse cx="57" cy="96" rx="4" ry="2" fill="url(#skinGrad)"/>
+</svg>

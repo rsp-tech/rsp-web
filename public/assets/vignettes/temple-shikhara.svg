@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="shikharaGold" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FEF08A"/>
+      <stop offset="50%" stop-color="#EAB308"/>
+      <stop offset="100%" stop-color="#A16207"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Kalasha & Dhvaja (Flag) at Peak -->
+  <line x1="50" y1="12" x2="50" y2="4" stroke="#DC2626" stroke-width="1.5"/>
+  <path d="M50 4 L60 8 L50 12 Z" fill="#DC2626"/>
+  <!-- Peak Kalasha Pin -->
+  <circle cx="50" cy="14" r="3" fill="#FEF08A" stroke="#CA8A04" stroke-width="0.8"/>
+  <ellipse cx="50" cy="19" rx="5" ry="3" fill="#FDE047" stroke="#CA8A04" stroke-width="0.8"/>
+
+  <!-- Amalaka (Ribbed Cogwheel stone below kalash) -->
+  <ellipse cx="50" cy="24" rx="12" ry="4" fill="url(#shikharaGold)" stroke="#78350F" stroke-width="1"/>
+
+  <!-- Tiered Shikhara Tower (Nagara style tiers) -->
+  <path d="M42 26 C40 38, 36 54, 30 70 L70 70 C64 54, 60 38, 58 26 Z" fill="url(#shikharaGold)" stroke="#78350F" stroke-width="1.2"/>
+
+  <!-- Horizontal architectural ribbed tiers (Bhumis) -->
+  <line x1="39" y1="36" x2="61" y2="36" stroke="#FEF9C3" stroke-width="1"/>
+  <line x1="36" y1="46" x2="64" y2="46" stroke="#FEF9C3" stroke-width="1"/>
+  <line x1="33" y1="58" x2="67" y2="58" stroke="#FEF9C3" stroke-width="1"/>
+
+  <!-- Gavaksha / Chaitya Arch motif in center -->
+  <path d="M45 54 C45 48, 55 48, 55 54 L55 64 L45 64 Z" fill="#78350F" stroke="#FDE047" stroke-width="0.8"/>
+
+  <!-- Temple Mandapa Base Platform -->
+  <rect x="22" y="70" width="56" height="10" fill="#CA8A04" stroke="#78350F" stroke-width="1.2"/>
+  <rect x="18" y="80" width="64" height="6" fill="#A16207" stroke="#78350F" stroke-width="1.2"/>
+  <rect x="14" y="86" width="72" height="6" fill="#78350F"/>
+</svg>

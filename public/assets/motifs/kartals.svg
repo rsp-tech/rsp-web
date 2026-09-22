@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <radialGradient id="brassGrad" cx="40%" cy="40%" r="60%">
+      <stop offset="0%" stop-color="#FEF08A"/>
+      <stop offset="60%" stop-color="#EAB308"/>
+      <stop offset="100%" stop-color="#A16207"/>
+    </radialGradient>
+  </defs>
+  <!-- Ribbon connecting cymbals -->
+  <path d="M38 42 C40 20, 60 20, 62 42" stroke="#DC2626" stroke-width="4" stroke-linecap="round" fill="none"/>
+  <path d="M38 42 C40 20, 60 20, 62 42" stroke="#FDE047" stroke-width="1.5" stroke-linecap="round" stroke-dasharray="2 3" fill="none"/>
+
+  <!-- Left Cymbal -->
+  <g transform="rotate(-15 35 55)">
+    <ellipse cx="35" cy="55" rx="22" ry="16" fill="url(#brassGrad)" stroke="#78350F" stroke-width="1.5"/>
+    <ellipse cx="35" cy="55" rx="14" ry="10" stroke="#CA8A04" stroke-width="1"/>
+    <!-- Dome boss -->
+    <ellipse cx="35" cy="55" rx="6" ry="4.5" fill="#FEF9C3" stroke="#78350F" stroke-width="1"/>
+    <circle cx="35" cy="55" r="1.5" fill="#78350F"/>
+  </g>
+
+  <!-- Right Cymbal -->
+  <g transform="rotate(20 65 58)">
+    <ellipse cx="65" cy="58" rx="22" ry="16" fill="url(#brassGrad)" stroke="#78350F" stroke-width="1.5"/>
+    <ellipse cx="65" cy="58" rx="14" ry="10" stroke="#CA8A04" stroke-width="1"/>
+    <!-- Dome boss -->
+    <ellipse cx="65" cy="58" rx="6" ry="4.5" fill="#FEF9C3" stroke="#78350F" stroke-width="1"/>
+    <circle cx="65" cy="58" r="1.5" fill="#78350F"/>
+  </g>
+
+  <!-- Red decorative tassel tails -->
+  <path d="M35 55 Q30 75 25 85" stroke="#DC2626" stroke-width="3" stroke-linecap="round"/>
+  <path d="M65 58 Q70 78 75 88" stroke="#DC2626" stroke-width="3" stroke-linecap="round"/>
+</svg>

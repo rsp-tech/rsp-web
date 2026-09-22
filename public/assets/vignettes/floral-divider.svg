@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 40" fill="none">
+  <defs>
+    <linearGradient id="divGold" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#EAB308" stop-opacity="0"/>
+      <stop offset="25%" stop-color="#EAB308"/>
+      <stop offset="50%" stop-color="#FDE047"/>
+      <stop offset="75%" stop-color="#EAB308"/>
+      <stop offset="100%" stop-color="#EAB308" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Horizontal divider lines -->
+  <line x1="10" y1="20" x2="80" y2="20" stroke="url(#divGold)" stroke-width="1.5"/>
+  <line x1="120" y1="20" x2="190" y2="20" stroke="url(#divGold)" stroke-width="1.5"/>
+
+  <!-- Symmetrical scrolls -->
+  <path d="M50 20 Q65 10 75 20 Q85 30 90 20" stroke="#EAB308" stroke-width="1.2" fill="none"/>
+  <path d="M150 20 Q135 10 125 20 Q115 30 110 20" stroke="#EAB308" stroke-width="1.2" fill="none"/>
+
+  <!-- Central Auspicious Lotus Crest -->
+  <g transform="translate(100 20)">
+    <!-- Central Petal -->
+    <path d="M0 6 C-4 0, -5 -12, 0 -16 C5 -12, 4 0, 0 6 Z" fill="#FDE047" stroke="#CA8A04" stroke-width="1"/>
+    <!-- Side Petals -->
+    <path d="M0 6 C-8 2, -14 -6, -10 -12 C-6 -8, 0 -2, 0 6 Z" fill="#FACC15" stroke="#CA8A04" stroke-width="0.8"/>
+    <path d="M0 6 C8 2, 14 -6, 10 -12 C6 -8, 0 -2, 0 6 Z" fill="#FACC15" stroke="#CA8A04" stroke-width="0.8"/>
+    <!-- Lotus Base -->
+    <circle cx="0" cy="5" r="2.5" fill="#EAB308"/>
+  </g>
+</svg>

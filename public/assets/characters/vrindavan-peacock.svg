@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <defs>
+    <linearGradient id="bodyBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0284C7"/>
+      <stop offset="60%" stop-color="#0369A1"/>
+      <stop offset="100%" stop-color="#075985"/>
+    </linearGradient>
+    <radialGradient id="featherEye" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#0369A1"/>
+      <stop offset="40%" stop-color="#15803D"/>
+      <stop offset="70%" stop-color="#CA8A04"/>
+      <stop offset="100%" stop-color="#166534"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Majestic Flared Plume / Fan in Background -->
+  <g opacity="0.95">
+    <path d="M50 70 C20 40, 10 15, 30 10 C45 25, 48 55, 50 70 Z" fill="#15803D" stroke="#CA8A04" stroke-width="0.8"/>
+    <path d="M50 70 C30 30, 25 5, 45 4 C55 20, 52 55, 50 70 Z" fill="#16A34A" stroke="#CA8A04" stroke-width="0.8"/>
+    <path d="M50 70 C45 25, 48 2, 55 2 C62 20, 55 55, 50 70 Z" fill="#15803D" stroke="#CA8A04" stroke-width="0.8"/>
+    <path d="M50 70 C55 25, 68 5, 75 8 C72 25, 58 55, 50 70 Z" fill="#16A34A" stroke="#CA8A04" stroke-width="0.8"/>
+    <path d="M50 70 C60 35, 82 15, 88 20 C82 38, 64 58, 50 70 Z" fill="#15803D" stroke="#CA8A04" stroke-width="0.8"/>
+
+    <!-- Feather Ocelli (Eyes) -->
+    <circle cx="28" cy="14" r="5" fill="url(#featherEye)"/>
+    <circle cx="42" cy="8" r="5" fill="url(#featherEye)"/>
+    <circle cx="56" cy="7" r="5" fill="url(#featherEye)"/>
+    <circle cx="70" cy="12" r="5" fill="url(#featherEye)"/>
+    <circle cx="82" cy="24" r="5" fill="url(#featherEye)"/>
+  </g>
+
+  <!-- Slender Royal Body & Neck -->
+  <path d="M44 80 C38 72, 42 58, 45 50 C47 42, 43 32, 45 24 C47 18, 55 18, 56 25 C54 36, 52 46, 55 56 C58 66, 54 78, 44 80 Z" fill="url(#bodyBlue)" stroke="#0369A1" stroke-width="1"/>
+
+  <!-- Crest on Head (3 Delicate plumes) -->
+  <path d="M52 18 L50 10 M53 18 L54 9 M54 18 L57 11" stroke="#0284C7" stroke-width="1.2"/>
+  <circle cx="50" cy="9" r="1.5" fill="#EAB308"/>
+  <circle cx="54" cy="8" r="1.5" fill="#EAB308"/>
+  <circle cx="57" cy="10" r="1.5" fill="#EAB308"/>
+
+  <!-- Beak & Eye -->
+  <path d="M46 22 L40 24 L46 26 Z" fill="#F59E0B"/>
+  <circle cx="49" cy="22" r="1.2" fill="#FFFFFF"/>
+  <circle cx="49" cy="22" r="0.6" fill="#000000"/>
+
+  <!-- Delicate Legs & Feet standing -->
+  <line x1="46" y1="80" x2="44" y2="95" stroke="#78350F" stroke-width="1.5"/>
+  <line x1="52" y1="80" x2="54" y2="95" stroke="#78350F" stroke-width="1.5"/>
+  <path d="M41 96 L47 95 L44 92" stroke="#78350F" stroke-width="1.2" fill="none"/>
+  <path d="M51 96 L57 95 L54 92" stroke="#78350F" stroke-width="1.2" fill="none"/>
+</svg>
