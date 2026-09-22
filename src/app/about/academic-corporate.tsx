@@ -49,26 +49,16 @@ export const AcademicCorporate = () => {
                 across the globe.
               </p>
               <div className="about-academic-logos reveal-blur">
-                <img
-                  src="/assets/about/logo-mit.png"
-                  alt="MIT"
-                  className="about-academic-logo-img"
-                />
-                <img
-                  src="/assets/about/logo-harvard.png"
-                  alt="Harvard"
-                  className="about-academic-logo-img"
-                />
-                <img
-                  src="/assets/about/logo-stanford.png"
-                  alt="Stanford"
-                  className="about-academic-logo-img"
-                />
-                <img
-                  src="/assets/about/logo-cornell.png"
-                  alt="Cornell"
-                  className="about-academic-logo-img"
-                />
+                {["mit", "harvard", "stanford", "cornell"].map((logo) => (
+                  <picture>
+                    <source srcSet={`/assets/about/logo-${logo}.avif`} type="image/avif" />
+                    <img
+                      src={`/assets/about/logo-${logo}.webp`}
+                      alt={logo.toUpperCase()}
+                      className="about-academic-logo-img"
+                    />
+                  </picture>
+                ))}
               </div>
             </div>
           </div>

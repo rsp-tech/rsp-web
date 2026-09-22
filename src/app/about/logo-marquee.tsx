@@ -30,9 +30,8 @@ export const LogoMarquee = () => {
             <div key={`logo-${idx}`} className="about-logo-marquee-item">
               <picture>
                 <source srcSet={`${logo.src}.avif`} type="image/avif" />
-                <source srcSet={`${logo.src}.webp`} type="image/webp" />
                 <img
-                  src={`${logo.src}.png`}
+                  src={`${logo.src}.webp`}
                   alt={logo.name}
                   width={140}
                   height={40}
