@@ -1,6 +1,6 @@
-# HG Radheshyamdas Spiritual Discourses
+# Radheshyamdas Spiritual Discourses
 
-> A high-performance media distribution and indexing platform for the spiritual discourses of HG Radheshyamdas. Built with Next.js, Supabase, IndexedDB, Orama Search, and Tailwind CSS to provide fast, resilient access to audio and video content.
+> A high-performance media distribution and indexing platform for the spiritual discourses of Radheshyamdas. Built with Next.js, Supabase, IndexedDB, Orama Search, and Tailwind CSS to provide fast, resilient access to audio and video content.
 
 This file serves as a machine-readable sitemap and guide for LLMs, RAG engines, and agentic browsers. Use the sections below to navigate available dynamic catalogs, application architecture, and core routes.
 
@@ -17,6 +17,6 @@ This file serves as a machine-readable sitemap and guide for LLMs, RAG engines, 
 ## Core Public Routes
 
 - [Homepage Interface](https://radheshyamdas.com/): The central web application shell and unified audio/video discourse player layout.
-- [About the Speaker](https://radheshyamdas.com/about): Biography, background, and spiritual lineage of HG Radheshyamdas.
+- [About the Speaker](https://radheshyamdas.com/about): Biography, background, and spiritual lineage of Radheshyamdas.
 - [Contact & Inquiries](https://radheshyamdas.com/contact-us): Gateway for submitting public inquiries, feedback, or spiritual queries.
 - [Get Involved](https://radheshyamdas.com/get-involved): Devotional volunteering, seva opportunities, and service coordination profiles.

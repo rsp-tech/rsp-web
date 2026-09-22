@@ -18,9 +18,9 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "HG Radheshyamdas Spiritual Discourses",
+  title: "Radheshyamdas Spiritual Discourses",
   description:
-    "Spiritual lectures, commentaries, and wisdom by HG Radheshyamdas",
+    "Spiritual lectures, commentaries, and wisdom by Radheshyamdas",
   manifest: "/manifest.json",
   icons: { icon: "/favicon.ico", apple: "/icon-192x192.webp" },
 };

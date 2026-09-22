@@ -19,7 +19,7 @@ export const metadata: Metadata = {
         url: "https://radheshyamdas.com/rsp.webp",
         width: 512,
         height: 512,
-        alt: "HG Radheshyamdas",
+        alt: "Radheshyamdas",
       },
     ],
   },

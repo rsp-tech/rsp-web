@@ -14,25 +14,25 @@ interface PageProps {
 }
 
 const homePageMetadata: Metadata = {
-  title: "HG Radheshyamdas Spiritual Discourses | Home",
+  title: "Radheshyamdas Spiritual Discourses | Home",
   description:
-    "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by HG Radheshyamdas.",
+    "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by Radheshyamdas.",
   alternates: {
     canonical: `https://${process.env["VERCEL_PROJECT_PRODUCTION_URL"] || "radheshyamdas.com"}`,
   },
   openGraph: {
-    title: "HG Radheshyamdas Spiritual Discourses",
+    title: "Radheshyamdas Spiritual Discourses",
     description:
-      "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by HG Radheshyamdas.",
+      "Explore a rich treasury of spiritual lectures, deep commentaries on scriptures, and wisdom to guide your daily life by Radheshyamdas.",
     url: "https://radheshyamdas.com",
-    siteName: "HG Radheshyamdas Spiritual Discourses",
+    siteName: "Radheshyamdas Spiritual Discourses",
     type: "website",
     images: [
       {
         url: "https://radheshyamdas.com/rsp.webp",
         width: 512,
         height: 512,
-        alt: "HG Radheshyamdas",
+        alt: "Radheshyamdas",
       },
     ],
   },
@@ -67,10 +67,10 @@ export const generateMetadata = async ({
   const category = await getCategoryDetails(urlPath);
 
   const title = category?.name
-    ? `${category.name} | HG Radheshyamdas Spiritual Discourses`
+    ? `${category.name} | Radheshyamdas Spiritual Discourses`
     : "Spiritual Discourses";
   const description = category?.name
-    ? `Explore lectures on ${category.name} by HG Radheshyamdas.`
+    ? `Explore lectures on ${category.name} by Radheshyamdas.`
     : "Spiritual lectures.";
   const imgPath = category?.img_id
     ? `https://radheshyamdas.com/img/${category.img_id.toString(36)}.webp`
@@ -124,7 +124,7 @@ const generateJsonLdData = async (slug?: string[]) => {
       {
         "@context": "https://schema.org",
         "@type": "WebSite",
-        name: "HG Radheshyamdas Spiritual Discourses",
+        name: "Radheshyamdas Spiritual Discourses",
         url: "https://radheshyamdas.com",
         about: aboutList.length > 0 ? aboutList : undefined,
       },
@@ -132,7 +132,7 @@ const generateJsonLdData = async (slug?: string[]) => {
         "@context": "https://schema.org",
         "@type": "Person",
         name: "Radheshyam Das",
-        alternateName: "HG Radheshyamdas",
+        alternateName: "Radheshyamdas",
         affiliation: { "@type": "Organization", name: "ISKCON Pune" },
         knowsAbout: ["Bhagavad Gita", "Vedic Philosophy", "Srimad Bhagavatam"],
       },

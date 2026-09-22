@@ -38,7 +38,7 @@ export function Header() {
               <source srcSet="/icon-192x192.avif" type="image/avif" />
               <img
                 src="/icon-192x192.webp"
-                alt="HG Radheshyamdas"
+                alt="Radheshyamdas"
                 width={32}
                 height={32}
                 className="w-full h-full object-cover"
