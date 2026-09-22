@@ -128,5 +128,6 @@ export const useCategoryPage = (
     queryKey: [QUERY_KEY.CATEGORY_PAGE, urlPath || "~"],
     queryFn: () => loadCategoryPage(urlPath, queryInitialData),
     initialData: queryInitialData,
+    staleTime: 15 * 60 * 1000,
   });
 };

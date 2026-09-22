@@ -38,7 +38,7 @@ export const usePublicSync = () => {
     queryKey: [QUERY_KEY.SYNC_PUBLIC],
     queryFn: () => runPublicSync({ queryClient }),
     staleTime: SYNC_INTERVAL,
-    refetchOnMount: "always",
+    refetchOnMount: false,
     refetchInterval: SYNC_INTERVAL,
     networkMode: "online",
   });
