@@ -627,10 +627,13 @@ export const applyDeltas = async (
     changedTables.push(syncTable);
   }
 
-  // Update target meta store in IDB with server's latest watermarks for changed tables
+  // Determine latest watermarks to persist:
+  // 1. Tables with changes are always updated.
+  // 2. Tables without changes are updated if their local watermark is empty.
+
   const metaTx = db.transaction(metaStore, "readwrite");
   for (const [table, updated_at] of Object.entries(syncMeta)) {
-    if (updated_at && changedTables.includes(table)) {
+    if (updated_at && (changedTables.includes(table) || !watermarks[table])) {
       metaTx.store.put({ id: table, updated_at });
     }
   }
