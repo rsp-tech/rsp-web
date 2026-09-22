@@ -60,7 +60,7 @@ export const useRoleSync = () => {
         accessToken,
       }),
     staleTime: SYNC_INTERVAL,
-    refetchOnMount: "always",
+    refetchOnMount: false,
     refetchInterval: SYNC_INTERVAL,
     networkMode: "online",
     enabled: !isLoading && hasRole,
