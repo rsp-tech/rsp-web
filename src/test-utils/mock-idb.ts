@@ -71,16 +71,18 @@ export const createMockDb = (
 
     transaction: (store: string | string[], _mode?: string) => {
       const targetStore = Array.isArray(store) ? store[0] : store;
+      const getStoreOps = (s: string) => ({
+        get: (key: string | number) => mockDb.get(s, key),
+        getAll: () => mockDb.getAll(s),
+        put: (val: unknown, key?: string | number) =>
+          mockDb.put(s, val, key),
+        delete: (key: string | number) => mockDb.delete(s, key),
+        clear: () => mockDb.clear(s),
+        openCursor: () => Promise.resolve(null),
+      });
       return {
-        store: {
-          get: (key: string | number) => mockDb.get(targetStore, key),
-          getAll: () => mockDb.getAll(targetStore),
-          put: (val: unknown, key?: string | number) =>
-            mockDb.put(targetStore, val, key),
-          delete: (key: string | number) => mockDb.delete(targetStore, key),
-          clear: () => mockDb.clear(targetStore),
-          openCursor: () => Promise.resolve(null),
-        },
+        store: getStoreOps(targetStore),
+        objectStore: (s: string) => getStoreOps(s),
         done: Promise.resolve(),
       };
     },
