@@ -20,7 +20,10 @@ const getCachedCategoryPageData = cache(
   async (urlPath: string): Promise<CategoryPageData | null> =>
     unstable_cache(
       async () => {
-        if (urlPath && !isValidCategoryPath(urlPath)) return null;
+        if (urlPath && !isValidCategoryPath(urlPath)) {
+          console.warn("Invalid category path: ", urlPath);
+          return null;
+        }
         const { data, error } = await getSupabaseServerClient().rpc(
           "get_category_page_data",
           { p_url_path: urlPath },
