@@ -58,6 +58,9 @@ export const sortByDate =
     return order * (timeA - timeB);
   };
 
+export const isValidCategoryPath = (value: string) =>
+  /^[A-Za-z0-9_]+(?:\.[A-Za-z0-9_]+)*$/.test(value);
+
 /**
  * Converts a pathname (string or array of slug segments) to a DB urlPath (dot-separated, ltree format).
  * Automatically strips the leading "library" segment if present.

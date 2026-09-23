@@ -6,7 +6,7 @@ import { REVALIDATE_30_DAYS } from "@/app/api/constants";
 import { ASSET_BASE_URL } from "@/constants";
 import type { CategoryPageData } from "@/hooks/use-category-page";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
-import { pathToUrlPath, slugToLabel } from "@/lib/utils";
+import { isValidCategoryPath, pathToUrlPath, slugToLabel } from "@/lib/utils";
 import { ClientShell } from "@/views/client-shell";
 
 export const revalidate = 2592000; // 30 days fallback if on-demand revalidation fails
@@ -20,13 +20,18 @@ const getCachedCategoryPageData = cache(
   async (urlPath: string): Promise<CategoryPageData | null> =>
     unstable_cache(
       async () => {
+        if (urlPath && !isValidCategoryPath(urlPath)) return null;
         const { data, error } = await getSupabaseServerClient().rpc(
           "get_category_page_data",
           { p_url_path: urlPath },
         );
 
         if (error) {
-          console.error("getCachedCategoryPageData rpc error: ", urlPath, error);
+          console.error(
+            "getCachedCategoryPageData rpc error: ",
+            urlPath,
+            error,
+          );
           return null;
         }
 
