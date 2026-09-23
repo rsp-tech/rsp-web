@@ -9,22 +9,15 @@ import type { RSP_IDB } from "@/lib/idb";
 
 type CleanupTable = (typeof ROLE_SYNCED_TABLES)[number];
 
+const ALL_ROLES = 0;
+
 const isAllowed = (
   allowedRoles: number[] | undefined,
   roleId: number | undefined,
-): boolean => {
-  if (
-    !allowedRoles ||
-    !Array.isArray(allowedRoles) ||
-    allowedRoles.length === 0
-  ) {
-    return true;
-  }
-  return (
-    allowedRoles.includes(0) ||
-    (typeof roleId === "number" && roleId > 0 && allowedRoles.includes(roleId))
-  );
-};
+): boolean =>
+  !allowedRoles?.length ||
+  allowedRoles.includes(ALL_ROLES) ||
+  (roleId !== undefined && allowedRoles.includes(roleId));
 
 const cleanupTable = async (
   db: IDBPDatabase<RSP_IDB>,
@@ -91,18 +84,21 @@ export const performUserCleanup = async (
   }
 
   if (storedUserId !== userId) {
-    await Promise.all(USER_SPECIFIC_TABLES.map((t) => db.clear(t)));
+    const tx = db.transaction(
+      [...USER_SPECIFIC_TABLES, STORE.ROLE_META, STORE.SYNC_META],
+      "readwrite",
+    );
 
-    await db.delete(STORE.ROLE_META, META_KEY.USER_FEATURES);
-
-    // Clear user table watermarks from sync_meta
-    const syncMetaTx = db.transaction(STORE.SYNC_META, "readwrite");
     for (const table of USER_SPECIFIC_TABLES) {
-      syncMetaTx.store.delete(table);
+      await tx.objectStore(table).clear();
+      await tx.objectStore(STORE.SYNC_META).delete(table);
     }
-    await syncMetaTx.done;
+    await tx.objectStore(STORE.ROLE_META).delete(META_KEY.USER_FEATURES);
 
-    await db.put(STORE.ROLE_META, userId, META_KEY.CLEANUP_USER_ID);
+    await tx.objectStore(STORE.ROLE_META).put(userId, META_KEY.CLEANUP_USER_ID);
+
+    await tx.done;
+
     return { clearedUser: true };
   }
 

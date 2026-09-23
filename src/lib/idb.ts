@@ -135,7 +135,7 @@ export interface RSP_IDB {
   };
   role_meta: {
     key: string;
-    value: string;
+    value: string | number | undefined;
   };
   [STORE.CACHE_LEDGER]: {
     key: string;
