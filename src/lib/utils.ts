@@ -59,7 +59,8 @@ export const sortByDate =
   };
 
 export const isValidCategoryPath = (value: string) =>
-  /^[A-Za-z0-9_]+(?:\.[A-Za-z0-9_]+)*$/.test(value);
+  /^[A-Za-z0-9_]+(?:\.[A-Za-z0-9_]+)*$/.test(value) &&
+  !/^_next|^\.well_known/.test(value);
 
 /**
  * Converts a pathname (string or array of slug segments) to a DB urlPath (dot-separated, ltree format).
@@ -74,7 +75,7 @@ export const pathToUrlPath = (path: string | string[]): string => {
   if (segments[0] === "library") {
     segments = segments.slice(1);
   }
-  return segments.join(".").replace(/-/g, "_");
+  return segments.join(".").replace(/-/g, "_").replace(/\(|\)/g, "");
 };
 
 export const toRoleId = (value: unknown): number | undefined =>
