@@ -75,7 +75,10 @@ export const pathToUrlPath = (path: string | string[]): string => {
   if (segments[0] === "library") {
     segments = segments.slice(1);
   }
-  return segments.join(".").replace(/-/g, "_").replace(/\(|\)/g, "");
+  return segments
+    .join(".")
+    .replace(/-/g, "_")
+    .replace(/[^a-z0-9_.]+/g, "");
 };
 
 export const toRoleId = (value: unknown): number | undefined =>
