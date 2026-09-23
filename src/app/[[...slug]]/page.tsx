@@ -20,10 +20,16 @@ const getCachedCategoryPageData = cache(
   async (urlPath: string): Promise<CategoryPageData | null> =>
     unstable_cache(
       async () => {
-        const { data } = await getSupabaseServerClient().rpc(
+        const { data, error } = await getSupabaseServerClient().rpc(
           "get_category_page_data",
           { p_url_path: urlPath },
         );
+
+        if (error) {
+          console.error("getCachedCategoryPageData rpc error: ", urlPath, error);
+          return null;
+        }
+
         return (data as unknown as CategoryPageData) || null;
       },
       ["category-page-data", urlPath],
