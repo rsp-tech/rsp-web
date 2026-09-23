@@ -267,9 +267,7 @@ export default async function CategoryPage({ params }: PageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
       ))}
-      <ClientShell
-        initialData={data || { subcategories: [], recordings: [] }}
-      />
+      <ClientShell initialData={data ?? undefined} />
     </>
   );
 }

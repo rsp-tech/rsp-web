@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { QUERY_KEY, STORE } from "@/constants";
+import { QUERY_KEY, STORE, SYNC_INTERVAL } from "@/constants";
 import { getDB } from "@/lib/idb";
 import { sortByOrderInd } from "@/lib/utils";
 import type {
@@ -185,4 +185,5 @@ export const useHomepage = () =>
         featuredSections: enrichedSections.filter((s) => s.items.length > 0),
       };
     },
+    staleTime: SYNC_INTERVAL,
   });

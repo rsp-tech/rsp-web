@@ -2,7 +2,7 @@
 
 import { useQuery } from "@tanstack/react-query";
 import type { IDBPDatabase } from "idb";
-import { INDEX, QUERY_KEY, STORE } from "@/constants";
+import { INDEX, QUERY_KEY, STORE, SYNC_INTERVAL } from "@/constants";
 import { getDB, type RSP_IDB } from "@/lib/idb";
 import { pathToUrlPath, sortByOrderInd } from "@/lib/utils";
 import type { Category, EnrichedRecording, Material, Recording } from "@/types";
@@ -115,12 +115,12 @@ export const useCategoryPage = (
 ) => {
   const urlPath = pathToUrlPath(pathname);
 
-  // Verify that the initial data matches the current URL route.
-  // If the service worker falls back to "/" shell when offline, the initial data of "/" (root categories)
-  // is passed down, which does not match the active dynamic route path.
+  // Verify that the initial data matches the current URL route and is populated.
+  // If the server data set is empty or offline fallback shell "/" is passed down,
+  // queryInitialData is set to undefined so TanStack Query queries IDB immediately.
   const isValidInitialData = urlPath
     ? initialData?.category?.url_path === urlPath
-    : !initialData?.category;
+    : !initialData?.category && initialData?.subcategories?.length;
 
   const queryInitialData = isValidInitialData ? initialData : undefined;
 
@@ -128,6 +128,6 @@ export const useCategoryPage = (
     queryKey: [QUERY_KEY.CATEGORY_PAGE, urlPath || "~"],
     queryFn: () => loadCategoryPage(urlPath, queryInitialData),
     initialData: queryInitialData,
-    staleTime: 15 * 60 * 1000,
+    staleTime: SYNC_INTERVAL,
   });
 };

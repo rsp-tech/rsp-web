@@ -1,7 +1,7 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { META_KEY, QUERY_KEY, STORE } from "@/constants";
+import { META_KEY, QUERY_KEY, STORE, SYNC_INTERVAL } from "@/constants";
 import { getDB } from "@/lib/idb";
 
 export const getPersistedFeatureFlags = async (): Promise<string[]> => {
@@ -49,7 +49,7 @@ export const useFeatureFlags = () =>
   useQuery({
     queryKey: [QUERY_KEY.FEATURE_CONFIG],
     queryFn: getPersistedFeatureFlags,
-    staleTime: 60_000,
+    staleTime: SYNC_INTERVAL,
   });
 
 export const useFeatureFlag = (flagId: string): boolean => {

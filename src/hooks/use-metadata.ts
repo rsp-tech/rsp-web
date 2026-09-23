@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { QUERY_KEY, STORE } from "@/constants";
+import { QUERY_KEY, STORE, SYNC_INTERVAL } from "@/constants";
 import { getDB } from "@/lib/idb";
 import type { Event, Language, Speaker, Venue } from "@/types";
 
@@ -14,6 +14,7 @@ export const useEvents = () =>
         (a.short_name || a.name).localeCompare(b.short_name || b.name),
       );
     },
+    staleTime: SYNC_INTERVAL,
   });
 
 export const useSpeakers = () =>
@@ -25,6 +26,7 @@ export const useSpeakers = () =>
       const data = (await db.getAll(STORE.SPEAKERS)) as Speaker[];
       return data.sort((a, b) => a.name.localeCompare(b.name));
     },
+    staleTime: SYNC_INTERVAL,
   });
 
 export const useLanguages = () =>
@@ -36,6 +38,7 @@ export const useLanguages = () =>
       const data = (await db.getAll(STORE.LANGUAGES)) as Language[];
       return data.sort((a, b) => a.name.localeCompare(b.name));
     },
+    staleTime: SYNC_INTERVAL,
   });
 
 export const useVenues = () =>
@@ -47,6 +50,7 @@ export const useVenues = () =>
       const data = (await db.getAll(STORE.VENUES)) as Venue[];
       return data.sort((a, b) => a.name.localeCompare(b.name));
     },
+    staleTime: SYNC_INTERVAL,
   });
 
 export const useMetadata = () => {
