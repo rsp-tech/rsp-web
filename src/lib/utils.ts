@@ -60,7 +60,7 @@ export const sortByDate =
 
 export const isValidCategoryPath = (value: string) =>
   /^[A-Za-z0-9_]+(?:\.[A-Za-z0-9_]+)*$/.test(value) &&
-  !/^_next|^\.well_known/.test(value);
+  !value.startsWith("_next");
 
 /**
  * Converts a pathname (string or array of slug segments) to a DB urlPath (dot-separated, ltree format).
