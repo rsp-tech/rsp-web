@@ -79,19 +79,31 @@ export type Database = {
       };
       banner_images: {
         Row: {
+          avif: string | null;
+          avif_2x: string | null;
           description: string;
           id: number;
           updated_at: string | null;
+          webp: string | null;
+          webp_2x: string | null;
         };
         Insert: {
+          avif?: string | null;
+          avif_2x?: string | null;
           description: string;
           id?: number;
           updated_at?: string | null;
+          webp?: string | null;
+          webp_2x?: string | null;
         };
         Update: {
+          avif?: string | null;
+          avif_2x?: string | null;
           description?: string;
           id?: number;
           updated_at?: string | null;
+          webp?: string | null;
+          webp_2x?: string | null;
         };
         Relationships: [];
       };
