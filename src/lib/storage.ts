@@ -1,4 +1,4 @@
-import { ASSET_BASE_URL, AUDIO_BASE_URL } from "@/constants";
+import { ASSET_BASE_URL, ASSET_PROXY } from "@/constants";
 import type { Category } from "@/types";
 
 export const getCategoryImageUrl = (cat: Category): string | null => {
@@ -9,4 +9,4 @@ export const getCategoryImageUrl = (cat: Category): string | null => {
 export const getAssetUrl = (id: string): string =>
   id.startsWith("http") ? id : `${ASSET_BASE_URL}${id}`;
 
-export const getAudioUrl = (id: string) => `${AUDIO_BASE_URL}${id}`;
+export const getAssetProxyUrl = (id: string) => `${ASSET_PROXY}${id}`;

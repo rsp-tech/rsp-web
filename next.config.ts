@@ -77,7 +77,7 @@ const nextConfig: NextConfig = {
                 .join(" "),
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https://lh3.googleusercontent.com https://i.ytimg.com",
-              `media-src 'self' blob: ${process.env["NEXT_PUBLIC_AUDIO_BASE_URL"]}`,
+              `media-src 'self' blob: ${process.env["NEXT_PUBLIC_ASSET_PROXY"]}`,
               [
                 "connect-src",
                 "'self'",
@@ -85,7 +85,7 @@ const nextConfig: NextConfig = {
                 "https://cloudflareinsights.com",
                 "wss://bfiyqzcnmkpczkmgounm.supabase.co",
                 "https://*.radheshyamdas.com",
-                process.env["NEXT_PUBLIC_AUDIO_BASE_URL"],
+                process.env["NEXT_PUBLIC_ASSET_PROXY"],
                 "https://*.google.com",
                 "https://*.googleusercontent.com",
               ]

@@ -7,7 +7,7 @@ import { STREAM_LIMIT_BYTES } from "@/constants";
 import { useAudioPlayback } from "@/hooks/use-audio";
 import { useVideo } from "@/hooks/use-video";
 import { audioEngine } from "@/lib/audio-engine";
-import { getAssetUrl, getAudioUrl } from "@/lib/storage";
+import { getAssetProxyUrl, getAssetUrl } from "@/lib/storage";
 import { cn, parseSize } from "@/lib/utils";
 import type { EnrichedRecording } from "@/types";
 import { RecordingMeta } from "./recording-meta";
@@ -52,7 +52,7 @@ export const RecordingCard = ({ rec, q, m, onKeyDown }: RecordingCardProps) => {
     } else {
       setIsLoading(true);
       try {
-        const url = getAudioUrl(rec.audio_id);
+        const url = getAssetProxyUrl(rec.audio_id);
         const cache = await caches.open(CACHE_NAME);
         let response = await cache.match(rec.audio_id);
 

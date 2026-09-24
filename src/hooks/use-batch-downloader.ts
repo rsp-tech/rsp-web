@@ -20,7 +20,7 @@ import {
   resolveMaterialFileName,
   sanitizeFileName,
 } from "@/lib/material-utils";
-import { getAssetUrl, getAudioUrl } from "@/lib/storage";
+import { getAssetProxyUrl, getAssetUrl } from "@/lib/storage";
 import { parseSize } from "@/lib/utils";
 import type { EnrichedRecording, Material } from "@/types";
 
@@ -247,7 +247,7 @@ export const prepareDistinctTasks = (
           key,
           type: "audio",
           name: rec.name,
-          url: getAudioUrl(rec.audio_id),
+          url: getAssetProxyUrl(rec.audio_id),
           cacheKey: rec.audio_id,
           cacheName: AUDIO_CACHE_NAME,
           recId: rec.id,
@@ -272,7 +272,7 @@ export const prepareDistinctTasks = (
             type: "material",
             name: mat.name,
             // Route through Cloudflare proxy for CORS support
-            url: getAudioUrl(mat.uri),
+            url: getAssetProxyUrl(mat.uri),
             cacheKey: mat.uri,
             cacheName: MATERIALS_CACHE_NAME,
             material: mat,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Category } from "@/types";
-import { getAssetUrl, getAudioUrl, getCategoryImageUrl } from "./storage";
+import { getAssetProxyUrl, getAssetUrl, getCategoryImageUrl } from "./storage";
 
 describe.concurrent("storage utility suite", () => {
   it.concurrent("getCategoryImageUrl creates base36 image URLs", () => {
@@ -20,6 +20,6 @@ describe.concurrent("storage utility suite", () => {
       "http://example.com/asset.png",
     );
     expect(getAssetUrl("assets/doc.pdf")).toContain("assets/doc.pdf");
-    expect(getAudioUrl("audio_sample.mp3")).toContain("audio_sample.mp3");
+    expect(getAssetProxyUrl("audio_sample.mp3")).toContain("audio_sample.mp3");
   });
 });

@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import type { Category } from "@/types";
 
 import { getQueryClient } from "./query-client";
-import { getAssetUrl, getAudioUrl, getCategoryImageUrl } from "./storage";
+import { getAssetProxyUrl, getAssetUrl, getCategoryImageUrl } from "./storage";
 import {
   categoryPath,
   cn,
@@ -191,7 +191,7 @@ describe.concurrent("utils.ts suite", () => {
       "https://external.cdn/image.jpg",
     );
     expect(getAssetUrl("assets/file.pdf")).toContain("assets/file.pdf");
-    expect(getAudioUrl("audio_123.mp3")).toContain("audio_123.mp3");
+    expect(getAssetProxyUrl("audio_123.mp3")).toContain("audio_123.mp3");
   });
 
   it.concurrent("getQueryClient returns configured singleton", () => {
