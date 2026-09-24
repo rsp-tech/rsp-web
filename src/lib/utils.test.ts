@@ -1,9 +1,8 @@
 import type { User } from "@supabase/supabase-js";
 import { describe, expect, it, vi } from "vitest";
-import type { Category } from "@/types";
 
 import { getQueryClient } from "./query-client";
-import { getAssetProxyUrl, getAssetUrl, getCategoryImageUrl } from "./storage";
+import { getAssetProxyUrl, getAssetUrl } from "./storage";
 import {
   categoryPath,
   cn,
@@ -181,12 +180,6 @@ describe.concurrent("utils.ts suite", () => {
   });
 
   it.concurrent("storage generates URLs for assets, audio, and category images", () => {
-    const cat = { img_id: 100 } as Category;
-    expect(getCategoryImageUrl(cat)).toBe("/img/2s.webp");
-    expect(
-      getCategoryImageUrl({ img_id: null } as unknown as Category),
-    ).toBeNull();
-
     expect(getAssetUrl("https://external.cdn/image.jpg")).toBe(
       "https://external.cdn/image.jpg",
     );

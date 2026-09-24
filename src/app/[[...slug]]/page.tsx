@@ -6,6 +6,7 @@ import { REVALIDATE_30_DAYS } from "@/app/api/constants";
 import { getCachedPublicUrlPaths } from "@/app/api/sync/delta-service";
 import { ASSET_BASE_URL } from "@/constants";
 import type { CategoryPageData } from "@/hooks/use-category-page";
+import { getCategoryImageUrl } from "@/lib/storage";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { isValidCategoryPath, pathToUrlPath, slugToLabel } from "@/lib/utils";
 import { ClientShell } from "@/views/client-shell";
@@ -108,9 +109,9 @@ export const generateMetadata = async ({
   const description = category?.name
     ? `Explore lectures on ${category.name} by Radheshyam Das.`
     : "Spiritual lectures.";
-  const imgPath = category?.img_id
-    ? `https://radheshyamdas.com/img/${category.img_id.toString(36)}.webp`
-    : "https://radheshyamdas.com/rsp.webp";
+  const imgPath =
+    getCategoryImageUrl(category, "webp") ||
+    "https://radheshyamdas.com/rsp.webp";
 
   return {
     title,

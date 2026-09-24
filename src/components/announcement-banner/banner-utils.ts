@@ -1,3 +1,4 @@
+import { ASSET_PROXY } from "@/constants";
 import type { ResponsiveBannerHeights } from "@/types";
 
 export const isExternalUrl = (url: string): boolean =>
@@ -31,10 +32,12 @@ export const getBannerMediaUrl = (
   ext: "webp" | "avif",
 ): string => {
   if (isExternalUrl(mediaPath)) return mediaPath;
-  const cleanPath = mediaPath.startsWith("bnr-")
-    ? mediaPath
-    : `bnr-${mediaPath}`;
-  return `/img/${cleanPath}-${variant}.${ext}`;
+
+  const raw = mediaPath.startsWith("bnr-") ? mediaPath.slice(4) : mediaPath;
+  const id = parseInt(raw, 36);
+  const format = `${variant === "d" ? "desktop" : "mobile"}_${ext}`;
+
+  return `${ASSET_PROXY}/bnr/${id}/${format}?v2`;
 };
 
 export const getBannerRawMediaUrl = (mediaPath: string): string => {

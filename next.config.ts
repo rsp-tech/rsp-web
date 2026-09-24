@@ -29,26 +29,9 @@ const nextConfig: NextConfig = {
   images: {
     unoptimized: true,
   },
-  async rewrites() {
-    return [
-      {
-        source: "/img/:path*",
-        destination: "/api/img/:path*",
-      },
-    ];
-  },
 
   async headers() {
     return [
-      {
-        source: "/img/:path*",
-        headers: [
-          {
-            key: "Cache-Control",
-            value: "public, max-age=31536000, s-maxage=31536000, immutable",
-          },
-        ],
-      },
       {
         source: "/assets/:path*",
         headers: [
@@ -76,7 +59,17 @@ const nextConfig: NextConfig = {
                 .filter(Boolean)
                 .join(" "),
               "style-src 'self' 'unsafe-inline'",
-              "img-src 'self' data: blob: https://lh3.googleusercontent.com https://i.ytimg.com",
+              [
+                "img-src",
+                "'self'",
+                "data:",
+                "blob:",
+                "https://lh3.googleusercontent.com",
+                "https://i.ytimg.com",
+                process.env["NEXT_PUBLIC_ASSET_PROXY"],
+              ]
+                .filter(Boolean)
+                .join(" "),
               `media-src 'self' blob: ${process.env["NEXT_PUBLIC_ASSET_PROXY"]}`,
               [
                 "connect-src",

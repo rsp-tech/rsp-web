@@ -173,8 +173,10 @@ export function SearchResults({
             <AccordionContent className="pb-2">
               <div className="flex flex-col gap-1">
                 {categories.map((cat, idx) => {
-                  const imgUrl = getCategoryImageUrl(cat) ?? "/rsp.webp";
-                  const avifUrl = imgUrl.replace(".webp", ".avif");
+                  const imgUrl =
+                    getCategoryImageUrl(cat, "webp") ?? "/rsp.webp";
+                  const avifUrl =
+                    getCategoryImageUrl(cat, "avif") ?? "/rsp.webp";
                   return (
                     <button
                       key={cat.id}

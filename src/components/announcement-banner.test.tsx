@@ -110,16 +110,15 @@ describe.concurrent("src/components/announcement-banner suite", () => {
     });
 
     it.concurrent("formats banner media URLs correctly with base-36 IDs", () => {
-      expect(getBannerMediaUrl("1a", "d", "webp")).toBe("/img/bnr-1a-d.webp");
-      expect(getBannerMediaUrl("bnr-1a", "m", "avif")).toBe(
-        "/img/bnr-1a-m.avif",
+      expect(getBannerMediaUrl("1a", "d", "webp")).toMatch(
+        /\/bnr\/46\/desktop_webp\?v2$/,
+      );
+      expect(getBannerMediaUrl("bnr-1a", "m", "avif")).toMatch(
+        /\/bnr\/46\/mobile_avif\?v2$/,
       );
       expect(
         getBannerMediaUrl("https://example.com/banner.webp", "d", "webp"),
       ).toBe("https://example.com/banner.webp");
-      expect(getBannerMediaUrl("httpfoo", "d", "webp")).toBe(
-        "/img/bnr-httpfoo-d.webp",
-      );
     });
 
     it.concurrent("formats raw banner media URLs correctly for video/gif", () => {

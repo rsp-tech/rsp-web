@@ -15,7 +15,10 @@ export const ONE_DAY_MS = 24 * 3600_000;
 export const ASSET_BASE_URL = process.env[
   "NEXT_PUBLIC_ASSET_BASE_URL"
 ] as string;
-export const ASSET_PROXY = process.env["NEXT_PUBLIC_ASSET_PROXY"];
+export const ASSET_PROXY = process.env["NEXT_PUBLIC_ASSET_PROXY"]?.replace(
+  /\/+$/,
+  "",
+);
 export const STREAM_LIMIT_BYTES = 100 * 1024 * 1024; // 100MB
 
 // IndexedDB

@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useState } from "react";
 import { getCategoryImageUrl } from "@/lib/storage";
 import { categoryPath } from "@/lib/utils";
 import type { Category } from "@/types";
@@ -14,9 +17,10 @@ export const CategoryCard = ({
   onKeyDown,
   priority,
 }: CategoryCardProps) => {
-  const imgUrl = getCategoryImageUrl(cat);
-  const avifUrl = imgUrl?.replace(".webp", ".avif");
+  const imgUrl = getCategoryImageUrl(cat, "webp");
+  const avifUrl = getCategoryImageUrl(cat, "avif");
   const href = `/${categoryPath(cat.url_path)}`;
+  const [failed, setFailed] = useState(false);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
     e.preventDefault();
@@ -37,15 +41,21 @@ export const CategoryCard = ({
       {imgUrl ? (
         <div className="absolute inset-0 w-full h-full bg-muted">
           <picture>
-            <source srcSet={avifUrl} type="image/avif" />
+            {!failed && <source srcSet={avifUrl} type="image/avif" />}
             <img
               src={imgUrl}
               alt=""
               loading={priority ? "eager" : "lazy"}
               fetchPriority={priority ? "high" : undefined}
               onError={(e) => {
+                const img = e.currentTarget;
+                setFailed(true);
+                if (img.src.endsWith("/rsp.webp")) {
+                  img.onerror = null;
+                  return;
+                }
                 // Structural native fallback allocation
-                e.currentTarget.src = "/rsp.webp";
+                img.src = "/rsp.webp";
               }}
               className="absolute inset-0 w-full h-full object-cover group-hover:scale-125 transition-all duration-200"
             />
