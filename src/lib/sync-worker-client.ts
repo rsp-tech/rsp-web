@@ -101,8 +101,8 @@ const getWorker = (): Worker => {
 export const dispatchSyncJob = (
   payload: Record<string, unknown>,
   onProgress?: (message: string) => void,
-): Promise<SyncResult> => {
-  return new Promise<SyncResult>((resolve, reject) => {
+): Promise<SyncResult> =>
+  new Promise<SyncResult>((resolve, reject) => {
     const type = typeof payload["type"] === "string" ? payload["type"] : "job";
     const jobId = `${type}-${crypto.randomUUID()}`;
 
@@ -117,4 +117,3 @@ export const dispatchSyncJob = (
       reject(err instanceof Error ? err : new Error(String(err)));
     }
   });
-};

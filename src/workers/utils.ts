@@ -600,7 +600,7 @@ export const applyDeltas = async (
   const changedTables: string[] = [];
 
   for (const [table, rows] of Object.entries(deltas)) {
-    if (!rows || rows.length === 0) continue;
+    if (!rows?.length) continue;
     const syncTable = table as SyncTable;
 
     if (
