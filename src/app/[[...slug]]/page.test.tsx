@@ -32,6 +32,9 @@ vi.mock("@/lib/supabase-server", () => ({
 vi.mock("@/hooks/use-is-mobile", () => ({ useIsMobile: () => false }));
 vi.mock("@/hooks/use-online-status", () => ({ useOnlineStatus: () => true }));
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
+vi.mock("@/app/api/sync/delta-service", () => ({
+  getCachedPublicUrlPaths: () => Promise.resolve(["gita"]),
+}));
 
 describe.concurrent("src/app/[[...slug]]/page.tsx suite", () => {
   it.concurrent("generateMetadata generates metadata for library category routes", async () => {

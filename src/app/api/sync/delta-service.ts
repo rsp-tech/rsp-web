@@ -1,3 +1,5 @@
+import { unstable_cache } from "next/cache";
+import { CACHE_TAG } from "@/app/api/constants";
 import {
   ROLE_SYNCED_TABLES,
   STORE,
@@ -11,7 +13,13 @@ import {
   stripUpdatedAt,
 } from "@/lib/sync-utils";
 import { sortByDate } from "@/lib/utils";
-import type { ClientWatermarks, SyncResponseData, SyncTable } from "@/types";
+import type {
+  Category,
+  ClientWatermarks,
+  Redirect,
+  SyncResponseData,
+  SyncTable,
+} from "@/types";
 import {
   getCachedPublicTable,
   getCachedRoleExtraTable,
@@ -50,17 +58,16 @@ const mergeAndPickTableRows = (
   return Array.from(mergedMap.values());
 };
 
-const resolvePublicTableDelta = async (
+export const resolvePublicTableDelta = async <T>(
   table: SyncTable,
   clientWatermark: string,
-): Promise<[SyncTable, unknown[]]> => {
+): Promise<T[]> => {
   if (table === STORE.DELETED_RECORDS || table === STORE.RESTRICTED_RECORDS) {
     const liveDiffRows = await getCachedLiveDiff(
       table,
       clientWatermark || null,
     );
-    const resultDelta = stripUpdatedAt(liveDiffRows.sort(sortByDate()));
-    return [table, resultDelta];
+    return stripUpdatedAt(liveDiffRows.sort(sortByDate())) as T[];
   }
 
   const publicRows = await getCachedPublicTable(table);
@@ -90,11 +97,9 @@ const resolvePublicTableDelta = async (
     highestBaselineUpdatedAt,
   );
 
-  const resultDelta = stripUpdatedAt(
+  return stripUpdatedAt(
     mergedRows.map((r) => pickSyncColumns(r, table)).sort(sortByDate()),
-  );
-
-  return [table, resultDelta];
+  ) as T[];
 };
 
 const resolveRoleTableDelta = async (
@@ -165,9 +170,10 @@ export const computePublicSyncDelta = async (
   }
 
   const deltaEntries = await Promise.all(
-    dirtyTables.map((table) =>
+    dirtyTables.map((table) => [
+      table,
       resolvePublicTableDelta(table, watermarks[table] || ""),
-    ),
+    ]),
   );
 
   return {
@@ -288,3 +294,22 @@ export const computeUserSyncDelta = async (
     deltas,
   };
 };
+
+export const getCachedPublicUrlPaths = unstable_cache(
+  async (): Promise<string[]> => {
+    const [categories, redirects] = await Promise.all([
+      resolvePublicTableDelta<Category>(STORE.CATEGORIES, ""),
+      resolvePublicTableDelta<Redirect>(STORE.REDIRECTS, ""),
+    ]);
+
+    return [
+      ...categories.map((c) => c.url_path),
+      ...redirects.map((r) => r.id),
+    ].filter(Boolean);
+  },
+  ["public-url-paths"],
+  {
+    revalidate: 300,
+    tags: [CACHE_TAG.SYNC_META, CACHE_TAG.LIVE_DIFF],
+  },
+);

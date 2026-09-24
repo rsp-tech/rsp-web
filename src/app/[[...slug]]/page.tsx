@@ -3,6 +3,7 @@ import { unstable_cache } from "next/cache";
 import { redirect } from "next/navigation";
 import { cache } from "react";
 import { REVALIDATE_30_DAYS } from "@/app/api/constants";
+import { getCachedPublicUrlPaths } from "@/app/api/sync/delta-service";
 import { ASSET_BASE_URL } from "@/constants";
 import type { CategoryPageData } from "@/hooks/use-category-page";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
@@ -20,9 +21,17 @@ const getCachedCategoryPageData = cache(
   async (urlPath: string): Promise<CategoryPageData | null> =>
     unstable_cache(
       async () => {
-        if (urlPath && !isValidCategoryPath(urlPath)) {
-          console.warn("Invalid category path: ", urlPath);
-          return null;
+        if (urlPath) {
+          if (!isValidCategoryPath(urlPath)) {
+            console.warn("Invalid category path: ", urlPath);
+            return null;
+          }
+
+          const validPaths = await getCachedPublicUrlPaths();
+          if (!validPaths.includes(urlPath)) {
+            console.warn("URL path not found: ", urlPath);
+            return null;
+          }
         }
         const { data, error } = await getSupabaseServerClient().rpc(
           "get_category_page_data",
