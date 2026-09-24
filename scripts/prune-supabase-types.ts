@@ -5,6 +5,7 @@ import { Project, SyntaxKind } from "ts-morph";
 const TABLES_TO_OMIT = [
   "cat_meta",
   "images",
+  "banner_images",
   "rec_meta",
   "roles",
   "user_edit_audit",
