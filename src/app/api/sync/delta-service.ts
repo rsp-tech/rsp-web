@@ -170,9 +170,9 @@ export const computePublicSyncDelta = async (
   }
 
   const deltaEntries = await Promise.all(
-    dirtyTables.map((table) => [
+    dirtyTables.map(async (table) => [
       table,
-      resolvePublicTableDelta(table, watermarks[table] || ""),
+      await resolvePublicTableDelta(table, watermarks[table] || ""),
     ]),
   );
 
