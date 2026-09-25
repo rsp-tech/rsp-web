@@ -52,6 +52,12 @@ export const POST = async (req: NextRequest) => {
     revalidatePath(path);
     revalidated.push(path);
 
+    if (!path.startsWith("/library") && !path.startsWith("/api")) {
+      const libPath = `/library${path}`;
+      revalidatePath(libPath);
+      revalidated.push(libPath);
+    }
+
     const slugParts = path.split("/").filter(Boolean);
     const urlPath = pathToUrlPath(slugParts);
     if (urlPath) {
