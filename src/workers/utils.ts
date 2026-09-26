@@ -600,13 +600,7 @@ export const applyDeltas = async (
   const changedTables: string[] = [];
 
   for (const [table, rows] of Object.entries(deltas)) {
-    if (!rows?.length) continue;
-    const syncTable = table as SyncTable;
-
-    if (
-      syncTable === STORE.DELETED_RECORDS ||
-      syncTable === STORE.RESTRICTED_RECORDS
-    ) {
+    if (table === STORE.DELETED_RECORDS || table === STORE.RESTRICTED_RECORDS) {
       await applyDeletedRecords(
         db,
         rows as DeletedRecord[],
@@ -616,15 +610,15 @@ export const applyDeltas = async (
     } else {
       await writeRowsToStore({
         db,
-        table: syncTable as IDBTable,
+        table: table as IDBTable,
         rows: rows as RSP_IDB[IDBTable]["value"][],
         changedIds,
         changedCategoryMeta,
         newAdditions,
-        idbLastSync: watermarks[syncTable],
+        idbLastSync: watermarks[table],
       });
     }
-    changedTables.push(syncTable);
+    changedTables.push(table);
   }
 
   // Determine latest watermarks to persist:
