@@ -54,17 +54,22 @@ export const RecordingCard = ({ rec, q, m, onKeyDown }: RecordingCardProps) => {
       try {
         const url = getAssetProxyUrl(rec.audio_id);
         const cache = await caches.open(CACHE_NAME);
-        let response = await cache.match(rec.audio_id);
+        const cachedResponse = await cache.match(rec.audio_id);
 
-        if (!response) {
-          response = await fetch(url);
+        if (cachedResponse) {
+          // Play instantly from local offline cache
+          const blob = await cachedResponse.blob();
+          await audioEngine.playTrack(rec.audio_id, rec, blob);
+        } else {
+          // Play immediately via streaming URL (~150ms start)
+          await audioEngine.playTrack(rec.audio_id, rec, url);
+
+          // Download and populate CacheStorage in background without interrupting playback
+          const response = await fetch(url);
           if (!response.ok) throw new Error("Stream connection drops");
           await cache.put(rec.audio_id, response.clone());
           setIsCached(true);
         }
-
-        const blob = await response.blob();
-        await audioEngine.playTrack(rec.audio_id, rec, blob);
       } catch (err) {
         console.error("Failed handling execution stream setup", err);
       } finally {

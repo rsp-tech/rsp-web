@@ -39,6 +39,7 @@ const emit = () =>
 const getAudioElement = (): HTMLAudioElement => {
   if (!audioEl && typeof window !== "undefined") {
     audioEl = new Audio();
+    audioEl.crossOrigin = "anonymous";
 
     audioEl.addEventListener("timeupdate", () => {
       state = { ...state, currentTime: audioEl?.currentTime ?? 0 };
@@ -73,7 +74,7 @@ export const audioEngine = {
   playTrack: async (
     audioId: string,
     rec: EnrichedRecording,
-    blob: Blob,
+    source: Blob | string,
     maxCacheSizeMB?: number,
   ) => {
     const audio = getAudioElement();
@@ -82,9 +83,15 @@ export const audioEngine = {
     // Prevent Object URL memory leakage explicitly
     if (currentObjectUrl) {
       URL.revokeObjectURL(currentObjectUrl);
+      currentObjectUrl = null;
     }
 
-    currentObjectUrl = URL.createObjectURL(blob);
+    if (typeof source === "string") {
+      audio.src = source;
+    } else {
+      currentObjectUrl = URL.createObjectURL(source);
+      audio.src = currentObjectUrl;
+    }
 
     let categoryPathVal: string | null = null;
     try {
@@ -108,15 +115,16 @@ export const audioEngine = {
     };
     emit();
 
-    audio.src = currentObjectUrl;
     audio.playbackRate = state.playbackRate;
     audio.volume = state.volume;
 
     await audio.play();
 
-    // Update metadata asynchronously off the main thread path
-    await touchTrackMeta(audioId, rec.id, blob.size);
-    await enforceLRUWatermark(maxCacheSizeMB);
+    if (typeof source !== "string") {
+      // Update metadata asynchronously off the main thread path
+      await touchTrackMeta(audioId, rec.id, source.size);
+      await enforceLRUWatermark(maxCacheSizeMB);
+    }
   },
 
   togglePlay: () => {
