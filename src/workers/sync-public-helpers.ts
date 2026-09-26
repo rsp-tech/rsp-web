@@ -58,14 +58,14 @@ export const syncPublicData = async (
     );
   }
 
-  const hasDirtyTables = GENERIC_TABLES.some((table) => {
+  const dirtyTables = GENERIC_TABLES.filter((table) => {
     const serverTime = serverMeta[table];
     return serverTime && serverTime > (idbSyncMeta[table] || "");
   });
 
-  if (hasDirtyTables) {
+  if (dirtyTables.length > 0) {
     const watermarks: Record<string, string> = Object.fromEntries(
-      GENERIC_TABLES.map((t) => [t, idbSyncMeta[t] || ""]),
+      dirtyTables.map((t) => [t, `${idbSyncMeta[t]}::${serverMeta[t]}`]),
     );
 
     const publicDeltaResult = await fetchPublicSyncDeltas(origin, watermarks);

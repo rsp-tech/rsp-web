@@ -152,9 +152,16 @@ const findDirtyTables = (
 };
 
 export const computePublicSyncDelta = async (
-  watermarks: ClientWatermarks,
+  watermarks_: ClientWatermarks,
 ): Promise<SyncResponseData> => {
-  const serverSyncMeta = await getCachedSyncMeta();
+  const watermarkKeys = Object.keys(watermarks_);
+  const watermarks: ClientWatermarks = Object.fromEntries(
+    watermarkKeys.map((key) => [key, watermarks_[key].split("::")[0]]),
+  );
+  const _serverSyncMeta = await getCachedSyncMeta();
+  const serverSyncMeta = Object.fromEntries(
+    watermarkKeys.map((key) => [key, _serverSyncMeta[key]]),
+  );
   const dirtyTables = findDirtyTables(
     watermarks,
     serverSyncMeta,
