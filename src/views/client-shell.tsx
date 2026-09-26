@@ -52,7 +52,7 @@ export const ClientShell = ({ initialData }: ClientShellProps) => {
     redirect(data.redirectTo);
   }
 
-  if (isPending || (slug.length > 0 && !data?.category && isSyncing)) {
+  if ((isPending || isSyncing) && !data?.subcategories?.length && !data?.recordings?.length) {
     return <Loading />;
   }
 
