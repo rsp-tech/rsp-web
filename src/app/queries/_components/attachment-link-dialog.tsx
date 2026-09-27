@@ -28,8 +28,7 @@ export const AttachmentLinkDialog = ({
   const [linkUrl, setLinkUrl] = useState("");
   const [linkTitle, setLinkTitle] = useState("");
 
-  const handleAddLink = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleAddLink = () => {
     const url = linkUrl.trim();
     if (!url) {
       toast.error("Please enter a URL.");
@@ -54,47 +53,49 @@ export const AttachmentLinkDialog = ({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-md">
-        <form onSubmit={handleAddLink}>
-          <DialogHeader>
-            <DialogTitle>Add Link</DialogTitle>
-            <DialogDescription>
-              Attach a relevant web link or reference.
-            </DialogDescription>
-          </DialogHeader>
-          <div className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="link-url-web">URL *</Label>
-              <Input
-                id="link-url-web"
-                placeholder="https://example.com/verse"
-                value={linkUrl}
-                onChange={(e) => setLinkUrl(e.target.value)}
-                autoFocus
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="link-title-web">Title (Optional)</Label>
-              <Input
-                id="link-title-web"
-                placeholder="Bhagavad Gita 2.13"
-                value={linkTitle}
-                onChange={(e) => setLinkTitle(e.target.value)}
-              />
-            </div>
+        <DialogHeader>
+          <DialogTitle>Add Link</DialogTitle>
+          <DialogDescription>
+            Attach a relevant web link or reference.
+          </DialogDescription>
+        </DialogHeader>
+        <div className="space-y-4 py-4">
+          <div className="space-y-2">
+            <Label htmlFor="link-url-web">URL *</Label>
+            <Input
+              id="link-url-web"
+              placeholder="https://example.com/verse"
+              value={linkUrl}
+              onChange={(e) => setLinkUrl(e.target.value)}
+              autoFocus
+            />
           </div>
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => onOpenChange(false)}
-            >
-              Cancel
-            </Button>
-            <Button type="submit" disabled={!linkUrl.trim()}>
-              Add Link
-            </Button>
-          </DialogFooter>
-        </form>
+          <div className="space-y-2">
+            <Label htmlFor="link-title-web">Title (Optional)</Label>
+            <Input
+              id="link-title-web"
+              placeholder="Bhagavad Gita 2.13"
+              value={linkTitle}
+              onChange={(e) => setLinkTitle(e.target.value)}
+            />
+          </div>
+        </div>
+        <DialogFooter>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="button"
+            disabled={!linkUrl.trim()}
+            onClick={handleAddLink}
+          >
+            Add Link
+          </Button>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );
