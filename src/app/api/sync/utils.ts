@@ -144,6 +144,18 @@ export const fetchBackupAsset = async (
   }
 
   const headers = new Headers(assetRes.headers);
+  headers.set(
+    "Cache-Control",
+    "public, max-age=86400, s-maxage=2592000, stale-while-revalidate=86400",
+  );
+  headers.set(
+    "CDN-Cache-Control",
+    "public, s-maxage=2592000, stale-while-revalidate=86400",
+  );
+  headers.set(
+    "Vercel-CDN-Cache-Control",
+    "public, s-maxage=2592000, stale-while-revalidate=86400",
+  );
   return new Response(assetRes.body, {
     status: assetRes.status,
     headers,
