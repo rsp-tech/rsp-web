@@ -8,7 +8,6 @@ import {
   NetworkOnly,
   Route,
   Serwist,
-  StaleWhileRevalidate,
 } from "serwist";
 
 declare const self: ServiceWorkerGlobalScope & {
@@ -58,16 +57,16 @@ const runtimeCaching: RuntimeCaching[] = [
     }),
   },
   {
-    // Fingerprinted Next.js assets.
+    // Fingerprinted Next.js assets (immutable content hashes; serve from cache without revalidating over network).
     matcher: ({ request, url }) =>
       url.origin === self.location.origin &&
       STATIC_ASSET_REGEX.test(url.pathname) &&
       request.headers.get("RSC") !== "1",
-    handler: new StaleWhileRevalidate({
+    handler: new CacheFirst({
       cacheName: "static-assets",
       plugins: [
         new ExpirationPlugin({
-          maxEntries: 80,
+          maxEntries: 120,
         }),
       ],
     }),
