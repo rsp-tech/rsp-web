@@ -139,7 +139,7 @@ export const NotificationCenter = () => {
                 size="icon-sm"
                 onClick={() => clearAll()}
                 title="Clear all notifications"
-                className="text-muted-foreground hover:text-destructive"
+                className="text-muted-foreground hover:text-destructive mr-2"
               >
                 <Trash2 className="w-4 h-4" />
               </Button>
