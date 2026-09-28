@@ -12,27 +12,22 @@ describe("use-notifications hook suite", () => {
     expect(typeof useNotifications).toBe("function");
   });
 
-  it("clearNotificationStorage removes notification local storage keys including cleared_at", () => {
+  it("clearNotificationStorage removes user notification keys but preserves public notifications", () => {
     localStorage.setItem(LOCAL_STORAGE.READ_NOTIFICATIONS, "['1']");
-    localStorage.setItem(
-      LOCAL_STORAGE.NOTIFICATIONS_CLEARED_AT,
-      "2026-09-28T00:00:00.000Z",
-    );
     localStorage.setItem(`${LOCAL_STORAGE.NOTIFICATION_GROUPS}:u1`, "[]");
+    localStorage.setItem(`${LOCAL_STORAGE.NOTIFICATION_GROUPS}:public`, "[]");
     localStorage.setItem(`${LOCAL_STORAGE.NOTIFICATION_GROUPS}::public`, "[]");
 
     clearNotificationStorage();
 
     expect(localStorage.getItem(LOCAL_STORAGE.READ_NOTIFICATIONS)).toBeNull();
     expect(
-      localStorage.getItem(LOCAL_STORAGE.NOTIFICATIONS_CLEARED_AT),
-    ).toBeNull();
-    expect(
       localStorage.getItem(`${LOCAL_STORAGE.NOTIFICATION_GROUPS}:u1`),
     ).toBeNull();
+    // Public keys are preserved
     expect(
-      localStorage.getItem(`${LOCAL_STORAGE.NOTIFICATION_GROUPS}::public`),
-    ).toBeNull();
+      localStorage.getItem(`${LOCAL_STORAGE.NOTIFICATION_GROUPS}:public`),
+    ).not.toBeNull();
   });
 
   it("addSyncNotifications groups new additions into local storage", () => {

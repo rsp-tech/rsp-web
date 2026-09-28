@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/components/providers";
-import { LOCAL_STORAGE, ONE_DAY_MS, STORE } from "@/constants";
+import { LOCAL_STORAGE, STORE } from "@/constants";
 import { getDB } from "@/lib/idb";
 import { categoryPath } from "@/lib/utils";
 import type {
@@ -19,14 +19,15 @@ import type {
 } from "@/types";
 
 const getGroupsStorageKey = (userId?: string | null) =>
-  `${LOCAL_STORAGE.NOTIFICATION_GROUPS}:${userId || ":public"}`;
+  `${LOCAL_STORAGE.NOTIFICATION_GROUPS}:${userId || "public"}`;
 
 const getStoredGroups = (userId?: string | null): NotificationGroup[] => {
   if (typeof window === "undefined") return [];
   try {
-    return JSON.parse(
-      localStorage.getItem(getGroupsStorageKey(userId)) || "[]",
-    );
+    const key = getGroupsStorageKey(userId);
+    const data = localStorage.getItem(key);
+    if (data) return JSON.parse(data);
+    return [];
   } catch {
     return [];
   }
@@ -64,20 +65,28 @@ export const getAllStoredGroups = (
   );
 };
 
-export const clearNotificationStorage = () => {
+export const clearNotificationStorage = (userId?: string | null) => {
   if (typeof window === "undefined") return;
   try {
     localStorage.removeItem(LOCAL_STORAGE.READ_NOTIFICATIONS);
-    localStorage.removeItem(LOCAL_STORAGE.NOTIFICATIONS_CLEARED_AT);
-    const keysToRemove: string[] = [];
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-      if (key?.startsWith(LOCAL_STORAGE.NOTIFICATION_GROUPS)) {
-        keysToRemove.push(key);
+    if (userId) {
+      localStorage.removeItem(getGroupsStorageKey(userId));
+    } else {
+      // Clear user-specific groups, but preserve public notifications
+      const publicKey = getGroupsStorageKey(null);
+      const keysToRemove: string[] = [];
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (
+          key?.startsWith(LOCAL_STORAGE.NOTIFICATION_GROUPS) &&
+          key !== publicKey
+        ) {
+          keysToRemove.push(key);
+        }
       }
-    }
-    for (const key of keysToRemove) {
-      localStorage.removeItem(key);
+      for (const key of keysToRemove) {
+        localStorage.removeItem(key);
+      }
     }
   } catch (err) {
     console.error("Failed to clear notification storage:", err);
@@ -154,62 +163,11 @@ export const addSyncNotifications = (
 const resolveGroups = async (
   userId?: string | null,
 ): Promise<ResolvedNotificationGroup[]> => {
-  let storedGroups = getAllStoredGroups(userId);
+  const storedGroups = getAllStoredGroups(userId);
+  if (!storedGroups.length) return [];
 
   const db = await getDB();
   if (!db) return [];
-
-  // Fallback / bootstrapping: If no recordings group exists in stored groups,
-  // check IndexedDB for recently added recordings (e.g. within 7 days)
-  const hasRecordingsGroup = storedGroups.some((g) => g.type === "recordings");
-  if (!hasRecordingsGroup) {
-    const clearedAtStr =
-      typeof window !== "undefined"
-        ? localStorage.getItem(LOCAL_STORAGE.NOTIFICATIONS_CLEARED_AT)
-        : null;
-    const clearedAtTime = clearedAtStr ? new Date(clearedAtStr).getTime() : 0;
-    const sevenDaysAgo = Date.now() - 7 * ONE_DAY_MS;
-    const minTimestamp = Math.max(sevenDaysAgo, clearedAtTime);
-
-    try {
-      const allRecordings = (await db.getAll(STORE.RECORDINGS)) as Recording[];
-      const recentRecordings = allRecordings
-        .filter((rec) => {
-          if (!rec.recorded_at) return false;
-          const recTime = new Date(rec.recorded_at).getTime();
-          return !Number.isNaN(recTime) && recTime >= minTimestamp;
-        })
-        .sort((a, b) => {
-          const timeA = new Date(a.recorded_at || 0).getTime();
-          const timeB = new Date(b.recorded_at || 0).getTime();
-          return timeB - timeA;
-        })
-        .slice(0, 20);
-
-      if (recentRecordings.length > 0) {
-        const latestTime =
-          recentRecordings[0].recorded_at || new Date().toISOString();
-        const bootstrapGroup: NotificationGroup = {
-          id: `recordings-bootstrap-${recentRecordings[0].id}`,
-          type: "recordings",
-          timestamp: latestTime,
-          itemIds: recentRecordings.map((r) => r.id),
-          readItemIds: [],
-        };
-
-        const publicGroups = getStoredGroups(null);
-        saveStoredGroups([bootstrapGroup, ...publicGroups], null);
-        storedGroups = [bootstrapGroup, ...storedGroups];
-      }
-    } catch (err) {
-      console.error(
-        "Failed to bootstrap recent recordings for notifications:",
-        err,
-      );
-    }
-  }
-
-  if (!storedGroups.length) return [];
 
   const hasReplies = storedGroups.some((g) => g.type === "replies");
   const hasRequests = storedGroups.some((g) => g.type === "requests");
@@ -518,6 +476,7 @@ export const useNotifications = () => {
           localStorage.removeItem(getGroupsStorageKey(userId));
         }
         localStorage.removeItem(getGroupsStorageKey(null));
+        localStorage.removeItem(`${LOCAL_STORAGE.NOTIFICATION_GROUPS}::public`);
         localStorage.setItem(
           LOCAL_STORAGE.NOTIFICATIONS_CLEARED_AT,
           new Date().toISOString(),
