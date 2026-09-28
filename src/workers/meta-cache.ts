@@ -4,7 +4,7 @@ export interface CachedSyncMeta {
   cachedAt: number;
 }
 
-export const SYNC_META_TTL_MS = 5_000; // 5 seconds
+export const SYNC_META_TTL_MS = 30_000; // 1/2 minute
 
 export const CACHE_NAME = "rsp-sync-meta-cache";
 
