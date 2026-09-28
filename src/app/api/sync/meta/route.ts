@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { axiomLogger } from "@/lib/axiom-logger";
 import {
   evaluatePublicFlags,
   getCachedFeatureFlags,
@@ -30,6 +31,7 @@ export const GET = async () => {
       },
     });
   } catch (error) {
+    axiomLogger.error("Failed to fetch sync meta", { error });
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 500 },

@@ -2,6 +2,7 @@ import { unstable_cache } from "next/cache";
 import { CACHE_TAG } from "@/app/api/constants";
 import { STORE, SYNC_COLUMNS } from "@/constants";
 import type { Database } from "@/database.types";
+import { axiomLogger } from "@/lib/axiom-logger";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { isRoleTable } from "@/lib/sync-utils";
 import type { SyncTable } from "@/types";
@@ -56,6 +57,12 @@ export const getCachedLiveDiff = unstable_cache(
         `[Live Diff Fetcher] Query failed for ${table}:`,
         error.message,
       );
+      axiomLogger.error(`[Live Diff Fetcher] Query failed for ${table}`, {
+        error: error.message,
+        table,
+        sinceTimestamp,
+        roleId,
+      });
       throw new Error(
         `Failed to fetch live diff for ${table}: ${error.message}`,
       );
@@ -64,6 +71,14 @@ export const getCachedLiveDiff = unstable_cache(
     if (data && data.length === 1000) {
       console.warn(
         `[Live Diff Fetcher] Warning: query for table "${table}" hit Supabase 1,000-row limit!`,
+      );
+      axiomLogger.warn(
+        `[Live Diff Fetcher] Query hit Supabase 1,000-row limit for ${table}`,
+        {
+          table,
+          sinceTimestamp,
+          roleId,
+        },
       );
     }
 

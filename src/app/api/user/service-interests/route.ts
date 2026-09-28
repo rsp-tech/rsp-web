@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { axiomLogger } from "@/lib/axiom-logger";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import type { UserServiceInterest } from "@/types";
 
@@ -28,6 +29,10 @@ export const POST = async (req: NextRequest) => {
 
       if (deleteError) {
         console.error("Failed to delete service interests:", deleteError);
+        axiomLogger.error("Failed to delete service interests", {
+          error: deleteError.message,
+          userId: body.user_id,
+        });
         return NextResponse.json(
           { error: deleteError.message },
           { status: 500 },
@@ -45,6 +50,10 @@ export const POST = async (req: NextRequest) => {
 
       if (upsertError) {
         console.error("Failed to upsert service interests:", upsertError);
+        axiomLogger.error("Failed to upsert service interests", {
+          error: upsertError.message,
+          userId: body.user_id,
+        });
         return NextResponse.json(
           { error: upsertError.message },
           { status: 500 },
@@ -59,6 +68,9 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({ success: true, data: upsertData });
   } catch (err: unknown) {
     console.error("Error processing service-interests submit route:", err);
+    axiomLogger.error("Error processing service-interests submit route", {
+      error: err,
+    });
     const errorMessage =
       err instanceof Error ? err.message : "Internal Server Error";
     return NextResponse.json({ error: errorMessage }, { status: 500 });

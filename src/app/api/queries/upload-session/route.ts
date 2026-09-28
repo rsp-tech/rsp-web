@@ -1,5 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { FEATURE_FLAGS } from "@/constants";
+import { axiomLogger } from "@/lib/axiom-logger";
 import { isFeatureFlagEnabled } from "@/lib/feature-flags-service";
 import { generateM2MToken } from "@/lib/jwt";
 
@@ -80,6 +81,12 @@ export const POST = async (req: NextRequest) => {
 
     if (!res.ok) {
       const errText = await res.text();
+      axiomLogger.error("Upload service error creating attachment session", {
+        status: res.status,
+        response: errText,
+        fileName,
+        mimeType,
+      });
       return NextResponse.json(
         { error: `Upload service error (${res.status}): ${errText}` },
         { status: res.status },
@@ -90,6 +97,9 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json(data);
   } catch (err: unknown) {
     console.error("Error creating query attachment upload session:", err);
+    axiomLogger.error("Error creating query attachment upload session", {
+      error: err,
+    });
     const errorMessage =
       err instanceof Error ? err.message : "Internal Server Error";
     return NextResponse.json({ error: errorMessage }, { status: 500 });

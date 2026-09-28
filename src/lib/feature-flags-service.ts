@@ -1,6 +1,7 @@
 import type { User } from "@supabase/supabase-js";
 import { unstable_cache } from "next/cache";
 import { CACHE_TAG, REVALIDATE_24_HOURS } from "@/app/api/constants";
+import { axiomLogger } from "@/lib/axiom-logger";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import type { FeatureFlag } from "@/types";
 
@@ -22,12 +23,18 @@ export const getCachedFeatureFlags = unstable_cache(
 
       if (error) {
         console.error("Failed to fetch feature flags from database:", error);
+        axiomLogger.error("Failed to fetch feature flags from database", {
+          error,
+        });
         return [];
       }
 
       return (data || []) as FeatureFlag[];
     } catch (err) {
       console.error("Error executing getCachedFeatureFlags query:", err);
+      axiomLogger.error("Error executing getCachedFeatureFlags query", {
+        error: err,
+      });
       return [];
     }
   },

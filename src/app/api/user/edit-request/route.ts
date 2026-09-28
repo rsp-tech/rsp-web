@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { axiomLogger } from "@/lib/axiom-logger";
 import {
   getSupabaseServerClient,
   handleMutationResult,
@@ -53,6 +54,9 @@ export const POST = async (req: NextRequest) => {
     return handleMutationResult(data, error, "submit user edit request");
   } catch (err: unknown) {
     console.error("Error processing edit-request submit route:", err);
+    axiomLogger.error("Error processing edit-request submit route", {
+      error: err,
+    });
     const errorMessage =
       err instanceof Error ? err.message : "Internal Server Error";
     return NextResponse.json({ error: errorMessage }, { status: 500 });

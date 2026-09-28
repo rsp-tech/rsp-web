@@ -1,7 +1,11 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { FEATURE_FLAGS } from "@/constants";
 import type { Json } from "@/database.types";
+import { axiomLogger } from "@/lib/axiom-logger";
+import { isFeatureFlagEnabled } from "@/lib/feature-flags-service";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import type { QueryAttachment } from "@/types";
+import { validateAttachments } from "../query-utils";
 
 interface QueryReplyBody {
   query_id: string;
@@ -9,10 +13,6 @@ interface QueryReplyBody {
   message: string;
   attachments?: QueryAttachment[];
 }
-
-import { FEATURE_FLAGS } from "@/constants";
-import { isFeatureFlagEnabled } from "@/lib/feature-flags-service";
-import { validateAttachments } from "../query-utils";
 
 export const POST = async (req: NextRequest) => {
   try {
@@ -61,6 +61,10 @@ export const POST = async (req: NextRequest) => {
 
     if (error) {
       console.error("Failed to insert query reply:", error);
+      axiomLogger.error("Failed to insert query reply", {
+        error: error.message,
+        query_id: body.query_id,
+      });
       return NextResponse.json(
         { error: error.message || "Database insert failed" },
         { status: 500 },
@@ -76,6 +80,7 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json({ success: true, data });
   } catch (err: unknown) {
     console.error("Error processing reply submit route:", err);
+    axiomLogger.error("Error processing reply submit route", { error: err });
     const errorMessage =
       err instanceof Error ? err.message : "Internal Server Error";
     return NextResponse.json({ error: errorMessage }, { status: 500 });

@@ -1,6 +1,7 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 import { API_PATH, CACHE_TAG } from "@/app/api/constants";
+import { axiomLogger } from "@/lib/axiom-logger";
 import { pathToUrlPath } from "@/lib/utils";
 import { verifyRevalidateAuth } from "./auth";
 
@@ -13,6 +14,9 @@ export const POST = async (req: NextRequest) => {
     console.error(
       `[API /api/revalidate] Auth verification failed for request from: ${origin}`,
     );
+    axiomLogger.warn("[API /api/revalidate] Auth verification failed", {
+      origin,
+    });
     return authError;
   }
 
@@ -70,6 +74,10 @@ export const POST = async (req: NextRequest) => {
     `[API /api/revalidate] Flushed targets (${origin}):`,
     revalidated,
   );
+  axiomLogger.info("[API /api/revalidate] Flushed targets", {
+    origin,
+    revalidated,
+  });
 
   return NextResponse.json({
     success: true,

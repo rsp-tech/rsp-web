@@ -1,4 +1,5 @@
 import type { NextRequest } from "next/server";
+import { axiomLogger } from "@/lib/axiom-logger";
 import { getAuthenticatedRoleId } from "../auth";
 import { fetchBackupAsset } from "../utils";
 
@@ -22,6 +23,9 @@ export const GET = async (request: NextRequest) => {
     );
   } catch (error) {
     console.error(error);
+    axiomLogger.error("Failed to fetch role backup zip", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return new Response("Failed to fetch backup", {
       status: 502,
     });

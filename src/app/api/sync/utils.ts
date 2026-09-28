@@ -5,6 +5,7 @@ import {
   CSV_ENDPOINT,
   REVALIDATE_24_HOURS,
 } from "@/app/api/constants";
+import { axiomLogger } from "@/lib/axiom-logger";
 
 const BACKUP_TOKEN = process.env["BACKUP_TOKEN"];
 const SYNC_ENDPOINT = process.env["SYNC_ENDPOINT"];
@@ -137,6 +138,14 @@ export const fetchBackupAsset = async (
   if (!assetRes.ok) {
     console.error(
       `[Backup Asset] Failed to download asset "${targetResource}": status=${assetRes.status} ${assetRes.statusText}`,
+    );
+    axiomLogger.error(
+      `[Backup Asset] Failed to download asset: ${targetResource}`,
+      {
+        targetResource,
+        status: assetRes.status,
+        statusText: assetRes.statusText,
+      },
     );
     return new Response("Failed to download seed", {
       status: assetRes.status,

@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
+import { axiomLogger } from "@/lib/axiom-logger";
 import type { SyncRequestBody } from "@/types";
 import { getAuthenticatedRoleId } from "./auth";
 import { computePublicSyncDelta, computeRoleSyncDelta } from "./delta-service";
@@ -34,6 +35,9 @@ export const GET = async (request: NextRequest) => {
     });
   } catch (error) {
     console.error("Public sync delta failed:", error);
+    axiomLogger.error("Public sync delta failed", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 500 },
@@ -69,6 +73,9 @@ export const POST = async (request: NextRequest) => {
     return NextResponse.json(result);
   } catch (error) {
     console.error("Role sync delta failed:", error);
+    axiomLogger.error("Role sync delta failed", {
+      error: error instanceof Error ? error.message : String(error),
+    });
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 500 },

@@ -6,6 +6,7 @@ import { REVALIDATE_30_DAYS } from "@/app/api/constants";
 import { getCachedPublicUrlPaths } from "@/app/api/sync/delta-service";
 import { ASSET_BASE_URL } from "@/constants";
 import type { CategoryPageData } from "@/hooks/use-category-page";
+import { axiomLogger } from "@/lib/axiom-logger";
 import { getCategoryImageUrl } from "@/lib/storage";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { isValidCategoryPath, pathToUrlPath, slugToLabel } from "@/lib/utils";
@@ -45,6 +46,10 @@ const getCachedCategoryPageData = cache(
             urlPath,
             error,
           );
+          axiomLogger.error("getCachedCategoryPageData RPC error", {
+            urlPath,
+            error,
+          });
           return null;
         }
 
