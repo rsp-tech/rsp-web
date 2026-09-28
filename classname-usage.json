@@ -1,6 +1,6 @@
 {
   "totalClasses": 366,
-  "timestamp": "2026-09-22T14:35:03.211Z",
+  "timestamp": "2026-09-28T09:25:02.260Z",
   "baselineCSSBytes": 67111,
   "baselineBrotliBytes": 9851,
   "newlyAddedClasses": [],
@@ -123,17 +123,17 @@
     "src\\components\\ui\\dropdown-menu.tsx": [
       "src\\components\\user-nav-dropdown-content.tsx"
     ],
-    "src\\components\\ui\\slider.tsx": [
-      "src\\components\\player\\timeline-slider.tsx",
-      "src\\components\\player\\volume-controls.tsx"
+    "src\\components\\ui\\command.tsx": [
+      "src\\components\\search\\searchable-select.tsx"
     ],
     "src\\components\\ui\\tabs.tsx": [
       "src\\app\\queries\\_components\\attachment-content-dialog.tsx",
       "src\\app\\queries\\_components\\query-filters.tsx",
       "src\\components\\search\\search-scope-tabs.tsx"
     ],
-    "src\\components\\ui\\command.tsx": [
-      "src\\components\\search\\searchable-select.tsx"
+    "src\\components\\ui\\slider.tsx": [
+      "src\\components\\player\\timeline-slider.tsx",
+      "src\\components\\player\\volume-controls.tsx"
     ],
     "src\\components\\ui\\card.tsx": [
       "src\\app\\contact-us\\contact-us-client.tsx",
@@ -531,7 +531,7 @@
     },
     {
       "className": "cursor-pointer",
-      "frequency": 93,
+      "frequency": 94,
       "length": 14,
       "uncompressedBytes": 31,
       "brotliBytesUpperLimit": 31,
@@ -939,7 +939,7 @@
     },
     {
       "className": "flex",
-      "frequency": 429,
+      "frequency": 430,
       "length": 4,
       "uncompressedBytes": 19,
       "brotliBytesUpperLimit": 23,
@@ -1155,7 +1155,7 @@
     },
     {
       "className": "gap-2",
-      "frequency": 118,
+      "frequency": 119,
       "length": 5,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40,
@@ -1363,7 +1363,7 @@
     },
     {
       "className": "h-4",
-      "frequency": 119,
+      "frequency": 122,
       "length": 3,
       "uncompressedBytes": 37,
       "brotliBytesUpperLimit": 41,
@@ -1523,7 +1523,7 @@
     },
     {
       "className": "hover:text-primary",
-      "frequency": 14,
+      "frequency": 16,
       "length": 18,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0,
@@ -1595,7 +1595,7 @@
     },
     {
       "className": "items-center",
-      "frequency": 197,
+      "frequency": 199,
       "length": 12,
       "uncompressedBytes": 33,
       "brotliBytesUpperLimit": 30,
@@ -1987,7 +1987,7 @@
     },
     {
       "className": "ml-1",
-      "frequency": 4,
+      "frequency": 5,
       "length": 4,
       "uncompressedBytes": 33,
       "brotliBytesUpperLimit": 32,
@@ -2019,7 +2019,7 @@
     },
     {
       "className": "mr-2",
-      "frequency": 7,
+      "frequency": 8,
       "length": 4,
       "uncompressedBytes": 44,
       "brotliBytesUpperLimit": 48,
@@ -2603,7 +2603,7 @@
     },
     {
       "className": "shrink-0",
-      "frequency": 103,
+      "frequency": 105,
       "length": 8,
       "uncompressedBytes": 24,
       "brotliBytesUpperLimit": 28,
@@ -2811,7 +2811,7 @@
     },
     {
       "className": "text-left",
-      "frequency": 17,
+      "frequency": 18,
       "length": 9,
       "uncompressedBytes": 27,
       "brotliBytesUpperLimit": 31,
@@ -2827,7 +2827,7 @@
     },
     {
       "className": "text-muted-foreground",
-      "frequency": 193,
+      "frequency": 195,
       "length": 21,
       "uncompressedBytes": 53,
       "brotliBytesUpperLimit": 47,
@@ -3019,7 +3019,7 @@
     },
     {
       "className": "w-4",
-      "frequency": 118,
+      "frequency": 121,
       "length": 3,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40,

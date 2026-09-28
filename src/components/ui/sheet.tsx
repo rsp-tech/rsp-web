@@ -69,7 +69,7 @@ function SheetContent({
               size="icon-sm"
               aria-label="Close"
             >
-              <XIcon className="h-4 w-4"/>
+              <XIcon className="h-4 w-4" />
             </Button>
           </SheetPrimitive.Close>
         )}

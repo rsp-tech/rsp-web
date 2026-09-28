@@ -3,6 +3,7 @@
 import {
   Bell,
   BellRing,
+  Check,
   CheckCheck,
   FileText,
   Folder,
@@ -60,6 +61,7 @@ export const NotificationCenter = () => {
     unreadCount,
     isLoading,
     markItemAsRead,
+    markGroupAsRead,
     markAllAsRead,
     clearAll,
   } = useNotifications();
@@ -185,7 +187,26 @@ export const NotificationCenter = () => {
                         : "bg-card border-border/40",
                     )}
                   >
-                    <AccordionTrigger className="hover:no-underline py-3">
+                    <AccordionTrigger
+                      className="hover:no-underline py-3"
+                      action={
+                        hasUnread ? (
+                          <Button
+                            type="button"
+                            variant="ghost"
+                            size="icon-sm"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              markGroupAsRead(group.id);
+                            }}
+                            title="Mark group as read"
+                            className="text-muted-foreground hover:text-primary shrink-0 ml-1"
+                          >
+                            <CheckCheck className="w-4 h-4" />
+                          </Button>
+                        ) : undefined
+                      }
+                    >
                       <div className="flex items-center gap-2.5 text-left flex-1 pr-4">
                         <div
                           className={cn(
@@ -220,12 +241,8 @@ export const NotificationCenter = () => {
 
                     <AccordionContent className="pt-1 pb-3 space-y-2">
                       {group.items.map((item) => (
-                        <button
+                        <div
                           key={item.id}
-                          type="button"
-                          onClick={() =>
-                            handleItemClick(group.id, item.id, item.url)
-                          }
                           className={cn(
                             "w-full text-left p-2.5 rounded-lg border transition-all flex items-center justify-between gap-2 group",
                             item.read
@@ -233,7 +250,13 @@ export const NotificationCenter = () => {
                               : "bg-background border-primary/20 hover:border-border hover:bg-primary/20 shadow-md",
                           )}
                         >
-                          <div className="flex-1">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              handleItemClick(group.id, item.id, item.url)
+                            }
+                            className="flex-1 text-left cursor-pointer"
+                          >
                             <p className="text-xs font-semibold truncate group-hover:text-primary transition-all">
                               {item.title}
                             </p>
@@ -242,15 +265,30 @@ export const NotificationCenter = () => {
                                 {item.subtitle}
                               </p>
                             )}
-                          </div>
+                          </button>
 
                           {!item.read && (
-                            <span
-                              className="h-2 w-2 rounded-full bg-primary shrink-0"
-                              title="Unread"
-                            />
+                            <div className="flex items-center gap-2 shrink-0">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon-sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  markItemAsRead(group.id, item.id);
+                                }}
+                                title="Mark as read"
+                                className="text-muted-foreground hover:text-primary"
+                              >
+                                <Check className="w-4 h-4" />
+                              </Button>
+                              <span
+                                className="h-2 w-2 rounded-full bg-primary shrink-0"
+                                title="Unread"
+                              />
+                            </div>
                           )}
-                        </button>
+                        </div>
                       ))}
                     </AccordionContent>
                   </AccordionItem>

@@ -2,7 +2,7 @@
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useSession } from "@/components/providers";
-import { LOCAL_STORAGE, STORE } from "@/constants";
+import { LOCAL_STORAGE, ONE_DAY_MS, STORE } from "@/constants";
 import { getDB } from "@/lib/idb";
 import { categoryPath } from "@/lib/utils";
 import type {
@@ -40,10 +40,35 @@ const saveStoredGroups = (
   localStorage.setItem(getGroupsStorageKey(userId), JSON.stringify(groups));
 };
 
+export const getAllStoredGroups = (
+  userId?: string | null,
+): NotificationGroup[] => {
+  const publicGroups = getStoredGroups(null);
+  if (!userId) {
+    return publicGroups;
+  }
+  const userGroups = getStoredGroups(userId);
+
+  const groupMap = new Map<string, NotificationGroup>();
+  for (const group of userGroups) {
+    groupMap.set(group.id, group);
+  }
+  for (const group of publicGroups) {
+    if (!groupMap.has(group.id)) {
+      groupMap.set(group.id, group);
+    }
+  }
+
+  return Array.from(groupMap.values()).sort(
+    (a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime(),
+  );
+};
+
 export const clearNotificationStorage = () => {
   if (typeof window === "undefined") return;
   try {
     localStorage.removeItem(LOCAL_STORAGE.READ_NOTIFICATIONS);
+    localStorage.removeItem(LOCAL_STORAGE.NOTIFICATIONS_CLEARED_AT);
     const keysToRemove: string[] = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
@@ -129,11 +154,62 @@ export const addSyncNotifications = (
 const resolveGroups = async (
   userId?: string | null,
 ): Promise<ResolvedNotificationGroup[]> => {
-  const storedGroups = getStoredGroups(userId);
-  if (!storedGroups.length) return [];
+  let storedGroups = getAllStoredGroups(userId);
 
   const db = await getDB();
   if (!db) return [];
+
+  // Fallback / bootstrapping: If no recordings group exists in stored groups,
+  // check IndexedDB for recently added recordings (e.g. within 7 days)
+  const hasRecordingsGroup = storedGroups.some((g) => g.type === "recordings");
+  if (!hasRecordingsGroup) {
+    const clearedAtStr =
+      typeof window !== "undefined"
+        ? localStorage.getItem(LOCAL_STORAGE.NOTIFICATIONS_CLEARED_AT)
+        : null;
+    const clearedAtTime = clearedAtStr ? new Date(clearedAtStr).getTime() : 0;
+    const sevenDaysAgo = Date.now() - 7 * ONE_DAY_MS;
+    const minTimestamp = Math.max(sevenDaysAgo, clearedAtTime);
+
+    try {
+      const allRecordings = (await db.getAll(STORE.RECORDINGS)) as Recording[];
+      const recentRecordings = allRecordings
+        .filter((rec) => {
+          if (!rec.recorded_at) return false;
+          const recTime = new Date(rec.recorded_at).getTime();
+          return !Number.isNaN(recTime) && recTime >= minTimestamp;
+        })
+        .sort((a, b) => {
+          const timeA = new Date(a.recorded_at || 0).getTime();
+          const timeB = new Date(b.recorded_at || 0).getTime();
+          return timeB - timeA;
+        })
+        .slice(0, 20);
+
+      if (recentRecordings.length > 0) {
+        const latestTime =
+          recentRecordings[0].recorded_at || new Date().toISOString();
+        const bootstrapGroup: NotificationGroup = {
+          id: `recordings-bootstrap-${recentRecordings[0].id}`,
+          type: "recordings",
+          timestamp: latestTime,
+          itemIds: recentRecordings.map((r) => r.id),
+          readItemIds: [],
+        };
+
+        const publicGroups = getStoredGroups(null);
+        saveStoredGroups([bootstrapGroup, ...publicGroups], null);
+        storedGroups = [bootstrapGroup, ...storedGroups];
+      }
+    } catch (err) {
+      console.error(
+        "Failed to bootstrap recent recordings for notifications:",
+        err,
+      );
+    }
+  }
+
+  if (!storedGroups.length) return [];
 
   const hasReplies = storedGroups.some((g) => g.type === "replies");
   const hasRequests = storedGroups.some((g) => g.type === "requests");
@@ -360,13 +436,25 @@ export const useNotifications = () => {
       groupId: string;
       itemId: number | string;
     }) => {
-      const groups = getStoredGroups(userId);
-      const targetGroup = groups.find((g) => g.id === groupId);
-      if (targetGroup) {
-        const strId = String(itemId);
-        if (!targetGroup.readItemIds.map(String).includes(strId)) {
-          targetGroup.readItemIds.push(itemId);
-          saveStoredGroups(groups, userId);
+      const strId = String(itemId);
+      if (userId) {
+        const userGroups = getStoredGroups(userId);
+        const targetGroup = userGroups.find((g) => g.id === groupId);
+        if (targetGroup) {
+          if (!targetGroup.readItemIds.map(String).includes(strId)) {
+            targetGroup.readItemIds.push(itemId);
+            saveStoredGroups(userGroups, userId);
+          }
+          return;
+        }
+      }
+
+      const publicGroups = getStoredGroups(null);
+      const targetPublicGroup = publicGroups.find((g) => g.id === groupId);
+      if (targetPublicGroup) {
+        if (!targetPublicGroup.readItemIds.map(String).includes(strId)) {
+          targetPublicGroup.readItemIds.push(itemId);
+          saveStoredGroups(publicGroups, null);
         }
       }
     },
@@ -378,11 +466,21 @@ export const useNotifications = () => {
 
   const markGroupAsRead = useMutation({
     mutationFn: async (groupId: string) => {
-      const groups = getStoredGroups(userId);
-      const targetGroup = groups.find((g) => g.id === groupId);
-      if (targetGroup) {
-        targetGroup.readItemIds = [...targetGroup.itemIds];
-        saveStoredGroups(groups, userId);
+      if (userId) {
+        const userGroups = getStoredGroups(userId);
+        const targetGroup = userGroups.find((g) => g.id === groupId);
+        if (targetGroup) {
+          targetGroup.readItemIds = [...targetGroup.itemIds];
+          saveStoredGroups(userGroups, userId);
+          return;
+        }
+      }
+
+      const publicGroups = getStoredGroups(null);
+      const targetPublicGroup = publicGroups.find((g) => g.id === groupId);
+      if (targetPublicGroup) {
+        targetPublicGroup.readItemIds = [...targetPublicGroup.itemIds];
+        saveStoredGroups(publicGroups, null);
       }
     },
     onSuccess: () =>
@@ -393,11 +491,19 @@ export const useNotifications = () => {
 
   const markAllAsRead = useMutation({
     mutationFn: async () => {
-      const groups = getStoredGroups(userId);
-      for (const group of groups) {
+      if (userId) {
+        const userGroups = getStoredGroups(userId);
+        for (const group of userGroups) {
+          group.readItemIds = [...group.itemIds];
+        }
+        saveStoredGroups(userGroups, userId);
+      }
+
+      const publicGroups = getStoredGroups(null);
+      for (const group of publicGroups) {
         group.readItemIds = [...group.itemIds];
       }
-      saveStoredGroups(groups, userId);
+      saveStoredGroups(publicGroups, null);
     },
     onSuccess: () =>
       queryClient.invalidateQueries({
@@ -408,7 +514,14 @@ export const useNotifications = () => {
   const clearAll = useMutation({
     mutationFn: async () => {
       if (typeof window !== "undefined") {
-        localStorage.removeItem(getGroupsStorageKey(userId));
+        if (userId) {
+          localStorage.removeItem(getGroupsStorageKey(userId));
+        }
+        localStorage.removeItem(getGroupsStorageKey(null));
+        localStorage.setItem(
+          LOCAL_STORAGE.NOTIFICATIONS_CLEARED_AT,
+          new Date().toISOString(),
+        );
       }
     },
     onSuccess: () =>

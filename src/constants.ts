@@ -349,6 +349,7 @@ export const META_KEY = {
 export const LOCAL_STORAGE = {
   READ_NOTIFICATIONS: "read-notif-ids",
   NOTIFICATION_GROUPS: "rsp_notification_groups",
+  NOTIFICATIONS_CLEARED_AT: "rsp_notifications_cleared_at",
   CLEANUP_USER_ID: "cleanup_user_id",
 } as const;
 

@@ -45,7 +45,7 @@ border-success/20,3,17,0,0
 border-t,17,8,71,65
 border-transparent,3,18,39,31
 border-warning/20,3,17,0,0
-cursor-pointer,93,14,31,31
+cursor-pointer,94,14,31,31
 dark,1,4,900,249
 data-[range-end=true]:bg-primary,1,32,0,0
 data-[range-end=true]:text-primary-foreground,1,45,0,0
@@ -96,7 +96,7 @@ ease-in-out,4,11,88,62
 fade-in,2,7,30,34
 field-sizing-content,1,20,43,33
 fixed,12,5,22,21
-flex,429,4,19,23
+flex,430,4,19,23
 flex-1,33,6,15,19
 flex-col,212,8,32,33
 flex-row,3,8,29,33
@@ -123,7 +123,7 @@ font-serif,9,10,42,46
 from-primary/20,4,15,0,0
 gap-1,75,5,26,30
 gap-1.5,82,7,0,0
-gap-2,118,5,36,40
+gap-2,119,5,36,40
 gap-2.5,8,7,0,0
 gap-3,49,5,36,40
 gap-4,45,5,36,40
@@ -149,7 +149,7 @@ h-10,3,4,39,43
 h-16,5,4,39,43
 h-2,6,3,37,41
 h-3,76,3,37,41
-h-4,119,3,37,41
+h-4,122,3,37,41
 h-5,25,3,37,41
 h-6,17,3,37,41
 h-8,36,3,37,41
@@ -169,7 +169,7 @@ hover:no-underline,4,18,0,0
 hover:shadow-md,2,15,0,0
 hover:text-accent-foreground,5,28,0,0
 hover:text-destructive,2,22,0,0
-hover:text-primary,14,18,0,0
+hover:text-primary,16,18,0,0
 hover:text-primary/80,1,21,0,0
 hover:transition-all,5,20,0,0
 hover:underline,1,15,0,0
@@ -178,7 +178,7 @@ inline-flex,17,11,33,31
 inset-0,20,7,17,21
 isolate,2,7,27,31
 italic,12,6,26,30
-items-center,197,12,33,30
+items-center,199,12,33,30
 items-start,25,11,36,32
 justify-between,40,15,47,35
 justify-center,38,14,39,31
@@ -227,11 +227,11 @@ md:w-auto,2,9,0,0
 min-h-20,2,8,47,51
 min-h-full,1,10,28,30
 min-w-8,3,7,44,48
-ml-1,4,4,33,32
+ml-1,5,4,33,32
 ml-1.5,1,6,0,0
 ml-2,3,4,43,47
 ml-auto,3,7,26,27
-mr-2,7,4,44,48
+mr-2,8,4,44,48
 mt-0.5,16,6,0,0
 mt-1,5,4,32,32
 mt-1.5,1,6,0,0
@@ -304,7 +304,7 @@ self-start,2,10,34,34
 self-stretch,2,12,33,33
 shadow-md,27,9,254,106
 shadow-primary/10,1,17,0,0
-shrink-0,103,8,24,28
+shrink-0,105,8,24,28
 size-3.5,1,8,0,0
 size-4,15,6,71,62
 sm:flex,5,7,0,0
@@ -330,9 +330,9 @@ text-center,23,11,31,31
 text-destructive,29,16,43,47
 text-destructive-foreground,1,27,0,0
 text-foreground,24,15,41,44
-text-left,17,9,27,31
+text-left,18,9,27,31
 text-lg,9,7,92,56
-text-muted-foreground,193,21,53,47
+text-muted-foreground,195,21,53,47
 text-primary,88,12,35,35
 text-primary-foreground,4,23,57,50
 text-sm,51,7,92,56
@@ -356,7 +356,7 @@ w-10,4,4,38,42
 w-16,7,4,38,42
 w-2,4,3,36,40
 w-3,73,3,36,40
-w-4,118,3,36,40
+w-4,121,3,36,40
 w-5,25,3,36,40
 w-6,7,3,36,40
 w-72,2,4,38,42
