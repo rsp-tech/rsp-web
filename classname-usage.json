@@ -1,6 +1,6 @@
 {
   "totalClasses": 366,
-  "timestamp": "2026-09-28T09:25:02.260Z",
+  "timestamp": "2026-09-28T09:41:58.196Z",
   "baselineCSSBytes": 67111,
   "baselineBrotliBytes": 9851,
   "newlyAddedClasses": [],
@@ -95,7 +95,8 @@
     ],
     "src\\components\\ui\\tooltip.tsx": [
       "src\\components\\download-recordings-modal.tsx",
-      "src\\components\\materials-cache-list.tsx"
+      "src\\components\\materials-cache-list.tsx",
+      "src\\components\\notification-center.tsx"
     ],
     "src\\components\\ui\\popover.tsx": [
       "src\\components\\materials-popover.tsx",
@@ -123,17 +124,17 @@
     "src\\components\\ui\\dropdown-menu.tsx": [
       "src\\components\\user-nav-dropdown-content.tsx"
     ],
-    "src\\components\\ui\\command.tsx": [
-      "src\\components\\search\\searchable-select.tsx"
+    "src\\components\\ui\\slider.tsx": [
+      "src\\components\\player\\timeline-slider.tsx",
+      "src\\components\\player\\volume-controls.tsx"
     ],
     "src\\components\\ui\\tabs.tsx": [
       "src\\app\\queries\\_components\\attachment-content-dialog.tsx",
       "src\\app\\queries\\_components\\query-filters.tsx",
       "src\\components\\search\\search-scope-tabs.tsx"
     ],
-    "src\\components\\ui\\slider.tsx": [
-      "src\\components\\player\\timeline-slider.tsx",
-      "src\\components\\player\\volume-controls.tsx"
+    "src\\components\\ui\\command.tsx": [
+      "src\\components\\search\\searchable-select.tsx"
     ],
     "src\\components\\ui\\card.tsx": [
       "src\\app\\contact-us\\contact-us-client.tsx",
@@ -1115,7 +1116,7 @@
     },
     {
       "className": "font-semibold",
-      "frequency": 62,
+      "frequency": 63,
       "length": 13,
       "uncompressedBytes": 100,
       "brotliBytesUpperLimit": 60,
@@ -1611,7 +1612,7 @@
     },
     {
       "className": "justify-between",
-      "frequency": 40,
+      "frequency": 41,
       "length": 15,
       "uncompressedBytes": 47,
       "brotliBytesUpperLimit": 35,
@@ -1795,7 +1796,7 @@
     },
     {
       "className": "max-w-xs",
-      "frequency": 12,
+      "frequency": 14,
       "length": 8,
       "uncompressedBytes": 40,
       "brotliBytesUpperLimit": 44,
@@ -2035,7 +2036,7 @@
     },
     {
       "className": "mt-1",
-      "frequency": 5,
+      "frequency": 6,
       "length": 4,
       "uncompressedBytes": 32,
       "brotliBytesUpperLimit": 32,
@@ -2123,7 +2124,7 @@
     },
     {
       "className": "overflow-hidden",
-      "frequency": 43,
+      "frequency": 50,
       "length": 15,
       "uncompressedBytes": 33,
       "brotliBytesUpperLimit": 24,
@@ -2603,7 +2604,7 @@
     },
     {
       "className": "shrink-0",
-      "frequency": 105,
+      "frequency": 106,
       "length": 8,
       "uncompressedBytes": 24,
       "brotliBytesUpperLimit": 28,
@@ -2827,7 +2828,7 @@
     },
     {
       "className": "text-muted-foreground",
-      "frequency": 195,
+      "frequency": 196,
       "length": 21,
       "uncompressedBytes": 53,
       "brotliBytesUpperLimit": 47,
@@ -2891,7 +2892,7 @@
     },
     {
       "className": "text-xs",
-      "frequency": 178,
+      "frequency": 179,
       "length": 7,
       "uncompressedBytes": 92,
       "brotliBytesUpperLimit": 57,
@@ -2899,7 +2900,7 @@
     },
     {
       "className": "text-xxs",
-      "frequency": 60,
+      "frequency": 61,
       "length": 8,
       "uncompressedBytes": 65,
       "brotliBytesUpperLimit": 55,
@@ -2963,7 +2964,7 @@
     },
     {
       "className": "truncate",
-      "frequency": 55,
+      "frequency": 56,
       "length": 8,
       "uncompressedBytes": 68,
       "brotliBytesUpperLimit": 52,
@@ -3059,7 +3060,7 @@
     },
     {
       "className": "w-full",
-      "frequency": 94,
+      "frequency": 95,
       "length": 6,
       "uncompressedBytes": 19,
       "brotliBytesUpperLimit": 23,

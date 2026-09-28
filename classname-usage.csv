@@ -118,7 +118,7 @@ focus:text-destructive,1,22,0,0
 font-bold,121,9,88,57
 font-heading,32,12,50,42
 font-medium,35,11,94,50
-font-semibold,62,13,100,60
+font-semibold,63,13,100,60
 font-serif,9,10,42,46
 from-primary/20,4,15,0,0
 gap-1,75,5,26,30
@@ -180,7 +180,7 @@ isolate,2,7,27,31
 italic,12,6,26,30
 items-center,199,12,33,30
 items-start,25,11,36,32
-justify-between,40,15,47,35
+justify-between,41,15,47,35
 justify-center,38,14,39,31
 justify-end,8,11,38,36
 justify-start,7,13,42,35
@@ -203,7 +203,7 @@ max-w-7xl,3,9,42,41
 max-w-lg,4,8,40,44
 max-w-md,8,8,40,37
 max-w-sm,6,8,40,44
-max-w-xs,12,8,40,44
+max-w-xs,14,8,40,44
 mb-2,2,4,45,49
 mb-4,4,4,45,49
 mb-6,2,4,45,49
@@ -233,7 +233,7 @@ ml-2,3,4,43,47
 ml-auto,3,7,26,27
 mr-2,8,4,44,48
 mt-0.5,16,6,0,0
-mt-1,5,4,32,32
+mt-1,6,4,32,32
 mt-1.5,1,6,0,0
 mt-2,10,4,42,46
 mt-auto,3,7,25,29
@@ -244,7 +244,7 @@ opacity-100,2,11,23,27
 opacity-60,9,10,23,27
 opacity-80,29,10,23,27
 outline-none,9,12,57,46
-overflow-hidden,43,15,33,24
+overflow-hidden,50,15,33,24
 overflow-x-auto,2,15,33,37
 overflow-x-hidden,3,17,37,33
 overflow-y-auto,12,15,33,37
@@ -304,7 +304,7 @@ self-start,2,10,34,34
 self-stretch,2,12,33,33
 shadow-md,27,9,254,106
 shadow-primary/10,1,17,0,0
-shrink-0,105,8,24,28
+shrink-0,106,8,24,28
 size-3.5,1,8,0,0
 size-4,15,6,71,62
 sm:flex,5,7,0,0
@@ -332,7 +332,7 @@ text-destructive-foreground,1,27,0,0
 text-foreground,24,15,41,44
 text-left,18,9,27,31
 text-lg,9,7,92,56
-text-muted-foreground,195,21,53,47
+text-muted-foreground,196,21,53,47
 text-primary,88,12,35,35
 text-primary-foreground,4,23,57,50
 text-sm,51,7,92,56
@@ -340,8 +340,8 @@ text-success,6,12,35,34
 text-warning,9,12,35,35
 text-white,8,10,37,41
 text-xl,13,7,92,57
-text-xs,178,7,92,57
-text-xxs,60,8,65,55
+text-xs,179,7,92,57
+text-xxs,61,8,65,55
 to-transparent,4,14,234,83
 toaster,1,7,0,0
 top-1/2,6,7,0,0
@@ -349,7 +349,7 @@ top-3,5,5,36,40
 tracking-tight,17,14,89,56
 tracking-wider,65,14,89,57
 transition-all,52,14,198,86
-truncate,55,8,68,52
+truncate,56,8,68,52
 uppercase,65,9,36,33
 via-primary/5,4,13,0,0
 w-10,4,4,38,42
@@ -361,7 +361,7 @@ w-5,25,3,36,40
 w-6,7,3,36,40
 w-72,2,4,38,42
 w-8,26,3,36,40
-w-full,94,6,19,23
+w-full,95,6,19,23
 whitespace-nowrap,2,17,38,33
 z-10,9,4,17,21
 z-50,19,4,17,21

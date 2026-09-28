@@ -30,6 +30,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { useIsMobile } from "@/hooks/use-is-mobile";
 import { useNotifications } from "@/hooks/use-notifications";
 import { cn } from "@/lib/utils";
@@ -124,27 +129,39 @@ export const NotificationCenter = () => {
           {groups.length > 0 && (
             <div className="flex items-center gap-1 mr-2">
               {unreadCount > 0 && (
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon-sm"
-                  onClick={() => markAllAsRead()}
-                  title="Mark all as read"
-                  className="text-muted-foreground hover:text-primary"
-                >
-                  <CheckCheck className="w-4 h-4" />
-                </Button>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      onClick={() => markAllAsRead()}
+                      aria-label="Mark all as read"
+                      className="text-muted-foreground hover:text-primary"
+                    >
+                      <CheckCheck className="w-4 h-4" />
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="top">Mark all as read</TooltipContent>
+                </Tooltip>
               )}
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon-sm"
-                onClick={() => clearAll()}
-                title="Clear all notifications"
-                className="text-muted-foreground hover:text-destructive mr-2"
-              >
-                <Trash2 className="w-4 h-4" />
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="icon-sm"
+                    onClick={() => clearAll()}
+                    aria-label="Clear all notifications"
+                    className="text-muted-foreground hover:text-destructive mr-2"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent side="top">
+                  Clear all notifications
+                </TooltipContent>
+              </Tooltip>
             </div>
           )}
         </SheetHeader>
@@ -188,26 +205,33 @@ export const NotificationCenter = () => {
                     )}
                   >
                     <AccordionTrigger
-                      className="hover:no-underline py-3"
+                      className="hover:no-underline py-3 overflow-hidden"
                       action={
                         hasUnread ? (
-                          <Button
-                            type="button"
-                            variant="ghost"
-                            size="icon-sm"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              markGroupAsRead(group.id);
-                            }}
-                            title="Mark group as read"
-                            className="text-muted-foreground hover:text-primary shrink-0 ml-1"
-                          >
-                            <CheckCheck className="w-4 h-4" />
-                          </Button>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon-sm"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  markGroupAsRead(group.id);
+                                }}
+                                aria-label="Mark group as read"
+                                className="text-muted-foreground hover:text-primary shrink-0 ml-1"
+                              >
+                                <CheckCheck className="w-4 h-4" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent side="top">
+                              Mark group as read
+                            </TooltipContent>
+                          </Tooltip>
                         ) : undefined
                       }
                     >
-                      <div className="flex items-center gap-2.5 text-left flex-1 pr-4">
+                      <div className="flex items-center gap-2.5 text-left flex-1 pr-4 overflow-hidden">
                         <div
                           className={cn(
                             "p-2 rounded-lg shrink-0",
@@ -218,23 +242,30 @@ export const NotificationCenter = () => {
                         >
                           <GroupIcon className="w-4 h-4" />
                         </div>
-                        <div className="flex-1">
-                          <div className="flex items-center gap-2">
-                            <h4 className="font-semibold text-sm truncate">
-                              {group.title}
-                            </h4>
+                        <div className="flex-1 overflow-hidden">
+                          <div className="flex items-center gap-2 overflow-hidden">
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <h4 className="font-semibold text-sm truncate">
+                                  {group.title}
+                                </h4>
+                              </TooltipTrigger>
+                              <TooltipContent side="top" className="max-w-xs">
+                                {group.title}
+                              </TooltipContent>
+                            </Tooltip>
                             {hasUnread && (
                               <span className="shrink-0 px-1.5 py-0.5 text-xxs font-bold bg-primary text-primary-foreground rounded-full">
                                 {group.unreadCount} new
                               </span>
                             )}
                           </div>
-                          <span
-                            className="text-xxs text-muted-foreground opacity-60"
+                          <p
+                            className="text-xxs text-muted-foreground opacity-60 truncate"
                             suppressHydrationWarning
                           >
                             {new Date(group.timestamp).toLocaleString()}
-                          </span>
+                          </p>
                         </div>
                       </div>
                     </AccordionTrigger>
@@ -244,44 +275,65 @@ export const NotificationCenter = () => {
                         <div
                           key={item.id}
                           className={cn(
-                            "w-full text-left p-2.5 rounded-lg border transition-all flex items-center justify-between gap-2 group",
+                            "w-full text-left p-2.5 rounded-lg border transition-all flex items-center justify-between gap-2 group overflow-hidden",
                             item.read
                               ? "bg-background/50 border-border/40 hover:bg-muted opacity-80"
                               : "bg-background border-primary/20 hover:border-border hover:bg-primary/20 shadow-md",
                           )}
                         >
-                          <button
-                            type="button"
-                            onClick={() =>
-                              handleItemClick(group.id, item.id, item.url)
-                            }
-                            className="flex-1 text-left cursor-pointer"
-                          >
-                            <p className="text-xs font-semibold truncate group-hover:text-primary transition-all">
-                              {item.title}
-                            </p>
-                            {item.subtitle && (
-                              <p className="text-xxs text-muted-foreground truncate mt-0.5">
-                                {item.subtitle}
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <button
+                                type="button"
+                                onClick={() =>
+                                  handleItemClick(group.id, item.id, item.url)
+                                }
+                                className="flex-1 text-left cursor-pointer overflow-hidden"
+                              >
+                                <p className="text-xs font-semibold truncate group-hover:text-primary transition-all">
+                                  {item.title}
+                                </p>
+                                {item.subtitle && (
+                                  <p className="text-xxs text-muted-foreground truncate mt-0.5">
+                                    {item.subtitle}
+                                  </p>
+                                )}
+                              </button>
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="max-w-xs">
+                              <p className="font-semibold text-xs">
+                                {item.title}
                               </p>
-                            )}
-                          </button>
+                              {item.subtitle && (
+                                <p className="text-xxs text-muted-foreground mt-1">
+                                  {item.subtitle}
+                                </p>
+                              )}
+                            </TooltipContent>
+                          </Tooltip>
 
                           {!item.read && (
                             <div className="flex items-center gap-2 shrink-0">
-                              <Button
-                                type="button"
-                                variant="ghost"
-                                size="icon-sm"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  markItemAsRead(group.id, item.id);
-                                }}
-                                title="Mark as read"
-                                className="text-muted-foreground hover:text-primary"
-                              >
-                                <Check className="w-4 h-4" />
-                              </Button>
+                              <Tooltip>
+                                <TooltipTrigger asChild>
+                                  <Button
+                                    type="button"
+                                    variant="ghost"
+                                    size="icon-sm"
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      markItemAsRead(group.id, item.id);
+                                    }}
+                                    aria-label="Mark as read"
+                                    className="text-muted-foreground hover:text-primary shrink-0"
+                                  >
+                                    <Check className="w-4 h-4" />
+                                  </Button>
+                                </TooltipTrigger>
+                                <TooltipContent side="top">
+                                  Mark as read
+                                </TooltipContent>
+                              </Tooltip>
                               <span
                                 className="h-2 w-2 rounded-full bg-primary shrink-0"
                                 title="Unread"
