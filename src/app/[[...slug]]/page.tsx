@@ -7,6 +7,7 @@ import { getCachedPublicUrlPaths } from "@/app/api/sync/delta-service";
 import { ASSET_BASE_URL } from "@/constants";
 import type { CategoryPageData } from "@/hooks/use-category-page";
 import { axiomLogger } from "@/lib/axiom-logger";
+import { resolveCategoryUrlPath } from "@/lib/legacy-url-map";
 import { getCategoryImageUrl } from "@/lib/storage";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import {
@@ -109,7 +110,8 @@ export const generateMetadata = async ({
     };
   }
 
-  const urlPath = pathToUrlPath(slug);
+  const rawUrlPath = pathToUrlPath(slug);
+  const urlPath = resolveCategoryUrlPath(rawUrlPath);
   const rpcData = await getCachedCategoryPageData(urlPath);
   const category = rpcData?.category;
 
@@ -126,7 +128,9 @@ export const generateMetadata = async ({
   return {
     title,
     description,
-    alternates: { canonical: `https://radheshyamdas.com/${slug.join("/")}` },
+    alternates: {
+      canonical: `https://radheshyamdas.com/${categoryPath(urlPath)}`,
+    },
     openGraph: {
       title,
       description,
@@ -144,7 +148,8 @@ const generateJsonLdData = async (slug?: string[]) => {
     redirect(`/library/${slug.join("/")}`);
   }
 
-  const urlPath = pathToUrlPath(slug ?? []);
+  const rawUrlPath = pathToUrlPath(slug ?? []);
+  const urlPath = resolveCategoryUrlPath(rawUrlPath);
   const rpcData = await getCachedCategoryPageData(urlPath);
 
   if (rpcData?.redirectTo) redirect(rpcData.redirectTo);

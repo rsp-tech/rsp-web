@@ -4,10 +4,8 @@ import { twMerge } from "tailwind-merge";
 
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export const categoryPath = (urlPath: string) => {
-  const clean = urlPath.replaceAll(".", "/").replaceAll("_", "-");
-  return `library/${clean}`;
-};
+export const categoryPath = (urlPath: string) =>
+  urlPath ? `library/${urlPath.replaceAll(".", "/")}` : "library";
 
 export const slugToLabel = (slug: string) =>
   slug
@@ -59,7 +57,7 @@ export const sortByDate =
   };
 
 export const isValidCategoryPath = (value: string) =>
-  /^[A-Za-z0-9_]+(?:\.[A-Za-z0-9_]+)*$/.test(value) &&
+  /^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*$/.test(value) &&
   !value.startsWith("_next");
 
 /**
@@ -71,14 +69,20 @@ export const isValidCategoryPath = (value: string) =>
 export const pathToUrlPath = (path: string | string[]): string => {
   let segments = Array.isArray(path)
     ? [...path]
-    : path.split("/").filter(Boolean);
-  if (segments[0] === "library") {
+    : decodeURIComponent(path).split("/").filter(Boolean);
+
+  if (segments[0] === "library" || segments[0] === "content") {
     segments = segments.slice(1);
   }
+
   return segments
+    .map((s) => decodeURIComponent(s).trim())
+    .filter(Boolean)
     .join(".")
-    .replace(/-/g, "_")
-    .replace(/[^a-z0-9_.]+/g, "");
+    .toLowerCase()
+    .replace(/[^a-z0-9_.-]+/g, " ")
+    .replace(/\s+/g, "_")
+    .replace(/_+/g, "_");
 };
 
 export const toRoleId = (value: unknown): number | undefined =>

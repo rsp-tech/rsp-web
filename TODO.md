@@ -1,3 +1,7 @@
+- [ ] ?nxtPslug=bhaktivedanta-raja-vidyalaya/bhakti-vaibhav-(sb-canto-1-6)/sb-canto-3 --- urlPath does not have -/_ between 1 and 6
+- [ ] 
+    
+
 # Release Requirements
 
 - [x] optimize offline
