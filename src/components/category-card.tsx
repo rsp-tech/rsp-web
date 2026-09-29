@@ -19,7 +19,7 @@ export const CategoryCard = ({
 }: CategoryCardProps) => {
   const imgUrl = getCategoryImageUrl(cat, "webp");
   const avifUrl = getCategoryImageUrl(cat, "avif");
-  const href = `/${categoryPath(cat.url_path)}`;
+  const href = categoryPath(cat.url_path);
   const [failed, setFailed] = useState(false);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {

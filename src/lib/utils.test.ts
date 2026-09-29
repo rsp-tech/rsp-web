@@ -27,12 +27,14 @@ describe.concurrent("utils.ts suite", () => {
     expect(cn("p-4", "p-2")).toBe("p-2");
   });
 
-  it.concurrent("categoryPath converts dot to slash under library", () => {
+  it.concurrent("categoryPath converts dot to slash under library with leading slash", () => {
     expect(categoryPath("spiritual_discourses.bhagavad_gita")).toBe(
-      "library/spiritual_discourses/bhagavad_gita",
+      "/library/spiritual_discourses/bhagavad_gita",
     );
-    expect(categoryPath("simple")).toBe("library/simple");
-    expect(categoryPath("")).toBe("library");
+    expect(categoryPath("simple")).toBe("/library/simple");
+    expect(categoryPath("")).toBe("/library");
+    expect(categoryPath(null)).toBe("/library");
+    expect(categoryPath(undefined)).toBe("/library");
   });
 
   it.concurrent("slugToLabel transforms underscore separated slugs into capitalized words", () => {

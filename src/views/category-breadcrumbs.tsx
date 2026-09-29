@@ -1,16 +1,27 @@
 import { ChevronRight, Home } from "lucide-react";
 import Link from "next/link";
-import { slugToLabel } from "@/lib/utils";
+import { useCategories } from "@/hooks/use-categories";
+import { categoryPath, cn } from "@/lib/utils";
+import type { Category } from "@/types";
 
-export const CategoryBreadcrumbs = ({ slug }: { slug: string[] }) => {
+interface CategoryBreadcrumbsProps {
+  category?: Category;
+}
+
+export const CategoryBreadcrumbs = ({ category }: CategoryBreadcrumbsProps) => {
+  const { data: categories } = useCategories();
+
+  const slugCategories = (category?.path.split(".") ?? [])
+    .map((id) => categories?.find((c) => c.id === Number(id)))
+    .concat(category)
+    .filter(Boolean);
+
   const breadcrumbs = [
     { label: "Library", href: "/library" },
-    ...(slug[0] === "library" ? slug.slice(1) : slug).map(
-      (slugPart, index, arr) => {
-        const path = ["library", ...arr.slice(0, index + 1)].join("/");
-        return { label: slugToLabel(slugPart), href: `/${path}` };
-      },
-    ),
+    ...slugCategories.map((cat) => ({
+      label: cat?.name,
+      href: categoryPath(cat?.url_path ?? ""),
+    })),
   ];
 
   const handleCrumbClick =
@@ -37,9 +48,10 @@ export const CategoryBreadcrumbs = ({ slug }: { slug: string[] }) => {
             prefetch={false}
             href={crumb.href}
             onClick={handleCrumbClick(crumb.href)}
-            className={`hover:transition-all ${
-              idx === breadcrumbs.length - 1 ? "font-bold" : ""
-            }`}
+            className={cn(
+              "hover:transition-all",
+              idx === breadcrumbs.length - 1 ? "font-bold" : "",
+            )}
           >
             {crumb.label}
           </Link>

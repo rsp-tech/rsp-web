@@ -17,7 +17,6 @@ import { useHomepage } from "@/hooks/use-homepage";
 import { usePublicSync } from "@/hooks/use-public-sync";
 import { useRoleSync } from "@/hooks/use-role-sync";
 import { clearSyncMetaCache } from "@/lib/sync-worker-client";
-import { slugToLabel } from "@/lib/utils";
 import { CategoryBreadcrumbs } from "./category-breadcrumbs";
 import { CategoryHero } from "./category-hero";
 
@@ -101,7 +100,7 @@ export const ClientShell = ({ initialData }: ClientShellProps) => {
   if (slug.length === 1 && slug[0] === "library") {
     return (
       <div className="flex flex-col gap-8 py-2">
-        <CategoryBreadcrumbs slug={slug} />
+        <CategoryBreadcrumbs />
 
         <div className="flex flex-col gap-2 border-b border-border pb-6">
           <span className="text-xs font-bold text-primary tracking-wider uppercase">
@@ -135,7 +134,7 @@ export const ClientShell = ({ initialData }: ClientShellProps) => {
 
   return (
     <div className="flex flex-col gap-8 py-2">
-      <CategoryBreadcrumbs slug={slug} />
+      <CategoryBreadcrumbs category={category} />
 
       {/* Category Header */}
       <div className="flex flex-col gap-2 border-b border-border pb-6">

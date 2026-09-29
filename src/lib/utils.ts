@@ -4,8 +4,8 @@ import { twMerge } from "tailwind-merge";
 
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
 
-export const categoryPath = (urlPath: string) =>
-  urlPath ? `library/${urlPath.replaceAll(".", "/")}` : "library";
+export const categoryPath = (urlPath?: string | null) =>
+  urlPath ? `/library/${urlPath.replaceAll(".", "/")}` : "/library";
 
 export const slugToLabel = (slug: string) =>
   safeDecodeUri(slug)

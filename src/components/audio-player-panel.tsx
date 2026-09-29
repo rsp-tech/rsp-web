@@ -87,7 +87,7 @@ export function AudioPlayerPanel() {
   // Resolve navigation path
   const path = categoryPathVal ? categoryPath(categoryPathVal) : "";
   const href = path
-    ? `/${path}?q=${currentRecording?.id}`
+    ? `${path}?q=${currentRecording?.id}`
     : `?q=${currentRecording?.id}`;
 
   return (

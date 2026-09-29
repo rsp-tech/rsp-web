@@ -129,7 +129,7 @@ export const generateMetadata = async ({
     title,
     description,
     alternates: {
-      canonical: `https://radheshyamdas.com/${categoryPath(urlPath)}`,
+      canonical: `https://radheshyamdas.com${categoryPath(urlPath)}`,
     },
     openGraph: {
       title,
@@ -164,7 +164,7 @@ const generateJsonLdData = async (slug?: string[]) => {
       .map((cat) => ({
         "@type": "CollectionPage",
         name: cat.name,
-        url: `https://radheshyamdas.com/${categoryPath(cat.url_path)}`,
+        url: `https://radheshyamdas.com${categoryPath(cat.url_path)}`,
       }));
 
     jsonLdOutputs.push(
@@ -189,6 +189,8 @@ const generateJsonLdData = async (slug?: string[]) => {
 
   // Categories & Recordings Framework Separation
   // BreadCrumbs
+
+  const canonicalSlug = category?.url_path?.split(".") ?? [];
   jsonLdOutputs.push({
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
@@ -199,11 +201,17 @@ const generateJsonLdData = async (slug?: string[]) => {
         name: "Home",
         item: "https://radheshyamdas.com",
       },
-      ...slug.map((slugPart, idx) => ({
+      {
         "@type": "ListItem",
-        position: idx + 2,
+        position: 2,
+        name: "Library",
+        item: "https://radheshyamdas.com/library",
+      },
+      ...canonicalSlug.map((slugPart, idx) => ({
+        "@type": "ListItem",
+        position: idx + 3,
         name: slugToLabel(slugPart),
-        item: `https://radheshyamdas.com/${slug.slice(0, idx + 1).join("/")}`,
+        item: `https://radheshyamdas.com/library/${canonicalSlug.slice(0, idx + 1).join("/")}`,
       })),
     ],
   });
@@ -221,7 +229,7 @@ const generateJsonLdData = async (slug?: string[]) => {
         item: {
           "@type": "CollectionPage",
           name: sub.name,
-          url: `https://radheshyamdas.com/${categoryPath(sub.url_path)}`,
+          url: `https://radheshyamdas.com${categoryPath(sub.url_path)}`,
         },
       })),
     });

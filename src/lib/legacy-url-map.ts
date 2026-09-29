@@ -652,5 +652,10 @@ export const LEGACY_URL_MAP: Record<string, string> = {
 };
 
 export const resolveCategoryUrlPath = (path: string): string => {
-  return LEGACY_URL_MAP[path] ?? path;
+  return (
+    LEGACY_URL_MAP[path] ??
+    LEGACY_URL_MAP[path.replace(/-/g, "_")] ??
+    LEGACY_URL_MAP[path.replace(/-/g, "")] ??
+    path
+  );
 };

@@ -225,7 +225,7 @@ const resolveGroups = async (
           if (rec.category_id) {
             const cat = await getCategory(rec.category_id);
             if (cat && cat.url_path !== "trash") {
-              url = `/${categoryPath(cat.url_path)}?q=${rec.id}`;
+              url = `${categoryPath(cat.url_path)}?q=${rec.id}`;
               categoryName = cat.name || "";
             }
           }
@@ -263,7 +263,7 @@ const resolveGroups = async (
             if (rec?.category_id) {
               const cat = await getCategory(rec.category_id);
               if (cat && cat.url_path !== "trash") {
-                url = `/${categoryPath(cat.url_path)}?q=${rec.id}&m=${mat.id}`;
+                url = `${categoryPath(cat.url_path)}?q=${rec.id}&m=${mat.id}`;
                 parentName = rec.name || cat.name || "";
               }
             }
@@ -290,7 +290,7 @@ const resolveGroups = async (
             id: cat.id,
             title: cat.name || "New Category",
             subtitle: "Category added",
-            url: `/${categoryPath(cat.url_path)}`,
+            url: categoryPath(cat.url_path),
             timestamp: group.timestamp,
             read: readSet.has(String(cat.id)),
           });

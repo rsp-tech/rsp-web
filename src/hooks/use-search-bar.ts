@@ -200,7 +200,7 @@ export function useSearchBar() {
   }, [term, scope, currentCategory, filters, searchAll, allCategories]);
 
   const handleSelectCategory = (cat: Category) => {
-    router.push(`/${categoryPath(cat.url_path)}`);
+    router.push(categoryPath(cat.url_path));
     setTerm("");
     setShowDropdown(false);
   };
@@ -211,7 +211,7 @@ export function useSearchBar() {
         if (db) {
           db.get(STORE.CATEGORIES, rec.category_id).then((cat) => {
             if (cat) {
-              router.push(`/${categoryPath(cat.url_path)}?q=${rec.id}`);
+              router.push(`${categoryPath(cat.url_path)}?q=${rec.id}`);
             }
           });
         }
@@ -224,7 +224,7 @@ export function useSearchBar() {
   const handleSelectMaterial = (mat: EnrichedMaterialSearchResult) => {
     if (mat.recording && mat.category) {
       router.push(
-        `/${categoryPath(mat.category.url_path)}?q=${mat.recording_id}&m=${mat.id}`,
+        `${categoryPath(mat.category.url_path)}?q=${mat.recording_id}&m=${mat.id}`,
       );
     }
     setTerm("");

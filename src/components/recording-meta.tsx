@@ -44,7 +44,7 @@ export const RecordingMeta = ({ rec, m, sm, showLink }: RecordingMetaProps) => {
   const eventName = matchedEvent?.short_name || matchedEvent?.name || "";
 
   const href = showLink
-    ? `/${categoryPath(categories?.find((c) => c?.id === rec.category_id)?.url_path ?? "")}?q=${rec.id}`
+    ? `${categoryPath(categories?.find((c) => c?.id === rec.category_id)?.url_path)}?q=${rec.id}`
     : "";
 
   const materials = rec.materials ?? [];

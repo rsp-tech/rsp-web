@@ -121,9 +121,7 @@ export const QueryAttachmentList = ({
             (att.category_id
               ? categories?.find((c) => c.id === att.category_id)?.url_path
               : undefined);
-          const href = catPath
-            ? `/${categoryPath(catPath)}?q=${att.id}`
-            : `/?q=${att.id}`;
+          const href = `${categoryPath(catPath)}?q=${att.id}`;
 
           return (
             <Link key={key} href={href} className="inline-flex cursor-pointer">
@@ -136,7 +134,7 @@ export const QueryAttachmentList = ({
         }
 
         if (att.type === "category") {
-          const href = att.url_path ? `/${categoryPath(att.url_path)}` : "/";
+          const href = att.url_path ? categoryPath(att.url_path) : "/";
 
           return (
             <Link key={key} href={href} className="inline-flex cursor-pointer">
@@ -156,9 +154,7 @@ export const QueryAttachmentList = ({
               : undefined);
 
           const href = att.recording_id
-            ? catPath
-              ? `/${categoryPath(catPath)}?q=${att.recording_id}&m=${att.id}`
-              : `/?q=${att.recording_id}&m=${att.id}`
+            ? `${categoryPath(catPath)}?q=${att.recording_id}&m=${att.id}`
             : undefined;
 
           if (href) {
