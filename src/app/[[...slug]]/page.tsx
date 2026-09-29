@@ -287,6 +287,7 @@ const generateJsonLdData = async (slug?: string[]) => {
 
 export default async function CategoryPage({ params }: PageProps) {
   const { slug } = await params;
+  const requestedPath = slug?.length ? pathToUrlPath(slug) : "";
   const { data, structuredData } = await generateJsonLdData(slug);
 
   return (
@@ -300,7 +301,10 @@ export default async function CategoryPage({ params }: PageProps) {
           dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
         />
       ))}
-      <ClientShell initialData={data ?? undefined} />
+      <ClientShell
+        initialData={data ?? undefined}
+        requestedPath={requestedPath}
+      />
     </>
   );
 }

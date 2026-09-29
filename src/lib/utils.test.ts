@@ -229,4 +229,24 @@ describe.concurrent("utils.ts suite", () => {
     const db = getDB();
     expect(db).toBeDefined();
   });
+
+  it.concurrent("resolveCategoryUrlPath normalizes underscores and resolves legacy paths", async () => {
+    const { resolveCategoryUrlPath } = await import("./legacy-url-map");
+    // Direct normalized key match
+    expect(resolveCategoryUrlPath("japa_talks.2006_jan_jun")).toBe(
+      "japa_talks.2006_jan_-_jun",
+    );
+    // Double underscore input resolves to single-underscore key
+    expect(resolveCategoryUrlPath("japa_talks.2006_jan__jun")).toBe(
+      "japa_talks.2006_jan_-_jun",
+    );
+    // Hyphenated input resolves
+    expect(resolveCategoryUrlPath("japa-talks.2018-janjun")).toBe(
+      "japa_talks.2018_jan-jun",
+    );
+    // Unknown or already canonical path passes through untouched
+    expect(resolveCategoryUrlPath("spiritual-discourses.bg")).toBe(
+      "spiritual-discourses.bg",
+    );
+  });
 });

@@ -22,14 +22,19 @@ import { CategoryHero } from "./category-hero";
 
 interface ClientShellProps {
   initialData?: CategoryPageData;
+  requestedPath?: string;
 }
 
-export const ClientShell = ({ initialData }: ClientShellProps) => {
+export const ClientShell = ({
+  initialData,
+  requestedPath,
+}: ClientShellProps) => {
   const pathname = usePathname();
   const slug = pathname.split("/").filter(Boolean);
   const { data, isPending, error, refetch } = useCategoryPage(
     pathname,
     initialData,
+    requestedPath,
   );
   const { data: homepageData } = useHomepage();
   const { isFetching: isPublicSyncing, refetch: syncPublic } = usePublicSync();

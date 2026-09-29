@@ -7,36 +7,36 @@ export const LEGACY_URL_MAP: Record<string, string> = {
   "japa_talks.2019_juldec": "japa_talks.2019_jul-dec",
   "japa_talks.2019_jan_jun": "japa_talks.2019_jan-_jun",
   "japa_talks.2017_juldec": "japa_talks.2017_jul-dec",
-  "japa_talks.2006_jan__jun": "japa_talks.2006_jan_-_jun",
-  "japa_talks.2006_jul__dec": "japa_talks.2006_jul_-_dec",
-  "japa_talks.2007_jan__jun": "japa_talks.2007_jan_-_jun",
-  "japa_talks.2007_jul__dec": "japa_talks.2007_jul_-_dec",
-  "japa_talks.2008_jan__jun": "japa_talks.2008_jan_-_jun",
-  "japa_talks.2008_jul__dec": "japa_talks.2008_jul_-_dec",
-  "japa_talks.2009_jan__jun": "japa_talks.2009_jan_-_jun",
-  "japa_talks.2009_jul__dec": "japa_talks.2009_jul_-_dec",
-  "japa_talks.2010_jan__jun": "japa_talks.2010_jan_-_jun",
-  "japa_talks.2010_jul__dec": "japa_talks.2010_jul_-_dec",
-  "japa_talks.2011_jan__jun": "japa_talks.2011_jan_-_jun",
-  "japa_talks.2011_jul__dec": "japa_talks.2011_jul_-_dec",
-  "japa_talks.2012_jan__jun": "japa_talks.2012_jan_-_jun",
-  "japa_talks.2012_jul__dec": "japa_talks.2012_jul_-_dec",
-  "japa_talks.2013_jan__jun": "japa_talks.2013_jan_-_jun",
-  "japa_talks.2013_jul__dec": "japa_talks.2013_jul_-_dec",
-  "japa_talks.2014_jan__jun": "japa_talks.2014_jan_-_jun",
-  "japa_talks.2014_jul__dec": "japa_talks.2014_jul_-_dec",
-  "japa_talks.2015_jan__jun": "japa_talks.2015_jan_-_jun",
-  "japa_talks.2015_jul__dec": "japa_talks.2015_jul_-_dec",
+  "japa_talks.2006_jan_jun": "japa_talks.2006_jan_-_jun",
+  "japa_talks.2006_jul_dec": "japa_talks.2006_jul_-_dec",
+  "japa_talks.2007_jan_jun": "japa_talks.2007_jan_-_jun",
+  "japa_talks.2007_jul_dec": "japa_talks.2007_jul_-_dec",
+  "japa_talks.2008_jan_jun": "japa_talks.2008_jan_-_jun",
+  "japa_talks.2008_jul_dec": "japa_talks.2008_jul_-_dec",
+  "japa_talks.2009_jan_jun": "japa_talks.2009_jan_-_jun",
+  "japa_talks.2009_jul_dec": "japa_talks.2009_jul_-_dec",
+  "japa_talks.2010_jan_jun": "japa_talks.2010_jan_-_jun",
+  "japa_talks.2010_jul_dec": "japa_talks.2010_jul_-_dec",
+  "japa_talks.2011_jan_jun": "japa_talks.2011_jan_-_jun",
+  "japa_talks.2011_jul_dec": "japa_talks.2011_jul_-_dec",
+  "japa_talks.2012_jan_jun": "japa_talks.2012_jan_-_jun",
+  "japa_talks.2012_jul_dec": "japa_talks.2012_jul_-_dec",
+  "japa_talks.2013_jan_jun": "japa_talks.2013_jan_-_jun",
+  "japa_talks.2013_jul_dec": "japa_talks.2013_jul_-_dec",
+  "japa_talks.2014_jan_jun": "japa_talks.2014_jan_-_jun",
+  "japa_talks.2014_jul_dec": "japa_talks.2014_jul_-_dec",
+  "japa_talks.2015_jan_jun": "japa_talks.2015_jan_-_jun",
+  "japa_talks.2015_jul_dec": "japa_talks.2015_jul_-_dec",
   "japa_talks.2016_janjun": "japa_talks.2016_jan-jun",
   "japa_talks.2016_juldec": "japa_talks.2016_jul-dec",
   "japa_talks.2017_janjun": "japa_talks.2017_jan-jun",
-  "japa_talks.2014_jan__jun.vasudeva_series":
+  "japa_talks.2014_jan_jun.vasudeva_series":
     "japa_talks.2014_jan_-_jun.vasudeva_series",
-  "japa_talks.2014_jan__jun.krishnas_holyname_is_the_best_medicine_series":
+  "japa_talks.2014_jan_jun.krishnas_holyname_is_the_best_medicine_series":
     "japa_talks.2014_jan_-_jun.krishnas_holyname_is_the_best_medicine_series",
-  "senior_vaishnavas_vani.3rd_semester_dd_series__hh_bhakti_rasamrita_swami_maharaj":
+  "senior_vaishnavas_vani.3rd_semester_dd_series_hh_bhakti_rasamrita_swami_maharaj":
     "senior_vaishnavas_vani.3rd_semester_dd_series_-_hh_bhakti_rasamrita_swami_maharaj_",
-  "senior_vaishnavas_vani.3rd_semester_dd_series__hh_bhakti_rasamrita_swami_maharaj.extras":
+  "senior_vaishnavas_vani.3rd_semester_dd_series_hh_bhakti_rasamrita_swami_maharaj.extras":
     "senior_vaishnavas_vani.3rd_semester_dd_series_-_hh_bhakti_rasamrita_swami_maharaj_.extras",
   "senior_vaishnavas_vani.hh_bhakti_charu_swami_maharaj.level_i.athato_brahma_jigyasadiscover_yourself":
     "senior_vaishnavas_vani.hh_bhakti_charu_swami_maharaj.level_i.athato_brahma_jigyasa_discover_yourself_",
@@ -44,7 +44,7 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "senior_vaishnavas_vani.hh_bhakti_charu_swami_maharaj.level_ii.seminars.teachings_of_lord_caitanya_5_lecs_",
   "senior_vaishnavas_vani.hh_bhakti_charu_swami_maharaj.level_iii.seminars.bhagwatam_mahatmaya_glories_of_srimad_bhagavatam":
     "senior_vaishnavas_vani.hh_bhakti_charu_swami_maharaj.level_iii.seminars.bhagwatam_mahatmaya_glories_of_srimad_bhagavatam_",
-  "senior_vaishnavas_vani.hh_bhakti_charu_swami_maharaj.level_iii.seminars.srila_prabhupada__the_founder_acharyaa_must":
+  "senior_vaishnavas_vani.hh_bhakti_charu_swami_maharaj.level_iii.seminars.srila_prabhupada_the_founder_acharyaa_must":
     "senior_vaishnavas_vani.hh_bhakti_charu_swami_maharaj.level_iii.seminars.srila_prabhupada_-_the_founder_acharya_a_must_",
   "senior_vaishnavas_vani.hh_gopal_krishna_goswami_maharaj.named_cd_english_lecturesource":
     "senior_vaishnavas_vani.hh_gopal_krishna_goswami_maharaj.named_cd_english_lecture-source",
@@ -58,51 +58,51 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "senior_vaishnavas_vani.hh_gopal_krishna_goswami_maharaj.named_cd_english_lecture-source.sweet_nectar",
   "senior_vaishnavas_vani.hh_gopal_krishna_goswami_maharaj.named_cd_english_lecturesource.timeless_wisdom_matchless_purity":
     "senior_vaishnavas_vani.hh_gopal_krishna_goswami_maharaj.named_cd_english_lecture-source.timeless_wisdom_matchless_purity",
-  "senior_vaishnavas_vani.hh_gopal_krishna_goswami_maharaj.named_cd_english_lecturesource.touchstone__transforming_the_heart":
+  "senior_vaishnavas_vani.hh_gopal_krishna_goswami_maharaj.named_cd_english_lecturesource.touchstone_transforming_the_heart":
     "senior_vaishnavas_vani.hh_gopal_krishna_goswami_maharaj.named_cd_english_lecture-source.touchstone_-_transforming_the_heart",
   "senior_vaishnavas_vani.hh_gopal_krishna_goswami_maharaj.named_cd_english_lecturesource.vision_from_the_vedas":
     "senior_vaishnavas_vani.hh_gopal_krishna_goswami_maharaj.named_cd_english_lecture-source.vision_from_the_vedas",
   "senior_vaishnavas_vani.hh_gopal_krishna_goswami_maharaj.named_cd_english_lecturesource.waves_of_wisdom":
     "senior_vaishnavas_vani.hh_gopal_krishna_goswami_maharaj.named_cd_english_lecture-source.waves_of_wisdom",
-  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.level_2__4th_semester":
+  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.level_2_4th_semester":
     "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.level_2_-_4th_semester",
-  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.level_3__56th_semester":
+  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.level_3_56th_semester":
     "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.level_3_-_5-6th_semester",
-  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.level_4__78th_semester":
+  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.level_4_78th_semester":
     "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.level_4_-_7-8th_semester",
-  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_2__4th_semester":
+  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_2_4th_semester":
     "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_2_-_4th_semester",
-  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_3__56th_semester":
+  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_3_56th_semester":
     "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_3_-_5-6th_semester",
-  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_3__56th_semester.gajendra_moksha_series":
+  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_3_56th_semester.gajendra_moksha_series":
     "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_3_-_5-6th_semester.gajendra_moksha_series",
-  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_3__56th_semester.prahlad_maharaj_series":
+  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_3_56th_semester.prahlad_maharaj_series":
     "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_3_-_5-6th_semester.prahlad_maharaj_series",
-  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_3__56th_semester.story_of_radha_gopijanavallabh":
+  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_3_56th_semester.story_of_radha_gopijanavallabh":
     "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_3_-_5-6th_semester.story_of_radha_gopijanavallabh",
-  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_3__56th_semester.the_six_goswamis_of_vrindavan":
+  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_3_56th_semester.the_six_goswamis_of_vrindavan":
     "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_3_-_5-6th_semester.the_six_goswamis_of_vrindavan",
-  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_4__78th_semester":
+  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_4_78th_semester":
     "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_4_-_7-8th_semester",
-  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_4__78th_semester.other_acharyas":
+  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_4_78th_semester.other_acharyas":
     "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_4_-_7-8th_semester.other_acharyas",
-  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_4__78th_semester.vritrasura_and_chitraketu_series":
+  "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_4_78th_semester.vritrasura_and_chitraketu_series":
     "senior_vaishnavas_vani.hh_radhanath_swami_maharaj.personal_hearing.level_4_-_7-8th_semester.vritrasura_and_chitraketu_series",
-  "senior_vaishnavas_vani.srila_prabhupada.level_1__3rd_semester":
+  "senior_vaishnavas_vani.srila_prabhupada.level_1_3rd_semester":
     "senior_vaishnavas_vani.srila_prabhupada.level_1_-_3rd_semester",
-  "senior_vaishnavas_vani.srila_prabhupada.level_1__3rd_semester.canto_6":
+  "senior_vaishnavas_vani.srila_prabhupada.level_1_3rd_semester.canto_6":
     "senior_vaishnavas_vani.srila_prabhupada.level_1_-_3rd_semester.canto_6",
-  "senior_vaishnavas_vani.srila_prabhupada.level_2__4th_semester":
+  "senior_vaishnavas_vani.srila_prabhupada.level_2_4th_semester":
     "senior_vaishnavas_vani.srila_prabhupada.level_2_-_4th_semester",
-  "senior_vaishnavas_vani.srila_prabhupada.level_3__56th_semester":
+  "senior_vaishnavas_vani.srila_prabhupada.level_3_56th_semester":
     "senior_vaishnavas_vani.srila_prabhupada.level_3_-_5-6th_semester",
-  "senior_vaishnavas_vani.srila_prabhupada.level_3__56th_semester.canto_3":
+  "senior_vaishnavas_vani.srila_prabhupada.level_3_56th_semester.canto_3":
     "senior_vaishnavas_vani.srila_prabhupada.level_3_-_5-6th_semester.canto_3",
-  "senior_vaishnavas_vani.srila_prabhupada.level_3__56th_semester.teachings_of_queen_kunti_sp_video_series":
+  "senior_vaishnavas_vani.srila_prabhupada.level_3_56th_semester.teachings_of_queen_kunti_sp_video_series":
     "senior_vaishnavas_vani.srila_prabhupada.level_3_-_5-6th_semester.teachings_of_queen_kunti_sp_video_series",
-  "senior_vaishnavas_vani.srila_prabhupada.level_4__78th_semester":
+  "senior_vaishnavas_vani.srila_prabhupada.level_4_78th_semester":
     "senior_vaishnavas_vani.srila_prabhupada.level_4_-_7-8th_semester",
-  "senior_vaishnavas_vani.srila_prabhupada.level_4__78th_semester.interview":
+  "senior_vaishnavas_vani.srila_prabhupada.level_4_78th_semester.interview":
     "senior_vaishnavas_vani.srila_prabhupada.level_4_-_7-8th_semester.interview",
   "all_category_dump.vidya_pitham_pune.canto1":
     "all_category_dump.vidya_pitham_pune.canto-1",
@@ -165,9 +165,9 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "hindi.krishna_rasayanam_hindi_.gocharan_lila",
   "hindi.krishna_rasayanam_hindi.nisandhay_nirbhay_vijay_ka_path_bhagavat_ka_shravan_yah_sadhuo_ka_mat":
     "hindi.krishna_rasayanam_hindi_.nisandhay_nirbhay_vijay_ka_path_bhagavat_ka_shravan_yah_sadhuo_ka_mat",
-  "leaders_training.temple_leaders.slate_pune.remaining_steady_in_adversity__converting_misfortune_into_good_fortune_vidura_insulted":
+  "leaders_training.temple_leaders.slate_pune.remaining_steady_in_adversity_converting_misfortune_into_good_fortune_vidura_insulted":
     "leaders_training.temple_leaders.slate_pune.remaining_steady_in_adversity_converting_misfortune_into_good_fortune_vidura_insulted_",
-  "leaders_training.temple_leaders.slate_pune.self_change__modifying_our_thinking_attitude_and_behavior":
+  "leaders_training.temple_leaders.slate_pune.self_change_modifying_our_thinking_attitude_and_behavior":
     "leaders_training.temple_leaders.slate_pune.self_change_-_modifying_our_thinking_attitude_and_behavior",
   "brahmachari_training.brahmachari_lectures.brahmachari_sanga.2011.sanatan_vrindalessons_from_samudra_manthan_lila":
     "brahmachari_training.brahmachari_lectures.brahmachari_sanga.2011.sanatan_vrinda-lessons_from_samudra_manthan_lila",
@@ -193,7 +193,7 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "hindi.krishna_rasayanam_hindi_.prahlad_narasimha_lila_hindi_",
   "japa_talks.2020_jan_jun": "japa_talks.2020_jan-_jun",
   "japa_talks.2020_juldec": "japa_talks.2020_jul-dec",
-  "all_category_dump.temple_lectures.srimad_bhagavatam_classes.2020.prayers_how_to_offer__vandanam":
+  "all_category_dump.temple_lectures.srimad_bhagavatam_classes.2020.prayers_how_to_offer_vandanam":
     "all_category_dump.temple_lectures.srimad_bhagavatam_classes.2020.prayers_how_to_offer_-_vandanam",
   "all_category_dump.vidya_pitham_pune.canto1.overview_of_canto":
     "all_category_dump.vidya_pitham_pune.canto-1.overview_of_canto",
@@ -253,8 +253,8 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "all_category_dump.vidya_pitham_pune.canto-6.overview_of_canto-6",
   "hindi.bhakti_sastri.nectar_of_devotion_bhava_taranga_hindi":
     "hindi.bhakti_sastri.nectar_of_devotion_bhava_taranga_hindi_",
-  "japa_talks.2021_jan__jun": "japa_talks.2021_jan_-_jun",
-  "all_category_dump.vidya_pitham_pune.bhakti_vadanta__canto_7":
+  "japa_talks.2021_jan_jun": "japa_talks.2021_jan_-_jun",
+  "all_category_dump.vidya_pitham_pune.bhakti_vadanta_canto_7":
     "all_category_dump.vidya_pitham_pune.bhakti_vadanta_-_canto_7",
   "other_language.kannada.bhagavata_rasamalaya_kannada":
     "other_language.kannada.bhagavata_rasamalaya_kannada_",
@@ -270,11 +270,11 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "all_category_dump.students_training.first_year_preaching.discover_your_self_old_",
   "hindi.bhakti_sastri.gitamrita_bindu_hindi.gitamrita_bindu_q_and_a_sessions":
     "hindi.bhakti_sastri.gitamrita_bindu_hindi_.gitamrita_bindu_q_and_a_sessions",
-  "all_category_dump.students_training.student_leaders_training.royal.level_1_3_put_horse_before_the_cart__putting_people_before_the_project":
+  "all_category_dump.students_training.student_leaders_training.royal.level_1_3_put_horse_before_the_cart_putting_people_before_the_project":
     "all_category_dump.students_training.student_leaders_training.royal.level_1_3_put_horse_before_the_cart_-_putting_people_before_the_project",
   "all_category_dump.students_training.student_leaders_training.royal.level_3_3_art_of_thinking_winwin":
     "all_category_dump.students_training.student_leaders_training.royal.level_3_3_art_of_thinking_win-win",
-  "all_category_dump.students_training.student_leaders_training.royal.level_3_4_customer_care__internal_and_external":
+  "all_category_dump.students_training.student_leaders_training.royal.level_3_4_customer_care_internal_and_external":
     "all_category_dump.students_training.student_leaders_training.royal.level_3_4_customer_care_-_internal_and_external",
   "brahmachari_training.brahmachari_ashram_foundation_course_pdc.sadhu_sambhashan":
     "brahmachari_training.brahmachari_ashram_foundation_course_pdc_.sadhu_sambhashan",
@@ -284,17 +284,17 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "brahmachari_training.gauranga_sabha.gs_camps.2005.vol-2-imp_classes-gs_classes_by_gp_and_knp",
   "brahmachari_training.gauranga_sabha.gs_camps.2005.vol3councellors_realization_and_kirtans_and_vsongs":
     "brahmachari_training.gauranga_sabha.gs_camps.2005.vol-3-councellors_realization_and_kirtans_and_v-songs",
-  "other_language.kannada.discover_your_self__kannada":
+  "other_language.kannada.discover_your_self_kannada":
     "other_language.kannada.discover_your_self_-_kannada",
-  "all_category_dump.students_training.first_year_preaching.ebg_courses.game_pt__bengali":
+  "all_category_dump.students_training.first_year_preaching.ebg_courses.game_pt_bengali":
     "all_category_dump.students_training.first_year_preaching.ebg_courses.game_pt_-_bengali",
-  "all_category_dump.students_training.first_year_preaching.ebg_courses.game_pt__hindi":
+  "all_category_dump.students_training.first_year_preaching.ebg_courses.game_pt_hindi":
     "all_category_dump.students_training.first_year_preaching.ebg_courses.game_pt_-_hindi",
-  "other_language.kannada.game_pt__kannada":
+  "other_language.kannada.game_pt_kannada":
     "other_language.kannada.game_pt_-_kannada",
-  "all_category_dump.students_training.first_year_preaching.ebg_courses.game_pt__marathi":
+  "all_category_dump.students_training.first_year_preaching.ebg_courses.game_pt_marathi":
     "all_category_dump.students_training.first_year_preaching.ebg_courses.game_pt_-_marathi",
-  "other_language.telugu.game_pt__telugu":
+  "other_language.telugu.game_pt_telugu":
     "other_language.telugu.game_pt_-_telugu",
   "all_category_dump.test.frontliner_training_course_ftec":
     "all_category_dump.test.frontliner_training_course_ftec_",
@@ -304,9 +304,9 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "all_category_dump.students_training.second_year_training.fec_and_ftw_old_.fec-2014",
   "all_category_dump.students_training.second_year_training.fec_and_ftw_old.ftw_2012_amp":
     "all_category_dump.students_training.second_year_training.fec_and_ftw_old_.ftw_2012_amp",
-  "senior_youth_training.youth_leadership_training.additional_lectures.pm_oc__2014":
+  "senior_youth_training.youth_leadership_training.additional_lectures.pm_oc_2014":
     "senior_youth_training.youth_leadership_training.additional_lectures.pm_oc_-_2014",
-  "senior_youth_training.youth_leadership_training.additional_lectures.pm_oc__2015":
+  "senior_youth_training.youth_leadership_training.additional_lectures.pm_oc_2015":
     "senior_youth_training.youth_leadership_training.additional_lectures.pm_oc_-_2015",
   "senior_youth_training.youth_leadership_training.additional_lectures.pm_oc_pcjun_2017":
     "senior_youth_training.youth_leadership_training.additional_lectures.pm_oc_pc-jun_2017",
@@ -332,16 +332,16 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "all_category_dump.students_training.voice_visits.miscellaneous.vishakha_camp-2006_and_2007.2007.april",
   "all_category_dump.students_training.voice_visits.miscellaneous.vishakha_camp2006_and_2007.2007.july":
     "all_category_dump.students_training.voice_visits.miscellaneous.vishakha_camp-2006_and_2007.2007.july",
-  "all_category_dump.students_training.first_year_preaching.utkarsh.utkarsh__2021":
+  "all_category_dump.students_training.first_year_preaching.utkarsh.utkarsh_2021":
     "all_category_dump.students_training.first_year_preaching.utkarsh.utkarsh_-_2021",
   "all_category_dump.test.mentor_training_course_mtec":
     "all_category_dump.test.mentor_training_course_mtec_",
-  "japa_talks.2021_jul__dec": "japa_talks.2021_jul_-_dec",
+  "japa_talks.2021_jul_dec": "japa_talks.2021_jul_-_dec",
   "other_language.telugu.gita_rahasyam_telugu":
     "other_language.telugu.gita_rahasyam_telugu_",
   "other_language.telugu.demons_in_vrindavan_lila_telugu":
     "other_language.telugu.demons_in_vrindavan_lila_telugu_",
-  "all_category_dump.vidya_pitham_pune.canto2.bhakti_vaibhav__canto_2_chapter_15":
+  "all_category_dump.vidya_pitham_pune.canto2.bhakti_vaibhav_canto_2_chapter_15":
     "all_category_dump.vidya_pitham_pune.canto-2.bhakti_vaibhav_-_canto_2_chapter_1-5",
   "all_category_dump.test._monks_podcast":
     "all_category_dump.test.monks_podcast",
@@ -386,7 +386,7 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "all_category_dump.vidya_pitham_pune.canto-10.chapter_1",
   "all_category_dump.vidya_pitham_pune.canto10.chapter_2":
     "all_category_dump.vidya_pitham_pune.canto-10.chapter_2",
-  "japa_talks.2022_jan__jun": "japa_talks.2022_jan_-_jun",
+  "japa_talks.2022_jan_jun": "japa_talks.2022_jan_-_jun",
   "all_category_dump.vidya_pitham_pune.canto10.chapter_3":
     "all_category_dump.vidya_pitham_pune.canto-10.chapter_3",
   "all_category_dump.vidya_pitham_pune.canto10.chapter_4":
@@ -403,68 +403,68 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "all_category_dump.vidya_pitham_pune.canto-10.chapter_9",
   "all_category_dump.vidya_pitham_pune.canto10.chapter_10":
     "all_category_dump.vidya_pitham_pune.canto-10.chapter_10",
-  "japa_talks.2022_jul__dec": "japa_talks.2022_jul_-_dec",
+  "japa_talks.2022_jul_dec": "japa_talks.2022_jul_-_dec",
   "bhaktivedanta_raja_vidyalaya.bhakti_vedanta_sb_canto_712.sb_canto_10.chapter_1115":
     "bhaktivedanta_raja_vidyalaya.bhakti_vedanta_sb_canto_7-12_.sb_canto_10.chapter_11-15",
   "brahmachari_training.brahmachari_ashram_foundation_course_pdc.bhagavata_viveka":
     "brahmachari_training.brahmachari_ashram_foundation_course_pdc_.bhagavata_viveka",
-  "all_category_dump.test.canto__1": "all_category_dump.test.canto_-_1",
-  "all_category_dump.temple_lectures.srimad_bhagavatam_classes.canto__2":
+  "all_category_dump.test.canto_1": "all_category_dump.test.canto_-_1",
+  "all_category_dump.temple_lectures.srimad_bhagavatam_classes.canto_2":
     "all_category_dump.temple_lectures.srimad_bhagavatam_classes.canto_-_2",
-  "all_category_dump.test.canto__3": "all_category_dump.test.canto_-_3",
-  "hindi.srimad_bhagavatam.canto__1": "hindi.srimad_bhagavatam.canto_-_1",
-  "hindi.srimad_bhagavatam.canto__2": "hindi.srimad_bhagavatam.canto_-_2",
-  "hindi.srimad_bhagavatam.canto__3": "hindi.srimad_bhagavatam.canto_-_3",
-  "hindi.srimad_bhagavatam.canto__4": "hindi.srimad_bhagavatam.canto_-_4",
-  "hindi.srimad_bhagavatam.canto__5": "hindi.srimad_bhagavatam.canto_-_5",
-  "hindi.srimad_bhagavatam.canto__6": "hindi.srimad_bhagavatam.canto_-_6",
-  "hindi.srimad_bhagavatam.canto__7": "hindi.srimad_bhagavatam.canto_-_7",
-  "hindi.srimad_bhagavatam.canto__8": "hindi.srimad_bhagavatam.canto_-_8",
-  "hindi.srimad_bhagavatam.canto__9": "hindi.srimad_bhagavatam.canto_-_9",
-  "hindi.srimad_bhagavatam.canto__10": "hindi.srimad_bhagavatam.canto_-_10",
-  "hindi.srimad_bhagavatam.canto__11": "hindi.srimad_bhagavatam.canto_-_11",
-  "hindi.srimad_bhagavatam.canto__12": "hindi.srimad_bhagavatam.canto_-_12",
-  "temple_lectures.sb_cantowise_lectures.canto__1":
+  "all_category_dump.test.canto_3": "all_category_dump.test.canto_-_3",
+  "hindi.srimad_bhagavatam.canto_1": "hindi.srimad_bhagavatam.canto_-_1",
+  "hindi.srimad_bhagavatam.canto_2": "hindi.srimad_bhagavatam.canto_-_2",
+  "hindi.srimad_bhagavatam.canto_3": "hindi.srimad_bhagavatam.canto_-_3",
+  "hindi.srimad_bhagavatam.canto_4": "hindi.srimad_bhagavatam.canto_-_4",
+  "hindi.srimad_bhagavatam.canto_5": "hindi.srimad_bhagavatam.canto_-_5",
+  "hindi.srimad_bhagavatam.canto_6": "hindi.srimad_bhagavatam.canto_-_6",
+  "hindi.srimad_bhagavatam.canto_7": "hindi.srimad_bhagavatam.canto_-_7",
+  "hindi.srimad_bhagavatam.canto_8": "hindi.srimad_bhagavatam.canto_-_8",
+  "hindi.srimad_bhagavatam.canto_9": "hindi.srimad_bhagavatam.canto_-_9",
+  "hindi.srimad_bhagavatam.canto_10": "hindi.srimad_bhagavatam.canto_-_10",
+  "hindi.srimad_bhagavatam.canto_11": "hindi.srimad_bhagavatam.canto_-_11",
+  "hindi.srimad_bhagavatam.canto_12": "hindi.srimad_bhagavatam.canto_-_12",
+  "temple_lectures.sb_cantowise_lectures.canto_1":
     "temple_lectures.sb_cantowise_lectures.canto_-_1",
-  "temple_lectures.sb_cantowise_lectures.canto__2":
+  "temple_lectures.sb_cantowise_lectures.canto_2":
     "temple_lectures.sb_cantowise_lectures.canto_-_2",
-  "temple_lectures.sb_cantowise_lectures.canto__3":
+  "temple_lectures.sb_cantowise_lectures.canto_3":
     "temple_lectures.sb_cantowise_lectures.canto_-_3",
-  "temple_lectures.sb_cantowise_lectures.canto__4":
+  "temple_lectures.sb_cantowise_lectures.canto_4":
     "temple_lectures.sb_cantowise_lectures.canto_-_4",
-  "temple_lectures.sb_cantowise_lectures.canto__5":
+  "temple_lectures.sb_cantowise_lectures.canto_5":
     "temple_lectures.sb_cantowise_lectures.canto_-_5",
-  "temple_lectures.sb_cantowise_lectures.canto__6":
+  "temple_lectures.sb_cantowise_lectures.canto_6":
     "temple_lectures.sb_cantowise_lectures.canto_-_6",
-  "temple_lectures.sb_cantowise_lectures.canto__7":
+  "temple_lectures.sb_cantowise_lectures.canto_7":
     "temple_lectures.sb_cantowise_lectures.canto_-_7",
-  "temple_lectures.sb_cantowise_lectures.canto__8":
+  "temple_lectures.sb_cantowise_lectures.canto_8":
     "temple_lectures.sb_cantowise_lectures.canto_-_8",
-  "temple_lectures.sb_cantowise_lectures.canto__9":
+  "temple_lectures.sb_cantowise_lectures.canto_9":
     "temple_lectures.sb_cantowise_lectures.canto_-_9",
-  "temple_lectures.sb_cantowise_lectures.canto__10":
+  "temple_lectures.sb_cantowise_lectures.canto_10":
     "temple_lectures.sb_cantowise_lectures.canto_-_10",
-  "temple_lectures.sb_cantowise_lectures.canto__11":
+  "temple_lectures.sb_cantowise_lectures.canto_11":
     "temple_lectures.sb_cantowise_lectures.canto_-_11",
-  "temple_lectures.sb_cantowise_lectures.canto__12":
+  "temple_lectures.sb_cantowise_lectures.canto_12":
     "temple_lectures.sb_cantowise_lectures.canto_-_12",
-  "temple_lectures.vanaprastha_training.vanaprastha_camps.2022__august":
+  "temple_lectures.vanaprastha_training.vanaprastha_camps.2022_august":
     "temple_lectures.vanaprastha_training.vanaprastha_camps.2022_-_august",
-  "brahmachari_training.brahmachari_camps.other_bc_camps.south_india_bc_camp__august_22":
+  "brahmachari_training.brahmachari_camps.other_bc_camps.south_india_bc_camp_august_22":
     "brahmachari_training.brahmachari_camps.other_bc_camps.south_india_bc_camp_-_august_22",
   "bhaktivedanta_raja_vidyalaya.bhakti_vedanta_sb_canto_712.sb_canto_10.chapter_1620":
     "bhaktivedanta_raja_vidyalaya.bhakti_vedanta_sb_canto_7-12_.sb_canto_10.chapter_16-20",
-  "all_category_dump.test.english.series_lecture.prayers_how_to_offer__vandanam":
+  "all_category_dump.test.english.series_lecture.prayers_how_to_offer_vandanam":
     "all_category_dump.test.english.series_lecture.prayers_how_to_offer_-_vandanam",
   "bhaktivedanta_raja_vidyalaya.bhakti_vedanta_sb_canto_712.sb_canto_10.chapter_2125":
     "bhaktivedanta_raja_vidyalaya.bhakti_vedanta_sb_canto_7-12_.sb_canto_10.chapter_21-25",
   "senior_youth_training.youth_leadership_training.email._level_1_1_managing_with_hands_heads_and_hearts_and_three_types_of_leadership":
     "senior_youth_training.youth_leadership_training.email.level_1_1_managing_with_hands_heads_and_hearts_and_three_types_of_leadership",
-  "senior_youth_training.youth_leadership_training.email.level_1_3_put_horse_before_the_cart__putting_people_before_the_project":
+  "senior_youth_training.youth_leadership_training.email.level_1_3_put_horse_before_the_cart_putting_people_before_the_project":
     "senior_youth_training.youth_leadership_training.email.level_1_3_put_horse_before_the_cart_-_putting_people_before_the_project",
   "senior_youth_training.youth_leadership_training.email.level_3_3_art_of_thinking_winwin":
     "senior_youth_training.youth_leadership_training.email.level_3_3_art_of_thinking_win-win",
-  "senior_youth_training.youth_leadership_training.email.level_3_4_customer_care__internal_and_external":
+  "senior_youth_training.youth_leadership_training.email.level_3_4_customer_care_internal_and_external":
     "senior_youth_training.youth_leadership_training.email.level_3_4_customer_care_-_internal_and_external",
   "brahmachari_training.brahmachari_ashram_foundation_course_pdc.sadhu_bhushan.dedication":
     "brahmachari_training.brahmachari_ashram_foundation_course_pdc_.sadhu_bhushan.dedication",
@@ -480,25 +480,25 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "newcomers.fundamentals_of_spirituality.gin_gita_in_a_nutshell_",
   "all_category_dump.test.mantra_meditation_circles_mmcs":
     "all_category_dump.test.mantra_meditation_circles_mmcs_",
-  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_1__reincarnation__scientific_fact_or_sentimental_fiction":
+  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_1_reincarnation_scientific_fact_or_sentimental_fiction":
     "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_1_reincarnation_scientific_fact_or_sentimental_fiction",
-  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_2__blossom_love_by_transforming_heart":
+  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_2_blossom_love_by_transforming_heart":
     "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_2_-_blossom_love_by_transforming_heart",
-  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_3__seeker_becomes_seer":
+  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_3_seeker_becomes_seer":
     "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_3_-_seeker_becomes_seer",
-  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_4__rekindle_wisdom_revive_love":
+  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_4_rekindle_wisdom_revive_love":
     "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_4_-_rekindle_wisdom_revive_love",
-  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_5__basics_of_bhakti_yoga":
+  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_5_basics_of_bhakti_yoga":
     "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_5_-_basics_of_bhakti_yoga",
-  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_6__password_for_happiness":
+  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_6_password_for_happiness":
     "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_6_-_password_for_happiness",
-  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_7__vedic_vs_modern_version_of_creation_of_universe_and_life":
+  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_7_vedic_vs_modern_version_of_creation_of_universe_and_life":
     "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_7_-_vedic_vs_modern_version_of_creation_of_universe_and_life",
-  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_8__spiritual_world_of_mirth_and_merry":
+  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_8_spiritual_world_of_mirth_and_merry":
     "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_8_-_spiritual_world_of_mirth_and_merry",
-  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_9__destroy_doubts_and_awaken_faith":
+  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_9_destroy_doubts_and_awaken_faith":
     "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_9_-_destroy_doubts_and_awaken_faith",
-  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_10__regulative_principles_of_freedom":
+  "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_10_regulative_principles_of_freedom":
     "newcomers.game_gita_for_all_made_easy_positive_thinker_course.course_10_-_regulative_principles_of_freedom",
   "newcomers.other_relevant_materials.level_1_pre_sankalpa_mantra_meditation_circles_mmcs":
     "newcomers.other_relevant_materials.level_1_pre_sankalpa_mantra_meditation_circles_mmcs_",
@@ -560,7 +560,7 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "bhaktivedanta_raja_vidyalaya.chaitanya_charitamrita.cc_madhya_lila_chapter_16-20",
   "bhaktivedanta_raja_vidyalaya.chaitanya_charitamrita.cc_madhya_lila_chapter_2125":
     "bhaktivedanta_raja_vidyalaya.chaitanya_charitamrita.cc_madhya_lila_chapter_21-25",
-  "temple_lectures.vandanam__how_to_offer_prayers":
+  "temple_lectures.vandanam_how_to_offer_prayers":
     "temple_lectures.vandanam_-_how_to_offer_prayers",
   "children_education.gulf_lectures_manage_your_mind_menace":
     "children_education.gulf_lectures_manage_your_mind_menace_",
@@ -588,7 +588,7 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "bhaktivedanta_raja_vidyalaya.bhakti_vedanta_sb_canto_7-12_.sb_canto_10.chapter_1-5",
   "bhaktivedanta_raja_vidyalaya.bhakti_vedanta_sb_canto_712.sb_canto_10.chapter_610":
     "bhaktivedanta_raja_vidyalaya.bhakti_vedanta_sb_canto_7-12_.sb_canto_10.chapter_6-10",
-  "temple_lectures.vanaprastha_training.vanaprastha_camps.2023__march":
+  "temple_lectures.vanaprastha_training.vanaprastha_camps.2023_march":
     "temple_lectures.vanaprastha_training.vanaprastha_camps.2023_-_march",
   "bhaktivedanta_raja_vidyalaya.bhakti_vedanta_sb_canto_712.sb_canto_10.chapter_3135":
     "bhaktivedanta_raja_vidyalaya.bhakti_vedanta_sb_canto_7-12_.sb_canto_10.chapter_31-35",
@@ -598,45 +598,45 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "bhaktivedanta_raja_vidyalaya.bhakti_vaibhav_sb_canto_1-6_.sb_canto_6.chapter_1-10",
   "bhaktivedanta_raja_vidyalaya.bhakti_vaibhav_sb_canto_16.sb_canto_5.chapter_110":
     "bhaktivedanta_raja_vidyalaya.bhakti_vaibhav_sb_canto_1-6_.sb_canto_5.chapter_1-10",
-  "japa_talks.2024_jan__jun": "japa_talks.2024_jan_-_jun",
+  "japa_talks.2024_jan_jun": "japa_talks.2024_jan_-_jun",
   "senior_youth_training.game_personality_development_course.siddhanta.teachings_of_lord_kapila_chapter_25":
     "senior_youth_training.game_personality_development_course.siddhanta.teachings_of_lord_kapila_chapter_25_",
   "hindi.bhakti_sastri.sri_isopanishad_hindi":
     "hindi.bhakti_sastri.sri_isopanishad_hindi_",
-  "japa_talks.2023_jul__dec": "japa_talks.2023_jul_-_dec",
+  "japa_talks.2023_jul_dec": "japa_talks.2023_jul_-_dec",
   "brahmachari_training.brahmachari_ashram_foundation_course_pdc.sp_speak_out":
     "brahmachari_training.brahmachari_ashram_foundation_course_pdc_.sp_speak_out",
   "brahmachari_training.brahmachari_ashram_foundation_course_pdc.sadhubhushan_sb_lectures":
     "brahmachari_training.brahmachari_ashram_foundation_course_pdc_.sadhubhushan_sb_lectures",
   "hindi.krishna_rasayanam_hindi.chitraketu_katha":
     "hindi.krishna_rasayanam_hindi_.chitraketu_katha",
-  "brahmachari_training.gauranga_sabha.gaur_bhakta_vrinda_camp.gaur_bhakta_vrinda__2017":
+  "brahmachari_training.gauranga_sabha.gaur_bhakta_vrinda_camp.gaur_bhakta_vrinda_2017":
     "brahmachari_training.gauranga_sabha.gaur_bhakta_vrinda_camp.gaur_bhakta_vrinda_-_2017",
-  "brahmachari_training.gauranga_sabha.gaur_bhakta_vrinda_camp.gaur_bhakta_vrinda__2019":
+  "brahmachari_training.gauranga_sabha.gaur_bhakta_vrinda_camp.gaur_bhakta_vrinda_2019":
     "brahmachari_training.gauranga_sabha.gaur_bhakta_vrinda_camp.gaur_bhakta_vrinda_-_2019",
-  "brahmachari_training.gauranga_sabha.gaur_bhakta_vrinda_camp.gaur_bhakta_vrinda__2020":
+  "brahmachari_training.gauranga_sabha.gaur_bhakta_vrinda_camp.gaur_bhakta_vrinda_2020":
     "brahmachari_training.gauranga_sabha.gaur_bhakta_vrinda_camp.gaur_bhakta_vrinda_-_2020",
-  "japa_talks.2024_jul__dec": "japa_talks.2024_jul_-_dec",
-  "japa_talks.2025_jan__jun": "japa_talks.2025_jan_-_jun",
-  "leaders_training.temple_leaders.slate_pune.developing_vaishnava_qualities__service_attitude_respect_and_care":
+  "japa_talks.2024_jul_dec": "japa_talks.2024_jul_-_dec",
+  "japa_talks.2025_jan_jun": "japa_talks.2025_jan_-_jun",
+  "leaders_training.temple_leaders.slate_pune.developing_vaishnava_qualities_service_attitude_respect_and_care":
     "leaders_training.temple_leaders.slate_pune.developing_vaishnava_qualities_-_service_attitude_respect_and_care",
   "bhaktivedanta_raja_vidyalaya.bhakti_vaibhav_sb_canto_16.sb_canto_1.chapters_79":
     "bhaktivedanta_raja_vidyalaya.bhakti_vaibhav_sb_canto_1-6_.sb_canto_1.chapters_7-9",
-  "leaders_training.temple_leaders.slate_hyderabad.course_1.developing_vaishnava_qualities__service_attitude_respect_and_care":
+  "leaders_training.temple_leaders.slate_hyderabad.course_1.developing_vaishnava_qualities_service_attitude_respect_and_care":
     "leaders_training.temple_leaders.slate_hyderabad.course_1.developing_vaishnava_qualities_-_service_attitude_respect_and_care",
   "leaders_training.temple_leaders.slate_hyderabad.course_1.overcoming_faultfinding_nature_learning_to_see_good_in_others":
     "leaders_training.temple_leaders.slate_hyderabad.course_1.overcoming_fault-finding_nature_learning_to_see_good_in_others",
   "leaders_training.temple_leaders.slate_hyderabad.course_2.selfchange_for_emotional_stability_cool_brain":
     "leaders_training.temple_leaders.slate_hyderabad.course_2.self-change_for_emotional_stability_cool_brain",
-  "japa_talks.jul__dec_2025": "japa_talks.jul_-_dec_2025",
-  "leaders_training.temple_leaders.slate_hyderabad.course_2.walk_your_talk__purity_vs_hypocrisy":
+  "japa_talks.jul_dec_2025": "japa_talks.jul_-_dec_2025",
+  "leaders_training.temple_leaders.slate_hyderabad.course_2.walk_your_talk_purity_vs_hypocrisy":
     "leaders_training.temple_leaders.slate_hyderabad.course_2.walk_your_talk_-_purity_vs_hypocrisy",
-  "leaders_training.temple_leaders.slate_hyderabad.course_3.balanced_approach__not_going_towards_extremes":
+  "leaders_training.temple_leaders.slate_hyderabad.course_3.balanced_approach_not_going_towards_extremes":
     "leaders_training.temple_leaders.slate_hyderabad.course_3.balanced_approach_not_going_towards_extremes",
-  "japa_talks.2026_jan__jun": "japa_talks.2026_jan_-_jun",
+  "japa_talks.2026_jan_jun": "japa_talks.2026_jan_-_jun",
   "leaders_training.temple_leaders.slate_pune.cultivating_right_attitude_in_preaching_":
     "leaders_training.temple_leaders.slate_pune.cultivating_right_attitude_in_preaching",
-  "daily_online_reading.krishna_leela__evening_reading_":
+  "daily_online_reading.krishna_leela_evening_reading_":
     "daily_online_reading.krishna_leela_evening_reading_",
   "daily_online_reading.chaitanya_leela_morning_reading":
     "daily_online_reading.chaitanya_leela_morning_reading_",
@@ -644,7 +644,7 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "brahmachari_training.brahmachari_camps.rsp_vrinda.2026.krishna_vrinda_camp_2026.why_don_t_i_make_right_decisions_in_life_",
   "bhaktivedanta_raja_vidyalaya.bhakti_vedanta_sb_canto_712.sb_canto_11.chapter_2729":
     "bhaktivedanta_raja_vidyalaya.bhakti_vedanta_sb_canto_7-12_.sb_canto_11.chapter_27-29",
-  "japa_talks.2026_jul__dec": "japa_talks.2026_jul_-_dec",
+  "japa_talks.2026_jul_dec": "japa_talks.2026_jul_-_dec",
   "leaders_training.temple_leaders.congregation_counselor_training.assistant_counselor_camp.vaishnava_behavior_of_grihasthas_with_different_categories_of_devotees_and_nondevotees":
     "leaders_training.temple_leaders.congregation_counselor_training.assistant_counselor_camp.vaishnava_behavior_of_grihasthas_with_different_categories_of_devotees_and_non-devotees",
   "bhaktivedanta_raja_vidyalaya.bhakti_vedanta_sb_canto_712.sb_canto_12.chapter_13":
@@ -652,10 +652,12 @@ export const LEGACY_URL_MAP: Record<string, string> = {
 };
 
 export const resolveCategoryUrlPath = (path: string): string => {
-  return (
-    LEGACY_URL_MAP[path] ??
-    LEGACY_URL_MAP[path.replace(/-/g, "_")] ??
-    LEGACY_URL_MAP[path.replace(/-/g, "")] ??
-    path
-  );
+  const normalized = path.replace(/_+/g, "_");
+  const resolved =
+    LEGACY_URL_MAP[normalized] ??
+    LEGACY_URL_MAP[normalized.replace(/-/g, "_")]?.replace(/_+/g, "_") ??
+    LEGACY_URL_MAP[normalized.replace(/-/g, "")] ??
+    path;
+  // console.log({ path, normalized, resolved });
+  return resolved;
 };

@@ -64,11 +64,23 @@ const loadCategoryPage = async (
     };
   }
 
-  const category = await db.getFromIndex(
+  let category = await db.getFromIndex(
     STORE.CATEGORIES,
     INDEX.BY_URL,
     urlPath,
   );
+
+  if (!category) {
+    const { resolveCategoryUrlPath } = await import("@/lib/legacy-url-map");
+    const resolvedPath = resolveCategoryUrlPath(urlPath);
+    if (resolvedPath !== urlPath) {
+      category = await db.getFromIndex(
+        STORE.CATEGORIES,
+        INDEX.BY_URL,
+        resolvedPath,
+      );
+    }
+  }
 
   if (!category) {
     if (initialData?.category) {
@@ -112,17 +124,27 @@ const loadCategoryPage = async (
 export const useCategoryPage = (
   pathname: string,
   initialData?: CategoryPageData,
+  requestedPath?: string,
 ) => {
-  const urlPath = pathToUrlPath(pathname);
+  const currentPath = pathToUrlPath(pathname);
 
-  // Verify that the initial data matches the current URL route and is populated.
-  // If the server data set is empty or offline fallback shell "/" is passed down,
-  // queryInitialData is set to undefined so TanStack Query queries IDB immediately.
-  const isValidInitialData = urlPath
-    ? initialData?.category?.url_path === urlPath
-    : !initialData?.category && initialData?.subcategories?.length;
+  // Initial data is valid if:
+  // 1. Current URL matches what the server was requested for (e.g. legacy alias), OR
+  // 2. Current URL matches the resolved category's canonical url_path, OR
+  // 3. Root library page ("") without category and with subcategories.
+  const isValidInitialData = currentPath
+    ? Boolean(
+        initialData?.category &&
+          (currentPath === requestedPath ||
+            currentPath === initialData.category.url_path),
+      )
+    : !initialData?.category && Boolean(initialData?.subcategories?.length);
 
   const queryInitialData = isValidInitialData ? initialData : undefined;
+  const urlPath =
+    isValidInitialData && initialData?.category?.url_path
+      ? initialData.category.url_path
+      : currentPath;
 
   return useQuery({
     queryKey: [QUERY_KEY.CATEGORY_PAGE, urlPath || "~"],
