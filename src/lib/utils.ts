@@ -60,23 +60,31 @@ export const isValidCategoryPath = (value: string) =>
   /^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*$/.test(value) &&
   !value.startsWith("_next");
 
+const safeDecodeUri = (str: string): string => {
+  try {
+    return decodeURIComponent(str);
+  } catch {
+    return str;
+  }
+};
+
 /**
  * Converts a pathname (string or array of slug segments) to a DB urlPath (dot-separated, ltree format).
  * Automatically strips the leading "library" segment if present.
- * E.g., "/library/spiritual-discourses/bg" -> "spiritual_discourses.bg"
- * E.g., ["library", "spiritual-discourses", "bg"] -> "spiritual_discourses.bg"
+ * E.g., "/library/spiritual-discourses/bg" -> "spiritual-discourses.bg"
+ * E.g., ["library", "spiritual-discourses", "bg"] -> "spiritual-discourses.bg"
  */
 export const pathToUrlPath = (path: string | string[]): string => {
   let segments = Array.isArray(path)
     ? [...path]
-    : decodeURIComponent(path).split("/").filter(Boolean);
+    : path.split("/").filter(Boolean);
 
   if (segments[0] === "library" || segments[0] === "content") {
     segments = segments.slice(1);
   }
 
   return segments
-    .map((s) => decodeURIComponent(s).trim())
+    .map((s) => safeDecodeUri(s).trim())
     .filter(Boolean)
     .join(".")
     .toLowerCase()
