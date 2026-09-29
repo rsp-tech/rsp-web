@@ -67,6 +67,7 @@ const runtimeCaching: RuntimeCaching[] = [
       plugins: [
         new ExpirationPlugin({
           maxEntries: 120,
+          maxAgeSeconds: 7 * 24 * 60 * 60,
         }),
       ],
     }),
@@ -114,10 +115,9 @@ const navigationRoute = new Route(
       /**
        * Dynamic [[...slug]] pages intentionally share the root app shell.
        *
-       * The server renders metadata and JSON-LD for SEO, while the page
-       * content itself is restored from IndexedDB after hydration based on
-       * the current URL. Serving "/" here enables offline navigation without
-       * precaching every possible category page.
+       * Avoids all server calls for /library/ category pages.
+       * User navigations reuse the precached "/" shell with zero network roundtrips,
+       * and page content is restored entirely on the client from IndexedDB.
        */
       return (await serwist.matchPrecache("/")) ?? (await fetch(request));
     } catch {

@@ -8,7 +8,7 @@ export function PwaRegister() {
       if (process.env.NODE_ENV === "production") {
         const registerSW = () => {
           navigator.serviceWorker
-            .register("/sw.js")
+            .register("/sw.js", { updateViaCache: "none" })
             .then((reg) => {
               console.info(
                 "Service Worker registered successfully with scope:",
