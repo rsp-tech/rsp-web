@@ -9,7 +9,12 @@ import type { CategoryPageData } from "@/hooks/use-category-page";
 import { axiomLogger } from "@/lib/axiom-logger";
 import { getCategoryImageUrl } from "@/lib/storage";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
-import { isValidCategoryPath, pathToUrlPath, slugToLabel } from "@/lib/utils";
+import {
+  categoryPath,
+  isValidCategoryPath,
+  pathToUrlPath,
+  slugToLabel,
+} from "@/lib/utils";
 import { ClientShell } from "@/views/client-shell";
 
 export const revalidate = 2592000; // 30 days fallback if on-demand revalidation fails
@@ -154,7 +159,7 @@ const generateJsonLdData = async (slug?: string[]) => {
       .map((cat) => ({
         "@type": "CollectionPage",
         name: cat.name,
-        url: `https://radheshyamdas.com/${(cat.url_path as string).replace(/_/g, "-").replace(/\./g, "/")}`,
+        url: `https://radheshyamdas.com/${categoryPath(cat.url_path)}`,
       }));
 
     jsonLdOutputs.push(
@@ -211,7 +216,7 @@ const generateJsonLdData = async (slug?: string[]) => {
         item: {
           "@type": "CollectionPage",
           name: sub.name,
-          url: `https://radheshyamdas.com/${(sub.url_path as string).replace(/_/g, "-").replace(/\./g, "/")}`,
+          url: `https://radheshyamdas.com/${categoryPath(sub.url_path)}`,
         },
       })),
     });
