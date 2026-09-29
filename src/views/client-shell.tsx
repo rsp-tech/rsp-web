@@ -101,9 +101,7 @@ export const ClientShell = ({ initialData }: ClientShellProps) => {
   if (slug.length === 1 && slug[0] === "library") {
     return (
       <div className="flex flex-col gap-8 py-2">
-        <CategoryBreadcrumbs
-          breadcrumbs={[{ label: "Library", href: "/library" }]}
-        />
+        <CategoryBreadcrumbs slug={slug} />
 
         <div className="flex flex-col gap-2 border-b border-border pb-6">
           <span className="text-xs font-bold text-primary tracking-wider uppercase">
@@ -135,19 +133,9 @@ export const ClientShell = ({ initialData }: ClientShellProps) => {
 
   const { category, subcategories, recordings } = data;
 
-  const breadcrumbs = [
-    { label: "Library", href: "/library" },
-    ...(slug[0] === "library" ? slug.slice(1) : slug).map(
-      (slugPart, index, arr) => {
-        const path = ["library", ...arr.slice(0, index + 1)].join("/");
-        return { label: slugToLabel(slugPart), href: `/${path}` };
-      },
-    ),
-  ];
-
   return (
     <div className="flex flex-col gap-8 py-2">
-      <CategoryBreadcrumbs breadcrumbs={breadcrumbs} />
+      <CategoryBreadcrumbs slug={slug} />
 
       {/* Category Header */}
       <div className="flex flex-col gap-2 border-b border-border pb-6">

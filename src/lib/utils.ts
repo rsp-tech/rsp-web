@@ -8,7 +8,7 @@ export const categoryPath = (urlPath: string) =>
   urlPath ? `library/${urlPath.replaceAll(".", "/")}` : "library";
 
 export const slugToLabel = (slug: string) =>
-  slug
+  safeDecodeUri(slug)
     .split("_")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");

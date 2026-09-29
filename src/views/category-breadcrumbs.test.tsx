@@ -8,7 +8,7 @@ vi.mock("@/lib/supabase-browser", () => ({
     auth: {
       getUser: () => Promise.resolve({ data: { user: null } }),
       onAuthStateChange: () => ({
-        data: { subscription: { unsubscribe: () => {} } },
+        data: { subscription: { unsubscribe: () => { } } },
       }),
     },
     from: () => ({
@@ -22,10 +22,7 @@ describe.concurrent("src/views/category-breadcrumbs.tsx suite", () => {
   it.concurrent("renders CategoryBreadcrumbs component with breadcrumb links", async () => {
     const { CategoryBreadcrumbs } = await import("./category-breadcrumbs");
     const tree = CategoryBreadcrumbs({
-      breadcrumbs: [
-        { label: "Gita", href: "/gita" },
-        { label: "Chapter 1", href: "/gita/ch1" },
-      ],
+      slug: ["gita", "ch1"],
     });
     expect(tree).toBeDefined();
   });

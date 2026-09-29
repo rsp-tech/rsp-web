@@ -1,16 +1,18 @@
 import { ChevronRight, Home } from "lucide-react";
 import Link from "next/link";
+import { slugToLabel } from "@/lib/utils";
 
-interface Breadcrumb {
-  label: string;
-  href: string;
-}
+export const CategoryBreadcrumbs = ({ slug }: { slug: string[] }) => {
+  const breadcrumbs = [
+    { label: "Library", href: "/library" },
+    ...(slug[0] === "library" ? slug.slice(1) : slug).map(
+      (slugPart, index, arr) => {
+        const path = ["library", ...arr.slice(0, index + 1)].join("/");
+        return { label: slugToLabel(slugPart), href: `/${path}` };
+      },
+    ),
+  ];
 
-export const CategoryBreadcrumbs = ({
-  breadcrumbs,
-}: {
-  breadcrumbs: Breadcrumb[];
-}) => {
   const handleCrumbClick =
     (href: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
       e.preventDefault();
