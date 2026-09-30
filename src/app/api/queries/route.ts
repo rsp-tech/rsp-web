@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { FEATURE_FLAGS } from "@/constants";
 import type { Json } from "@/database.types";
-import { axiomLogger } from "@/lib/axiom-logger";
+import { withApiLogging } from "@/lib/axiom-logger";
 import { isFeatureFlagEnabled } from "@/lib/feature-flags-service";
 import {
   getSupabaseServerClient,
@@ -20,7 +20,7 @@ interface QueryRequestBody {
   attachments?: QueryAttachment[];
 }
 
-export const POST = async (req: NextRequest) => {
+export const POST = withApiLogging("/api/queries", async (req: NextRequest) => {
   try {
     const body = (await req.json()) as QueryRequestBody;
 
@@ -71,12 +71,9 @@ export const POST = async (req: NextRequest) => {
     return handleMutationResult(data, error, "insert user query on server");
   } catch (err: unknown) {
     console.error("Error processing query submit route:", err);
-    axiomLogger.error("Error processing query submit route", { error: err });
-    const errorMessage =
-      err instanceof Error ? err.message : "Internal Server Error";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    throw err;
   }
-};
+});
 
 interface QueryPatchRequestBody {
   query_id: string;
@@ -86,7 +83,7 @@ interface QueryPatchRequestBody {
 
 const ALLOWED_STATUSES = new Set(["open", "in_progress", "resolved", "closed"]);
 
-export const PATCH = async (req: NextRequest) => {
+export const PATCH = withApiLogging("/api/queries", async (req: NextRequest) => {
   try {
     const body = (await req.json()) as QueryPatchRequestBody;
 
@@ -115,9 +112,6 @@ export const PATCH = async (req: NextRequest) => {
     return handleMutationResult(data, error, "update user query status");
   } catch (err: unknown) {
     console.error("Error updating query status:", err);
-    axiomLogger.error("Error updating query status", { error: err });
-    const errorMessage =
-      err instanceof Error ? err.message : "Internal Server Error";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    throw err;
   }
-};
+});

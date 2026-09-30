@@ -56,7 +56,8 @@ const getCachedCategoryPageData = async (
       error,
     );
     axiomLogger.error("getCachedCategoryPageData RPC error", {
-      urlPath,
+      event: "category.rpc_error",
+      url_path: urlPath,
       error,
     });
     return { data: null, status: 500 };

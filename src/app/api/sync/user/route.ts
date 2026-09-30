@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { STORE } from "@/constants";
-import { axiomLogger } from "@/lib/axiom-logger";
+import { axiomLogger, withApiLogging } from "@/lib/axiom-logger";
 import {
   evaluateUserFlags,
   getCachedFeatureFlags,
@@ -36,6 +36,8 @@ export const GET = async (request: NextRequest) => {
   } catch (error) {
     console.error("Failed to fetch user seed backup:", error);
     axiomLogger.error("Failed to fetch user seed backup", {
+      event: "sync.user_seed_error",
+      route: "/api/sync/user",
       error: error instanceof Error ? error.message : String(error),
     });
     return new Response("Failed to fetch backup", {
@@ -44,7 +46,7 @@ export const GET = async (request: NextRequest) => {
   }
 };
 
-export const POST = async (request: NextRequest) => {
+export const POST = withApiLogging("/api/sync/user", async (request: NextRequest) => {
   try {
     const { user, errorResponse } = await getAuthenticatedUser(request);
     if (errorResponse || !user) {
@@ -68,8 +70,10 @@ export const POST = async (request: NextRequest) => {
   } catch (error) {
     console.error("User delta sync failed:", error);
     axiomLogger.error("User delta sync failed", {
+      event: "sync.user_error",
+      route: "/api/sync/user",
       error: error instanceof Error ? error.message : String(error),
     });
     return Response.json({ error: (error as Error).message }, { status: 500 });
   }
-};
+});

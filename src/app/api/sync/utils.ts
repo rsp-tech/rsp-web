@@ -85,9 +85,10 @@ const getCachedBackupAssetData = async (
     axiomLogger.error(
       `[Backup Asset] Failed to download asset: ${targetResource}`,
       {
-        targetResource,
+        event: "sync.asset_download_error",
+        target_resource: targetResource,
         status: assetRes.status,
-        statusText: assetRes.statusText,
+        status_text: assetRes.statusText,
       },
     );
     return null;

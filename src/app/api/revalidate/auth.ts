@@ -15,6 +15,7 @@ export const verifyRevalidateAuth = async (
     );
     axiomLogger.error(
       "[Revalidate Auth] Server missing JWT environment variables",
+      { event: "auth.config_error" },
     );
     return NextResponse.json(
       { error: "Missing JWT environment variables" },
@@ -45,6 +46,7 @@ export const verifyRevalidateAuth = async (
   } catch (jwtErr) {
     console.error("[Revalidate Auth] JWT verification failed:", jwtErr);
     axiomLogger.warn("[Revalidate Auth] JWT verification failed", {
+      event: "auth.failed",
       error: jwtErr,
     });
     return NextResponse.json({ error: "Invalid token" }, { status: 401 });

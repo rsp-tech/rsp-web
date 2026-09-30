@@ -58,10 +58,11 @@ export const getCachedLiveDiff = async (
         error.message,
       );
       axiomLogger.error(`[Live Diff Fetcher] Query failed for ${table}`, {
+        event: "sync.live_diff_error",
         error: error.message,
         table,
-        sinceTimestamp,
-        roleId,
+        since_timestamp: sinceTimestamp,
+        role_id: roleId,
       });
       throw new Error(
         `Failed to fetch live diff for ${table}: ${error.message}`,
@@ -75,9 +76,10 @@ export const getCachedLiveDiff = async (
       axiomLogger.warn(
         `[Live Diff Fetcher] Query hit Supabase 1,000-row limit for ${table}`,
         {
+          event: "sync.row_limit_warning",
           table,
-          sinceTimestamp,
-          roleId,
+          since_timestamp: sinceTimestamp,
+          role_id: roleId,
         },
       );
     }

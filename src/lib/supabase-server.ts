@@ -22,6 +22,7 @@ export const handleMutationResult = <T>(
   if (error) {
     console.error(`Failed to ${failureContext}:`, error);
     axiomLogger.error(`Database mutation failed: ${failureContext}`, {
+      event: "db.mutation_error",
       error: error.message || "Database insert failed",
       context: failureContext,
     });

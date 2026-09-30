@@ -1,6 +1,6 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { FEATURE_FLAGS } from "@/constants";
-import { axiomLogger } from "@/lib/axiom-logger";
+import { axiomLogger, withApiLogging } from "@/lib/axiom-logger";
 import { isFeatureFlagEnabled } from "@/lib/feature-flags-service";
 import { generateM2MToken } from "@/lib/jwt";
 
@@ -11,7 +11,7 @@ const isAllowedAttachmentMimeType = (mimeType: string): boolean => {
   return normalized.startsWith("image/") || normalized === "application/pdf";
 };
 
-export const POST = async (req: NextRequest) => {
+export const POST = withApiLogging("/api/queries/upload-session", async (req: NextRequest) => {
   try {
     const body = await req.json();
     const { fileName, mimeType, fileSize, origin, userId } = body;
@@ -82,10 +82,12 @@ export const POST = async (req: NextRequest) => {
     if (!res.ok) {
       const errText = await res.text();
       axiomLogger.error("Upload service error creating attachment session", {
+        event: "upload.session_error",
+        route: "/api/queries/upload-session",
         status: res.status,
         response: errText,
-        fileName,
-        mimeType,
+        file_name: fileName,
+        mime_type: mimeType,
       });
       return NextResponse.json(
         { error: `Upload service error (${res.status}): ${errText}` },
@@ -97,11 +99,6 @@ export const POST = async (req: NextRequest) => {
     return NextResponse.json(data);
   } catch (err: unknown) {
     console.error("Error creating query attachment upload session:", err);
-    axiomLogger.error("Error creating query attachment upload session", {
-      error: err,
-    });
-    const errorMessage =
-      err instanceof Error ? err.message : "Internal Server Error";
-    return NextResponse.json({ error: errorMessage }, { status: 500 });
+    throw err;
   }
-};
+});

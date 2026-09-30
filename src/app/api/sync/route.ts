@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { axiomLogger } from "@/lib/axiom-logger";
+import { axiomLogger, withApiLogging } from "@/lib/axiom-logger";
 import type { SyncRequestBody } from "@/types";
 import { getAuthenticatedRoleId } from "./auth";
 import { computePublicSyncDelta, computeRoleSyncDelta } from "./delta-service";
@@ -11,7 +11,7 @@ if (!SYNC_RESOURCE) {
   throw new Error("Missing SYNC_RESOURCE");
 }
 
-export const GET = async (request: NextRequest) => {
+export const GET = withApiLogging("/api/sync", async (request: NextRequest) => {
   const { searchParams } = request.nextUrl;
   const entries = Array.from(searchParams.entries());
 
@@ -34,6 +34,8 @@ export const GET = async (request: NextRequest) => {
   } catch (error) {
     console.error("Public sync delta failed:", error);
     axiomLogger.error("Public sync delta failed", {
+      event: "sync.public_error",
+      route: "/api/sync",
       error: error instanceof Error ? error.message : String(error),
     });
     return NextResponse.json(
@@ -41,9 +43,9 @@ export const GET = async (request: NextRequest) => {
       { status: 500 },
     );
   }
-};
+});
 
-export const POST = async (request: NextRequest) => {
+export const POST = withApiLogging("/api/sync", async (request: NextRequest) => {
   try {
     const body = (await request.json()) as SyncRequestBody;
 
@@ -72,6 +74,8 @@ export const POST = async (request: NextRequest) => {
   } catch (error) {
     console.error("Role sync delta failed:", error);
     axiomLogger.error("Role sync delta failed", {
+      event: "sync.role_error",
+      route: "/api/sync",
       error: error instanceof Error ? error.message : String(error),
     });
     return NextResponse.json(
@@ -79,4 +83,4 @@ export const POST = async (request: NextRequest) => {
       { status: 500 },
     );
   }
-};
+});

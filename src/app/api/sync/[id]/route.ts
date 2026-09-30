@@ -1,5 +1,5 @@
 import type { NextRequest } from "next/server";
-import { axiomLogger } from "@/lib/axiom-logger";
+import { axiomLogger, withApiLogging } from "@/lib/axiom-logger";
 import { getAuthenticatedRoleId } from "../auth";
 import { fetchBackupAsset } from "../utils";
 
@@ -9,7 +9,7 @@ if (!SYNC_RESOURCE) {
   throw new Error("Missing SYNC_RESOURCE");
 }
 
-export const GET = async (request: NextRequest) => {
+export const GET = withApiLogging("/api/sync/[id]", async (request: NextRequest) => {
   try {
     const { roleId, errorResponse } = await getAuthenticatedRoleId(request);
     if (errorResponse || !roleId) {
@@ -22,10 +22,12 @@ export const GET = async (request: NextRequest) => {
   } catch (error) {
     console.error(error);
     axiomLogger.error("Failed to fetch role backup zip", {
+      event: "sync.role_backup_error",
+      route: "/api/sync/[id]",
       error: error instanceof Error ? error.message : String(error),
     });
     return new Response("Failed to fetch backup", {
       status: 502,
     });
   }
-};
+});

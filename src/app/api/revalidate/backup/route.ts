@@ -1,10 +1,10 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 import { API_PATH, CACHE_TAG } from "@/app/api/constants";
-import { axiomLogger } from "@/lib/axiom-logger";
+import { axiomLogger, withApiLogging } from "@/lib/axiom-logger";
 import { verifyRevalidateAuth } from "../auth";
 
-export const POST = async (req: NextRequest) => {
+export const POST = withApiLogging("/api/revalidate/backup", async (req: NextRequest) => {
   const authError = await verifyRevalidateAuth(req);
   if (authError) return authError;
 
@@ -13,8 +13,10 @@ export const POST = async (req: NextRequest) => {
   revalidatePath(API_PATH.SYNC);
 
   axiomLogger.info("[API /api/revalidate/backup] Flushed backup caches", {
-    revalidatedTags: [CACHE_TAG.BACKUP_RESOURCES],
-    revalidatedPaths: [API_PATH.SYNC],
+    event: "revalidate.backup_flushed",
+    route: "/api/revalidate/backup",
+    revalidated_tags: [CACHE_TAG.BACKUP_RESOURCES],
+    revalidated_paths: [API_PATH.SYNC],
   });
 
   return NextResponse.json({
@@ -22,4 +24,4 @@ export const POST = async (req: NextRequest) => {
     revalidatedTags: [CACHE_TAG.BACKUP_RESOURCES],
     revalidatedPaths: [API_PATH.SYNC],
   });
-};
+});

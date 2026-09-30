@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { axiomLogger } from "@/lib/axiom-logger";
+import { axiomLogger, withApiLogging } from "@/lib/axiom-logger";
 import {
   evaluatePublicFlags,
   getCachedFeatureFlags,
@@ -9,7 +9,7 @@ import { getCachedSyncMeta } from "../meta-service";
 const CACHE_CONTROL_HEADER =
   "public, max-age=60, s-maxage=86400, stale-while-revalidate=28800";
 
-export const GET = async () => {
+export const GET = withApiLogging("/api/sync/meta", async () => {
   try {
     const [data, flags] = await Promise.all([
       getCachedSyncMeta(),
@@ -29,10 +29,14 @@ export const GET = async () => {
       },
     });
   } catch (error) {
-    axiomLogger.error("Failed to fetch sync meta", { error });
+    axiomLogger.error("Failed to fetch sync meta", {
+      event: "sync.meta_error",
+      route: "/api/sync/meta",
+      error,
+    });
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 500 },
     );
   }
-};
+});

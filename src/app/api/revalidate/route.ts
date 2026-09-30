@@ -1,11 +1,11 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 import { API_PATH, CACHE_TAG } from "@/app/api/constants";
-import { axiomLogger } from "@/lib/axiom-logger";
+import { axiomLogger, withApiLogging } from "@/lib/axiom-logger";
 import { pathToUrlPath } from "@/lib/utils";
 import { verifyRevalidateAuth } from "./auth";
 
-export const POST = async (req: NextRequest) => {
+export const POST = withApiLogging("/api/revalidate", async (req: NextRequest) => {
   const origin =
     req.headers.get("origin") || req.headers.get("host") || "unknown";
 
@@ -15,6 +15,8 @@ export const POST = async (req: NextRequest) => {
       `[API /api/revalidate] Auth verification failed for request from: ${origin}`,
     );
     axiomLogger.warn("[API /api/revalidate] Auth verification failed", {
+      event: "auth.failed",
+      route: "/api/revalidate",
       origin,
     });
     return authError;
@@ -73,6 +75,8 @@ export const POST = async (req: NextRequest) => {
     revalidated,
   );
   axiomLogger.info("[API /api/revalidate] Flushed targets", {
+    event: "revalidate.flushed",
+    route: "/api/revalidate",
     origin,
     revalidated,
   });
@@ -81,4 +85,4 @@ export const POST = async (req: NextRequest) => {
     success: true,
     revalidated,
   });
-};
+});
