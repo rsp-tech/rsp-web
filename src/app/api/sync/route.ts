@@ -5,8 +5,6 @@ import { getAuthenticatedRoleId } from "./auth";
 import { computePublicSyncDelta, computeRoleSyncDelta } from "./delta-service";
 import { fetchBackupAsset } from "./utils";
 
-export const revalidate = 86400; // 24 hours
-
 const SYNC_RESOURCE = process.env["SYNC_RESOURCE"];
 
 if (!SYNC_RESOURCE) {

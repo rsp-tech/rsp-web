@@ -16,9 +16,6 @@ import {
 } from "@/lib/utils";
 import { ClientShell } from "@/views/client-shell";
 
-export const revalidate = 2592000; // 30 days fallback if on-demand revalidation fails
-export const dynamicParams = true;
-
 interface PageProps {
   params: Promise<{ slug?: string[] }>;
 }

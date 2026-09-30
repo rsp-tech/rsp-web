@@ -6,8 +6,6 @@ import {
 } from "@/lib/feature-flags-service";
 import { getCachedSyncMeta } from "../meta-service";
 
-export const revalidate = 86400; // 24 hours
-
 const CACHE_CONTROL_HEADER =
   "public, max-age=60, s-maxage=86400, stale-while-revalidate=28800";
 

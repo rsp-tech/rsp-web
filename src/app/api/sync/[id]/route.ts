@@ -3,8 +3,6 @@ import { axiomLogger } from "@/lib/axiom-logger";
 import { getAuthenticatedRoleId } from "../auth";
 import { fetchBackupAsset } from "../utils";
 
-export const revalidate = 86400; // 24 hours
-
 const SYNC_RESOURCE = process.env["SYNC_RESOURCE"];
 
 if (!SYNC_RESOURCE) {

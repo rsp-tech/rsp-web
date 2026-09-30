@@ -9,8 +9,6 @@ import type { SyncRequestBody } from "@/types";
 import { getAuthenticatedUser } from "../auth";
 import { computeUserSyncDelta } from "../delta-service";
 
-export const dynamic = "force-dynamic";
-
 export const GET = async (request: NextRequest) => {
   try {
     const { user, errorResponse } = await getAuthenticatedUser(request);
