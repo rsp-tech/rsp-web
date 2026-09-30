@@ -28,6 +28,7 @@ import {
 } from "./baseline-cache";
 import { getCachedLiveDiff } from "./live-diff-fetcher";
 import { getCachedSyncMeta } from "./meta-service";
+import { getSupabaseServerClient } from "@/lib/supabase-server";
 
 const mergeAndPickTableRows = (
   baselineRows: Record<string, unknown>[],
@@ -304,19 +305,24 @@ export const computeUserSyncDelta = async (
 
 export const getCachedPublicUrlPaths = unstable_cache(
   async (): Promise<string[]> => {
-    const [categories, redirects] = await Promise.all([
-      resolvePublicTableDelta<Category>(STORE.CATEGORIES, ""),
-      resolvePublicTableDelta<Redirect>(STORE.REDIRECTS, ""),
+    const supabase = getSupabaseServerClient();
+    const [categoriesRes, redirectsRes] = await Promise.all([
+      supabase.from("categories").select("url_path").neq("url_path", "trash"),
+      supabase.from("redirects").select("id"),
     ]);
 
-    return [
-      ...categories.map((c) => c.url_path),
-      ...redirects.map((r) => r.id),
-    ].filter(Boolean);
+    const categoryPaths = (categoriesRes.data ?? [])
+      .map((c) => c.url_path as string)
+      .filter(Boolean);
+    const redirectPaths = (redirectsRes.data ?? [])
+      .map((r) => r.id)
+      .filter(Boolean);
+
+    return [...categoryPaths, ...redirectPaths];
   },
   ["public-url-paths"],
   {
-    revalidate: 300,
+    revalidate: 86400,
     tags: [CACHE_TAG.SYNC_META, CACHE_TAG.LIVE_DIFF],
   },
 );
