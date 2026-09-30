@@ -58,6 +58,8 @@ const getCachedBackupAssetData = async (
   cacheLife("days");
   cacheTag(CACHE_TAG.BACKUP_RESOURCES);
 
+  console.log(`[CACHE MISS] getCachedBackupAssetData fetching: ${targetResource}`);
+
   const releaseJson = await getReleaseMetadata();
   const asset = releaseJson?.assets?.find((a) => a.name === targetResource);
   const assetUrl = asset?.url;
@@ -97,6 +99,10 @@ const getCachedBackupAssetData = async (
   const arrayBuffer = await assetRes.arrayBuffer();
   const contentType =
     assetRes.headers.get("content-type") || "application/octet-stream";
+
+  console.log(
+    `[CACHE STORE] getCachedBackupAssetData downloaded: ${targetResource}, size: ${arrayBuffer.byteLength} bytes`,
+  );
 
   return {
     data: new Uint8Array(arrayBuffer),

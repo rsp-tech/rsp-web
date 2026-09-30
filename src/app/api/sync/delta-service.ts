@@ -301,14 +301,22 @@ export const getCachedPublicUrlPaths = async (): Promise<string[]> => {
   cacheLife("days");
   cacheTag(CACHE_TAG.SYNC_META);
 
+  console.log("[CACHE MISS] getCachedPublicUrlPaths computing valid paths...");
+
   const [categories, redirects] = await Promise.all([
     resolvePublicTableDelta<Category>(STORE.CATEGORIES, ""),
     resolvePublicTableDelta<Redirect>(STORE.REDIRECTS, ""),
   ]);
 
-  return [
+  const paths = [
     ...categories.map((c) => c.url_path),
     ...redirects.map((r) => r.id),
   ].filter(Boolean);
+
+  console.log(
+    `[CACHE STORE] getCachedPublicUrlPaths finished, total valid paths: ${paths.length}`,
+  );
+
+  return paths;
 };
 

@@ -17,6 +17,11 @@ export const getCachedLiveDiff = async (
   "use cache";
   cacheLife("days");
   cacheTag(CACHE_TAG.SYNC_META);
+
+  console.log(
+    `[CACHE MISS] getCachedLiveDiff fetching Supabase: ${table}, since: ${sinceTimestamp}, role: ${roleId ?? "none"}`,
+  );
+
   const supabase = getSupabaseServerClient();
 
     const syncCols = SYNC_COLUMNS[table];
@@ -83,6 +88,10 @@ export const getCachedLiveDiff = async (
         },
       );
     }
+
+    console.log(
+      `[CACHE STORE] getCachedLiveDiff got ${table}: ${data?.length ?? 0} rows`,
+    );
 
     return (data as unknown as Array<Record<string, unknown>>) || [];
 };

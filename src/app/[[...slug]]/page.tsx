@@ -32,6 +32,8 @@ const getCachedCategoryPageData = async (
   cacheLife("month");
   cacheTag("category-page-data", `category:${urlPath}`);
 
+  console.log(`[CACHE MISS] getCachedCategoryPageData executing for: "${urlPath}"`);
+
   if (urlPath) {
     if (!isValidCategoryPath(urlPath)) {
       console.warn("Invalid category path: ", urlPath);
@@ -62,6 +64,8 @@ const getCachedCategoryPageData = async (
     });
     return { data: null, status: 500 };
   }
+
+  console.log(`[CACHE STORE] getCachedCategoryPageData succeeded for: "${urlPath}"`);
 
   return {
     data: (data as unknown as CategoryPageData) || null,
@@ -289,6 +293,10 @@ export default async function CategoryPage({ params }: PageProps) {
   const { slug } = await params;
   const requestedPath = slug?.length ? pathToUrlPath(slug) : "";
   const { data, structuredData, status } = await generateJsonLdData(slug);
+
+  console.log(
+    `[PAGE RENDER] /[[...slug]] path: "${requestedPath}", status: ${status}, hasData: ${Boolean(data)}`,
+  );
 
   if (!data && status === 404) {
     return notFound();

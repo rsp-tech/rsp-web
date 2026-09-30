@@ -71,8 +71,14 @@ export const getCachedPublicTable = async (
   cacheLife("days");
   cacheTag(CACHE_TAG.BACKUP_RESOURCES);
 
+  console.log(`[CACHE MISS] getCachedPublicTable compute for table: ${table}`);
+
   const unzipped = await getUnzippedArchive(SYNC_RESOURCE);
-  return parseAndSortTableRows(unzipped, table, true);
+  const rows = parseAndSortTableRows(unzipped, table, true);
+  console.log(
+    `[CACHE STORE] getCachedPublicTable parsed ${table}: ${rows.length} rows`,
+  );
+  return rows;
 };
 
 // Cached role extra baseline table (sorted ascending by updated_at)
