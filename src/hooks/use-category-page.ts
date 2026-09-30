@@ -64,11 +64,7 @@ const loadCategoryPage = async (
     };
   }
 
-  let category = await db.getFromIndex(
-    STORE.CATEGORIES,
-    INDEX.BY_URL,
-    urlPath,
-  );
+  let category = await db.getFromIndex(STORE.CATEGORIES, INDEX.BY_URL, urlPath);
 
   if (!category) {
     const { resolveCategoryUrlPath } = await import("@/lib/legacy-url-map");

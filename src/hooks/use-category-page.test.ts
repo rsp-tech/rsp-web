@@ -34,7 +34,8 @@ vi.mock("@/lib/idb", () => ({
 
 vi.mock("@tanstack/react-query", () => ({
   useQuery: ({ queryFn, initialData }: any) => ({
-    data: initialData !== undefined ? initialData : (queryFn ? queryFn() : undefined),
+    data:
+      initialData !== undefined ? initialData : queryFn ? queryFn() : undefined,
   }),
 }));
 
@@ -50,7 +51,11 @@ describe.concurrent("use-category-page hook suite", () => {
 
   it.concurrent("useCategoryPage accepts initialData when requestedPath matches legacy URL", () => {
     const initialData = {
-      category: { id: 1, name: "Gita", url_path: "spiritual-discourses.bg" } as any,
+      category: {
+        id: 1,
+        name: "Gita",
+        url_path: "spiritual-discourses.bg",
+      } as any,
       subcategories: [],
       recordings: [],
     };
@@ -61,7 +66,11 @@ describe.concurrent("use-category-page hook suite", () => {
 
   it.concurrent("useCategoryPage rejects stale initialData when client path does not match", () => {
     const staleInitialData = {
-      category: { id: 1, name: "Gita", url_path: "spiritual-discourses.bg" } as any,
+      category: {
+        id: 1,
+        name: "Gita",
+        url_path: "spiritual-discourses.bg",
+      } as any,
       subcategories: [],
       recordings: [],
     };

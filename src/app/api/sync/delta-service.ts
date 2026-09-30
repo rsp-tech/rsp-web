@@ -6,6 +6,7 @@ import {
   SYNC_COLUMNS,
   USER_SPECIFIC_TABLES,
 } from "@/constants";
+import { getSupabaseServerClient } from "@/lib/supabase-server";
 import {
   isRoleTable,
   pickSyncColumns,
@@ -28,7 +29,6 @@ import {
 } from "./baseline-cache";
 import { getCachedLiveDiff } from "./live-diff-fetcher";
 import { getCachedSyncMeta } from "./meta-service";
-import { getSupabaseServerClient } from "@/lib/supabase-server";
 
 const mergeAndPickTableRows = (
   baselineRows: Record<string, unknown>[],
