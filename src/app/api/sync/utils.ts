@@ -54,7 +54,7 @@ interface CachedAsset {
 const getCachedBackupAssetData = async (
   targetResource: string,
 ): Promise<CachedAsset | null> => {
-  "use cache";
+  "use cache: remote";
   cacheLife("days");
   cacheTag(CACHE_TAG.BACKUP_RESOURCES);
 

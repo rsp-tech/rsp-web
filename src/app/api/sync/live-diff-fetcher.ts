@@ -14,7 +14,7 @@ export const getCachedLiveDiff = async (
   sinceTimestamp: string | null,
   roleId?: number,
 ): Promise<Array<Record<string, unknown>>> => {
-  "use cache";
+  "use cache: remote";
   cacheLife("days");
   cacheTag(CACHE_TAG.SYNC_META);
 

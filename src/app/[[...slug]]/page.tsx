@@ -28,7 +28,7 @@ interface CategoryPageDataResult {
 const getCachedCategoryPageData = async (
   urlPath: string,
 ): Promise<CategoryPageDataResult> => {
-  "use cache";
+  "use cache: remote";
   cacheLife("month");
   cacheTag("category-page-data", `category:${urlPath}`);
 

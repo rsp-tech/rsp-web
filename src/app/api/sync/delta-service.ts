@@ -297,7 +297,7 @@ export const computeUserSyncDelta = async (
 };
 
 export const getCachedPublicUrlPaths = async (): Promise<string[]> => {
-  "use cache";
+  "use cache: remote";
   cacheLife("days");
   cacheTag(CACHE_TAG.SYNC_META);
 

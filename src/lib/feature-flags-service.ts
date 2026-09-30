@@ -13,7 +13,7 @@ export interface UserSessionLike {
 }
 
 export const getCachedFeatureFlags = async (): Promise<FeatureFlag[]> => {
-  "use cache";
+  "use cache: remote";
   cacheLife("month");
   cacheTag(CACHE_TAG.FEATURE_FLAGS);
 

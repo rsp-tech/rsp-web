@@ -3,7 +3,7 @@ import { cacheLife } from "next/cache";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  "use cache";
+  "use cache: remote";
   cacheLife("days");
   const supabase = getSupabaseServerClient();
   const baseUrl = "https://radheshyamdas.com";

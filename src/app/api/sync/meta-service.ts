@@ -5,7 +5,7 @@ import { getSupabaseServerClient } from "@/lib/supabase-server";
 import { toUpdatedAtMap } from "@/lib/sync-utils";
 
 export const getCachedSyncMeta = async (): Promise<Record<string, string>> => {
-  "use cache";
+  "use cache: remote";
   cacheLife("days");
   cacheTag(CACHE_TAG.SYNC_META);
 

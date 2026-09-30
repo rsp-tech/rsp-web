@@ -67,7 +67,7 @@ export const getFullPublicTable = async (
 export const getCachedPublicTable = async (
   table: SyncTable,
 ): Promise<Array<Record<string, unknown>>> => {
-  "use cache";
+  "use cache: remote";
   cacheLife("days");
   cacheTag(CACHE_TAG.BACKUP_RESOURCES);
 
@@ -86,7 +86,7 @@ export const getCachedRoleExtraTable = async (
   table: SyncTable,
   roleId: number,
 ): Promise<Array<Record<string, unknown>>> => {
-  "use cache";
+  "use cache: remote";
   cacheLife("days");
   cacheTag(CACHE_TAG.BACKUP_RESOURCES);
 
@@ -99,7 +99,7 @@ export const getCachedRoleExtraTable = async (
 export const getCachedUserTable = async (
   table: SyncTable,
 ): Promise<Array<Record<string, unknown>>> => {
-  "use cache";
+  "use cache: remote";
   cacheLife("days");
   cacheTag(CACHE_TAG.BACKUP_RESOURCES);
 
