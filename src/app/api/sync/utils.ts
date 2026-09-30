@@ -1,10 +1,6 @@
-import { revalidateTag } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import Papa from "papaparse";
-import {
-  CACHE_TAG,
-  CSV_ENDPOINT,
-  REVALIDATE_24_HOURS,
-} from "@/app/api/constants";
+import { CACHE_TAG, CSV_ENDPOINT } from "@/app/api/constants";
 import { axiomLogger } from "@/lib/axiom-logger";
 
 const BACKUP_TOKEN = process.env["BACKUP_TOKEN"];
@@ -32,108 +28,55 @@ interface ReleaseMetadata {
   assets?: ReleaseAsset[];
 }
 
-const getReleaseMetadata = async (
-  forceFresh = false,
-): Promise<ReleaseMetadata | null> => {
-  const fetchOptions: RequestInit = {
+const getReleaseMetadata = async (): Promise<ReleaseMetadata | null> => {
+  const res = await fetch(SYNC_ENDPOINT as string, {
     headers: {
       Authorization: `Bearer ${BACKUP_TOKEN}`,
       "User-Agent": "rsp-web",
       Accept: "application/vnd.github+json",
     },
-    ...(forceFresh
-      ? { cache: "no-store" }
-      : {
-          next: {
-            tags: [CACHE_TAG.BACKUP_RESOURCES],
-            revalidate: REVALIDATE_24_HOURS,
-          },
-        }),
-  };
+  });
 
-  const res = await fetch(SYNC_ENDPOINT as string, fetchOptions);
   if (!res.ok) {
     console.error(
-      `[Backup Asset] Failed to fetch release metadata (fresh=${forceFresh}): status=${res.status} ${res.statusText}`,
+      `[Backup Asset] Failed to fetch release metadata: status=${res.status} ${res.statusText}`,
     );
     return null;
   }
   return (await res.json()) as ReleaseMetadata;
 };
 
-export const fetchBackupAsset = async (
-  targetResource: string,
-): Promise<Response> => {
-  let releaseJson = await getReleaseMetadata(false);
-  let asset = releaseJson?.assets?.find((a) => a.name === targetResource);
-  let assetUrl = asset?.url;
+interface CachedAsset {
+  data: Uint8Array;
+  contentType: string;
+}
 
-  // If not found in cached metadata, retry with fresh metadata and invalidate backup cache
-  if (!assetUrl) {
-    console.warn(
-      `[Backup Asset] Target asset "${targetResource}" not found in cached release. Invalidating backup cache and refetching fresh metadata...`,
-    );
-    try {
-      revalidateTag(CACHE_TAG.BACKUP_RESOURCES, {});
-    } catch (e) {
-      console.warn("[Backup Asset] Failed to revalidate backup tag:", e);
-    }
-    releaseJson = await getReleaseMetadata(true);
-    asset = releaseJson?.assets?.find((a) => a.name === targetResource);
-    assetUrl = asset?.url;
-  }
+const getCachedBackupAssetData = async (
+  targetResource: string,
+): Promise<CachedAsset | null> => {
+  "use cache";
+  cacheLife("days");
+  cacheTag(CACHE_TAG.BACKUP_RESOURCES);
+
+  const releaseJson = await getReleaseMetadata();
+  const asset = releaseJson?.assets?.find((a) => a.name === targetResource);
+  const assetUrl = asset?.url;
 
   if (!assetUrl) {
     console.error(
       `[Backup Asset] Target asset "${targetResource}" not found in release assets list!`,
     );
-    return new Response("Asset not found", { status: 404 });
+    return null;
   }
 
-  let assetRes = await fetch(assetUrl, {
+  const assetRes = await fetch(assetUrl, {
     headers: {
       Authorization: `Bearer ${BACKUP_TOKEN}`,
       "User-Agent": "rsp-web",
       Accept: "application/octet-stream",
     },
-    next: {
-      tags: [CACHE_TAG.BACKUP_RESOURCES],
-      revalidate: REVALIDATE_24_HOURS,
-    },
     redirect: "follow",
   });
-
-  // Self-healing fallback on 404: If the asset ID was stale/deleted, invalidate cache and retry with fresh metadata
-  if (assetRes.status === 404) {
-    console.warn(
-      `[Backup Asset] Asset fetch for "${targetResource}" returned 404 (stale asset ID). Invalidating backup cache and refetching fresh metadata...`,
-    );
-    try {
-      revalidateTag(CACHE_TAG.BACKUP_RESOURCES, {});
-    } catch (e) {
-      console.warn("[Backup Asset] Failed to revalidate backup tag:", e);
-    }
-    const freshReleaseJson = await getReleaseMetadata(true);
-    const freshAsset = freshReleaseJson?.assets?.find(
-      (a) => a.name === targetResource,
-    );
-    const freshAssetUrl = freshAsset?.url;
-
-    if (freshAssetUrl && freshAssetUrl !== assetUrl) {
-      assetRes = await fetch(freshAssetUrl, {
-        headers: {
-          Authorization: `Bearer ${BACKUP_TOKEN}`,
-          "User-Agent": "rsp-web",
-          Accept: "application/octet-stream",
-        },
-        next: {
-          tags: [CACHE_TAG.BACKUP_RESOURCES],
-          revalidate: REVALIDATE_24_HOURS,
-        },
-        redirect: "follow",
-      });
-    }
-  }
 
   if (!assetRes.ok) {
     console.error(
@@ -147,12 +90,29 @@ export const fetchBackupAsset = async (
         statusText: assetRes.statusText,
       },
     );
-    return new Response("Failed to download seed", {
-      status: assetRes.status,
-    });
+    return null;
   }
 
-  const headers = new Headers(assetRes.headers);
+  const arrayBuffer = await assetRes.arrayBuffer();
+  const contentType =
+    assetRes.headers.get("content-type") || "application/octet-stream";
+
+  return {
+    data: new Uint8Array(arrayBuffer),
+    contentType,
+  };
+};
+
+export const fetchBackupAsset = async (
+  targetResource: string,
+): Promise<Response> => {
+  const asset = await getCachedBackupAssetData(targetResource);
+  if (!asset) {
+    return new Response("Asset not found", { status: 404 });
+  }
+
+  const headers = new Headers();
+  headers.set("Content-Type", asset.contentType);
   headers.set(
     "Cache-Control",
     "public, max-age=86400, s-maxage=2592000, stale-while-revalidate=86400",
@@ -165,8 +125,9 @@ export const fetchBackupAsset = async (
     "Vercel-CDN-Cache-Control",
     "public, s-maxage=2592000, stale-while-revalidate=86400",
   );
-  return new Response(assetRes.body, {
-    status: assetRes.status,
+
+  return new Response(asset.data as unknown as BodyInit, {
+    status: 200,
     headers,
   });
 };
