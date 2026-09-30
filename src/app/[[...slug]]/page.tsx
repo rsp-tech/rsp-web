@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { unstable_cache } from "next/cache";
-import { redirect } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { cache } from "react";
 import { REVALIDATE_30_DAYS } from "@/app/api/constants";
 import { getCachedPublicUrlPaths } from "@/app/api/sync/delta-service";
@@ -25,20 +25,25 @@ interface PageProps {
   params: Promise<{ slug?: string[] }>;
 }
 
+interface CategoryPageDataResult {
+  data: CategoryPageData | null;
+  status: number;
+}
+
 const getCachedCategoryPageData = cache(
-  async (urlPath: string): Promise<CategoryPageData | null> =>
+  async (urlPath: string): Promise<CategoryPageDataResult> =>
     unstable_cache(
       async () => {
         if (urlPath) {
           if (!isValidCategoryPath(urlPath)) {
             console.warn("Invalid category path: ", urlPath);
-            return null;
+            return { data: null, status: 404 };
           }
 
           const validPaths = await getCachedPublicUrlPaths();
           if (!validPaths.includes(urlPath)) {
             console.warn("URL path not found: ", urlPath);
-            return null;
+            return { data: null, status: 404 };
           }
         }
         const { data, error } = await getSupabaseServerClient().rpc(
@@ -56,10 +61,13 @@ const getCachedCategoryPageData = cache(
             urlPath,
             error,
           });
-          return null;
+          return { data: null, status: 500 };
         }
 
-        return (data as unknown as CategoryPageData) || null;
+        return {
+          data: (data as unknown as CategoryPageData) || null,
+          status: 200,
+        };
       },
       ["category-page-data", urlPath],
       {
@@ -112,7 +120,7 @@ export const generateMetadata = async ({
 
   const rawUrlPath = pathToUrlPath(slug);
   const urlPath = resolveCategoryUrlPath(rawUrlPath);
-  const rpcData = await getCachedCategoryPageData(urlPath);
+  const { data: rpcData } = await getCachedCategoryPageData(urlPath);
   const category = rpcData?.category;
 
   const title = category?.name
@@ -150,7 +158,7 @@ const generateJsonLdData = async (slug?: string[]) => {
 
   const rawUrlPath = pathToUrlPath(slug ?? []);
   const urlPath = resolveCategoryUrlPath(rawUrlPath);
-  const rpcData = await getCachedCategoryPageData(urlPath);
+  const { data: rpcData, status } = await getCachedCategoryPageData(urlPath);
 
   if (rpcData?.redirectTo) redirect(rpcData.redirectTo);
   const { category, recordings = [], subcategories = [] } = rpcData ?? {};
@@ -282,13 +290,17 @@ const generateJsonLdData = async (slug?: string[]) => {
     });
   }
 
-  return { data: rpcData, structuredData: jsonLdOutputs };
+  return { data: rpcData, structuredData: jsonLdOutputs, status };
 };
 
 export default async function CategoryPage({ params }: PageProps) {
   const { slug } = await params;
   const requestedPath = slug?.length ? pathToUrlPath(slug) : "";
-  const { data, structuredData } = await generateJsonLdData(slug);
+  const { data, structuredData, status } = await generateJsonLdData(slug);
+
+  if (!data && status === 404) {
+    return notFound();
+  }
 
   return (
     <>
