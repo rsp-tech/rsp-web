@@ -56,9 +56,13 @@ export const sortByDate =
     return order * (timeA - timeB);
   };
 
+const STATIC_FILE_EXTENSIONS =
+  /\.(png|jpg|jpeg|webp|avif|gif|svg|ico|txt|xml|json|map|css|js|webmanifest|woff|woff2|ttf|eot)$/i;
+
 export const isValidCategoryPath = (value: string) =>
   /^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*$/.test(value) &&
-  !value.startsWith("_next");
+  !value.startsWith("_next") &&
+  !STATIC_FILE_EXTENSIONS.test(value);
 
 const safeDecodeUri = (str: string): string => {
   try {

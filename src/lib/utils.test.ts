@@ -249,4 +249,21 @@ describe.concurrent("utils.ts suite", () => {
       "spiritual-discourses.bg",
     );
   });
+
+  it.concurrent("isValidCategoryPath accepts valid paths and rejects assets/extensions", async () => {
+    const { isValidCategoryPath } = await import("./utils");
+    expect(isValidCategoryPath("spiritual-discourses.bg")).toBe(true);
+    expect(isValidCategoryPath("gita")).toBe(true);
+    expect(isValidCategoryPath("canto-1.chapter-1")).toBe(true);
+    // Rejects static assets and file extensions
+    expect(isValidCategoryPath("apple-icon-57x57.png")).toBe(false);
+    expect(isValidCategoryPath("apple-icon-114x114.png")).toBe(false);
+    expect(isValidCategoryPath("favicon.ico")).toBe(false);
+    expect(isValidCategoryPath("robots.txt")).toBe(false);
+    expect(isValidCategoryPath("site.webmanifest")).toBe(false);
+    expect(isValidCategoryPath("image.webp")).toBe(false);
+    // Rejects internal or invalid paths
+    expect(isValidCategoryPath("_next/static")).toBe(false);
+    expect(isValidCategoryPath("invalid/path/with/slashes")).toBe(false);
+  });
 });

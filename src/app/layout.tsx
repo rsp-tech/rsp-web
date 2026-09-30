@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   title: "Radheshyam Das Spiritual Discourses",
   description: "Spiritual lectures, commentaries, and wisdom by Radheshyam Das",
   manifest: "/manifest.json",
-  icons: { icon: "/favicon.ico", apple: "/icon-192x192.webp" },
+  icons: { icon: "/favicon.ico", apple: "/icon-512x512.png" },
 };
 
 export default async function RootLayout({
