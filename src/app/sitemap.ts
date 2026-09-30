@@ -1,9 +1,10 @@
 import type { MetadataRoute } from "next";
+import { cacheLife } from "next/cache";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 
-export const revalidate = 28800; // 8 hours
-
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  "use cache";
+  cacheLife("days");
   const supabase = getSupabaseServerClient();
   const baseUrl = "https://radheshyamdas.com";
 
