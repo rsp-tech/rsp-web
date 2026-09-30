@@ -1,6 +1,6 @@
 {
   "totalClasses": 366,
-  "timestamp": "2026-09-28T09:41:58.196Z",
+  "timestamp": "2026-09-30T17:16:58.828Z",
   "baselineCSSBytes": 67111,
   "baselineBrotliBytes": 9851,
   "newlyAddedClasses": [],
@@ -1092,7 +1092,7 @@
     },
     {
       "className": "font-bold",
-      "frequency": 121,
+      "frequency": 122,
       "length": 9,
       "uncompressedBytes": 88,
       "brotliBytesUpperLimit": 57,

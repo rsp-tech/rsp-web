@@ -3,6 +3,8 @@ import { STORE } from "@/constants";
 
 vi.mock("next/cache", () => ({
   unstable_cache: (fn: any) => fn,
+  cacheLife: vi.fn(),
+  cacheTag: vi.fn(),
 }));
 
 vi.mock("./utils", () => ({

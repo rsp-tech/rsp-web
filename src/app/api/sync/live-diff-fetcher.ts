@@ -1,4 +1,4 @@
-import { unstable_cache } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import { CACHE_TAG } from "@/app/api/constants";
 import { STORE, SYNC_COLUMNS } from "@/constants";
 import type { Database } from "@/database.types";
@@ -9,15 +9,15 @@ import type { SyncTable } from "@/types";
 
 type SupabaseTable = keyof Database["prod"]["Tables"];
 
-const REVALIDATE_5_MINUTES = 300;
-
-export const getCachedLiveDiff = unstable_cache(
-  async (
-    table: SyncTable,
-    sinceTimestamp: string | null,
-    roleId?: number,
-  ): Promise<Array<Record<string, unknown>>> => {
-    const supabase = getSupabaseServerClient();
+export const getCachedLiveDiff = async (
+  table: SyncTable,
+  sinceTimestamp: string | null,
+  roleId?: number,
+): Promise<Array<Record<string, unknown>>> => {
+  "use cache";
+  cacheLife("days");
+  cacheTag(CACHE_TAG.SYNC_META);
+  const supabase = getSupabaseServerClient();
 
     const syncCols = SYNC_COLUMNS[table];
     let columns = syncCols
@@ -83,10 +83,5 @@ export const getCachedLiveDiff = unstable_cache(
     }
 
     return (data as unknown as Array<Record<string, unknown>>) || [];
-  },
-  [CACHE_TAG.LIVE_DIFF],
-  {
-    revalidate: REVALIDATE_5_MINUTES,
-    tags: [CACHE_TAG.LIVE_DIFF],
-  },
-);
+};
+

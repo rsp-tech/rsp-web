@@ -22,7 +22,21 @@ const withSerwist = withSerwistInit({
 const nextConfig: NextConfig = {
   reactCompiler: true,
   reactStrictMode: true,
+  cacheComponents: true,
+  cacheLife: {
+    days: {
+      stale: 86400,
+      revalidate: 86400,
+      expire: 604800,
+    },
+    month: {
+      stale: 2592000,
+      revalidate: 2592000,
+      expire: 5184000,
+    },
+  },
   experimental: {
+    useCache: true,
     optimizeCss: true,
     optimizePackageImports: ["@/components"],
   },

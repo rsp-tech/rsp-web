@@ -1,6 +1,6 @@
 import { unzipSync } from "fflate";
-import { unstable_cache } from "next/cache";
-import { CACHE_TAG, REVALIDATE_24_HOURS } from "@/app/api/constants";
+import { cacheLife, cacheTag } from "next/cache";
+import { CACHE_TAG } from "@/app/api/constants";
 import { MAX_SYNC_STALE_DAYS, ONE_DAY_MS, STORE } from "@/constants";
 import {
   findFirstIndexAfter,
@@ -64,44 +64,42 @@ export const getFullPublicTable = async (
 };
 
 // Cached public baseline table (safely limited to top 1,000 recent rows to stay under 2MB)
-export const getCachedPublicTable = unstable_cache(
-  async (table: SyncTable): Promise<Array<Record<string, unknown>>> => {
-    const unzipped = await getUnzippedArchive(SYNC_RESOURCE);
-    return parseAndSortTableRows(unzipped, table, true);
-  },
-  [CACHE_TAG.BACKUP_RESOURCES, "public"],
-  {
-    revalidate: REVALIDATE_24_HOURS,
-    tags: [CACHE_TAG.BACKUP_RESOURCES],
-  },
-);
+export const getCachedPublicTable = async (
+  table: SyncTable,
+): Promise<Array<Record<string, unknown>>> => {
+  "use cache";
+  cacheLife("days");
+  cacheTag(CACHE_TAG.BACKUP_RESOURCES);
+
+  const unzipped = await getUnzippedArchive(SYNC_RESOURCE);
+  return parseAndSortTableRows(unzipped, table, true);
+};
 
 // Cached role extra baseline table (sorted ascending by updated_at)
-export const getCachedRoleExtraTable = unstable_cache(
-  async (
-    table: SyncTable,
-    roleId: number,
-  ): Promise<Array<Record<string, unknown>>> => {
-    const roleResource = SYNC_RESOURCE.replace(".zip", `-${roleId}.zip`);
-    const unzipped = await getUnzippedArchive(roleResource);
-    return parseAndSortTableRows(unzipped, table);
-  },
-  [CACHE_TAG.BACKUP_RESOURCES, "role"],
-  {
-    revalidate: REVALIDATE_24_HOURS,
-    tags: [CACHE_TAG.BACKUP_RESOURCES],
-  },
-);
+export const getCachedRoleExtraTable = async (
+  table: SyncTable,
+  roleId: number,
+): Promise<Array<Record<string, unknown>>> => {
+  "use cache";
+  cacheLife("days");
+  cacheTag(CACHE_TAG.BACKUP_RESOURCES);
+
+  const roleResource = SYNC_RESOURCE.replace(".zip", `-${roleId}.zip`);
+  const unzipped = await getUnzippedArchive(roleResource);
+  return parseAndSortTableRows(unzipped, table);
+};
 
 // Cached user baseline table (parsed and sorted ascending by updated_at)
-export const getCachedUserTable = unstable_cache(
-  async (table: SyncTable): Promise<Array<Record<string, unknown>>> =>
-    parseCSVTable<Record<string, unknown>>(await getCSV(table), table).sort(
-      sortByDate(),
-    ),
-  [CACHE_TAG.BACKUP_RESOURCES, "user-table"],
-  {
-    revalidate: REVALIDATE_24_HOURS,
-    tags: [CACHE_TAG.BACKUP_RESOURCES],
-  },
-);
+export const getCachedUserTable = async (
+  table: SyncTable,
+): Promise<Array<Record<string, unknown>>> => {
+  "use cache";
+  cacheLife("days");
+  cacheTag(CACHE_TAG.BACKUP_RESOURCES);
+
+  return parseCSVTable<Record<string, unknown>>(
+    await getCSV(table),
+    table,
+  ).sort(sortByDate());
+};
+

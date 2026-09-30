@@ -1,4 +1,4 @@
-import { unstable_cache } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import { CACHE_TAG } from "@/app/api/constants";
 import {
   ROLE_SYNCED_TABLES,
@@ -6,7 +6,6 @@ import {
   SYNC_COLUMNS,
   USER_SPECIFIC_TABLES,
 } from "@/constants";
-import { getSupabaseServerClient } from "@/lib/supabase-server";
 import {
   isRoleTable,
   pickSyncColumns,
@@ -14,13 +13,7 @@ import {
   stripUpdatedAt,
 } from "@/lib/sync-utils";
 import { sortByDate } from "@/lib/utils";
-import type {
-  Category,
-  ClientWatermarks,
-  Redirect,
-  SyncResponseData,
-  SyncTable,
-} from "@/types";
+import type { Category, ClientWatermarks, Redirect, SyncResponseData, SyncTable } from "@/types";
 import {
   getCachedPublicTable,
   getCachedRoleExtraTable,
@@ -303,26 +296,19 @@ export const computeUserSyncDelta = async (
   };
 };
 
-export const getCachedPublicUrlPaths = unstable_cache(
-  async (): Promise<string[]> => {
-    const supabase = getSupabaseServerClient();
-    const [categoriesRes, redirectsRes] = await Promise.all([
-      supabase.from("categories").select("url_path").neq("url_path", "trash"),
-      supabase.from("redirects").select("id"),
-    ]);
+export const getCachedPublicUrlPaths = async (): Promise<string[]> => {
+  "use cache";
+  cacheLife("days");
+  cacheTag(CACHE_TAG.SYNC_META);
 
-    const categoryPaths = (categoriesRes.data ?? [])
-      .map((c) => c.url_path as string)
-      .filter(Boolean);
-    const redirectPaths = (redirectsRes.data ?? [])
-      .map((r) => r.id)
-      .filter(Boolean);
+  const [categories, redirects] = await Promise.all([
+    resolvePublicTableDelta<Category>(STORE.CATEGORIES, ""),
+    resolvePublicTableDelta<Redirect>(STORE.REDIRECTS, ""),
+  ]);
 
-    return [...categoryPaths, ...redirectPaths];
-  },
-  ["public-url-paths"],
-  {
-    revalidate: 86400,
-    tags: [CACHE_TAG.SYNC_META, CACHE_TAG.LIVE_DIFF],
-  },
-);
+  return [
+    ...categories.map((c) => c.url_path),
+    ...redirects.map((r) => r.id),
+  ].filter(Boolean);
+};
+

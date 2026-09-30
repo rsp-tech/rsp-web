@@ -1,8 +1,6 @@
 import type { Metadata } from "next";
-import { unstable_cache } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 import { notFound, redirect } from "next/navigation";
-import { cache } from "react";
-import { REVALIDATE_30_DAYS } from "@/app/api/constants";
 import { getCachedPublicUrlPaths } from "@/app/api/sync/delta-service";
 import { ASSET_BASE_URL } from "@/constants";
 import type { CategoryPageData } from "@/hooks/use-category-page";
@@ -30,52 +28,48 @@ interface CategoryPageDataResult {
   status: number;
 }
 
-const getCachedCategoryPageData = cache(
-  async (urlPath: string): Promise<CategoryPageDataResult> =>
-    unstable_cache(
-      async () => {
-        if (urlPath) {
-          if (!isValidCategoryPath(urlPath)) {
-            console.warn("Invalid category path: ", urlPath);
-            return { data: null, status: 404 };
-          }
+const getCachedCategoryPageData = async (
+  urlPath: string,
+): Promise<CategoryPageDataResult> => {
+  "use cache";
+  cacheLife("days");
+  cacheTag("category-page-data", `category:${urlPath}`);
 
-          const validPaths = await getCachedPublicUrlPaths();
-          if (!validPaths.includes(urlPath)) {
-            console.warn("URL path not found: ", urlPath);
-            return { data: null, status: 404 };
-          }
-        }
-        const { data, error } = await getSupabaseServerClient().rpc(
-          "get_category_page_data",
-          { p_url_path: urlPath },
-        );
+  if (urlPath) {
+    if (!isValidCategoryPath(urlPath)) {
+      console.warn("Invalid category path: ", urlPath);
+      return { data: null, status: 404 };
+    }
 
-        if (error) {
-          console.error(
-            "getCachedCategoryPageData rpc error: ",
-            urlPath,
-            error,
-          );
-          axiomLogger.error("getCachedCategoryPageData RPC error", {
-            urlPath,
-            error,
-          });
-          return { data: null, status: 500 };
-        }
+    const validPaths = await getCachedPublicUrlPaths();
+    if (!validPaths.includes(urlPath)) {
+      console.warn("URL path not found: ", urlPath);
+      return { data: null, status: 404 };
+    }
+  }
+  const { data, error } = await getSupabaseServerClient().rpc(
+    "get_category_page_data",
+    { p_url_path: urlPath },
+  );
 
-        return {
-          data: (data as unknown as CategoryPageData) || null,
-          status: 200,
-        };
-      },
-      ["category-page-data", urlPath],
-      {
-        revalidate: REVALIDATE_30_DAYS,
-        tags: ["category-page-data", `category:${urlPath}`],
-      },
-    )(),
-);
+  if (error) {
+    console.error(
+      "getCachedCategoryPageData rpc error: ",
+      urlPath,
+      error,
+    );
+    axiomLogger.error("getCachedCategoryPageData RPC error", {
+      urlPath,
+      error,
+    });
+    return { data: null, status: 500 };
+  }
+
+  return {
+    data: (data as unknown as CategoryPageData) || null,
+    status: 200,
+  };
+};
 
 const homePageMetadata: Metadata = {
   title: "Radheshyam Das Spiritual Discourses | Home",

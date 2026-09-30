@@ -22,7 +22,6 @@ export const POST = async (req: NextRequest) => {
 
   // Flush live sync metadata
   revalidateTag(CACHE_TAG.SYNC_META, {});
-  revalidateTag(CACHE_TAG.LIVE_DIFF, {});
   revalidatePath(API_PATH.SYNC_META);
   revalidatePath(API_PATH.SYNC);
 
@@ -37,7 +36,6 @@ export const POST = async (req: NextRequest) => {
     API_PATH.SYNC_META,
     API_PATH.SYNC,
     `tag:${CACHE_TAG.SYNC_META}`,
-    `tag:${CACHE_TAG.LIVE_DIFF}`,
   ];
 
   const tags = body.tags ?? (body.tag ? [body.tag] : []);

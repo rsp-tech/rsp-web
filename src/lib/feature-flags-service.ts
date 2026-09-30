@@ -1,6 +1,6 @@
 import type { User } from "@supabase/supabase-js";
-import { unstable_cache } from "next/cache";
-import { CACHE_TAG, REVALIDATE_24_HOURS } from "@/app/api/constants";
+import { cacheLife, cacheTag } from "next/cache";
+import { CACHE_TAG } from "@/app/api/constants";
 import { axiomLogger } from "@/lib/axiom-logger";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import type { FeatureFlag } from "@/types";
@@ -12,38 +12,35 @@ export interface UserSessionLike {
   } | null;
 }
 
-export const getCachedFeatureFlags = unstable_cache(
-  async (): Promise<FeatureFlag[]> => {
-    try {
-      const supabase = getSupabaseServerClient();
-      const { data, error } = await supabase
-        .from("feature_flags")
-        .select("*")
-        .order("id");
+export const getCachedFeatureFlags = async (): Promise<FeatureFlag[]> => {
+  "use cache";
+  cacheLife("days");
+  cacheTag(CACHE_TAG.FEATURE_FLAGS);
 
-      if (error) {
-        console.error("Failed to fetch feature flags from database:", error);
-        axiomLogger.error("Failed to fetch feature flags from database", {
-          error,
-        });
-        return [];
-      }
+  try {
+    const supabase = getSupabaseServerClient();
+    const { data, error } = await supabase
+      .from("feature_flags")
+      .select("*")
+      .order("id");
 
-      return (data || []) as FeatureFlag[];
-    } catch (err) {
-      console.error("Error executing getCachedFeatureFlags query:", err);
-      axiomLogger.error("Error executing getCachedFeatureFlags query", {
-        error: err,
+    if (error) {
+      console.error("Failed to fetch feature flags from database:", error);
+      axiomLogger.error("Failed to fetch feature flags from database", {
+        error,
       });
       return [];
     }
-  },
-  [CACHE_TAG.FEATURE_FLAGS],
-  {
-    revalidate: REVALIDATE_24_HOURS,
-    tags: [CACHE_TAG.FEATURE_FLAGS],
-  },
-);
+
+    return (data || []) as FeatureFlag[];
+  } catch (err) {
+    console.error("Error executing getCachedFeatureFlags query:", err);
+    axiomLogger.error("Error executing getCachedFeatureFlags query", {
+      error: err,
+    });
+    return [];
+  }
+};
 
 export const evaluatePublicFlags = (flags: FeatureFlag[]): string[] =>
   flags.filter((flag) => flag.is_enabled && flag.is_ga).map((flag) => flag.id);
