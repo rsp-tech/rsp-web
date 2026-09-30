@@ -32,7 +32,7 @@ const getCachedCategoryPageData = async (
   urlPath: string,
 ): Promise<CategoryPageDataResult> => {
   "use cache";
-  cacheLife("days");
+  cacheLife("month");
   cacheTag("category-page-data", `category:${urlPath}`);
 
   if (urlPath) {

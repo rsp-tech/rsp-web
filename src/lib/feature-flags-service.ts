@@ -14,7 +14,7 @@ export interface UserSessionLike {
 
 export const getCachedFeatureFlags = async (): Promise<FeatureFlag[]> => {
   "use cache";
-  cacheLife("days");
+  cacheLife("month");
   cacheTag(CACHE_TAG.FEATURE_FLAGS);
 
   try {
