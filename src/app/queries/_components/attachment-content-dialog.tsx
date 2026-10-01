@@ -9,6 +9,7 @@ import {
   Search,
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
+import { MaterialLineage } from "@/components/material-lineage";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -354,22 +355,11 @@ export const AttachmentContentDialog = ({
                         {mat.name}
                       </span>
                     </div>
-                    {(mat.category || mat.recording) && (
-                      <div
-                        className="text-xxs text-muted-foreground pl-6 flex items-center gap-1 font-medium truncate w-full"
-                        style={{ minWidth: 0 }}
-                      >
-                        {mat.category && (
-                          <span className="shrink-0">{mat.category.name}</span>
-                        )}
-                        {mat.category && mat.recording && (
-                          <ChevronRight className="w-3 h-3 shrink-0" />
-                        )}
-                        {mat.recording && (
-                          <span className="truncate">{mat.recording.name}</span>
-                        )}
-                      </div>
-                    )}
+                    <MaterialLineage
+                      category={mat.category}
+                      recording={mat.recording}
+                      className="w-full"
+                    />
                   </Button>
                 ))}
               </>

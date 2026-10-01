@@ -51,7 +51,8 @@ export const QueryAttachmentList = ({
       {attachments.map((att, idx) => {
         const key = `${att.type}-${idx}`;
 
-        if (att.type === "image") {
+        if (att.type === "image" || att.type === "pdf") {
+          const Icon = att.type === "image" ? ImageIcon : FileText;
           return (
             <Button
               key={key}
@@ -65,28 +66,7 @@ export const QueryAttachmentList = ({
                 variant="secondary"
                 className="gap-1.5 py-0.5 px-2 text-xs"
               >
-                <ImageIcon className="w-3 h-3 text-primary" />
-                <span className="max-w-xs truncate">{att.name}</span>
-              </Badge>
-            </Button>
-          );
-        }
-
-        if (att.type === "pdf") {
-          return (
-            <Button
-              key={key}
-              type="button"
-              variant="ghost"
-              onClick={() => handlePreviewDriveFile(att)}
-              className="p-0 cursor-pointer"
-              style={{ height: "auto" }}
-            >
-              <Badge
-                variant="secondary"
-                className="gap-1.5 py-0.5 px-2 text-xs"
-              >
-                <FileText className="w-3 h-3 text-primary" />
+                <Icon className="w-3 h-3 text-primary" />
                 <span className="max-w-xs truncate">{att.name}</span>
               </Badge>
             </Button>

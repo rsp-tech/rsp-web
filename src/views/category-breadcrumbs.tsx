@@ -1,7 +1,7 @@
 import { ChevronRight, Home } from "lucide-react";
 import Link from "next/link";
 import { useCategories } from "@/hooks/use-categories";
-import { categoryPath, cn } from "@/lib/utils";
+import { categoryPath, cn, navigateClientSide } from "@/lib/utils";
 import type { Category } from "@/types";
 
 interface CategoryBreadcrumbsProps {
@@ -26,9 +26,7 @@ export const CategoryBreadcrumbs = ({ category }: CategoryBreadcrumbsProps) => {
 
   const handleCrumbClick =
     (href: string) => (e: React.MouseEvent<HTMLAnchorElement>) => {
-      e.preventDefault();
-      window.history.pushState(null, "", href);
-      window.scrollTo({ top: 0, behavior: "instant" });
+      navigateClientSide(href, e);
     };
 
   return (

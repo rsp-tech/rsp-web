@@ -1,5 +1,6 @@
 import type { User } from "@supabase/supabase-js";
 import { type ClassValue, clsx } from "clsx";
+import type { MouseEvent as ReactMouseEvent } from "react";
 import { twMerge } from "tailwind-merge";
 
 export const cn = (...inputs: ClassValue[]) => twMerge(clsx(inputs));
@@ -165,15 +166,26 @@ export const formatSize = (bytes?: unknown): string => {
   return `${gb.toFixed(1).replace(/\.0$/, "")}GB`;
 };
 
+export const navigateClientSide = (href: string, e?: ReactMouseEvent) => {
+  e?.preventDefault();
+  window.history.pushState(null, "", href);
+  window.scrollTo({ top: 0, behavior: "instant" });
+};
+
+export const parseDate = (dateStr?: string | null): Date | null => {
+  if (!dateStr) return null;
+  const date = new Date(dateStr);
+  return Number.isNaN(date.getTime()) ? null : date;
+};
+
 export const isSameDay = (d1: Date, d2: Date = new Date()): boolean =>
   d1.getDate() === d2.getDate() &&
   d1.getMonth() === d2.getMonth() &&
   d1.getFullYear() === d2.getFullYear();
 
 export const formatQueryDate = (dateStr?: string | null): string => {
-  if (!dateStr) return "";
-  const date = new Date(dateStr);
-  if (Number.isNaN(date.getTime())) return "";
+  const date = parseDate(dateStr);
+  if (!date) return "";
 
   const now = new Date();
   const timeStr = date.toLocaleTimeString(undefined, {
@@ -199,9 +211,8 @@ export const formatQueryDate = (dateStr?: string | null): string => {
 };
 
 export const formatCompactDate = (dateStr?: string | null): string => {
-  if (!dateStr) return "";
-  const date = new Date(dateStr);
-  if (Number.isNaN(date.getTime())) return "";
+  const date = parseDate(dateStr);
+  if (!date) return "";
 
   const now = new Date();
   if (isSameDay(date, now)) {

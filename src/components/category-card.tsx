@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import { getCategoryImageUrl } from "@/lib/storage";
-import { categoryPath } from "@/lib/utils";
+import { categoryPath, navigateClientSide } from "@/lib/utils";
 import type { Category } from "@/types";
 
 interface CategoryCardProps {
@@ -23,9 +23,7 @@ export const CategoryCard = ({
   const [failed, setFailed] = useState(false);
 
   const handleClick = (e: React.MouseEvent<HTMLAnchorElement>) => {
-    e.preventDefault();
-    window.history.pushState(null, "", href);
-    window.scrollTo({ top: 0, behavior: "instant" });
+    navigateClientSide(href, e);
   };
 
   return (

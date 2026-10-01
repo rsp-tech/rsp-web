@@ -1,6 +1,6 @@
 "use client";
 
-import { ChevronRight, FileText, Music } from "lucide-react";
+import { FileText, Music } from "lucide-react";
 import { useEffect, useRef } from "react";
 import {
   Accordion,
@@ -17,6 +17,7 @@ import type {
   EnrichedRecording,
   Recording,
 } from "@/types";
+import { MaterialLineage } from "../material-lineage";
 import { RecordingMeta } from "../recording-meta";
 
 interface SearchResultsProps {
@@ -257,17 +258,10 @@ export function SearchResults({
                       <FileText className="w-4 h-4 text-warning shrink-0" />
                       <span className="font-semibold truncate">{mat.name}</span>
                     </div>
-                    {(mat.category || mat.recording) && (
-                      <div className="text-xxs text-muted-foreground pl-6 flex items-center gap-1 font-medium truncate">
-                        {mat.category && <span>{mat.category.name}</span>}
-                        {mat.category && mat.recording && (
-                          <ChevronRight className="w-3 h-3 shrink-0" />
-                        )}
-                        {mat.recording && (
-                          <span className="truncate">{mat.recording.name}</span>
-                        )}
-                      </div>
-                    )}
+                    <MaterialLineage
+                      category={mat.category}
+                      recording={mat.recording}
+                    />
                   </button>
                 ))}
               </div>

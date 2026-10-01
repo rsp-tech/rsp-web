@@ -1,4 +1,4 @@
-import { type NextRequest } from "next/server";
+import type { NextRequest } from "next/server";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 const mockGetClaims = vi.fn();
@@ -16,7 +16,9 @@ const makeRequest = (token?: string): NextRequest => {
   if (token !== undefined) {
     headers.set("Authorization", `Bearer ${token}`);
   }
-  return new Request("https://localhost/api/sync/7", { headers }) as unknown as NextRequest;
+  return new Request("https://localhost/api/sync/7", {
+    headers,
+  }) as unknown as NextRequest;
 };
 
 describe("api/sync/auth with supabase.auth.getClaims", () => {
@@ -30,7 +32,9 @@ describe("api/sync/auth with supabase.auth.getClaims", () => {
 
   it("rejects request without Authorization header", async () => {
     const { getAuthenticatedRoleId } = await import("./auth");
-    const req = new Request("https://localhost/api/sync/7", { headers: {} }) as unknown as NextRequest;
+    const req = new Request("https://localhost/api/sync/7", {
+      headers: {},
+    }) as unknown as NextRequest;
     const res = await getAuthenticatedRoleId(req);
 
     expect(res.errorResponse).toBeDefined();
@@ -96,7 +100,9 @@ describe("api/sync/auth with supabase.auth.getClaims", () => {
     const res = await getAuthenticatedRoleId(makeRequest("public-jwt-token"));
     expect(res.errorResponse?.status).toBe(403);
     const body = await res.errorResponse?.json();
-    expect(body.error).toBe("Forbidden: user has a public role, use public GET /api/sync");
+    expect(body.error).toBe(
+      "Forbidden: user has a public role, use public GET /api/sync",
+    );
   });
 
   it("rejects token without valid restricted role_id with 403", async () => {
@@ -114,7 +120,9 @@ describe("api/sync/auth with supabase.auth.getClaims", () => {
     const res = await getAuthenticatedRoleId(makeRequest("no-role-token"));
     expect(res.errorResponse?.status).toBe(403);
     const body = await res.errorResponse?.json();
-    expect(body.error).toBe("Forbidden: no assigned restricted role found in token");
+    expect(body.error).toBe(
+      "Forbidden: no assigned restricted role found in token",
+    );
   });
 
   it("authenticates getAuthenticatedUser and constructs user object", async () => {

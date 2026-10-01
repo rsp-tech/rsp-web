@@ -11,6 +11,23 @@ if (!SYNC_RESOURCE) {
   throw new Error("Missing SYNC_RESOURCE");
 }
 
+const handleSyncDeltaError = (
+  error: unknown,
+  event: string,
+  context: string,
+): NextResponse => {
+  console.error(`${context} failed:`, error);
+  axiomLogger.error(`${context} failed`, {
+    event,
+    route: "/api/sync",
+    error: error instanceof Error ? error.message : String(error),
+  });
+  return NextResponse.json(
+    { error: error instanceof Error ? error.message : String(error) },
+    { status: 500 },
+  );
+};
+
 export const GET = withApiLogging("/api/sync", async (request: NextRequest) => {
   const { searchParams } = request.nextUrl;
   const entries = Array.from(searchParams.entries());
@@ -32,15 +49,10 @@ export const GET = withApiLogging("/api/sync", async (request: NextRequest) => {
       },
     });
   } catch (error) {
-    console.error("Public sync delta failed:", error);
-    axiomLogger.error("Public sync delta failed", {
-      event: "sync.public_error",
-      route: "/api/sync",
-      error: error instanceof Error ? error.message : String(error),
-    });
-    return NextResponse.json(
-      { error: (error as Error).message },
-      { status: 500 },
+    return handleSyncDeltaError(
+      error,
+      "sync.public_error",
+      "Public sync delta",
     );
   }
 });
@@ -74,16 +86,7 @@ export const POST = withApiLogging(
       const result = await computeRoleSyncDelta(body.watermarks, roleId);
       return NextResponse.json(result);
     } catch (error) {
-      console.error("Role sync delta failed:", error);
-      axiomLogger.error("Role sync delta failed", {
-        event: "sync.role_error",
-        route: "/api/sync",
-        error: error instanceof Error ? error.message : String(error),
-      });
-      return NextResponse.json(
-        { error: (error as Error).message },
-        { status: 500 },
-      );
+      return handleSyncDeltaError(error, "sync.role_error", "Role sync delta");
     }
   },
 );

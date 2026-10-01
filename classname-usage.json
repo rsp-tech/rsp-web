@@ -1,6 +1,6 @@
 {
   "totalClasses": 366,
-  "timestamp": "2026-09-30T17:16:58.828Z",
+  "timestamp": "2026-10-01T14:38:54.263Z",
   "baselineCSSBytes": 67111,
   "baselineBrotliBytes": 9851,
   "newlyAddedClasses": [],
@@ -159,6 +159,9 @@
       "src\\app\\queries\\_components\\query-attachment-picker.tsx",
       "src\\app\\queries\\_components\\query-list.tsx",
       "src\\app\\queries\\page.tsx"
+    ],
+    "src\\components\\material-lineage.tsx": [
+      "src\\app\\queries\\_components\\attachment-content-dialog.tsx"
     ]
   },
   "data": [
@@ -532,7 +535,7 @@
     },
     {
       "className": "cursor-pointer",
-      "frequency": 94,
+      "frequency": 93,
       "length": 14,
       "uncompressedBytes": 31,
       "brotliBytesUpperLimit": 31,
@@ -940,7 +943,7 @@
     },
     {
       "className": "flex",
-      "frequency": 430,
+      "frequency": 429,
       "length": 4,
       "uncompressedBytes": 19,
       "brotliBytesUpperLimit": 23,
@@ -1108,7 +1111,7 @@
     },
     {
       "className": "font-medium",
-      "frequency": 35,
+      "frequency": 34,
       "length": 11,
       "uncompressedBytes": 94,
       "brotliBytesUpperLimit": 50,
@@ -1140,7 +1143,7 @@
     },
     {
       "className": "gap-1",
-      "frequency": 75,
+      "frequency": 74,
       "length": 5,
       "uncompressedBytes": 26,
       "brotliBytesUpperLimit": 30,
@@ -1148,7 +1151,7 @@
     },
     {
       "className": "gap-1.5",
-      "frequency": 82,
+      "frequency": 81,
       "length": 7,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0,
@@ -1356,7 +1359,7 @@
     },
     {
       "className": "h-3",
-      "frequency": 76,
+      "frequency": 74,
       "length": 3,
       "uncompressedBytes": 37,
       "brotliBytesUpperLimit": 41,
@@ -1596,7 +1599,7 @@
     },
     {
       "className": "items-center",
-      "frequency": 199,
+      "frequency": 198,
       "length": 12,
       "uncompressedBytes": 33,
       "brotliBytesUpperLimit": 30,
@@ -1796,7 +1799,7 @@
     },
     {
       "className": "max-w-xs",
-      "frequency": 14,
+      "frequency": 13,
       "length": 8,
       "uncompressedBytes": 40,
       "brotliBytesUpperLimit": 44,
@@ -2156,7 +2159,7 @@
     },
     {
       "className": "p-0",
-      "frequency": 22,
+      "frequency": 21,
       "length": 3,
       "uncompressedBytes": 15,
       "brotliBytesUpperLimit": 19,
@@ -2268,7 +2271,7 @@
     },
     {
       "className": "pl-6",
-      "frequency": 5,
+      "frequency": 4,
       "length": 4,
       "uncompressedBytes": 44,
       "brotliBytesUpperLimit": 48,
@@ -2364,7 +2367,7 @@
     },
     {
       "className": "px-2",
-      "frequency": 34,
+      "frequency": 33,
       "length": 4,
       "uncompressedBytes": 46,
       "brotliBytesUpperLimit": 50,
@@ -2404,7 +2407,7 @@
     },
     {
       "className": "py-0.5",
-      "frequency": 22,
+      "frequency": 21,
       "length": 6,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0,
@@ -2604,7 +2607,7 @@
     },
     {
       "className": "shrink-0",
-      "frequency": 106,
+      "frequency": 105,
       "length": 8,
       "uncompressedBytes": 24,
       "brotliBytesUpperLimit": 28,
@@ -2828,7 +2831,7 @@
     },
     {
       "className": "text-muted-foreground",
-      "frequency": 196,
+      "frequency": 195,
       "length": 21,
       "uncompressedBytes": 53,
       "brotliBytesUpperLimit": 47,
@@ -2836,7 +2839,7 @@
     },
     {
       "className": "text-primary",
-      "frequency": 88,
+      "frequency": 87,
       "length": 12,
       "uncompressedBytes": 35,
       "brotliBytesUpperLimit": 35,
@@ -2892,7 +2895,7 @@
     },
     {
       "className": "text-xs",
-      "frequency": 179,
+      "frequency": 178,
       "length": 7,
       "uncompressedBytes": 92,
       "brotliBytesUpperLimit": 57,
@@ -2900,7 +2903,7 @@
     },
     {
       "className": "text-xxs",
-      "frequency": 61,
+      "frequency": 60,
       "length": 8,
       "uncompressedBytes": 65,
       "brotliBytesUpperLimit": 55,
@@ -2964,7 +2967,7 @@
     },
     {
       "className": "truncate",
-      "frequency": 56,
+      "frequency": 53,
       "length": 8,
       "uncompressedBytes": 68,
       "brotliBytesUpperLimit": 52,
@@ -3012,7 +3015,7 @@
     },
     {
       "className": "w-3",
-      "frequency": 73,
+      "frequency": 71,
       "length": 3,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40,
