@@ -32,7 +32,7 @@ export const GET = withApiLogging(
 
       return res;
     } catch (error) {
-      console.error(error);
+      console.warn("[Sync Role Backup Error]", error);
       axiomLogger.error("Failed to fetch role backup zip", {
         event: "sync.role_backup_error",
         route: "/api/sync/[id]",
