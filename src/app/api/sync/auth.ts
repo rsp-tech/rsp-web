@@ -7,11 +7,13 @@ export interface AuthenticatedRoleResult {
   errorResponse?: NextResponse;
 }
 
-/**
- * Extracts and securely verifies the caller's role_id from their Bearer JWT.
- * Client never passes role_id; server resolves it directly from the token.
- * Rejects unauthenticated callers, expired tokens, or users without a restricted role.
- */
+export interface AuthenticatedUserResult {
+  user?: User;
+  errorResponse?: Response;
+}
+
+const GENERIC_AUTH_ERROR = "Unauthorized: invalid or expired auth token";
+
 export const getAuthenticatedRoleId = async (
   request: NextRequest,
 ): Promise<AuthenticatedRoleResult> => {
@@ -19,7 +21,7 @@ export const getAuthenticatedRoleId = async (
   if (!authHeader?.startsWith("Bearer ")) {
     return {
       errorResponse: NextResponse.json(
-        { error: "Unauthorized: Bearer token required for role sync" },
+        { error: GENERIC_AUTH_ERROR },
         { status: 401 },
       ),
     };
@@ -27,22 +29,25 @@ export const getAuthenticatedRoleId = async (
 
   const token = authHeader.slice(7);
   const supabase = getSupabaseServerClient();
+  const { data, error } = await supabase.auth.getClaims(token);
 
-  const {
-    data: { user },
-    error: authError,
-  } = await supabase.auth.getUser(token);
-
-  if (authError || !user) {
+  if (error || !data?.claims) {
     return {
       errorResponse: NextResponse.json(
-        { error: "Unauthorized: invalid or expired auth token" },
+        { error: GENERIC_AUTH_ERROR },
         { status: 401 },
       ),
     };
   }
 
-  if (user.app_metadata["is_public"]) {
+  const claims = data.claims as {
+    app_metadata?: {
+      role_id?: number;
+      is_public?: boolean;
+    };
+  };
+
+  if (claims.app_metadata?.["is_public"]) {
     return {
       errorResponse: NextResponse.json(
         {
@@ -53,8 +58,8 @@ export const getAuthenticatedRoleId = async (
     };
   }
 
-  const roleId = user.app_metadata["role_id"] as number | undefined;
-  if (!roleId) {
+  const roleId = claims.app_metadata?.["role_id"];
+  if (typeof roleId !== "number" || roleId <= 0) {
     return {
       errorResponse: NextResponse.json(
         { error: "Forbidden: no assigned restricted role found in token" },
@@ -66,34 +71,54 @@ export const getAuthenticatedRoleId = async (
   return { roleId };
 };
 
-export interface AuthenticatedUserResult {
-  user?: User;
-  errorResponse?: Response;
-}
-
 export const getAuthenticatedUser = async (
   request: NextRequest,
 ): Promise<AuthenticatedUserResult> => {
   const authHeader = request.headers.get("Authorization");
   if (!authHeader?.startsWith("Bearer ")) {
     return {
-      errorResponse: new Response("Unauthorized", { status: 401 }),
+      errorResponse: new Response(GENERIC_AUTH_ERROR, { status: 401 }),
     };
   }
 
-  const token = authHeader.slice(7);
-  const supabase = getSupabaseServerClient();
-
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser(token);
-
-  if (error || !user) {
+  const token = authHeader.slice(7).trim();
+  if (!token) {
     return {
-      errorResponse: new Response("Unauthorized", { status: 401 }),
+      errorResponse: new Response(GENERIC_AUTH_ERROR, { status: 401 }),
     };
   }
+
+  const supabase = getSupabaseServerClient();
+  const { data, error } = await supabase.auth.getClaims(token);
+
+  if (error || !data?.claims) {
+    return {
+      errorResponse: new Response(GENERIC_AUTH_ERROR, { status: 401 }),
+    };
+  }
+
+  const claims = data.claims as {
+    sub?: string;
+    app_metadata?: Record<string, unknown>;
+    user_metadata?: Record<string, unknown>;
+    aud?: string;
+    email?: string;
+  };
+
+  if (!claims.sub) {
+    return {
+      errorResponse: new Response(GENERIC_AUTH_ERROR, { status: 401 }),
+    };
+  }
+
+  const user: User = {
+    id: claims.sub,
+    app_metadata: claims.app_metadata || {},
+    user_metadata: claims.user_metadata || {},
+    aud: claims.aud || "authenticated",
+    created_at: "",
+    email: claims.email,
+  };
 
   return { user };
 };
