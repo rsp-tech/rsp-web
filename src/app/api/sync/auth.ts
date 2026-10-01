@@ -27,7 +27,16 @@ export const getAuthenticatedRoleId = async (
     };
   }
 
-  const token = authHeader.slice(7);
+  const token = authHeader.slice(7).trim();
+  if (!token) {
+    return {
+      errorResponse: NextResponse.json(
+        { error: GENERIC_AUTH_ERROR },
+        { status: 401 },
+      ),
+    };
+  }
+
   const supabase = getSupabaseServerClient();
   const { data, error } = await supabase.auth.getClaims(token);
 

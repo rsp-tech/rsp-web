@@ -223,12 +223,12 @@ export const sendAxiomLog = (
 
   const eventPayload = {
     _time: new Date().toISOString(),
-    service: "rsp-web",
     level,
     event: eventName,
     message,
     environment: process.env.NODE_ENV || "production",
     ...sanitizedAttributes,
+    service: "rsp-web",
   };
 
   const ingestPromise = fetch(url, {

@@ -1,14 +1,12 @@
 import { type NextRequest, NextResponse } from "next/server";
-import { FEATURE_FLAGS } from "@/constants";
 import type { Json } from "@/database.types";
 import { withApiLogging } from "@/lib/axiom-logger";
-import { isFeatureFlagEnabled } from "@/lib/feature-flags-service";
 import {
   getSupabaseServerClient,
   handleMutationResult,
 } from "@/lib/supabase-server";
 import type { QueryAttachment } from "@/types";
-import { validateAttachments } from "./query-utils";
+import { validateQueryAttachments } from "./query-utils";
 
 interface QueryRequestBody {
   guest_name?: string | null;
@@ -31,25 +29,12 @@ export const POST = withApiLogging("/api/queries", async (req: NextRequest) => {
       );
     }
 
-    const attachError = validateAttachments(body.attachments, 5);
-    if (attachError) {
-      return NextResponse.json({ error: attachError }, { status: 400 });
-    }
-
-    const hasFiles = (body.attachments ?? []).some(
-      (a) => a.type === "image" || a.type === "pdf",
+    const attachmentError = await validateQueryAttachments(
+      body.attachments,
+      body.user_id,
     );
-    if (hasFiles) {
-      const allowed = await isFeatureFlagEnabled(
-        FEATURE_FLAGS.QUERY_FILE_UPLOADS,
-        body.user_id,
-      );
-      if (!allowed) {
-        return NextResponse.json(
-          { error: "File uploads are currently disabled" },
-          { status: 403 },
-        );
-      }
+    if (attachmentError) {
+      return attachmentError;
     }
 
     const supabase = getSupabaseServerClient();

@@ -391,6 +391,7 @@ export const QUERY_KEY = {
   MATERIALS_CACHE_LIST: "materials-cache-list",
   FEATURE_CONFIG: "feature-config",
 } as const;
+export const MAX_QUERY_ATTACHMENTS = 5;
 
 // Search
 export const SEARCH_LIMIT = 15;
