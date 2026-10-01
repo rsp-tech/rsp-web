@@ -109,6 +109,9 @@ export const useSearch = () => {
     async (
       term: string,
       filters?: RecordingSearchFilters,
+      tolerance?: number,
+      exact?: boolean,
+      searchFields?: string[],
     ): Promise<SearchResult[]> => {
       const trimmedTerm = term.trim();
       if (!trimmedTerm) return [];
@@ -147,6 +150,9 @@ export const useSearch = () => {
             targets,
             reqId,
             filters,
+            tolerance,
+            exact,
+            searchFields,
           },
         });
       });

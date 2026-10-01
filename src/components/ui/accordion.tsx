@@ -23,15 +23,19 @@ const AccordionItem = (
 export interface AccordionTriggerProps
   extends React.ComponentProps<typeof AccordionPrimitive.Trigger> {
   action?: React.ReactNode;
+  headerClassName?: string;
 }
 
 const AccordionTrigger = ({
   className,
   children,
   action,
+  headerClassName,
   ...props
 }: AccordionTriggerProps) => (
-  <AccordionPrimitive.Header className="flex items-center justify-between w-full">
+  <AccordionPrimitive.Header
+    className={cn("flex items-center justify-between w-full", headerClassName)}
+  >
     <AccordionPrimitive.Trigger
       data-slot="accordion-trigger"
       className={cn(

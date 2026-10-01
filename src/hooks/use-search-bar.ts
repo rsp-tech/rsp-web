@@ -19,6 +19,7 @@ import type {
   RecordingSearchFilters,
 } from "@/types";
 import { useCategories } from "./use-categories";
+import { useSearchSettings } from "./use-search-settings";
 
 interface FilteredHits {
   categories: Category[];
@@ -26,11 +27,21 @@ interface FilteredHits {
   materials: EnrichedMaterialSearchResult[];
 }
 
-export function useSearchBar() {
+export const useSearchBar = () => {
   const router = useRouter();
   const pathname = usePathname();
   const { searchAll } = useSearch();
   const { data: allCategories = [] } = useCategories();
+  const {
+    effectiveTolerance,
+    tolerance,
+    setTolerance,
+    searchFields,
+    setSearchFields,
+    toggleSearchField,
+    exactMatch,
+    setExactMatch,
+  } = useSearchSettings();
 
   const [term, setTerm] = useState("");
   const [scope, setScope] = useState<SearchScope>("full");
@@ -110,7 +121,13 @@ export function useSearchBar() {
           }
         }
 
-        const rawResults = await searchAll(term, activeFilters);
+        const rawResults = await searchAll(
+          term,
+          activeFilters,
+          effectiveTolerance,
+          exactMatch,
+          searchFields,
+        );
         const db = await getDB();
         if (!db) return;
 
@@ -197,7 +214,17 @@ export function useSearchBar() {
     }, 250);
 
     return () => clearTimeout(delayDebounce);
-  }, [term, scope, currentCategory, filters, searchAll, allCategories]);
+  }, [
+    term,
+    scope,
+    currentCategory,
+    filters,
+    searchAll,
+    allCategories,
+    effectiveTolerance,
+    exactMatch,
+    searchFields,
+  ]);
 
   const handleSelectCategory = (cat: Category) => {
     router.push(categoryPath(cat.url_path));
@@ -246,5 +273,13 @@ export function useSearchBar() {
     handleSelectCategory,
     handleSelectRecording,
     handleSelectMaterial,
+    tolerance,
+    setTolerance,
+    effectiveTolerance,
+    exactMatch,
+    setExactMatch,
+    searchFields,
+    setSearchFields,
+    toggleSearchField,
   };
-}
+};

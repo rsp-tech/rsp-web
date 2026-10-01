@@ -80,5 +80,19 @@ describe.concurrent("src/components/search/search-results.tsx suite", () => {
       hasCategoryContext: false,
     });
     expect(populated).toBeDefined();
+
+    const withSearchFields = SearchResults({
+      categories: [],
+      recordings: [],
+      materials: [],
+      onSelectCategory: vi.fn(),
+      onSelectRecording: vi.fn(),
+      onSelectMaterial: vi.fn(),
+      term: "Gita",
+      hasCategoryContext: false,
+      searchFields: ["name", "speaker_names"],
+      toggleSearchField: vi.fn(),
+    });
+    expect(withSearchFields).toBeDefined();
   });
 });

@@ -249,6 +249,9 @@ export interface SearchPayload {
   targets: SearchTarget[];
   reqId: string;
   filters?: RecordingSearchFilters;
+  tolerance?: number;
+  exact?: boolean;
+  searchFields?: string[];
 }
 
 export interface SearchResult {

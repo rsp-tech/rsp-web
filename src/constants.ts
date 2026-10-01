@@ -394,9 +394,9 @@ export const QUERY_KEY = {
 export const MAX_QUERY_ATTACHMENTS = 5;
 
 // Search
-export const SEARCH_LIMIT = 15;
+export const SEARCH_LIMIT = 20;
 export const SEARCH_TOLERANCE = 1;
-export const SEARCH_BOOST_NAME = 2.0;
+export const SEARCH_BOOST_NAME = 5.0;
 export const SEARCH_BOOST_SPEAKER = 1.5;
 export const SEARCH_BOOST_EVENT = 1.2;
 export const INVALIDATE_ALL_THRESHOLD = 10;

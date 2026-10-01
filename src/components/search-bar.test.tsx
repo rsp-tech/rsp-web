@@ -37,6 +37,15 @@ vi.mock("@/hooks/use-search-bar", () => ({
     setScope: vi.fn(),
     results: { categories: [], recordings: [], materials: [] },
     currentCategory: null,
+    fuzzyEnabled: true,
+    setFuzzyEnabled: vi.fn(),
+    tolerance: 1,
+    setTolerance: vi.fn(),
+    effectiveTolerance: 1,
+    exactMatch: false,
+    setExactMatch: vi.fn(),
+    searchFields: ["name", "speaker_names", "event_name", "venue_name"],
+    toggleSearchField: vi.fn(),
   }),
 }));
 

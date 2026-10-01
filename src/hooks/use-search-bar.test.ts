@@ -23,6 +23,19 @@ vi.mock("./use-categories", () => ({
   }),
 }));
 
+vi.mock("./use-search-settings", () => ({
+  useSearchSettings: () => ({
+    effectiveTolerance: 1,
+    tolerance: 1,
+    setTolerance: vi.fn(),
+    searchFields: ["name", "speaker_names", "event_name", "venue_name"],
+    setSearchFields: vi.fn(),
+    toggleSearchField: vi.fn(),
+    exactMatch: false,
+    setExactMatch: vi.fn(),
+  }),
+}));
+
 vi.mock("@/lib/idb", () => ({
   getDB: () =>
     Promise.resolve({

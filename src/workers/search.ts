@@ -332,8 +332,31 @@ const toRecordingWhere = (
   return clauses.length === 1 ? clauses[0] : { and: clauses };
 };
 
+const VALID_REC_PROPS = [
+  "name",
+  "speaker_names",
+  "venue_name",
+  "event_name",
+  "languages",
+];
+
 const runSearchAll = async (payload: SearchPayload): Promise<void> => {
-  const { term, targets, reqId, filters } = payload;
+  const { term, targets, reqId, filters, tolerance, exact, searchFields } =
+    payload;
+  const searchTolerance =
+    typeof tolerance === "number" ? tolerance : SEARCH_TOLERANCE;
+  const isExact = Boolean(exact);
+
+  const activeRecProps =
+    searchFields && searchFields.length > 0
+      ? searchFields.filter((f) => VALID_REC_PROPS.includes(f))
+      : VALID_REC_PROPS;
+
+  const recordingProperties =
+    activeRecProps.length > 0 ? activeRecProps : ["name"];
+
+  const shouldSearchNamedStores =
+    !searchFields || searchFields.includes("name");
 
   try {
     const currentEngine = await getSearchEngine();
@@ -348,13 +371,10 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
             currentEngine.recordingsDb,
             {
               term,
-              properties: [
-                "name",
-                "speaker_names",
-                "venue_name",
-                "event_name",
-                "languages",
-              ],
+              exact: isExact,
+              properties: recordingProperties as Array<
+                keyof RecordingSearchDocument
+              >,
               boost: {
                 name: SEARCH_BOOST_NAME,
                 speaker_names: SEARCH_BOOST_SPEAKER,
@@ -362,7 +382,7 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
               },
               where: recordingWhere,
               limit: recordingLimit,
-              tolerance: SEARCH_TOLERANCE,
+              tolerance: searchTolerance,
             },
           );
 
@@ -373,6 +393,9 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
         }
 
         if (target === STORE.CATEGORIES) {
+          if (!shouldSearchNamedStores) {
+            return { target, hits: [] };
+          }
           const clauses: CategoryWhere[] = [];
           if (filters?.category_path !== undefined) {
             clauses.push({ path: { eq: filters.category_path } });
@@ -395,14 +418,19 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
             currentEngine.categoriesDb,
             {
               term,
+              exact: isExact,
               properties: ["name"],
               boost: { name: SEARCH_BOOST_NAME },
               where: categoryWhere,
               limit: SEARCH_LIMIT,
-              tolerance: SEARCH_TOLERANCE,
+              tolerance: searchTolerance,
             },
           );
           return { target, hits: result.hits.map((hit) => hit.document) };
+        }
+
+        if (!shouldSearchNamedStores) {
+          return { target, hits: [] };
         }
 
         const clauses: MaterialWhere[] = [];
@@ -429,9 +457,10 @@ const runSearchAll = async (payload: SearchPayload): Promise<void> => {
           currentEngine.materialsDb,
           {
             term,
+            exact: isExact,
             properties: ["name"],
             limit: SEARCH_LIMIT,
-            tolerance: SEARCH_TOLERANCE,
+            tolerance: searchTolerance,
             where: materialWhere,
           },
         );

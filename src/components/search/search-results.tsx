@@ -8,6 +8,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+import { Checkbox } from "@/components/ui/checkbox";
+import type { SearchFieldKey } from "@/hooks/use-search-settings";
 import { trackEvent } from "@/lib/analytics";
 import { getCategoryImageUrl } from "@/lib/storage";
 import { categoryPath } from "@/lib/utils";
@@ -20,6 +22,13 @@ import type {
 import { MaterialLineage } from "../material-lineage";
 import { RecordingMeta } from "../recording-meta";
 
+const SEARCH_FIELD_ITEMS: { id: SearchFieldKey; label: string }[] = [
+  { id: "name", label: "Titles" },
+  { id: "speaker_names", label: "Speakers" },
+  { id: "event_name", label: "Events" },
+  { id: "venue_name", label: "Venues" },
+];
+
 interface SearchResultsProps {
   categories: Category[];
   recordings: EnrichedRecording[];
@@ -29,9 +38,11 @@ interface SearchResultsProps {
   onSelectMaterial: (mat: EnrichedMaterialSearchResult) => void;
   term: string;
   hasCategoryContext: boolean;
+  searchFields?: SearchFieldKey[];
+  toggleSearchField?: (field: SearchFieldKey) => void;
 }
 
-export function SearchResults({
+export const SearchResults = ({
   categories,
   recordings,
   materials,
@@ -40,7 +51,9 @@ export function SearchResults({
   onSelectMaterial,
   term,
   hasCategoryContext,
-}: SearchResultsProps) {
+  searchFields,
+  toggleSearchField,
+}: SearchResultsProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const hasResults =
@@ -86,11 +99,42 @@ export function SearchResults({
     );
   }
 
+  const searchingInTags = toggleSearchField && searchFields && (
+    <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 text-xxs">
+      <span className="font-semibold text-muted-foreground whitespace-nowrap">
+        Searching in:
+      </span>
+      <div className="flex flex-wrap items-center gap-2">
+        {SEARCH_FIELD_ITEMS.map((field) => {
+          const isChecked = searchFields.includes(field.id);
+          return (
+            <label
+              key={field.id}
+              htmlFor={`search-field-${field.id}`}
+              className="flex items-center gap-1 cursor-pointer select-none text-xxs text-foreground font-medium"
+            >
+              <Checkbox
+                id={`search-field-${field.id}`}
+                checked={isChecked}
+                onCheckedChange={() => toggleSearchField(field.id)}
+                className="size-3.5"
+              />
+              <span>{field.label}</span>
+            </label>
+          );
+        })}
+      </div>
+    </div>
+  );
+
   if (!hasResults) {
     return (
-      <p className="py-6 text-center text-sm text-muted-foreground">
-        No matching results found
-      </p>
+      <div className="py-6 px-4 flex flex-col items-center gap-3 text-center">
+        <p className="text-sm text-muted-foreground">
+          No matching results found
+        </p>
+        {searchingInTags}
+      </div>
     );
   }
 
@@ -113,54 +157,65 @@ export function SearchResults({
         key={`${recordings.length}-${categories.length}-${materials.length}`}
       >
         {/* Recordings Section */}
-        {recordings.length > 0 && (
+        {(recordings.length > 0 || searchingInTags) && (
           <AccordionItem value="recordings" key="recordings">
-            <AccordionTrigger className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:transition-all">
+            <AccordionTrigger
+              headerClassName="flex-col sm:flex-row sm:items-center items-start gap-1.5 sm:gap-2"
+              className="hover:no-underline py-2 px-2 text-xxs font-bold tracking-wider uppercase text-muted-foreground opacity-80 hover:transition-all"
+              action={searchingInTags}
+            >
               Recordings ({recordings.length})
             </AccordionTrigger>
             <AccordionContent className="pb-2">
-              <div className="flex flex-col gap-1">
-                {recordings.map((rec, idx) => (
-                  <button
-                    key={rec.id}
-                    type="button"
-                    data-search-item
-                    onClick={() => {
-                      const idxClicked = recordings.indexOf(rec);
-                      trackEvent("search_result_clicked", {
-                        query_term: term,
-                        clicked_slug: rec.category
-                          ? `${categoryPath(rec.category.url_path)}?q=${rec.id}`
-                          : `?q=${rec.id}`,
-                        position_index: idxClicked,
-                      });
-                      onSelectRecording(rec);
-                    }}
-                    className="relative w-full text-left flex gap-2 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none transition-all border border-transparent hover:border-border cursor-pointer opacity-0"
-                    style={{
-                      animation:
-                        "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
-                      animationDelay: `${idx * 50}ms`,
-                    }}
-                  >
-                    <Music className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                    <RecordingMeta rec={rec} sm />
-                    {rec.category && (
-                      <span
-                        className="absolute text-xxs italic bg-primary px-1.5 rounded-full font-medium shrink-0"
-                        style={{
-                          top: "-0.1rem",
-                          right: "-0.1rem",
-                          opacity: 0.8,
-                          color: "white",
-                        }}
-                      >
-                        {rec.category.name}
-                      </span>
-                    )}
-                  </button>
-                ))}
-              </div>
+              {recordings.length === 0 ? (
+                <p className="py-2 px-3 text-xs text-muted-foreground">
+                  No recordings found matching current search fields and
+                  filters.
+                </p>
+              ) : (
+                <div className="flex flex-col gap-1">
+                  {recordings.map((rec, idx) => (
+                    <button
+                      key={rec.id}
+                      type="button"
+                      data-search-item
+                      onClick={() => {
+                        const idxClicked = recordings.indexOf(rec);
+                        trackEvent("search_result_clicked", {
+                          query_term: term,
+                          clicked_slug: rec.category
+                            ? `${categoryPath(rec.category.url_path)}?q=${rec.id}`
+                            : `?q=${rec.id}`,
+                          position_index: idxClicked,
+                        });
+                        onSelectRecording(rec);
+                      }}
+                      className="relative w-full text-left flex gap-2 px-3 py-2 rounded-lg text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground focus:outline-none transition-all border border-transparent hover:border-border cursor-pointer opacity-0"
+                      style={{
+                        animation:
+                          "fadeInUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+                        animationDelay: `${idx * 50}ms`,
+                      }}
+                    >
+                      <Music className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                      <RecordingMeta rec={rec} sm />
+                      {rec.category && (
+                        <span
+                          className="absolute text-xxs italic bg-primary px-1.5 rounded-full font-medium shrink-0"
+                          style={{
+                            top: "-0.1rem",
+                            right: "-0.1rem",
+                            opacity: 0.8,
+                            color: "white",
+                          }}
+                        >
+                          {rec.category.name}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
             </AccordionContent>
           </AccordionItem>
         )}
@@ -271,4 +326,4 @@ export function SearchResults({
       </Accordion>
     </div>
   );
-}
+};

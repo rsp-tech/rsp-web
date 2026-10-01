@@ -1,8 +1,7 @@
-- [ ] ?nxtPslug=bhaktivedanta-raja-vidyalaya/bhakti-vaibhav-(sb-canto-1-6)/sb-canto-3 --- urlPath does not have -/_ between 1 and 6
-- [ ] Checkbox to disable fuzzy search
+- [x] Checkbox to disable fuzzy search
 - [ ] TipTap for queries page with mentions
-- [ ] Use JWT for auth optimizations
-    
+- [ ] re-review search.ts and dry-refactor + standardize materials and categories
+- [ ] re-review use-search-settings --- may be use useSyncExternalStore
 
 # Release Requirements
 

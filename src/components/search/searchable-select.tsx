@@ -32,11 +32,12 @@ interface SearchableSelectProps {
   className?: string;
   searchable?: boolean;
   style?: React.CSSProperties;
+  disabled?: boolean;
 }
 
 const MIN_SEARCHABLE = 6;
 
-export function SearchableSelect({
+export const SearchableSelect = ({
   options,
   value,
   onChange,
@@ -45,7 +46,8 @@ export function SearchableSelect({
   className,
   style,
   searchable,
-}: SearchableSelectProps) {
+  disabled,
+}: SearchableSelectProps) => {
   const [open, setOpen] = useState(false);
 
   const selectedOption = options.find((opt) => opt.value === value);
@@ -58,6 +60,7 @@ export function SearchableSelect({
           variant="outline"
           role="combobox"
           aria-expanded={open}
+          disabled={disabled}
           className={cn(
             "w-full justify-between h-8 text-xs bg-background border-border text-left",
             className,
@@ -105,4 +108,4 @@ export function SearchableSelect({
       </PopoverContent>
     </Popover>
   );
-}
+};

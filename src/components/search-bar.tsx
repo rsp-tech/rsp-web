@@ -16,7 +16,7 @@ const SearchBarDropdownContent = dynamic(
   { ssr: false },
 );
 
-export function SearchBar() {
+export const SearchBar = () => {
   const searchBarState = useSearchBar();
   const { term, setTerm, searching, showDropdown, setShowDropdown, filters } =
     searchBarState;
@@ -77,4 +77,4 @@ export function SearchBar() {
       </Popover>
     </div>
   );
-}
+};
