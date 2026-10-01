@@ -20,4 +20,3 @@ export const getCachedSyncMeta = async (): Promise<Record<string, string>> => {
 
   return toUpdatedAtMap(data || []);
 };
-

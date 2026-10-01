@@ -32,7 +32,9 @@ const getCachedCategoryPageData = async (
   cacheLife("month");
   cacheTag("category-page-data", `category:${urlPath}`);
 
-  console.log(`[CACHE MISS] getCachedCategoryPageData executing for: "${urlPath}"`);
+  console.log(
+    `[CACHE MISS] getCachedCategoryPageData executing for: "${urlPath}"`,
+  );
 
   if (urlPath) {
     if (!isValidCategoryPath(urlPath)) {
@@ -52,11 +54,7 @@ const getCachedCategoryPageData = async (
   );
 
   if (error) {
-    console.error(
-      "getCachedCategoryPageData rpc error: ",
-      urlPath,
-      error,
-    );
+    console.error("getCachedCategoryPageData rpc error: ", urlPath, error);
     axiomLogger.error("getCachedCategoryPageData RPC error", {
       event: "category.rpc_error",
       url_path: urlPath,
@@ -65,7 +63,9 @@ const getCachedCategoryPageData = async (
     return { data: null, status: 500 };
   }
 
-  console.log(`[CACHE STORE] getCachedCategoryPageData succeeded for: "${urlPath}"`);
+  console.log(
+    `[CACHE STORE] getCachedCategoryPageData succeeded for: "${urlPath}"`,
+  );
 
   return {
     data: (data as unknown as CategoryPageData) || null,

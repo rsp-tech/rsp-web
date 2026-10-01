@@ -108,4 +108,3 @@ export const getCachedUserTable = async (
     table,
   ).sort(sortByDate());
 };
-

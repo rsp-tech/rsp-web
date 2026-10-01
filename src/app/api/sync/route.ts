@@ -45,42 +45,45 @@ export const GET = withApiLogging("/api/sync", async (request: NextRequest) => {
   }
 });
 
-export const POST = withApiLogging("/api/sync", async (request: NextRequest) => {
-  try {
-    const body = (await request.json()) as SyncRequestBody;
+export const POST = withApiLogging(
+  "/api/sync",
+  async (request: NextRequest) => {
+    try {
+      const body = (await request.json()) as SyncRequestBody;
 
-    if (!body?.watermarks || typeof body.watermarks !== "object") {
+      if (!body?.watermarks || typeof body.watermarks !== "object") {
+        return NextResponse.json(
+          { error: "Invalid sync payload: watermarks object required" },
+          { status: 400 },
+        );
+      }
+
+      // Role-specific sync: resolve role_id strictly from JWT on the server
+      const { roleId, errorResponse } = await getAuthenticatedRoleId(request);
+      if (errorResponse) {
+        return errorResponse;
+      }
+
+      if (!roleId) {
+        return NextResponse.json(
+          { error: "Forbidden: user has no restricted role assigned" },
+          { status: 403 },
+        );
+      }
+
+      const result = await computeRoleSyncDelta(body.watermarks, roleId);
+      return NextResponse.json(result);
+    } catch (error) {
+      console.error("Role sync delta failed:", error);
+      axiomLogger.error("Role sync delta failed", {
+        event: "sync.role_error",
+        route: "/api/sync",
+        error: error instanceof Error ? error.message : String(error),
+      });
       return NextResponse.json(
-        { error: "Invalid sync payload: watermarks object required" },
-        { status: 400 },
+        { error: (error as Error).message },
+        { status: 500 },
       );
     }
-
-    // Role-specific sync: resolve role_id strictly from JWT on the server
-    const { roleId, errorResponse } = await getAuthenticatedRoleId(request);
-    if (errorResponse) {
-      return errorResponse;
-    }
-
-    if (!roleId) {
-      return NextResponse.json(
-        { error: "Forbidden: user has no restricted role assigned" },
-        { status: 403 },
-      );
-    }
-
-    const result = await computeRoleSyncDelta(body.watermarks, roleId);
-    return NextResponse.json(result);
-  } catch (error) {
-    console.error("Role sync delta failed:", error);
-    axiomLogger.error("Role sync delta failed", {
-      event: "sync.role_error",
-      route: "/api/sync",
-      error: error instanceof Error ? error.message : String(error),
-    });
-    return NextResponse.json(
-      { error: (error as Error).message },
-      { status: 500 },
-    );
-  }
-});
+  },
+);

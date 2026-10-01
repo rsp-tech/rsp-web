@@ -13,7 +13,13 @@ import {
   stripUpdatedAt,
 } from "@/lib/sync-utils";
 import { sortByDate } from "@/lib/utils";
-import type { Category, ClientWatermarks, Redirect, SyncResponseData, SyncTable } from "@/types";
+import type {
+  Category,
+  ClientWatermarks,
+  Redirect,
+  SyncResponseData,
+  SyncTable,
+} from "@/types";
 import {
   getCachedPublicTable,
   getCachedRoleExtraTable,
@@ -319,4 +325,3 @@ export const getCachedPublicUrlPaths = async (): Promise<string[]> => {
 
   return paths;
 };
-

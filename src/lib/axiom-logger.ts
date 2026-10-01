@@ -82,11 +82,17 @@ export const serializeError = (err: unknown): Record<string, unknown> => {
     "message" in err &&
     typeof (err as { message: unknown }).message === "string"
   ) {
-    const errorObj = err as { message: string; name?: unknown; stack?: unknown };
+    const errorObj = err as {
+      message: string;
+      name?: unknown;
+      stack?: unknown;
+    };
     return {
       error_message: errorObj.message,
       error_name: typeof errorObj.name === "string" ? errorObj.name : "Error",
-      ...(typeof errorObj.stack === "string" && { error_stack: errorObj.stack }),
+      ...(typeof errorObj.stack === "string" && {
+        error_stack: errorObj.stack,
+      }),
     };
   }
   return { error_raw: String(err) };
@@ -298,8 +304,7 @@ export const axiomLogger = {
     sendAxiomLog("warn", message, attributes),
   error: (message: string, attributes?: LogAttributes) =>
     sendAxiomLog("error", message, attributes),
-  request: (attributes: ApiRequestLogAttributes) =>
-    logApiRequest(attributes),
+  request: (attributes: ApiRequestLogAttributes) => logApiRequest(attributes),
   external: (attributes: ExternalRequestLogAttributes) =>
     logExternalRequest(attributes),
 };
@@ -313,9 +318,7 @@ export const withApiLogging = <
 ) => {
   return async (...args: TArgs): Promise<TReturn> => {
     const start = performance.now();
-    const req = args[0] as
-      | (Request & { nextUrl?: URL })
-      | undefined;
+    const req = args[0] as (Request & { nextUrl?: URL }) | undefined;
     const method = req?.method?.toUpperCase() || "GET";
 
     let slug: string | undefined;

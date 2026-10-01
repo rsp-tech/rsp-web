@@ -3,10 +3,7 @@ import {
   axiomLogger,
   isSensitiveKey,
   logApiRequest,
-  logExternalRequest,
   safeDecodeUri,
-  sanitizeAttributes,
-  sanitizeValue,
   scheduleTask,
   sendAxiomLog,
   serializeError,
@@ -289,9 +286,12 @@ describe("axiom-logger suite", () => {
       return Promise.resolve(new Response(JSON.stringify({ ingested: 1 })));
     });
 
-    const failingHandler = withApiLogging("/api/fail", async (_req: Request) => {
-      throw new Error("Database query timed out");
-    });
+    const failingHandler = withApiLogging(
+      "/api/fail",
+      async (_req: Request) => {
+        throw new Error("Database query timed out");
+      },
+    );
 
     await expect(
       failingHandler(new Request("https://localhost/api/fail")),
@@ -366,7 +366,9 @@ describe("axiom-logger suite", () => {
     it("safeDecodeUri decodes encoded strings and handles malformed strings gracefully", () => {
       expect(safeDecodeUri("%D8%A6%D8%A8")).toBe("\u0626\u0628");
       expect(safeDecodeUri("normal-slug")).toBe("normal-slug");
-      expect(safeDecodeUri("%E0%A4%97%E0%A5%80%E0%A4%A4%E0%A4%BE")).toBe("गीता");
+      expect(safeDecodeUri("%E0%A4%97%E0%A5%80%E0%A4%A4%E0%A4%BE")).toBe(
+        "गीता",
+      );
       expect(safeDecodeUri("%malformed%")).toBe("%malformed%");
       expect(safeDecodeUri(null)).toBeUndefined();
       expect(safeDecodeUri(undefined)).toBeUndefined();
@@ -390,7 +392,9 @@ describe("axiom-logger suite", () => {
       expect(serializeError("Failure string")).toEqual({
         error_message: "Failure string",
       });
-      expect(serializeError({ message: "Postgres error", code: "PGRST100" })).toMatchObject({
+      expect(
+        serializeError({ message: "Postgres error", code: "PGRST100" }),
+      ).toMatchObject({
         error_message: "Postgres error",
       });
       expect(serializeError(404)).toEqual({

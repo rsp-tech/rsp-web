@@ -83,35 +83,42 @@ interface QueryPatchRequestBody {
 
 const ALLOWED_STATUSES = new Set(["open", "in_progress", "resolved", "closed"]);
 
-export const PATCH = withApiLogging("/api/queries", async (req: NextRequest) => {
-  try {
-    const body = (await req.json()) as QueryPatchRequestBody;
+export const PATCH = withApiLogging(
+  "/api/queries",
+  async (req: NextRequest) => {
+    try {
+      const body = (await req.json()) as QueryPatchRequestBody;
 
-    if (!body.query_id || !body.status || !ALLOWED_STATUSES.has(body.status)) {
-      return NextResponse.json(
-        { error: "Invalid query_id or status" },
-        { status: 400 },
-      );
+      if (
+        !body.query_id ||
+        !body.status ||
+        !ALLOWED_STATUSES.has(body.status)
+      ) {
+        return NextResponse.json(
+          { error: "Invalid query_id or status" },
+          { status: 400 },
+        );
+      }
+
+      const supabase = getSupabaseServerClient();
+      let query = supabase
+        .from("user_queries")
+        .update({
+          status: body.status,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", body.query_id);
+
+      if (body.user_id) {
+        query = query.eq("user_id", body.user_id);
+      }
+
+      const { data, error } = await query.select().single();
+
+      return handleMutationResult(data, error, "update user query status");
+    } catch (err: unknown) {
+      console.error("Error updating query status:", err);
+      throw err;
     }
-
-    const supabase = getSupabaseServerClient();
-    let query = supabase
-      .from("user_queries")
-      .update({
-        status: body.status,
-        updated_at: new Date().toISOString(),
-      })
-      .eq("id", body.query_id);
-
-    if (body.user_id) {
-      query = query.eq("user_id", body.user_id);
-    }
-
-    const { data, error } = await query.select().single();
-
-    return handleMutationResult(data, error, "update user query status");
-  } catch (err: unknown) {
-    console.error("Error updating query status:", err);
-    throw err;
-  }
-});
+  },
+);

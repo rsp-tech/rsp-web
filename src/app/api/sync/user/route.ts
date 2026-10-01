@@ -46,34 +46,40 @@ export const GET = async (request: NextRequest) => {
   }
 };
 
-export const POST = withApiLogging("/api/sync/user", async (request: NextRequest) => {
-  try {
-    const { user, errorResponse } = await getAuthenticatedUser(request);
-    if (errorResponse || !user) {
-      return errorResponse || new Response("Unauthorized", { status: 401 });
+export const POST = withApiLogging(
+  "/api/sync/user",
+  async (request: NextRequest) => {
+    try {
+      const { user, errorResponse } = await getAuthenticatedUser(request);
+      if (errorResponse || !user) {
+        return errorResponse || new Response("Unauthorized", { status: 401 });
+      }
+
+      const body = (await request.json()) as SyncRequestBody;
+      const watermarks = body?.watermarks || {};
+
+      const [result, featureFlags] = await Promise.all([
+        computeUserSyncDelta(watermarks, user.id),
+        getCachedFeatureFlags(),
+      ]);
+
+      const userFlags = evaluateUserFlags(featureFlags, user);
+
+      return Response.json({
+        ...result,
+        user_feature_flags: userFlags,
+      });
+    } catch (error) {
+      console.error("User delta sync failed:", error);
+      axiomLogger.error("User delta sync failed", {
+        event: "sync.user_error",
+        route: "/api/sync/user",
+        error: error instanceof Error ? error.message : String(error),
+      });
+      return Response.json(
+        { error: (error as Error).message },
+        { status: 500 },
+      );
     }
-
-    const body = (await request.json()) as SyncRequestBody;
-    const watermarks = body?.watermarks || {};
-
-    const [result, featureFlags] = await Promise.all([
-      computeUserSyncDelta(watermarks, user.id),
-      getCachedFeatureFlags(),
-    ]);
-
-    const userFlags = evaluateUserFlags(featureFlags, user);
-
-    return Response.json({
-      ...result,
-      user_feature_flags: userFlags,
-    });
-  } catch (error) {
-    console.error("User delta sync failed:", error);
-    axiomLogger.error("User delta sync failed", {
-      event: "sync.user_error",
-      route: "/api/sync/user",
-      error: error instanceof Error ? error.message : String(error),
-    });
-    return Response.json({ error: (error as Error).message }, { status: 500 });
-  }
-});
+  },
+);
