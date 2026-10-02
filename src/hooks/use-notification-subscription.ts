@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { useSession } from "@/components/providers";
 import { STORE } from "@/constants";
 import { getSupabaseClient } from "@/lib/supabase-browser";
-import { toRoleId } from "@/lib/utils";
 import { runUserSync } from "./use-user-sync";
 
 interface SyncBroadcastEvent {
@@ -22,10 +21,8 @@ export const useNotificationSubscription = (): void => {
   const isTargetPage =
     pathname === "/profile" || pathname.startsWith("/queries");
 
-  const roleId = toRoleId(session?.user?.app_metadata?.["role_id"]);
-
   useEffect(() => {
-    if (!userId || !(isTargetPage || roleId === 1) || !queryClient) return;
+    if (!userId || !isTargetPage || !queryClient) return;
 
     const supabase = getSupabaseClient();
 
@@ -51,14 +48,12 @@ export const useNotificationSubscription = (): void => {
       }
     };
 
-    const channel = supabase.channel(
-      roleId === 1 ? "admin-channel" : `user-channel-${userId}`,
-    );
+    const channel = supabase.channel(`user-channel-${userId}`);
 
     channel.on("broadcast", { event: "sync" }, handleTriggerSync).subscribe();
 
     return () => {
       supabase.removeChannel(channel);
     };
-  }, [userId, isTargetPage, roleId, session?.access_token, queryClient]);
+  }, [userId, isTargetPage, session?.access_token, queryClient]);
 };
