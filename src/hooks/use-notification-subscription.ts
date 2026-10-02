@@ -54,6 +54,8 @@ export const useNotificationSubscription = (): void => {
       }
     };
 
+    handleTriggerSync();
+
     const channel = supabase.channel(`user-channel-${userId}`);
 
     channel.on("broadcast", { event: "sync" }, handleTriggerSync).subscribe();

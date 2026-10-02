@@ -6,7 +6,7 @@ import {
 } from "@/lib/feature-flags-service";
 import { getCachedSyncMeta } from "../meta-service";
 
-const CACHE_CONTROL_HEADER = "public, max-age=30, s-maxage=30";
+const CACHE_CONTROL_HEADER = "public, max-age=15, s-maxage=15";
 
 export const GET = withApiLogging("/api/sync/meta", async () => {
   try {
