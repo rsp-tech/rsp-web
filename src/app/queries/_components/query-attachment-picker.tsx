@@ -20,8 +20,6 @@ import { FEATURE_FLAGS } from "@/constants";
 import { useFeatureFlag } from "@/hooks/use-feature-flags";
 import { uploadQueryAttachmentToDrive } from "@/lib/drive-upload";
 import type { QueryAttachment } from "@/types";
-import { AttachmentContentDialog } from "./attachment-content-dialog";
-import { AttachmentLinkDialog } from "./attachment-link-dialog";
 
 const MAX_ATTACHMENTS = 5;
 const MAX_FILE_SIZE_BYTES = 15 * 1024 * 1024; // 15MB limit
@@ -54,8 +52,8 @@ interface QueryAttachmentPickerProps {
   attachments: QueryAttachment[];
   onChange: (attachments: QueryAttachment[]) => void;
   disabled?: boolean;
-  onAddLinkInline?: () => void;
-  onSelectContentInline?: () => void;
+  onAddLinkInline: () => void;
+  onSelectContentInline: () => void;
 }
 
 export const QueryAttachmentPicker = ({
@@ -69,10 +67,6 @@ export const QueryAttachmentPicker = ({
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
   const [uploadPercent, setUploadPercent] = useState(0);
-
-  // Dialog states
-  const [linkDialogOpen, setLinkDialogOpen] = useState(false);
-  const [contentDialogOpen, setContentDialogOpen] = useState(false);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -140,14 +134,6 @@ export const QueryAttachmentPicker = ({
     }
   };
 
-  const handleAddAttachment = (att: QueryAttachment) => {
-    if (attachments.length >= MAX_ATTACHMENTS) {
-      toast.error(`Maximum of ${MAX_ATTACHMENTS} attachments reached.`);
-      return;
-    }
-    onChange([...attachments, att]);
-  };
-
   const handleRemove = (idxToRemove: number) => {
     onChange(attachments.filter((_, idx) => idx !== idxToRemove));
   };
@@ -193,13 +179,7 @@ export const QueryAttachmentPicker = ({
           variant="outline"
           size="sm"
           className="gap-1.5 text-xs cursor-pointer"
-          onClick={() => {
-            if (onAddLinkInline) {
-              onAddLinkInline();
-            } else {
-              setLinkDialogOpen(true);
-            }
-          }}
+          onClick={onAddLinkInline}
           disabled={disabled || uploading}
         >
           <Globe className="w-3 h-3" />
@@ -211,13 +191,7 @@ export const QueryAttachmentPicker = ({
           variant="outline"
           size="sm"
           className="gap-1.5 text-xs cursor-pointer"
-          onClick={() => {
-            if (onSelectContentInline) {
-              onSelectContentInline();
-            } else {
-              setContentDialogOpen(true);
-            }
-          }}
+          onClick={onSelectContentInline}
           disabled={disabled || uploading}
         >
           <Headphones className="w-3 h-3" />
@@ -262,18 +236,6 @@ export const QueryAttachmentPicker = ({
           })}
         </div>
       )}
-
-      <AttachmentLinkDialog
-        open={linkDialogOpen}
-        onOpenChange={setLinkDialogOpen}
-        onAddLink={(link) => handleAddAttachment({ type: "link", ...link })}
-      />
-
-      <AttachmentContentDialog
-        open={contentDialogOpen}
-        onOpenChange={setContentDialogOpen}
-        onSelect={handleAddAttachment}
-      />
     </div>
   );
 };
