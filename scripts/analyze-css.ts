@@ -3,7 +3,7 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { promisify } from "node:util";
 import zlib from "node:zlib";
-import ts from "typescript";
+import { ts } from "ts-morph";
 
 const execAsync = promisify(exec);
 const brotliCompressAsync = promisify(zlib.brotliCompress);
