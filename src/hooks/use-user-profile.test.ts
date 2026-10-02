@@ -30,10 +30,6 @@ vi.mock("@/lib/idb", () => ({
     }),
 }));
 
-vi.mock("@/lib/realtime-utils", () => ({
-  sendRealtimeBroadcast: vi.fn(),
-}));
-
 vi.mock("@tanstack/react-query", () => ({
   useMutation: ({ mutationFn, onSuccess }: any) => ({
     mutateAsync: async (args: any) => {
