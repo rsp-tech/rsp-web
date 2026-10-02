@@ -1,12 +1,9 @@
 "use client";
 
-import { Loader2, Send } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
-
 import type { QueryAttachment } from "@/types";
 import { QueryAttachmentPicker } from "./query-attachment-picker";
+import { QueryEditorLazy } from "./query-editor-lazy";
 
 interface QueryReplyFormProps {
   queryId: string;
@@ -35,29 +32,18 @@ export const QueryReplyForm = ({
       >
         Send Follow-Up Message
       </Label>
-      <div className="flex gap-2 items-start">
-        <Textarea
-          id={`reply-text-${queryId}`}
-          placeholder="Type your response here..."
-          value={replyText}
-          onChange={(e) => onReplyTextChange(e.target.value)}
-          className="text-xs resize-none"
-          style={{ minHeight: "3.75rem" }}
-        />
-        <Button
-          type="button"
-          onClick={onSendReply}
-          disabled={sending || (!replyText.trim() && attachments.length === 0)}
-          className="shrink-0 cursor-pointer"
-          style={{ height: "3rem", width: "4rem" }}
-        >
-          {sending ? (
-            <Loader2 className="w-4 h-4 animate-spin" />
-          ) : (
-            <Send className="w-4 h-4" />
-          )}
-        </Button>
-      </div>
+      <QueryEditorLazy
+        value={replyText}
+        onChange={onReplyTextChange}
+        onSend={() => onSendReply()}
+        sending={sending}
+        hasAttachments={attachments.length > 0}
+        placeholder="Type your follow-up message here... Type @ to reference lectures, categories, or study materials."
+        showSendButton={true}
+        sendButtonText="Send Reply"
+        minHeight="5rem"
+        disabled={sending}
+      />
       {onAttachmentsChange && (
         <QueryAttachmentPicker
           attachments={attachments}

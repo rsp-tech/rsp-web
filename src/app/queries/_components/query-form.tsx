@@ -9,13 +9,13 @@ import { SearchableSelect } from "@/components/search/searchable-select";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { ENGAGEMENT_TYPES, QUERY_CATEGORIES } from "@/constants";
 import { useConsultationForm } from "@/hooks/use-consultation-form";
 import { saveUserQueryToIdb } from "@/hooks/use-user-queries-and-replies";
 import { getUserDisplayName } from "@/lib/utils";
 import type { QueryAttachment, UserQuery } from "@/types";
 import { QueryAttachmentPicker } from "./query-attachment-picker";
+import { QueryEditorLazy } from "./query-editor-lazy";
 
 export interface QueryFormProps {
   initialCategory?: string;
@@ -385,18 +385,16 @@ export const QueryForm = ({
           {isConsultation ? "Proposed Theme & Objectives" : "Message"}{" "}
           <span className="text-destructive">*</span>
         </Label>
-        <Textarea
-          id={`${id}-message`}
+        <QueryEditorLazy
           value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          onChange={setMessage}
           placeholder={
             isConsultation
-              ? "Describe your session objectives, key audience background, or preferred keynote topic..."
-              : "Write details of your query here..."
+              ? "Describe your session objectives, key audience background, or preferred keynote topic... Type @ to reference lectures or materials."
+              : "Write details of your query here... Type @ to reference lectures, categories, or materials."
           }
-          className="bg-muted"
-          style={{ minHeight: isConsultation ? "6.5rem" : "7.5rem" }}
-          required
+          minHeight={isConsultation ? "6.5rem" : "7.5rem"}
+          disabled={submitting}
         />
       </div>
 
