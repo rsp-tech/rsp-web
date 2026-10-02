@@ -13,21 +13,16 @@ import {
   stripUpdatedAt,
 } from "@/lib/sync-utils";
 import { sortByDate } from "@/lib/utils";
-import type {
-  Category,
-  ClientWatermarks,
-  Redirect,
-  SyncResponseData,
-  SyncTable,
-} from "@/types";
+import type { ClientWatermarks, SyncResponseData, SyncTable } from "@/types";
 import {
   getCachedPublicTable,
   getCachedRoleExtraTable,
-  getCachedUserTable,
+  getCachedTable,
   getFullPublicTable,
 } from "./baseline-cache";
 import { getCachedLiveDiff } from "./live-diff-fetcher";
 import { getCachedSyncMeta } from "./meta-service";
+import { getSupabaseServerClient } from "@/lib/supabase-server";
 
 const mergeAndPickTableRows = (
   baselineRows: Record<string, unknown>[],
@@ -227,7 +222,7 @@ export const computeUserSyncDelta = async (
   const serverSyncMeta = await getCachedSyncMeta();
 
   // Load all user queries first so we know all user query IDs across baseline & live diff
-  const baselineQueries = await getCachedUserTable(STORE.USER_QUERIES);
+  const baselineQueries = await getCachedTable(STORE.USER_QUERIES);
   const highestQueriesBaseline =
     (baselineQueries[baselineQueries.length - 1]?.["updated_at"] as
       | string
@@ -252,7 +247,7 @@ export const computeUserSyncDelta = async (
   const deltaEntries = await Promise.all(
     (USER_SPECIFIC_TABLES as readonly SyncTable[]).map(async (table) => {
       const clientWatermark = watermarks[table] || "";
-      const baselineRows = await getCachedUserTable(table);
+      const baselineRows = await getCachedTable(table);
       const highestBaselineUpdatedAt =
         (baselineRows[baselineRows.length - 1]?.["updated_at"] as
           | string
@@ -309,15 +304,32 @@ export const getCachedPublicUrlPaths = async (): Promise<string[]> => {
 
   console.log("[CACHE MISS] getCachedPublicUrlPaths computing valid paths...");
 
-  const [categories, redirects] = await Promise.all([
-    resolvePublicTableDelta<Category>(STORE.CATEGORIES, ""),
-    resolvePublicTableDelta<Redirect>(STORE.REDIRECTS, ""),
-  ]);
+  const baselineRows = await getCachedTable(STORE.CATEGORIES);
+  const baselinePaths = baselineRows
+    .map((r) => r["url_path"] as string)
+    .filter(Boolean);
 
-  const paths = [
-    ...categories.map((c) => c.url_path),
-    ...redirects.map((r) => r.id),
-  ].filter(Boolean);
+  const highestBaselineUpdatedAt = baselineRows[baselineRows.length - 1]?.[
+    "updated_at"
+  ] as string | undefined;
+
+  const supabase = getSupabaseServerClient();
+
+  let query = supabase.from(STORE.CATEGORIES).select("url_path");
+  if (highestBaselineUpdatedAt) {
+    query = query.gt("updated_at", highestBaselineUpdatedAt);
+  }
+
+  const { data, error } = await query;
+
+  if (error) {
+    console.error("Error fetching live categories diff: ", error);
+    return baselinePaths;
+  }
+
+  const livePaths =
+    data?.map((c) => c.url_path as string).filter(Boolean) || [];
+  const paths = Array.from(new Set([...baselinePaths, ...livePaths]));
 
   console.log(
     `[CACHE STORE] getCachedPublicUrlPaths finished, total valid paths: ${paths.length}`,

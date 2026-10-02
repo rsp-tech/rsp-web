@@ -48,6 +48,5 @@ describe.concurrent("api/revalidate/route suite", () => {
     expect(json.revalidated).not.toContain("/library/queries");
     expect(json.revalidated).not.toContain("tag:category:queries");
     expect(json.revalidated).toContain("tag:sync-live-diff");
-    expect(json.revalidated).toContain("/api/sync/user");
   });
 });

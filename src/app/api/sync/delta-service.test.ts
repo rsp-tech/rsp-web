@@ -46,7 +46,23 @@ vi.mock("./baseline-cache", () => ({
     return Promise.resolve([]);
   },
   getCachedRoleExtraTable: () => Promise.resolve([]),
-  getCachedUserTable: (t: string) => {
+  getCachedTable: (t: string) => {
+    if (t === STORE.CATEGORIES) {
+      return Promise.resolve([
+        {
+          id: 1,
+          name: "Cat 1",
+          url_path: "cat_1",
+          updated_at: "2026-01-01T00:00:00Z",
+        },
+        {
+          id: 2,
+          name: "Cat 2",
+          url_path: "cat_2",
+          updated_at: "2026-01-03T00:00:00Z",
+        },
+      ]);
+    }
     if (t === STORE.USERS) {
       return Promise.resolve([
         {
@@ -58,6 +74,26 @@ vi.mock("./baseline-cache", () => ({
     }
     return Promise.resolve([]);
   },
+}));
+
+vi.mock("@/lib/supabase-server", () => ({
+  getSupabaseServerClient: () => ({
+    from: () => ({
+      select: () => ({
+        gt: () =>
+          Promise.resolve({
+            data: [{ url_path: "cat_live" }],
+            error: null,
+          }),
+        // biome-ignore lint/suspicious/noThenProperty: ok
+        then: (resolve: any) =>
+          resolve({
+            data: [{ url_path: "cat_live" }],
+            error: null,
+          }),
+      }),
+    }),
+  }),
 }));
 
 vi.mock("./live-diff-fetcher", () => ({
@@ -99,11 +135,11 @@ describe.concurrent("delta-service suite", () => {
     expect(res.deltas[STORE.USERS]).toBeDefined();
   });
 
-  it.concurrent("getCachedPublicUrlPaths returns list of category url_paths and redirect ids", async () => {
+  it.concurrent("getCachedPublicUrlPaths returns list of category url_paths", async () => {
     const { getCachedPublicUrlPaths } = await import("./delta-service");
     const paths = await getCachedPublicUrlPaths();
     expect(paths).toContain("cat_1");
     expect(paths).toContain("cat_2");
-    expect(paths).toContain("old_path");
+    expect(paths).toContain("cat_live");
   });
 });

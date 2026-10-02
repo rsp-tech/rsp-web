@@ -96,7 +96,7 @@ export const getCachedRoleExtraTable = async (
 };
 
 // Cached user baseline table (parsed and sorted ascending by updated_at)
-export const getCachedUserTable = async (
+export const getCachedTable = async (
   table: SyncTable,
 ): Promise<Array<Record<string, unknown>>> => {
   "use cache: remote";
