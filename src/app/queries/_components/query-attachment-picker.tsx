@@ -54,12 +54,16 @@ interface QueryAttachmentPickerProps {
   attachments: QueryAttachment[];
   onChange: (attachments: QueryAttachment[]) => void;
   disabled?: boolean;
+  onAddLinkInline?: () => void;
+  onSelectContentInline?: () => void;
 }
 
 export const QueryAttachmentPicker = ({
   attachments,
   onChange,
   disabled = false,
+  onAddLinkInline,
+  onSelectContentInline,
 }: QueryAttachmentPickerProps) => {
   const fileUploadsEnabled = useFeatureFlag(FEATURE_FLAGS.QUERY_FILE_UPLOADS);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -189,10 +193,14 @@ export const QueryAttachmentPicker = ({
           variant="outline"
           size="sm"
           className="gap-1.5 text-xs cursor-pointer"
-          onClick={() => setLinkDialogOpen(true)}
-          disabled={
-            disabled || uploading || attachments.length >= MAX_ATTACHMENTS
-          }
+          onClick={() => {
+            if (onAddLinkInline) {
+              onAddLinkInline();
+            } else {
+              setLinkDialogOpen(true);
+            }
+          }}
+          disabled={disabled || uploading}
         >
           <Globe className="w-3 h-3" />
           <span>Add Link</span>
@@ -203,10 +211,14 @@ export const QueryAttachmentPicker = ({
           variant="outline"
           size="sm"
           className="gap-1.5 text-xs cursor-pointer"
-          onClick={() => setContentDialogOpen(true)}
-          disabled={
-            disabled || uploading || attachments.length >= MAX_ATTACHMENTS
-          }
+          onClick={() => {
+            if (onSelectContentInline) {
+              onSelectContentInline();
+            } else {
+              setContentDialogOpen(true);
+            }
+          }}
+          disabled={disabled || uploading}
         >
           <Headphones className="w-3 h-3" />
           <span>Select Lecture / Content</span>

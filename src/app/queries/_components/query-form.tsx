@@ -2,7 +2,7 @@
 
 import { useQueryClient } from "@tanstack/react-query";
 import { AlertCircle, Info, Loader2, Send } from "lucide-react";
-import { useEffect, useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { toast } from "sonner";
 import { useSession } from "@/components/providers";
 import { SearchableSelect } from "@/components/search/searchable-select";
@@ -16,6 +16,7 @@ import { getUserDisplayName } from "@/lib/utils";
 import type { QueryAttachment, UserQuery } from "@/types";
 import { QueryAttachmentPicker } from "./query-attachment-picker";
 import { QueryEditorLazy } from "./query-editor-lazy";
+import type { QueryRichEditorRef } from "./query-rich-editor";
 
 export interface QueryFormProps {
   initialCategory?: string;
@@ -35,6 +36,7 @@ export const QueryForm = ({
   onCancel,
 }: QueryFormProps) => {
   const id = useId();
+  const editorRef = useRef<QueryRichEditorRef>(null);
   const queryClient = useQueryClient();
   const { session } = useSession();
 
@@ -386,6 +388,7 @@ export const QueryForm = ({
           <span className="text-destructive">*</span>
         </Label>
         <QueryEditorLazy
+          editorRef={editorRef}
           value={message}
           onChange={setMessage}
           placeholder={
@@ -406,6 +409,8 @@ export const QueryForm = ({
         <QueryAttachmentPicker
           attachments={attachments}
           onChange={setAttachments}
+          onAddLinkInline={() => editorRef.current?.openLinkDialog()}
+          onSelectContentInline={() => editorRef.current?.openMentionDialog()}
           disabled={submitting}
         />
       </div>

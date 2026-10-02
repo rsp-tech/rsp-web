@@ -1,9 +1,11 @@
 "use client";
 
+import { useRef } from "react";
 import { Label } from "@/components/ui/label";
 import type { QueryAttachment } from "@/types";
 import { QueryAttachmentPicker } from "./query-attachment-picker";
 import { QueryEditorLazy } from "./query-editor-lazy";
+import type { QueryRichEditorRef } from "./query-rich-editor";
 
 interface QueryReplyFormProps {
   queryId: string;
@@ -24,6 +26,8 @@ export const QueryReplyForm = ({
   onSendReply,
   sending,
 }: QueryReplyFormProps) => {
+  const editorRef = useRef<QueryRichEditorRef>(null);
+
   return (
     <div className="border-t border-border/40 pt-4 flex flex-col gap-2">
       <Label
@@ -33,6 +37,7 @@ export const QueryReplyForm = ({
         Send Follow-Up Message
       </Label>
       <QueryEditorLazy
+        editorRef={editorRef}
         value={replyText}
         onChange={onReplyTextChange}
         onSend={() => onSendReply()}
@@ -48,6 +53,8 @@ export const QueryReplyForm = ({
         <QueryAttachmentPicker
           attachments={attachments}
           onChange={onAttachmentsChange}
+          onAddLinkInline={() => editorRef.current?.openLinkDialog()}
+          onSelectContentInline={() => editorRef.current?.openMentionDialog()}
           disabled={sending}
         />
       )}

@@ -28,6 +28,7 @@ export interface QueryRichEditorRef {
 }
 
 export interface QueryRichEditorProps {
+  editorRef?: React.Ref<QueryRichEditorRef>;
   value: string;
   onChange?: (markdown: string) => void;
   onSend?: (markdown: string) => Promise<void> | void;
@@ -47,6 +48,7 @@ export const QueryRichEditor = forwardRef<
 >(
   (
     {
+      editorRef,
       value,
       onChange,
       onSend,
@@ -135,21 +137,52 @@ export const QueryRichEditor = forwardRef<
       },
     });
 
-    useImperativeHandle(ref, () => ({
-      openMentionDialog: () => {
-        openedViaAtRef.current = false;
-        setMentionDialogOpen(true);
-      },
-      openLinkDialog: () => {
-        setLinkDialogOpen(true);
-      },
-      focus: () => {
-        editor?.commands.focus();
-      },
-      clearContent: () => {
-        editor?.commands.clearContent();
-      },
-    }));
+    useImperativeHandle(
+      ref,
+      () => ({
+        openMentionDialog: () => {
+          openedViaAtRef.current = false;
+          setMentionDialogOpen(true);
+        },
+        openLinkDialog: () => {
+          setLinkDialogOpen(true);
+        },
+        focus: () => {
+          editor?.commands.focus();
+        },
+        clearContent: () => {
+          editor?.commands.clearContent();
+        },
+      }),
+      [editor],
+    );
+
+    useEffect(() => {
+      if (!editorRef) return;
+      const methods: QueryRichEditorRef = {
+        openMentionDialog: () => {
+          openedViaAtRef.current = false;
+          setMentionDialogOpen(true);
+        },
+        openLinkDialog: () => {
+          setLinkDialogOpen(true);
+        },
+        focus: () => {
+          editor?.commands.focus();
+        },
+        clearContent: () => {
+          editor?.commands.clearContent();
+        },
+      };
+
+      if (typeof editorRef === "function") {
+        editorRef(methods);
+      } else if ("current" in editorRef) {
+        (
+          editorRef as React.MutableRefObject<QueryRichEditorRef | null>
+        ).current = methods;
+      }
+    }, [editorRef, editor]);
 
     // Synchronize external value changes (e.g. reset form)
     useEffect(() => {

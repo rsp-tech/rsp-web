@@ -23,7 +23,7 @@ export const QueryEditorLazy = forwardRef<
   QueryRichEditorRef,
   QueryRichEditorProps
 >((props, ref) => {
-  return <QueryRichEditor ref={ref} {...props} />;
+  return <QueryRichEditor editorRef={props.editorRef || ref} {...props} />;
 });
 
 QueryEditorLazy.displayName = "QueryEditorLazy";
