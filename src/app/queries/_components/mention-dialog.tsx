@@ -144,7 +144,7 @@ export const MentionDialog = ({
                 "absolute right-3 h-5 w-5 p-0 cursor-pointer transition-all",
                 showFieldFilters || searchFields.length < 3
                   ? "text-primary hover:text-primary"
-                  : "text-muted-foreground hover:text-foreground",
+                  : "text-muted-foreground hover:text-primary",
               )}
               onClick={() => setShowFieldFilters((prev) => !prev)}
               title="Toggle search fields (Speakers, Events, Venues)"

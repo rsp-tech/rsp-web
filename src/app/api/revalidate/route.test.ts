@@ -45,6 +45,9 @@ describe.concurrent("api/revalidate/route suite", () => {
     expect(res.status).toBe(200);
     const json = await res.json();
     expect(json.revalidated).toContain("/queries");
+    expect(json.revalidated).not.toContain("/library/queries");
+    expect(json.revalidated).not.toContain("tag:category:queries");
     expect(json.revalidated).toContain("tag:sync-live-diff");
+    expect(json.revalidated).toContain("/api/sync/user");
   });
 });

@@ -58,17 +58,19 @@ export const POST = withApiLogging(
       revalidatePath(path);
       revalidated.push(path);
 
-      if (!path.startsWith("/library") && !path.startsWith("/api")) {
+      if (!/^\/(library|api|queries)/.test(path)) {
         const libPath = `/library${path}`;
         revalidatePath(libPath);
         revalidated.push(libPath);
       }
 
-      const slugParts = path.split("/").filter(Boolean);
-      const urlPath = pathToUrlPath(slugParts);
-      if (urlPath) {
-        revalidateTag(`category:${urlPath}`, {});
-        revalidated.push(`tag:category:${urlPath}`);
+      if (!path.startsWith("/queries")) {
+        const slugParts = path.split("/").filter(Boolean);
+        const urlPath = pathToUrlPath(slugParts);
+        if (urlPath) {
+          revalidateTag(`category:${urlPath}`, {});
+          revalidated.push(`tag:category:${urlPath}`);
+        }
       }
     }
 

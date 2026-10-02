@@ -169,7 +169,7 @@ hover:no-underline,6,18,0,0
 hover:shadow-md,2,15,0,0
 hover:text-accent-foreground,5,28,0,0
 hover:text-destructive,2,22,0,0
-hover:text-primary,22,18,0,0
+hover:text-primary,24,18,0,0
 hover:text-primary/80,1,21,0,0
 hover:transition-all,5,20,0,0
 hover:underline,1,15,0,0
@@ -331,8 +331,8 @@ text-destructive-foreground,1,27,0,0
 text-foreground,28,15,41,44
 text-left,16,9,27,31
 text-lg,9,7,92,56
-text-muted-foreground,213,21,53,47
-text-primary,93,12,35,35
+text-muted-foreground,214,21,53,47
+text-primary,94,12,35,35
 text-primary-foreground,4,23,57,50
 text-sm,53,7,92,56
 text-success,6,12,35,34
