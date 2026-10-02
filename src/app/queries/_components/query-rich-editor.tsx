@@ -8,6 +8,7 @@ import {
   useCallback,
   useEffect,
   useImperativeHandle,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -135,8 +136,7 @@ export const QueryRichEditor = forwardRef<
       },
     });
 
-    useImperativeHandle(
-      ref,
+    const methods: QueryRichEditorRef = useMemo(
       () => ({
         openMentionDialog: () => {
           openedViaAtRef.current = false;
@@ -155,23 +155,10 @@ export const QueryRichEditor = forwardRef<
       [editor],
     );
 
+    useImperativeHandle(ref, () => methods, [methods]);
+
     useEffect(() => {
       if (!editorRef) return;
-      const methods: QueryRichEditorRef = {
-        openMentionDialog: () => {
-          openedViaAtRef.current = false;
-          setMentionDialogOpen(true);
-        },
-        openLinkDialog: () => {
-          setLinkDialogOpen(true);
-        },
-        focus: () => {
-          editor?.commands.focus();
-        },
-        clearContent: () => {
-          editor?.commands.clearContent();
-        },
-      };
 
       if (typeof editorRef === "function") {
         editorRef(methods);
@@ -180,7 +167,7 @@ export const QueryRichEditor = forwardRef<
           editorRef as React.MutableRefObject<QueryRichEditorRef | null>
         ).current = methods;
       }
-    }, [editorRef, editor]);
+    }, [editorRef, methods]);
 
     // Synchronize external value changes (e.g. reset form)
     useEffect(() => {
