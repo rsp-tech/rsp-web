@@ -70,7 +70,7 @@ export const MentionDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-lg p-0 overflow-hidden">
+      <DialogContent  maxW="32rem" className="max-w-lg p-0 overflow-hidden">
         <DialogHeader className="p-4 border-b border-border/40 bg-muted/20 flex flex-row items-center justify-between">
           <DialogTitle className="text-sm font-bold flex items-center gap-2">
             <AtSign className="h-4 w-4 text-primary" />
