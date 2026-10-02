@@ -1,10 +1,10 @@
+import { SYNC_META_TTL_MS } from "@/constants";
+
 export interface CachedSyncMeta {
   serverMeta: Record<string, string>;
   publicFeatureFlags?: string[];
   cachedAt: number;
 }
-
-export const SYNC_META_TTL_MS = 30_000; // 1/2 minute
 
 export const CACHE_NAME = "rsp-sync-meta-cache";
 

@@ -2,7 +2,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { usePathname } from "next/navigation";
 import { useEffect } from "react";
 import { useSession } from "@/components/providers";
-import { STORE } from "@/constants";
+import { STORE, SYNC_META_TTL_MS } from "@/constants";
 import { getSupabaseClient } from "@/lib/supabase-browser";
 import { runUserSync } from "./use-user-sync";
 
@@ -38,11 +38,17 @@ export const useNotificationSubscription = (): void => {
           currentToken = refreshData?.session?.access_token ?? currentToken;
         }
 
-        runUserSync({
-          queryClient,
-          userId,
-          accessToken: currentToken,
-        });
+        // Ensure we trigger after sync_meta_ttl expires to prevent race condition
+        // where user changes, sync starts, but meta isn't updated yet.
+        setTimeout(
+          () =>
+            runUserSync({
+              queryClient,
+              userId,
+              accessToken: currentToken,
+            }),
+          SYNC_META_TTL_MS,
+        );
       } catch (err) {
         console.error("Failed to refresh session or run user sync:", err);
       }
