@@ -119,6 +119,17 @@ export const generateMetadata = async ({
   const { data: rpcData } = await getCachedCategoryPageData(urlPath);
   const category = rpcData?.category;
 
+  if (!category) {
+    return {
+      title: "Spiritual Discourses",
+      robots: {
+        index: false,
+        follow: false,
+        nocache: true,
+      },
+    };
+  }
+
   const title = category?.name
     ? `${category.name} | Radheshyam Das Spiritual Discourses`
     : "Spiritual Discourses";
@@ -192,6 +203,10 @@ const generateJsonLdData = async (slug?: string[]) => {
   }
 
   // Categories & Recordings Framework Separation
+  if (!category) {
+    return { data: rpcData, structuredData: [], status };
+  }
+
   // BreadCrumbs
 
   const canonicalSlug = category?.url_path?.split(".") ?? [];

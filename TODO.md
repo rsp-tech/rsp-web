@@ -1,5 +1,5 @@
 - [x] Checkbox to disable fuzzy search
-- [ ] TipTap for queries page with mentions
+- [x] TipTap for queries page with mentions
 - [ ] re-review search.ts and dry-refactor + standardize materials and categories
 - [ ] re-review use-search-settings --- may be use useSyncExternalStore
 
