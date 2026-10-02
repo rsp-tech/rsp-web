@@ -25,14 +25,39 @@ export type MentionFilterScope =
   | "categories"
   | "materials";
 
+export type MentionSearchFieldKey =
+  | "speaker_names"
+  | "event_name"
+  | "venue_name";
+
+export const MENTION_SEARCH_FIELDS: {
+  id: MentionSearchFieldKey;
+  label: string;
+}[] = [
+  { id: "speaker_names", label: "Speakers" },
+  { id: "event_name", label: "Events" },
+  { id: "venue_name", label: "Venues" },
+];
+
 export const useMentionSearch = (isOpen: boolean) => {
   const [mentionQuery, setMentionQuery] = useState("");
   const [mentionResults, setMentionResults] = useState<MentionEntity[]>([]);
   const [searchingMentions, setSearchingMentions] = useState(false);
   const [mentionFilterScope, setMentionFilterScope] =
     useState<MentionFilterScope>("all");
+  const [searchFields, setSearchFields] = useState<MentionSearchFieldKey[]>([
+    "speaker_names",
+    "event_name",
+    "venue_name",
+  ]);
 
   const { searchAll } = useSearch();
+
+  const toggleSearchField = (field: MentionSearchFieldKey) => {
+    setSearchFields((prev) =>
+      prev.includes(field) ? prev.filter((f) => f !== field) : [...prev, field],
+    );
+  };
 
   // Reset state when closed
   useEffect(() => {
@@ -60,7 +85,14 @@ export const useMentionSearch = (isOpen: boolean) => {
 
     const timer = setTimeout(async () => {
       try {
-        const rawResults = await searchAll(trimmed);
+        const activeSearchFields = ["name", ...searchFields];
+        const rawResults = await searchAll(
+          trimmed,
+          undefined,
+          undefined,
+          undefined,
+          activeSearchFields,
+        );
         if (!isMounted) return;
 
         const db = await getDB();
@@ -168,7 +200,7 @@ export const useMentionSearch = (isOpen: boolean) => {
       isMounted = false;
       clearTimeout(timer);
     };
-  }, [mentionQuery, isOpen, searchAll]);
+  }, [mentionQuery, isOpen, searchAll, searchFields]);
 
   const filteredMentionResults = useMemo(() => {
     if (mentionFilterScope === "all") return mentionResults;
@@ -208,5 +240,7 @@ export const useMentionSearch = (isOpen: boolean) => {
     catCount,
     matCount,
     totalCount: mentionResults.length,
+    searchFields,
+    toggleSearchField,
   };
 };

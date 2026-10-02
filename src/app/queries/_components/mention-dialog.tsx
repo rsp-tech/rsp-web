@@ -7,9 +7,12 @@ import {
   Headphones,
   Loader2,
   Search,
+  SlidersHorizontal,
 } from "lucide-react";
+import { useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Dialog,
   DialogContent,
@@ -19,6 +22,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
+  MENTION_SEARCH_FIELDS,
   type MentionEntity,
   type MentionFilterScope,
   useMentionSearch,
@@ -54,7 +58,11 @@ export const MentionDialog = ({
     catCount,
     matCount,
     totalCount,
+    searchFields,
+    toggleSearchField,
   } = useMentionSearch(open);
+
+  const [showFieldFilters, setShowFieldFilters] = useState(false);
 
   const handleOpenChange = (nextOpen: boolean) => {
     if (!nextOpen) {
@@ -70,7 +78,11 @@ export const MentionDialog = ({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent maxW="32rem" className="max-w-lg p-0 overflow-hidden">
+      <DialogContent
+        maxW="32rem"
+        className="max-w-lg p-0 overflow-hidden"
+        style={{ gap: 0 }}
+      >
         <DialogHeader className="p-4 border-b border-border/40 bg-muted/20 flex flex-row items-center justify-between">
           <DialogTitle className="text-sm font-bold flex items-center gap-2">
             <AtSign className="h-4 w-4 text-primary" />
@@ -92,7 +104,11 @@ export const MentionDialog = ({
 
         <div className="p-3 border-b border-border/40 flex flex-col gap-2.5">
           <div className="relative flex items-center">
-            <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground opacity-60" />
+            {searchingMentions ? (
+              <Loader2 className="absolute left-3 top-3 h-4 w-4 animate-spin text-primary" />
+            ) : (
+              <Search className="absolute left-3 top-3 h-4 w-4 text-muted-foreground opacity-60" />
+            )}
             <Input
               type="text"
               placeholder={`Search lectures, categories, materials...${isOpenViaAt ? " (Esc to dismiss and insert literal @)" : ""}`}
@@ -118,10 +134,48 @@ export const MentionDialog = ({
               className="pl-9 pr-10 text-xs h-8"
               autoFocus
             />
-            {searchingMentions && (
-              <Loader2 className="absolute right-3 top-3 h-4 w-4 animate-spin text-primary" />
-            )}
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon-xs"
+              className={`absolute right-3 h-5 w-5 p-0 cursor-pointer transition-colors ${
+                showFieldFilters || searchFields.length < 3
+                  ? "text-primary hover:text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              }`}
+              onClick={() => setShowFieldFilters((prev) => !prev)}
+              title="Toggle search fields (Speakers, Events, Venues)"
+              aria-expanded={showFieldFilters}
+            >
+              <SlidersHorizontal className="size-3.5" />
+            </Button>
           </div>
+
+          {showFieldFilters && (
+            <div className="flex flex-wrap items-center gap-2.5 px-1 py-0.5 text-xxs text-muted-foreground">
+              <span className="font-semibold text-muted-foreground whitespace-nowrap">
+                Search in:
+              </span>
+              {MENTION_SEARCH_FIELDS.map((field) => {
+                const isChecked = searchFields.includes(field.id);
+                return (
+                  <label
+                    key={field.id}
+                    htmlFor={`mention-field-${field.id}`}
+                    className="flex items-center gap-1 cursor-pointer select-none text-xxs text-foreground font-medium"
+                  >
+                    <Checkbox
+                      id={`mention-field-${field.id}`}
+                      checked={isChecked}
+                      onCheckedChange={() => toggleSearchField(field.id)}
+                      className="size-3.5"
+                    />
+                    <span>{field.label}</span>
+                  </label>
+                );
+              })}
+            </div>
+          )}
 
           <Tabs
             value={mentionFilterScope}
