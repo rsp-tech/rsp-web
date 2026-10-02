@@ -1,6 +1,6 @@
 "use client";
 
-import { FileText, Music } from "lucide-react";
+import { FileText, Headphones } from "lucide-react";
 import { useEffect, useRef } from "react";
 import {
   Accordion,
@@ -197,7 +197,7 @@ export const SearchResults = ({
                         animationDelay: `${idx * 50}ms`,
                       }}
                     >
-                      <Music className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+                      <Headphones className="w-4 h-4 text-primary shrink-0 mt-0.5" />
                       <RecordingMeta rec={rec} sm />
                       {rec.category && (
                         <span

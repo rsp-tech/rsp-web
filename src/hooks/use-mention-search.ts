@@ -6,6 +6,7 @@ import { categoryPath } from "@/lib/utils";
 import type {
   Category,
   CategorySearchDocument,
+  EnrichedRecording,
   MaterialSearchDocument,
   Recording,
   RecordingSearchDocument,
@@ -17,6 +18,7 @@ export interface MentionEntity {
   type: "recording" | "category" | "material";
   subtitle: string;
   url: string;
+  recording?: EnrichedRecording;
 }
 
 export type MentionFilterScope =
@@ -160,6 +162,10 @@ export const useMentionSearch = (isOpen: boolean) => {
               type: "recording",
               subtitle: cat ? cat.name : "Lecture",
               url: `${pathUrl}?q=${rec.id}`,
+              recording: {
+                ...rec,
+                category: cat ?? null,
+              },
             });
           }
         }

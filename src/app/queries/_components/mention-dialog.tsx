@@ -10,6 +10,7 @@ import {
   SlidersHorizontal,
 } from "lucide-react";
 import { useState } from "react";
+import { RecordingMeta } from "@/components/recording-meta";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -27,6 +28,7 @@ import {
   type MentionFilterScope,
   useMentionSearch,
 } from "@/hooks/use-mention-search";
+import { cn } from "@/lib/utils";
 
 interface MentionDialogProps {
   open: boolean;
@@ -138,11 +140,12 @@ export const MentionDialog = ({
               type="button"
               variant="ghost"
               size="icon-xs"
-              className={`absolute right-3 h-5 w-5 p-0 cursor-pointer transition-colors ${
+              className={cn(
+                "absolute right-3 h-5 w-5 p-0 cursor-pointer transition-all",
                 showFieldFilters || searchFields.length < 3
                   ? "text-primary hover:text-primary"
-                  : "text-muted-foreground hover:text-foreground"
-              }`}
+                  : "text-muted-foreground hover:text-foreground",
+              )}
               onClick={() => setShowFieldFilters((prev) => !prev)}
               title="Toggle search fields (Speakers, Events, Venues)"
               aria-expanded={showFieldFilters}
@@ -250,31 +253,35 @@ export const MentionDialog = ({
                 key={item.id}
                 type="button"
                 onClick={() => onSelectMention(item)}
-                className="w-full text-left p-3 hover:bg-muted transition-all flex items-center justify-between gap-3 cursor-pointer group"
+                className="w-full text-left p-3 hover:bg-muted transition-all flex items-start justify-between gap-3 cursor-pointer group"
               >
-                <div className="flex items-center gap-2.5 flex-1">
-                  {item.type === "recording" && (
-                    <Headphones className="h-4 w-4 text-primary shrink-0" />
-                  )}
-                  {item.type === "category" && (
-                    <Folder className="h-4 w-4 text-primary shrink-0" />
-                  )}
-                  {item.type === "material" && (
-                    <FileText className="h-4 w-4 text-warning shrink-0" />
-                  )}
-                  <div className="flex flex-col flex-1">
-                    <span className="text-xs font-semibold truncate group-hover:text-primary transition-all">
-                      {item.name}
-                    </span>
-                    {item.subtitle && (
-                      <span className="text-xxs text-muted-foreground truncate">
-                        {item.subtitle}
-                      </span>
-                    )}
+                {item.type === "recording" && item.recording ? (
+                  <div className="flex items-start gap-2.5 flex-1 overflow-hidden">
+                    <Headphones className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                    <RecordingMeta rec={item.recording} sm />
                   </div>
-                </div>
+                ) : (
+                  <div className="flex items-center gap-2.5 flex-1 overflow-hidden">
+                    {item.type === "category" && (
+                      <Folder className="h-4 w-4 text-primary shrink-0" />
+                    )}
+                    {item.type === "material" && (
+                      <FileText className="h-4 w-4 text-warning shrink-0" />
+                    )}
+                    <div className="flex flex-col flex-1 overflow-hidden">
+                      <span className="text-xs font-semibold truncate group-hover:text-primary transition-all">
+                        {item.name}
+                      </span>
+                      {item.subtitle && (
+                        <span className="text-xxs text-muted-foreground truncate">
+                          {item.subtitle}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                )}
 
-                <Badge variant="outline" className="text-xxs shrink-0">
+                <Badge variant="outline" className="text-xxs shrink-0 mt-0.5">
                   {item.type === "recording"
                     ? "Lecture"
                     : item.type === "category"
