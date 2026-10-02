@@ -95,6 +95,16 @@ export const getCachedRoleExtraTable = async (
   return parseAndSortTableRows(unzipped, table);
 };
 
+// Full role extra baseline table fallback (un-cached, for fallback or recovery)
+export const getFullRoleExtraTable = async (
+  table: SyncTable,
+  roleId: number,
+): Promise<Array<Record<string, unknown>>> => {
+  const roleResource = SYNC_RESOURCE.replace(".zip", `-${roleId}.zip`);
+  const unzipped = await getUnzippedArchive(roleResource);
+  return parseAndSortTableRows(unzipped, table, false);
+};
+
 // Cached user baseline table (parsed and sorted ascending by updated_at)
 export const getCachedTable = async (
   table: SyncTable,

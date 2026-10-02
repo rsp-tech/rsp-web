@@ -51,17 +51,9 @@ interface CachedAsset {
   contentType: string;
 }
 
-const getCachedBackupAssetData = async (
+const fetchLiveBackupAssetData = async (
   targetResource: string,
 ): Promise<CachedAsset | null> => {
-  "use cache: remote";
-  cacheLife("days");
-  cacheTag(CACHE_TAG.BACKUP_RESOURCES);
-
-  console.log(
-    `[CACHE MISS] getCachedBackupAssetData fetching: ${targetResource}`,
-  );
-
   const releaseJson = await getReleaseMetadata();
   const asset = releaseJson?.assets?.find((a) => a.name === targetResource);
   const assetUrl = asset?.url;
@@ -102,20 +94,40 @@ const getCachedBackupAssetData = async (
   const contentType =
     assetRes.headers.get("content-type") || "application/octet-stream";
 
-  console.log(
-    `[CACHE STORE] getCachedBackupAssetData downloaded: ${targetResource}, size: ${arrayBuffer.byteLength} bytes`,
-  );
-
   return {
     data: new Uint8Array(arrayBuffer),
     contentType,
   };
 };
 
+const getCachedBackupAssetData = async (
+  targetResource: string,
+): Promise<CachedAsset | null> => {
+  "use cache: remote";
+  cacheLife("days");
+  cacheTag(CACHE_TAG.BACKUP_RESOURCES);
+
+  console.log(
+    `[CACHE MISS] getCachedBackupAssetData fetching: ${targetResource}`,
+  );
+
+  return fetchLiveBackupAssetData(targetResource);
+};
+
 export const fetchBackupAsset = async (
   targetResource: string,
 ): Promise<Response> => {
-  const asset = await getCachedBackupAssetData(targetResource);
+  let asset: CachedAsset | null = null;
+  try {
+    asset = await getCachedBackupAssetData(targetResource);
+  } catch (err) {
+    console.warn(
+      `[Backup Asset] Remote cache read failed for "${targetResource}", falling back to live fetch:`,
+      err,
+    );
+    asset = await fetchLiveBackupAssetData(targetResource);
+  }
+
   if (!asset) {
     return new Response("Asset not found", { status: 404 });
   }

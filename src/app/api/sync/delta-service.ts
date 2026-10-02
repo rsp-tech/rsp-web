@@ -20,6 +20,7 @@ import {
   getCachedRoleExtraTable,
   getCachedTable,
   getFullPublicTable,
+  getFullRoleExtraTable,
 } from "./baseline-cache";
 import { getCachedLiveDiff } from "./live-diff-fetcher";
 import { getCachedSyncMeta } from "./meta-service";
@@ -65,7 +66,17 @@ export const resolvePublicTableDelta = async <T>(
     return stripUpdatedAt(liveDiffRows.sort(sortByDate())) as T[];
   }
 
-  const publicRows = await getCachedPublicTable(table);
+  let publicRows: Record<string, unknown>[] = [];
+  try {
+    publicRows = await getCachedPublicTable(table);
+  } catch (err) {
+    console.warn(
+      `[Sync Delta] Cache read failed for public table ${table}, falling back to unzipped full table:`,
+      err,
+    );
+    publicRows = await getFullPublicTable(table);
+  }
+
   const highestBaselineUpdatedAt =
     (publicRows[publicRows.length - 1]?.["updated_at"] as string | undefined) ??
     null;
@@ -107,7 +118,17 @@ const resolveRoleTableDelta = async (
     return [table, []];
   }
 
-  const roleRows = await getCachedRoleExtraTable(table, roleId);
+  let roleRows: Record<string, unknown>[] = [];
+  try {
+    roleRows = await getCachedRoleExtraTable(table, roleId);
+  } catch (err) {
+    console.warn(
+      `[Sync Delta] Cache read failed for role table ${table} (roleId ${roleId}), falling back to unzipped full table:`,
+      err,
+    );
+    roleRows = await getFullRoleExtraTable(table, roleId);
+  }
+
   const highestBaselineUpdatedAt =
     (roleRows[roleRows.length - 1]?.["updated_at"] as string | undefined) ??
     null;
