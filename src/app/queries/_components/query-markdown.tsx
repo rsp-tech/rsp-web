@@ -1,8 +1,8 @@
 "use client";
 
 import Markdown from "markdown-to-jsx";
-import Link from "next/link";
 import React from "react";
+import { navigateClientSide } from "@/lib/utils";
 
 interface QueryMarkdownProps {
   content: string;
@@ -18,24 +18,13 @@ const MarkdownLink = ({
 
   const isInternal = href.startsWith("/") || href.startsWith("#");
 
-  if (isInternal) {
-    return (
-      <Link
-        href={href}
-        className="text-primary font-medium cursor-pointer"
-        style={{ textDecoration: "underline", textUnderlineOffset: "2px" }}
-      >
-        {children}
-      </Link>
-    );
-  }
-
   return (
     <a
       href={href}
       target="_blank"
       rel="noopener noreferrer"
       className="text-primary font-medium cursor-pointer"
+      onClick={isInternal ? (e) => navigateClientSide(href, e) : undefined}
       style={{ textDecoration: "underline", textUnderlineOffset: "2px" }}
       {...props}
     >
