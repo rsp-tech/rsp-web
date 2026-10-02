@@ -33,7 +33,6 @@ export interface QueryRichEditorProps {
   onChange?: (markdown: string) => void;
   onSend?: (markdown: string) => Promise<void> | void;
   sending?: boolean;
-  hasAttachments?: boolean;
   placeholder?: string;
   showSendButton?: boolean;
   sendButtonText?: string;
@@ -53,7 +52,6 @@ export const QueryRichEditor = forwardRef<
       onChange,
       onSend,
       sending = false,
-      hasAttachments = false,
       placeholder = "Type your message here... Use @ to reference lectures, categories, or study materials.",
       showSendButton = false,
       sendButtonText = "Post Reply",
@@ -308,11 +306,11 @@ export const QueryRichEditor = forwardRef<
       };
       const markdown = storage?.markdown?.getMarkdown?.() || "";
       const trimmed = markdown.trim();
-      if (!trimmed && !hasAttachments) return;
+      if (!trimmed) return;
 
       onSend(trimmed);
       editor.commands.clearContent();
-    }, [editor, sending, hasAttachments, onSend]);
+    }, [editor, sending, onSend]);
 
     if (!editor) {
       return (
@@ -360,9 +358,7 @@ export const QueryRichEditor = forwardRef<
               type="button"
               size="sm"
               onClick={handleSend}
-              disabled={
-                disabled || sending || (editor.isEmpty && !hasAttachments)
-              }
+              disabled={disabled || sending || editor.isEmpty}
               className="gap-1.5 cursor-pointer px-4 font-semibold text-xs h-8"
             >
               {sending ? (

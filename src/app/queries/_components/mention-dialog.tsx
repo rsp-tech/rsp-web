@@ -155,7 +155,10 @@ export const MentionDialog = ({
           </div>
 
           {showFieldFilters && (
-            <div className="flex flex-wrap items-center gap-2.5 px-1 py-0.5 text-xxs text-muted-foreground">
+            <div
+              className="flex flex-wrap items-center gap-2.5 px-1 py-0.5 text-xxs text-muted-foreground"
+              style={{ justifyContent: "flex-end" }}
+            >
               <span className="font-semibold text-muted-foreground whitespace-nowrap">
                 Search in:
               </span>

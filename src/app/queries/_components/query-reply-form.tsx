@@ -42,7 +42,6 @@ export const QueryReplyForm = ({
         onChange={onReplyTextChange}
         onSend={() => onSendReply()}
         sending={sending}
-        hasAttachments={attachments.length > 0}
         placeholder="Type your follow-up message here... Type @ to reference lectures, categories, or study materials."
         showSendButton={true}
         sendButtonText="Send Reply"
