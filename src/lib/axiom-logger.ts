@@ -267,15 +267,12 @@ export const logApiRequest = (
   const decodedSlug = attributes.slug
     ? safeDecodeUri(attributes.slug)
     : undefined;
-  const decodedQuery = attributes.query
-    ? safeDecodeUri(attributes.query)
-    : undefined;
 
   return sendAxiomLog(level, message, {
     event: "api.request",
     ...attributes,
     ...(decodedSlug !== undefined && { slug: decodedSlug }),
-    ...(decodedQuery !== undefined && { query: decodedQuery }),
+    ...(attributes.query !== undefined && { query: attributes.query }),
   });
 };
 
@@ -328,9 +325,11 @@ export const withApiLogging = <
     if (req?.url) {
       try {
         const url = req.nextUrl ?? new URL(req.url, "https://localhost");
-        query = safeDecodeUri(
-          url.searchParams.get("q") || url.searchParams.get("query"),
-        );
+        query = url.search
+          ? url.search.startsWith("?")
+            ? url.search.slice(1)
+            : url.search
+          : undefined;
         const pageParam =
           url.searchParams.get("page") || url.searchParams.get("p");
         if (pageParam && !Number.isNaN(Number(pageParam))) {
