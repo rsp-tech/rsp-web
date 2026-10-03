@@ -1,6 +1,5 @@
-import { cacheLife, cacheTag } from "next/cache";
 import Papa from "papaparse";
-import { CACHE_TAG, CSV_ENDPOINT } from "@/app/api/constants";
+import { CSV_ENDPOINT } from "@/app/api/constants";
 import { axiomLogger } from "@/lib/axiom-logger";
 
 const BACKUP_TOKEN = process.env["BACKUP_TOKEN"];
@@ -100,34 +99,40 @@ const fetchLiveBackupAssetData = async (
   };
 };
 
+const ASSET_CACHE_TTL_MS = 24 * 60 * 60 * 1000; // 24 hours
+
+interface MemoryCachedAsset extends CachedAsset {
+  expiresAt: number;
+}
+
+const assetMemoryCache = new Map<string, MemoryCachedAsset>();
+
+export const clearAssetMemoryCache = (): void => {
+  assetMemoryCache.clear();
+};
+
 const getCachedBackupAssetData = async (
   targetResource: string,
 ): Promise<CachedAsset | null> => {
-  "use cache: remote";
-  cacheLife("days");
-  cacheTag(CACHE_TAG.BACKUP_RESOURCES);
+  const cached = assetMemoryCache.get(targetResource);
+  if (cached && Date.now() < cached.expiresAt) {
+    return cached;
+  }
 
-  console.log(
-    `[CACHE MISS] getCachedBackupAssetData fetching: ${targetResource}`,
-  );
-
-  return fetchLiveBackupAssetData(targetResource);
+  const live = await fetchLiveBackupAssetData(targetResource);
+  if (live) {
+    assetMemoryCache.set(targetResource, {
+      ...live,
+      expiresAt: Date.now() + ASSET_CACHE_TTL_MS,
+    });
+  }
+  return live;
 };
 
 export const fetchBackupAsset = async (
   targetResource: string,
 ): Promise<Response> => {
-  let asset: CachedAsset | null = null;
-  try {
-    asset = await getCachedBackupAssetData(targetResource);
-  } catch (err) {
-    console.warn(
-      `[Backup Asset] Remote cache read failed for "${targetResource}", falling back to live fetch:`,
-      err,
-    );
-    asset = await fetchLiveBackupAssetData(targetResource);
-  }
-
+  const asset = await getCachedBackupAssetData(targetResource);
   if (!asset) {
     return new Response("Asset not found", { status: 404 });
   }

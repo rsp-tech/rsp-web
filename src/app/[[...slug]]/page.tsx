@@ -39,12 +39,22 @@ const getCachedCategoryPageData = async (
   if (urlPath) {
     if (!isValidCategoryPath(urlPath)) {
       console.warn("Invalid category path: ", urlPath);
+      axiomLogger.warn(`Invalid category path: "${urlPath}"`, {
+        event: "category.invalid_path",
+        route: "/[[...slug]]",
+        url_path: urlPath,
+      });
       return { data: null, status: 404 };
     }
 
     const validPaths = await getCachedPublicUrlPaths();
     if (!validPaths.includes(urlPath)) {
       console.warn("URL path not found: ", urlPath);
+      axiomLogger.warn(`Category URL path not found: "${urlPath}"`, {
+        event: "category.path_not_found",
+        route: "/[[...slug]]",
+        url_path: urlPath,
+      });
       return { data: null, status: 404 };
     }
   }
@@ -159,15 +169,20 @@ const generateJsonLdData = async (slug?: string[]) => {
   if (process.env.NODE_ENV === "development") return { structuredData: [] };
 
   // If old direct category path, redirect to /library/...
-  if (slug?.length && slug[0] !== "library") {
-    redirect(`/library/${slug.join("/")}`);
-  }
 
   const rawUrlPath = pathToUrlPath(slug ?? []);
   const urlPath = resolveCategoryUrlPath(rawUrlPath);
   const { data: rpcData, status } = await getCachedCategoryPageData(urlPath);
 
-  if (rpcData?.redirectTo) redirect(rpcData.redirectTo);
+  if (rpcData?.redirectTo) {
+    axiomLogger.info(`Redirecting category to ${rpcData.redirectTo}`, {
+      event: "page.redirect",
+      route: "/[[...slug]]",
+      url_path: urlPath,
+      redirect_to: rpcData.redirectTo,
+    });
+    redirect(rpcData.redirectTo);
+  }
   const { category, recordings = [], subcategories = [] } = rpcData ?? {};
 
   const jsonLdOutputs = [];
@@ -304,18 +319,47 @@ const generateJsonLdData = async (slug?: string[]) => {
   return { data: rpcData, structuredData: jsonLdOutputs, status };
 };
 
-export default async function CategoryPage({ params }: PageProps) {
+const CategoryPage = async ({ params }: PageProps) => {
+  const start = performance.now();
   const { slug } = await params;
   const requestedPath = slug?.length ? pathToUrlPath(slug) : "";
   const { data, structuredData, status } = await generateJsonLdData(slug);
+  const durationMs = Math.round((performance.now() - start) * 100) / 100;
 
   console.log(
     `[PAGE RENDER] /[[...slug]] path: "${requestedPath}", status: ${status}, hasData: ${Boolean(data)}`,
   );
 
   if (!data && status === 404) {
+    axiomLogger.warn(`Category page not found: /${requestedPath}`, {
+      event: "page.not_found",
+      route: "/[[...slug]]",
+      requested_path: requestedPath,
+      url_path: requestedPath,
+      status: 404,
+      duration_ms: durationMs,
+    });
     return notFound();
   }
+
+  axiomLogger.info(
+    requestedPath
+      ? `Category page render: /${requestedPath}`
+      : "Category page render: /",
+    {
+      event: "page.render",
+      route: "/[[...slug]]",
+      requested_path: requestedPath,
+      status: status ?? 200,
+      has_data: Boolean(data),
+      category_id: data?.category?.id,
+      category_name: data?.category?.name,
+      category_url_path: data?.category?.url_path,
+      recordings_count: data?.recordings?.length ?? 0,
+      subcategories_count: data?.subcategories?.length ?? 0,
+      duration_ms: durationMs,
+    },
+  );
 
   return (
     <>
@@ -334,4 +378,6 @@ export default async function CategoryPage({ params }: PageProps) {
       />
     </>
   );
-}
+};
+
+export default CategoryPage;

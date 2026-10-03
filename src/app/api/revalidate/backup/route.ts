@@ -1,6 +1,7 @@
 import { revalidatePath, revalidateTag } from "next/cache";
 import { type NextRequest, NextResponse } from "next/server";
 import { API_PATH, CACHE_TAG } from "@/app/api/constants";
+import { clearAssetMemoryCache } from "@/app/api/sync/utils";
 import { axiomLogger, withApiLogging } from "@/lib/axiom-logger";
 import { verifyRevalidateAuth } from "../auth";
 
@@ -11,6 +12,7 @@ export const POST = withApiLogging(
     if (authError) return authError;
 
     // Flush scheduled backup release zip and backup CSV tables
+    clearAssetMemoryCache();
     revalidateTag(CACHE_TAG.BACKUP_RESOURCES, {});
     revalidatePath(API_PATH.SYNC);
 
