@@ -137,37 +137,6 @@ export const fetchBackupAsset = async (
     return new Response("Asset not found", { status: 404 });
   }
 
-  const isUint8 = asset.data instanceof Uint8Array;
-  const isBuffer = Buffer.isBuffer(asset.data);
-  const isView = ArrayBuffer.isView(asset.data);
-  const dataType = typeof asset.data;
-  const constructorName = (
-    asset.data as unknown as { constructor?: { name?: string } }
-  )?.constructor?.name;
-  const byteLength =
-    (asset.data as unknown as { byteLength?: number; length?: number })
-      ?.byteLength ?? (asset.data as unknown as { length?: number })?.length;
-
-  if (!isUint8 && !isBuffer) {
-    console.warn(
-      `[Backup Asset Mismatch] "${targetResource}" cached data is not Uint8Array. Type: ${dataType}, constructor: ${constructorName}, isView: ${isView}`,
-    );
-    axiomLogger.warn(`Cached asset data mismatch for ${targetResource}`, {
-      event: "sync.cached_asset_type_mismatch",
-      target_resource: targetResource,
-      type: dataType,
-      constructor_name: constructorName,
-      is_view: isView,
-      is_uint8: isUint8,
-      is_buffer: isBuffer,
-      byte_length: byteLength,
-      sample_keys:
-        asset.data && typeof asset.data === "object"
-          ? Object.keys(asset.data).slice(0, 10)
-          : [],
-    });
-  }
-
   const headers = new Headers();
   headers.set("Content-Type", asset.contentType);
   headers.set(
@@ -183,29 +152,10 @@ export const fetchBackupAsset = async (
     "public, s-maxage=2592000, stale-while-revalidate=86400",
   );
 
-  try {
-    return new Response(asset.data as unknown as BodyInit, {
-      status: 200,
-      headers,
-    });
-  } catch (err) {
-    axiomLogger.error(
-      `Failed to construct Response from cached asset: ${targetResource}`,
-      {
-        event: "sync.asset_response_construction_error",
-        target_resource: targetResource,
-        error: err instanceof Error ? err.message : String(err),
-        error_name: err instanceof Error ? err.name : typeof err,
-        type: dataType,
-        constructor_name: constructorName,
-        is_view: isView,
-        is_uint8: isUint8,
-        is_buffer: isBuffer,
-        byte_length: byteLength,
-      },
-    );
-    throw err;
-  }
+  return new Response(asset.data as unknown as BodyInit, {
+    status: 200,
+    headers,
+  });
 };
 
 // Cached function to load backup CSV tables (Next.js automatically adds `table` arg to the cache key)
