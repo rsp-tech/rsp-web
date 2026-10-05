@@ -51,7 +51,7 @@ export const MobileDrawerContent = ({ setOpen }: MobileDrawerContentProps) => {
     >
       <SheetHeader className="p-0 border-b border-border pb-4 text-left">
         <SheetTitle className="font-heading font-bold text-lg flex items-center gap-2">
-          <span className="text-primary font-serif">RSP</span> Discourses
+          <span className="text-primary font-serif">RSD</span> Media
         </SheetTitle>
       </SheetHeader>
 

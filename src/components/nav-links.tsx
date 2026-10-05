@@ -18,7 +18,7 @@ const navLinks: {
   title: string;
 }[] = [
   {
-    href: "https://voicepublication.in/search?attribute_Author=Radheshyam+Das",
+    href: "https://voicepublication.in/collections/radheshyam-das-books",
     Icon: BookOpen,
     title: "Books",
   },
