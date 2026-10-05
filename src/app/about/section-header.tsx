@@ -28,7 +28,7 @@ export const SectionHeader = ({
       )}
     >
       <span className="about-sec-sub">{subtitle}</span>
-      <h2 className={cn("about-sec-title", isDark && "text-white")}>
+      <h2 className={cn("about-sec-title", isDark && "text-white!")}>
         {title}{" "}
         {underlinedWord && (
           <span className="about-hand-underline">{underlinedWord}</span>
