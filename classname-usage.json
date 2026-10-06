@@ -1,15 +1,15 @@
 {
   "totalClasses": 365,
-  "timestamp": "2026-10-02T06:41:31.179Z",
+  "timestamp": "2026-10-06T06:05:43.721Z",
   "baselineCSSBytes": 67086,
   "baselineBrotliBytes": 9845,
   "newlyAddedClasses": [],
   "nextGeneratedCss": [
     {
-      "file": "55016d91db2ee1d1.css",
-      "rawBytes": 70713,
-      "brotliBytes": 10436,
-      "gZipBytes": 12204
+      "file": "fc94c1a3a321b2b8.css",
+      "rawBytes": 70762,
+      "brotliBytes": 10437,
+      "gZipBytes": 12208
     },
     {
       "file": "b937c0a36a6b17c3.css",
@@ -56,6 +56,7 @@
       "src\\components\\guidance-spotlight.tsx",
       "src\\components\\material-badge.tsx",
       "src\\components\\materials-cache-list.tsx",
+      "src\\components\\materials-popover.tsx",
       "src\\components\\mobile-drawer-content.tsx",
       "src\\components\\mobile-drawer.tsx",
       "src\\components\\not-found-state.tsx",
@@ -105,10 +106,6 @@
       "src\\components\\notification-center.tsx",
       "src\\components\\search-bar-dropdown.tsx"
     ],
-    "src\\components\\ui\\sheet.tsx": [
-      "src\\components\\mobile-drawer-content.tsx",
-      "src\\components\\notification-center.tsx"
-    ],
     "src\\components\\ui\\popover.tsx": [
       "src\\components\\materials-popover.tsx",
       "src\\components\\player\\speed-controls.tsx",
@@ -116,10 +113,18 @@
       "src\\components\\search\\date-picker.tsx",
       "src\\components\\search\\searchable-select.tsx"
     ],
+    "src\\components\\ui\\sheet.tsx": [
+      "src\\components\\mobile-drawer-content.tsx",
+      "src\\components\\notification-center.tsx"
+    ],
     "src\\components\\ui\\accordion.tsx": [
       "src\\components\\notification-center.tsx",
       "src\\components\\search-bar-dropdown.tsx",
       "src\\components\\search\\search-results.tsx"
+    ],
+    "src\\components\\ui\\dropdown-menu.tsx": [
+      "src\\components\\recording-card.tsx",
+      "src\\components\\user-nav-dropdown-content.tsx"
     ],
     "src\\components\\ui\\label.tsx": [
       "src\\app\\about\\consultation-section.tsx",
@@ -129,9 +134,6 @@
       "src\\app\\queries\\_components\\query-reply-form.tsx",
       "src\\components\\recording-sort-controls.tsx",
       "src\\components\\search-bar-dropdown.tsx"
-    ],
-    "src\\components\\ui\\dropdown-menu.tsx": [
-      "src\\components\\user-nav-dropdown-content.tsx"
     ],
     "src\\components\\ui\\slider.tsx": [
       "src\\components\\player\\timeline-slider.tsx",
@@ -244,7 +246,7 @@
     },
     {
       "className": "animate-spin",
-      "frequency": 19,
+      "frequency": 21,
       "length": 12,
       "uncompressedBytes": 44,
       "brotliBytesUpperLimit": 43,
@@ -276,7 +278,7 @@
     },
     {
       "className": "bg-background",
-      "frequency": 9,
+      "frequency": 10,
       "length": 13,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0,
@@ -428,7 +430,7 @@
     },
     {
       "className": "border",
-      "frequency": 77,
+      "frequency": 78,
       "length": 6,
       "uncompressedBytes": 61,
       "brotliBytesUpperLimit": 61,
@@ -444,7 +446,7 @@
     },
     {
       "className": "border-border",
-      "frequency": 88,
+      "frequency": 89,
       "length": 13,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0,
@@ -540,7 +542,7 @@
     },
     {
       "className": "cursor-pointer",
-      "frequency": 116,
+      "frequency": 123,
       "length": 14,
       "uncompressedBytes": 31,
       "brotliBytesUpperLimit": 31,
@@ -948,7 +950,7 @@
     },
     {
       "className": "flex",
-      "frequency": 449,
+      "frequency": 450,
       "length": 4,
       "uncompressedBytes": 19,
       "brotliBytesUpperLimit": 23,
@@ -1100,7 +1102,7 @@
     },
     {
       "className": "font-bold",
-      "frequency": 125,
+      "frequency": 126,
       "length": 9,
       "uncompressedBytes": 88,
       "brotliBytesUpperLimit": 57,
@@ -1116,7 +1118,7 @@
     },
     {
       "className": "font-medium",
-      "frequency": 35,
+      "frequency": 38,
       "length": 11,
       "uncompressedBytes": 94,
       "brotliBytesUpperLimit": 50,
@@ -1124,7 +1126,7 @@
     },
     {
       "className": "font-semibold",
-      "frequency": 75,
+      "frequency": 77,
       "length": 13,
       "uncompressedBytes": 100,
       "brotliBytesUpperLimit": 60,
@@ -1148,7 +1150,7 @@
     },
     {
       "className": "gap-1",
-      "frequency": 79,
+      "frequency": 80,
       "length": 5,
       "uncompressedBytes": 26,
       "brotliBytesUpperLimit": 30,
@@ -1164,7 +1166,7 @@
     },
     {
       "className": "gap-2",
-      "frequency": 120,
+      "frequency": 123,
       "length": 5,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40,
@@ -1364,7 +1366,7 @@
     },
     {
       "className": "h-3",
-      "frequency": 75,
+      "frequency": 78,
       "length": 3,
       "uncompressedBytes": 37,
       "brotliBytesUpperLimit": 41,
@@ -1372,7 +1374,7 @@
     },
     {
       "className": "h-4",
-      "frequency": 136,
+      "frequency": 142,
       "length": 3,
       "uncompressedBytes": 37,
       "brotliBytesUpperLimit": 41,
@@ -1388,7 +1390,7 @@
     },
     {
       "className": "h-6",
-      "frequency": 17,
+      "frequency": 19,
       "length": 3,
       "uncompressedBytes": 37,
       "brotliBytesUpperLimit": 41,
@@ -1420,7 +1422,7 @@
     },
     {
       "className": "hidden",
-      "frequency": 19,
+      "frequency": 20,
       "length": 6,
       "uncompressedBytes": 21,
       "brotliBytesUpperLimit": 18,
@@ -1532,7 +1534,7 @@
     },
     {
       "className": "hover:text-primary",
-      "frequency": 24,
+      "frequency": 26,
       "length": 18,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0,
@@ -1572,7 +1574,7 @@
     },
     {
       "className": "inline-flex",
-      "frequency": 17,
+      "frequency": 18,
       "length": 11,
       "uncompressedBytes": 33,
       "brotliBytesUpperLimit": 31,
@@ -1604,7 +1606,7 @@
     },
     {
       "className": "items-center",
-      "frequency": 212,
+      "frequency": 214,
       "length": 12,
       "uncompressedBytes": 33,
       "brotliBytesUpperLimit": 30,
@@ -1620,7 +1622,7 @@
     },
     {
       "className": "justify-between",
-      "frequency": 46,
+      "frequency": 47,
       "length": 15,
       "uncompressedBytes": 47,
       "brotliBytesUpperLimit": 35,
@@ -1844,7 +1846,7 @@
     },
     {
       "className": "md:flex",
-      "frequency": 12,
+      "frequency": 13,
       "length": 7,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0,
@@ -2132,7 +2134,7 @@
     },
     {
       "className": "overflow-hidden",
-      "frequency": 47,
+      "frequency": 48,
       "length": 15,
       "uncompressedBytes": 33,
       "brotliBytesUpperLimit": 24,
@@ -2364,7 +2366,7 @@
     },
     {
       "className": "px-1.5",
-      "frequency": 3,
+      "frequency": 5,
       "length": 6,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0,
@@ -2372,7 +2374,7 @@
     },
     {
       "className": "px-2",
-      "frequency": 36,
+      "frequency": 37,
       "length": 4,
       "uncompressedBytes": 46,
       "brotliBytesUpperLimit": 50,
@@ -2540,7 +2542,7 @@
     },
     {
       "className": "rounded-lg",
-      "frequency": 26,
+      "frequency": 27,
       "length": 10,
       "uncompressedBytes": 40,
       "brotliBytesUpperLimit": 41,
@@ -2604,7 +2606,7 @@
     },
     {
       "className": "shrink-0",
-      "frequency": 106,
+      "frequency": 107,
       "length": 8,
       "uncompressedBytes": 24,
       "brotliBytesUpperLimit": 28,
@@ -2828,7 +2830,7 @@
     },
     {
       "className": "text-muted-foreground",
-      "frequency": 214,
+      "frequency": 219,
       "length": 21,
       "uncompressedBytes": 53,
       "brotliBytesUpperLimit": 47,
@@ -2836,7 +2838,7 @@
     },
     {
       "className": "text-primary",
-      "frequency": 94,
+      "frequency": 95,
       "length": 12,
       "uncompressedBytes": 35,
       "brotliBytesUpperLimit": 35,
@@ -2876,7 +2878,7 @@
     },
     {
       "className": "text-white",
-      "frequency": 8,
+      "frequency": 7,
       "length": 10,
       "uncompressedBytes": 37,
       "brotliBytesUpperLimit": 41,
@@ -2892,7 +2894,7 @@
     },
     {
       "className": "text-xs",
-      "frequency": 191,
+      "frequency": 195,
       "length": 7,
       "uncompressedBytes": 92,
       "brotliBytesUpperLimit": 57,
@@ -2900,7 +2902,7 @@
     },
     {
       "className": "text-xxs",
-      "frequency": 75,
+      "frequency": 77,
       "length": 8,
       "uncompressedBytes": 65,
       "brotliBytesUpperLimit": 55,
@@ -3012,7 +3014,7 @@
     },
     {
       "className": "w-3",
-      "frequency": 72,
+      "frequency": 75,
       "length": 3,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40,
@@ -3020,7 +3022,7 @@
     },
     {
       "className": "w-4",
-      "frequency": 132,
+      "frequency": 138,
       "length": 3,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40,

@@ -72,6 +72,7 @@ export const MaterialBadge = ({ mat, isHighlighted }: MaterialBadgeProps) => {
             size="sm"
             onClick={handleDirectDownload}
             className="h-6 w-6 p-0 border-border hover:bg-accent shrink-0"
+            style={{ borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}
           >
             {isLink ? (
               <ExternalLink className="w-3 h-3 text-muted-foreground" />

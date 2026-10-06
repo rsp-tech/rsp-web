@@ -4,7 +4,6 @@ import { resolveCategoryUrlPath } from "./legacy-url-map";
 import { getQueryClient } from "./query-client";
 import { getAssetProxyUrl, getAssetUrl } from "./storage";
 import {
-  categoryPath,
   cn,
   createLimiter,
   errorMessage,

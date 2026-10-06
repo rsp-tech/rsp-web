@@ -1,17 +1,36 @@
 "use client";
 
-import { Check, FileDown, Loader2, Pause, Play } from "lucide-react";
-import { useEffect, useState } from "react";
+import {
+  Archive,
+  Check,
+  ChevronDown,
+  FileDown,
+  FolderDown,
+  Loader2,
+  Music,
+  Pause,
+  Play,
+} from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import { SiYoutube } from "react-icons/si";
+import { toast } from "sonner";
 import { STREAM_LIMIT_BYTES } from "@/constants";
 import { useAudioPlayback } from "@/hooks/use-audio";
+import { useBatchDownloader } from "@/hooks/use-batch-downloader";
 import { useVideo } from "@/hooks/use-video";
 import { audioEngine } from "@/lib/audio-engine";
+import { sanitizeFileName } from "@/lib/material-utils";
 import { getAssetProxyUrl, getAssetUrl } from "@/lib/storage";
 import { cn, parseSize } from "@/lib/utils";
 import type { EnrichedRecording } from "@/types";
 import { RecordingMeta } from "./recording-meta";
 import { Button } from "./ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "./ui/dropdown-menu";
 
 interface RecordingCardProps {
   rec: EnrichedRecording;
@@ -26,6 +45,11 @@ export const RecordingCard = ({ rec, q, m, onKeyDown }: RecordingCardProps) => {
   const { isPlaying, currentAudioId } = useAudioPlayback();
   const [isCached, setIsCached] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [isBatchProcessing, setIsBatchProcessing] = useState(false);
+  const { startZipDownload } = useBatchDownloader();
+  const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isLongPressRef = useRef(false);
   const { setYt } = useVideo();
 
   // Async dynamic cache checking on initial mount without thread block
@@ -109,6 +133,78 @@ export const RecordingCard = ({ rec, q, m, onKeyDown }: RecordingCardProps) => {
     }
   };
 
+  const handleDownloadMaterials = async () => {
+    if (!rec.materials || rec.materials.length === 0 || isBatchProcessing)
+      return;
+    setIsBatchProcessing(true);
+    try {
+      const safeName = sanitizeFileName(rec.name);
+      await startZipDownload({
+        recordings: [rec],
+        selectedAudioIds: new Set(),
+        selectedMaterialIds: new Set(rec.materials.map((m) => m.id)),
+        zipFileName: `${safeName}_materials.zip`,
+        shouldCache: true,
+      });
+      toast.success("Materials download started");
+    } catch (err) {
+      console.error("Failed downloading materials", err);
+      toast.error("Failed to download materials");
+    } finally {
+      setIsBatchProcessing(false);
+    }
+  };
+
+  const handleDownloadAll = async () => {
+    if (isBatchProcessing) return;
+    setIsBatchProcessing(true);
+    try {
+      const safeName = sanitizeFileName(rec.name);
+      await startZipDownload({
+        recordings: [rec],
+        selectedAudioIds: rec.audio_id ? new Set([rec.audio_id]) : new Set(),
+        selectedMaterialIds: new Set((rec.materials ?? []).map((m) => m.id)),
+        zipFileName: `${safeName}_bundle.zip`,
+        shouldCache: true,
+      });
+      toast.success("Bundle download started");
+    } catch (err) {
+      console.error("Failed downloading bundle", err);
+      toast.error("Failed to download bundle");
+    } finally {
+      setIsBatchProcessing(false);
+    }
+  };
+
+  const handleTouchStart = () => {
+    isLongPressRef.current = false;
+    longPressTimerRef.current = setTimeout(() => {
+      isLongPressRef.current = true;
+      setIsDropdownOpen(true);
+      if (typeof navigator !== "undefined" && navigator.vibrate) {
+        navigator.vibrate(50);
+      }
+    }, 500);
+  };
+
+  const handleTouchEnd = () => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+      longPressTimerRef.current = null;
+    }
+  };
+
+  const handleButtonClick = (e: React.MouseEvent) => {
+    if (isLongPressRef.current) {
+      e.preventDefault();
+      isLongPressRef.current = false;
+      return;
+    }
+    handleDownload();
+  };
+
+  const hasMaterials = Boolean(rec.materials && rec.materials.length > 0);
+
   return (
     // biome-ignore lint/a11y/noStaticElementInteractions: handled for custom list focus/navigation
     <div
@@ -165,17 +261,96 @@ export const RecordingCard = ({ rec, q, m, onKeyDown }: RecordingCardProps) => {
               </Button>
             )}
 
-            <Button
-              type="button"
-              variant="outline"
-              size="sm"
-              onClick={handleDownload}
-              className="font-bold text-xs cursor-pointer"
-              title="Download Audio"
-            >
-              <FileDown className="w-4 h-4" />
-              <span className="hidden md:flex">Download</span>
-            </Button>
+            {hasMaterials ? (
+              <DropdownMenu
+                open={isDropdownOpen}
+                onOpenChange={setIsDropdownOpen}
+              >
+                <div className="inline-flex items-center rounded-lg border border-border bg-background overflow-hidden">
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleButtonClick}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
+                      setIsDropdownOpen(true);
+                    }}
+                    onTouchStart={handleTouchStart}
+                    onTouchEnd={handleTouchEnd}
+                    onTouchMove={handleTouchEnd}
+                    disabled={isBatchProcessing}
+                    className="font-bold text-xs cursor-pointer"
+                    title="Download Audio (Right-click or long-press for more options)"
+                  >
+                    {isBatchProcessing ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <FileDown className="w-4 h-4" />
+                    )}
+                    <span className="hidden md:flex">
+                      {isBatchProcessing ? "Downloading..." : "Download"}
+                    </span>
+                  </Button>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="sm"
+                      disabled={isBatchProcessing}
+                      className="px-1.5 cursor-pointer text-muted-foreground hover:text-primary"
+                      style={{
+                        borderLeft: "1px solid var(--border)",
+                        borderTopLeftRadius: 0,
+                        borderBottomLeftRadius: 0,
+                      }}
+                      title="More download options"
+                    >
+                      <ChevronDown className="w-4 h-4" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                </div>
+                <DropdownMenuContent
+                  align="end"
+                  side="bottom"
+                  style={{ width: "15rem" }}
+                >
+                  <DropdownMenuItem
+                    onClick={handleDownload}
+                    className="cursor-pointer gap-2 text-xs font-medium"
+                  >
+                    <Music className="w-4 h-4 text-muted-foreground" />
+                    <span>Audio Only (.mp3)</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={handleDownloadMaterials}
+                    className="cursor-pointer gap-2 text-xs font-medium"
+                  >
+                    <FolderDown className="w-4 h-4 text-muted-foreground" />
+                    <span>Materials Only ({rec.materials?.length}) (.zip)</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem
+                    onClick={handleDownloadAll}
+                    className="cursor-pointer gap-2 text-xs font-medium"
+                  >
+                    <Archive className="w-4 h-4 text-muted-foreground" />
+                    <span>Complete Bundle (Audio + Materials)</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                onClick={handleDownload}
+                className="font-bold text-xs cursor-pointer"
+                title="Download Audio"
+              >
+                <FileDown className="w-4 h-4" />
+                <span className="hidden md:flex">Download</span>
+              </Button>
+            )}
           </>
         )}
 

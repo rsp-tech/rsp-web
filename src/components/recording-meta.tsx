@@ -1,5 +1,6 @@
 import {
   Calendar,
+  Download,
   ExternalLink,
   Globe,
   MapPin,
@@ -158,10 +159,11 @@ export const RecordingMeta = ({ rec, m, sm, showLink }: RecordingMetaProps) => {
                 />
               );
             })}
-            {materials.length > nMaterialPills && (
+            {materials.length > nMaterialPills ? (
               <MaterialsPopover
                 materials={materials}
                 m={m}
+                rec={rec}
                 trigger={
                   <Button
                     type="button"
@@ -170,6 +172,23 @@ export const RecordingMeta = ({ rec, m, sm, showLink }: RecordingMetaProps) => {
                     className="text-xxs font-semibold h-6 px-2 shrink-0 cursor-pointer"
                   >
                     +{materials.length - nMaterialPills} more
+                  </Button>
+                }
+              />
+            ) : (
+              <MaterialsPopover
+                materials={materials}
+                m={m}
+                rec={rec}
+                trigger={
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    className="text-xxs font-semibold h-6 px-1.5 shrink-0 cursor-pointer"
+                    title="View & download materials"
+                  >
+                    <Download className="w-3 h-3 text-muted-foreground" />
                   </Button>
                 }
               />

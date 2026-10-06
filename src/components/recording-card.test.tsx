@@ -17,6 +17,18 @@ vi.mock("@/lib/supabase-browser", () => ({
   }),
 }));
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
+vi.mock("@/hooks/use-batch-downloader", () => ({
+  useBatchDownloader: () => ({
+    isProcessing: false,
+    startZipDownload: vi.fn(),
+  }),
+}));
+vi.mock("sonner", () => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+}));
 
 vi.mock("@/hooks/use-audio", () => ({
   useAudioPlayback: () => ({

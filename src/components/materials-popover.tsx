@@ -1,6 +1,12 @@
 "use client";
 
-import type { Material } from "@/types";
+import { Download, Loader2 } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
+import { useBatchDownloader } from "@/hooks/use-batch-downloader";
+import { sanitizeFileName } from "@/lib/material-utils";
+import type { EnrichedRecording, Material } from "@/types";
 import { MaterialBadge } from "./material-badge";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 
@@ -8,13 +14,41 @@ interface MaterialsPopoverProps {
   materials: Material[];
   trigger: React.ReactNode;
   m?: string | null;
+  rec?: EnrichedRecording;
 }
 
-export function MaterialsPopover({
+export const MaterialsPopover = ({
   materials,
   trigger,
   m,
-}: MaterialsPopoverProps) {
+  rec,
+}: MaterialsPopoverProps) => {
+  const [isDownloading, setIsDownloading] = useState(false);
+  const { startZipDownload } = useBatchDownloader();
+
+  const handleDownloadAll = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!rec || isDownloading) return;
+    setIsDownloading(true);
+    try {
+      const safeName = sanitizeFileName(rec.name);
+      await startZipDownload({
+        recordings: [rec],
+        selectedAudioIds: new Set(),
+        selectedMaterialIds: new Set(materials.map((mat) => mat.id)),
+        zipFileName: `${safeName}_materials.zip`,
+        shouldCache: true,
+      });
+      toast.success("Materials download started");
+    } catch (err) {
+      console.error("Failed to download materials", err);
+      toast.error("Failed to download materials");
+    } finally {
+      setIsDownloading(false);
+    }
+  };
+
   return (
     <Popover>
       <PopoverTrigger asChild>{trigger}</PopoverTrigger>
@@ -24,8 +58,28 @@ export function MaterialsPopover({
         className="flex flex-col gap-2 p-3 bg-card border border-border shadow-md rounded-xl z-50"
         style={{ width: "20rem", maxWidth: "calc(100vw - 2rem)" }}
       >
-        <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground pb-1 border-b border-border">
-          All Materials ({materials.length})
+        <div className="flex items-center justify-between pb-1 border-b border-border">
+          <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+            All Materials ({materials.length})
+          </div>
+          {rec && (
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              disabled={isDownloading}
+              onClick={handleDownloadAll}
+              className="text-xxs font-semibold h-6 px-2 gap-1 text-primary hover:text-primary cursor-pointer"
+              title="Download all materials as ZIP"
+            >
+              {isDownloading ? (
+                <Loader2 className="w-3 h-3 animate-spin" />
+              ) : (
+                <Download className="w-3 h-3" />
+              )}
+              <span>{isDownloading ? "Downloading..." : "Download All"}</span>
+            </Button>
+          )}
         </div>
         <div
           className="flex flex-wrap gap-1.5 overflow-y-auto"
@@ -45,4 +99,4 @@ export function MaterialsPopover({
       </PopoverContent>
     </Popover>
   );
-}
+};
