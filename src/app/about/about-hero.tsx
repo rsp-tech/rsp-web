@@ -11,7 +11,10 @@ export const AboutHero = () => {
             <p className="about-hero-tagline reveal-blur">
               Inspiring People. Strengthening Teams. Elevating Performance.
             </p>
-            <h1 className="about-hero-h1 reveal-blur text-white!">
+            <h1
+              className="about-hero-h1 reveal-blur"
+              style={{ color: "white" }}
+            >
               Timeless wisdom
               <br />
               practical <span className="about-hero-highlight">impact.</span>
