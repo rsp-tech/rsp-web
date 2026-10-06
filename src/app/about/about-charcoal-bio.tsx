@@ -29,7 +29,9 @@ export const AboutCharcoalBio = () => {
 
           {/* Biography Content */}
           <div className="flex flex-col justify-center reveal-right">
-            <h2 className="about-charcoal-name font-heading text-white!">Radheshyam Das</h2>
+            <h2 className="about-charcoal-name font-heading text-white!">
+              Radheshyam Das
+            </h2>
             <span className="about-sec-sub" style={{ textAlign: "left" }}>
               IIT Bombay Alumnus • Leadership Mentor • Author
             </span>

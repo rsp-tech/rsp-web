@@ -135,9 +135,9 @@ describe.concurrent("delta-service suite", () => {
     expect(res.deltas[STORE.USERS]).toBeDefined();
   });
 
-  it.concurrent("getCachedPublicUrlPaths returns list of category url_paths", async () => {
-    const { getCachedPublicUrlPaths } = await import("./delta-service");
-    const paths = await getCachedPublicUrlPaths();
+  it.concurrent("getCachedUrlPaths returns list of category url_paths", async () => {
+    const { getCachedUrlPaths } = await import("./delta-service");
+    const paths = await getCachedUrlPaths();
     expect(paths).toContain("cat_1");
     expect(paths).toContain("cat_2");
     expect(paths).toContain("cat_live");

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
 import { notFound, redirect } from "next/navigation";
-import { getCachedPublicUrlPaths } from "@/app/api/sync/delta-service";
+import { getCachedUrlPaths } from "@/app/api/sync/delta-service";
 import { ASSET_BASE_URL } from "@/constants";
 import type { CategoryPageData } from "@/hooks/use-category-page";
 import { axiomLogger } from "@/lib/axiom-logger";
@@ -47,7 +47,7 @@ const getCachedCategoryPageData = async (
       return { data: null, status: 404 };
     }
 
-    const validPaths = await getCachedPublicUrlPaths();
+    const validPaths = await getCachedUrlPaths();
     if (!validPaths.includes(urlPath)) {
       console.warn("URL path not found: ", urlPath);
       axiomLogger.warn(`Category URL path not found: "${urlPath}"`, {

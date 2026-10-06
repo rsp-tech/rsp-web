@@ -1,3 +1,7 @@
+- [ ] Add all materials per audio
+- [ ] Clean up download all UX --- it should not create confusion
+- [ ] Move all images to drive
+
 - [x] Checkbox to disable fuzzy search
 - [x] TipTap for queries page with mentions
 - [ ] re-review search.ts and dry-refactor + standardize materials and categories

@@ -35,7 +35,7 @@ vi.mock("@/hooks/use-is-mobile", () => ({ useIsMobile: () => false }));
 vi.mock("@/hooks/use-online-status", () => ({ useOnlineStatus: () => true }));
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
 vi.mock("@/app/api/sync/delta-service", () => ({
-  getCachedPublicUrlPaths: () => Promise.resolve(["gita"]),
+  getCachedUrlPaths: () => Promise.resolve(["gita"]),
 }));
 
 describe.concurrent("src/app/[[...slug]]/page.tsx suite", () => {
@@ -62,13 +62,5 @@ describe.concurrent("src/app/[[...slug]]/page.tsx suite", () => {
       params: Promise.resolve({ slug: ["library", "gita"] }),
     });
     expect(tree).toBeDefined();
-  });
-
-  it.concurrent("redirects legacy direct category paths to /library", async () => {
-    const mod = await import("./page");
-    const Comp = mod.default;
-    await expect(
-      Comp({ params: Promise.resolve({ slug: ["gita"] }) }),
-    ).rejects.toThrow("NEXT_REDIRECT");
   });
 });

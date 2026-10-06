@@ -10,10 +10,10 @@ export const categoryPath = (urlPath?: string | null) =>
 
 export const slugToLabel = (slug: string) =>
   safeDecodeUri(slug)
-    .split("_")
+    .split(/[_-]+/)
+    .filter(Boolean)
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
     .join(" ");
-
 export const errorMessage = (err: unknown) =>
   err instanceof Error ? err.message : String(err);
 
@@ -73,6 +73,12 @@ const safeDecodeUri = (str: string): string => {
   }
 };
 
+export const toLtreeSlug = (name: string): string =>
+  safeDecodeUri(name)
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]+/g, "-");
+
 /**
  * Converts a pathname (string or array of slug segments) to a DB urlPath (dot-separated, ltree format).
  * Automatically strips the leading "library" segment if present.
@@ -88,14 +94,7 @@ export const pathToUrlPath = (path: string | string[]): string => {
     segments = segments.slice(1);
   }
 
-  return segments
-    .map((s) => safeDecodeUri(s).trim())
-    .filter(Boolean)
-    .join(".")
-    .toLowerCase()
-    .replace(/[^a-z0-9_.-]+/g, " ")
-    .replace(/\s+/g, "_")
-    .replace(/_+/g, "_");
+  return segments.map(toLtreeSlug).filter(Boolean).join(".");
 };
 
 export const toRoleId = (value: unknown): number | undefined =>

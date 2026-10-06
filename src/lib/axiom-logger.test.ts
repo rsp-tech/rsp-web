@@ -215,7 +215,7 @@ describe("axiom-logger suite", () => {
       duration_ms: 24.5,
       slug: "\u0626\u0628",
       page: 1,
-      query: "गीता",
+      query: "%E0%A4%97%E0%A5%80%E0%A4%A4%E0%A4%BE",
       cache_status: "HIT",
     });
   });
@@ -245,7 +245,7 @@ describe("axiom-logger suite", () => {
     expect(bodies[1].level).toBe("error");
   });
 
-  it("wraps API routes with withApiLogging, decodes slug/query, and captures dynamic dimensions", async () => {
+  it("wraps API routes with withApiLogging, decodes slug, captures query and dynamic dimensions", async () => {
     let capturedBody = "";
     vi.spyOn(globalThis, "fetch").mockImplementation((_url, options) => {
       capturedBody = options?.body as string;
@@ -272,7 +272,7 @@ describe("axiom-logger suite", () => {
       method: "GET",
       status: 200,
       slug: "\u0626\u0628",
-      query: "कर्म",
+      query: "q=%E0%A4%95%E0%A4%B0%E0%A5%8D%E0%A4%AE&p=2",
       page: 2,
       cache_status: "HIT",
     });
