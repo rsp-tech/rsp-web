@@ -486,13 +486,5 @@ export const LEGACY_URL_MAP: Record<string, string> = {
     "bhaktivedanta-raja-vidyalaya.bhakti-vedanta-sb-canto-7-12-.sb-canto-12.chapter-1-3",
 };
 
-export const resolveCategoryUrlPath = (path: string): string => {
-  const normalized = path.replace(/_+/g, "_");
-  const resolved =
-    LEGACY_URL_MAP[normalized] ??
-    LEGACY_URL_MAP[normalized.replace(/-/g, "_")]?.replace(/_+/g, "_") ??
-    LEGACY_URL_MAP[normalized.replace(/-/g, "")] ??
-    path;
-  // console.log({ path, normalized, resolved });
-  return resolved;
-};
+export const resolveCategoryUrlPath = (path: string): string =>
+  LEGACY_URL_MAP[path] ?? path;

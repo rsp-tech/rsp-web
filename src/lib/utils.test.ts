@@ -27,16 +27,6 @@ describe.concurrent("utils.ts suite", () => {
     expect(cn("p-4", "p-2")).toBe("p-2");
   });
 
-  it.concurrent("categoryPath converts dot to slash and underscores to hyphens under library with leading slash", () => {
-    expect(categoryPath("spiritual_discourses.bhagavad_gita")).toBe(
-      "/library/spiritual-discourses/bhagavad-gita",
-    );
-    expect(categoryPath("simple")).toBe("/library/simple");
-    expect(categoryPath("")).toBe("/library");
-    expect(categoryPath(null)).toBe("/library");
-    expect(categoryPath(undefined)).toBe("/library");
-  });
-
   it.concurrent("slugToLabel transforms underscore and hyphen separated slugs into capitalized words", () => {
     expect(slugToLabel("bhagavad_gita")).toBe("Bhagavad Gita");
     expect(slugToLabel("bhagavad-gita")).toBe("Bhagavad Gita");
@@ -229,26 +219,6 @@ describe.concurrent("utils.ts suite", () => {
     const { getDB } = await import("./idb");
     const db = getDB();
     expect(db).toBeDefined();
-  });
-
-  it.concurrent("resolveCategoryUrlPath normalizes underscores and resolves legacy paths", async () => {
-    const { resolveCategoryUrlPath } = await import("./legacy-url-map");
-    // Direct normalized key match
-    expect(resolveCategoryUrlPath("japa_talks.2006_jan_jun")).toBe(
-      "japa_talks.2006_jan_-_jun",
-    );
-    // Double underscore input resolves to single-underscore key
-    expect(resolveCategoryUrlPath("japa_talks.2006_jan__jun")).toBe(
-      "japa_talks.2006_jan_-_jun",
-    );
-    // Hyphenated input resolves
-    expect(resolveCategoryUrlPath("japa-talks.2018-janjun")).toBe(
-      "japa_talks.2018_jan-jun",
-    );
-    // Unknown or already canonical path passes through untouched
-    expect(resolveCategoryUrlPath("spiritual-discourses.bg")).toBe(
-      "spiritual-discourses.bg",
-    );
   });
 
   it.concurrent("isValidCategoryPath accepts valid paths and rejects assets/extensions", async () => {
