@@ -1,39 +1,39 @@
 import { SectionHeader } from "./section-header";
 
 const row1 = [
-  "Community_1",
-  "Community_3",
-  "Community_7",
-  "Community_9",
-  "Community_11",
-  "Community_14",
-  "Community_18",
-  "Community_22",
-  "Community_25",
+  "1HHNnRpF5GUxX4m00_4b4OQLdDVNPAARM", // Community_1
+  "1SEUIn5VD1ev667QVeRNyl6sqnI7X9qs0", // Community_3
+  "1CJx62N6HQ7NZxv23f3GB7w593Y8OUzcE", // Community_7
+  "1WAlAO7ZEDG1o7-vDnKiHu7oxkLpb7V-K", // Community_9
+  "1Fe5YufbXZKE8se7us5YVeZuaoKA3iyLw", // Community_11
+  "1GU_ndzzkW3V6m_WCnuQpXkH6vPEs6q4J", // Community_14
+  "1t-YOFHkOQLf1iJ0npZXW5ltiO2t6wQ-k", // Community_18
+  "1DRd4TFA-NhV7KicaP3-KrWrETyFSvOw6", // Community_22
+  "1V3t4fPOnbNa1-2wRvOTEtAoamWhVi6qF", // Community_25
 ];
 
 const row2 = [
-  "Community_2",
-  "Community_4",
-  "Community_6",
-  "Community_8",
-  "Community_12",
-  "Community_15",
-  "Community_19",
-  "Community_20",
-  "Community_23",
+  "1BTeWEFTBFWwcb6Xj5HbU2hrKP6beFAZK", // Community_2
+  "1NpuRJ6hwM2mGvdPVxEJLIsqDq_09EBvd", // Community_4
+  "1lcekvW-IF15sS0WAa1cEfIVxuModkDfq", // Community_6
+  "1bfYUlzDvg-R-HiGt6292GA3Xj0u1OL9d", // Community_8
+  "1h4XJBiNS5werwfd09z2xXK-mbHr7ra7X", // Community_12
+  "1fDl7zqGICO5VzBRi4NI_DYtGpYzV3soS", // Community_15
+  "1hzJHtlMeNQfMDMs9kXw8HYSfoFPZCEOY", // Community_19
+  "1rpPVqcfXUDCq-v5mJm2snTka5d6H927C", // Community_20
+  "1w1MoetlyF7Z42ZA_lTRZksDcvtcoPIvz", // Community_23
 ];
 
 const row3 = [
-  "Community_5",
-  "Community_10",
-  "Community_13",
-  "Community_16",
-  "Community_17",
-  "Community_21",
-  "Community_24",
-  "Community_1",
-  "Community_7",
+  "1CLhgzCbdVYLXHs35lhDKRe307EENo_nj", // Community_5
+  "13AAC6AU6CBgnw_ythwQNfXz6iCWS_ypl", // Community_10
+  "115sxNTFjTqAAPctfKVLJ6viZsmgVRfjf", // Community_13
+  "12FngK8YWrfhtMQn8azh5hC1ADOJs7mg3", // Community_16
+  "1SWJveQK3xTqxV9TJDOZDYbenwAhjMLiy", // Community_17
+  "1VkG5RGJSVAnxnmQbB_SCkStx3DWXdJg3", // Community_21
+  "1VFKZ0cHYCG-6wshzc678_hnilwSwMZnx", // Community_24
+  "1HHNnRpF5GUxX4m00_4b4OQLdDVNPAARM", // Community_1
+  "1CJx62N6HQ7NZxv23f3GB7w593Y8OUzcE", // Community_7
 ];
 
 interface MarqueeRowProps {
@@ -51,24 +51,20 @@ const MarqueeRow = ({ images, duration, reverse = false }: MarqueeRowProps) => (
         animation: `marquee ${duration} linear infinite ${reverse ? "reverse" : ""}`,
       }}
     >
-      {[...images, ...images].map((img, idx) => (
+      {[...images, ...images].map((driveId, idx) => (
         <div
           // biome-ignore lint/suspicious/noArrayIndexKey: infinite marquee clone
           key={idx}
           className="about-gallery-card"
         >
-          <picture>
-            <source srcSet={`/assets/about/${img}.avif`} type="image/avif" />
-            <source srcSet={`/assets/about/${img}.webp`} type="image/webp" />
-            <img
-              src={`/assets/about/${img}.jpg`}
-              alt="Community engagement"
-              width={320}
-              height={240}
-              className="about-gallery-img"
-              loading="lazy"
-            />
-          </picture>
+          <img
+            src={`https://lh3.googleusercontent.com/d/${driveId}`}
+            alt="Community engagement"
+            width={320}
+            height={240}
+            className="about-gallery-img"
+            loading="lazy"
+          />
         </div>
       ))}
     </div>

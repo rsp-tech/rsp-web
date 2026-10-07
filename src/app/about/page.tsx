@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     type: "profile",
     images: [
       {
-        url: "https://radheshyamdas.com/assets/about/about-profile.jpg",
+        url: "https://lh3.googleusercontent.com/d/1hrv0uQwTgPt69BMTessBqQIM3l-EaPdR",
         width: 720,
         height: 900,
         alt: "His Grace Radheshyam Das",
@@ -51,7 +51,8 @@ const jsonLd = {
     ],
     description:
       "President of ISKCON NVCC Pune, Founder of VOICE Youth Initiative, Global Duty Officer for Youth Outreach, M. Tech. from IIT Bombay, and author of bestselling spiritual books.",
-    image: "https://radheshyamdas.com/assets/about/about-profile.jpg",
+    image:
+      "https://lh3.googleusercontent.com/d/1hrv0uQwTgPt69BMTessBqQIM3l-EaPdR",
     url: "https://radheshyamdas.com/about",
     alumniOf: {
       "@type": "EducationalOrganization",

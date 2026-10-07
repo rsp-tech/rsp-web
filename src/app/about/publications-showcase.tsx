@@ -14,21 +14,21 @@ const books: BookItem[] = [
     tag: "Bestselling Flagship",
     title: "Decoding the Self",
     desc: "A systematic roadmap to self-discovery, emotional intelligence, and discovering one's authentic identity beyond societal programming.",
-    img: "/assets/about/book-decoding-the-self",
+    img: "1NSbUu1nVd82N2VnZNaIeKEZdmd_kcbQI",
     link: "https://voicepublication.in/search?attribute_Author=Radheshyam+Das",
   },
   {
     tag: "Personal Growth",
     title: "The Happiness Paradox",
     desc: "Unraveling why modern achievements often leave an internal void — and how ancient Vedic frameworks yield sustainable, resilient peace.",
-    img: "/assets/about/book-happiness-paradox",
+    img: "1Gwio2mFWwxEDnUbj3dZGRaEPlmwwXuCK",
     link: "https://voicepublication.in/search?attribute_Author=Radheshyam+Das",
   },
   {
     tag: "Productivity & Purpose",
     title: "Art of Smart Work",
     desc: "Mastering focus, energy management, and ethical work productivity inspired by timeless leadership models from Vedic history.",
-    img: "/assets/about/book-smart-work",
+    img: "1UkstzKsLRO4yR9Ywkcw6FdgwcXxHrO6l",
     link: "https://voicepublication.in/search?attribute_Author=Radheshyam+Das",
   },
 ];
@@ -55,18 +55,14 @@ export const PublicationsShowcase = () => {
             >
               <div className="flex flex-col">
                 <div className="about-book-img-wrap">
-                  <picture>
-                    <source srcSet={`${b.img}.avif`} type="image/avif" />
-                    <source srcSet={`${b.img}.webp`} type="image/webp" />
-                    <img
-                      src={`${b.img}.jpg`}
-                      alt={b.title}
-                      width={400}
-                      height={533}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                  </picture>
+                  <img
+                    src={`https://lh3.googleusercontent.com/d/${b.img}`}
+                    alt={b.title}
+                    width={400}
+                    height={533}
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                  />
                 </div>
 
                 <span

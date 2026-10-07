@@ -44,44 +44,24 @@ export const InitiativesGrid = () => {
           {/* Overlapping Collage */}
           <div className="relative flex flex-col items-center reveal-right">
             <div className="about-collage-card-main">
-              <picture>
-                <source
-                  srcSet="/assets/about/voice-leadership-main.avif"
-                  type="image/avif"
-                />
-                <source
-                  srcSet="/assets/about/voice-leadership-main.webp"
-                  type="image/webp"
-                />
-                <img
-                  src="/assets/about/voice-leadership-main.jpg"
-                  alt="VOICE Group Sessions"
-                  width={800}
-                  height={600}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </picture>
+              <img
+                src="https://lh3.googleusercontent.com/d/1VIFtHqP7296imNEjGvOnH0PX7uAkT0LR"
+                alt="VOICE Group Sessions"
+                width={800}
+                height={600}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
             <div className="about-collage-card-sub">
-              <picture>
-                <source
-                  srcSet="/assets/about/voice-leadership-sub.avif"
-                  type="image/avif"
-                />
-                <source
-                  srcSet="/assets/about/voice-leadership-sub.webp"
-                  type="image/webp"
-                />
-                <img
-                  src="/assets/about/voice-leadership-sub.jpg"
-                  alt="VOICE Class Activity"
-                  width={600}
-                  height={450}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </picture>
+              <img
+                src="https://lh3.googleusercontent.com/d/1YegKFccNvGmfrNRcIA2igOIGabafFMWd"
+                alt="VOICE Class Activity"
+                width={600}
+                height={450}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
           </div>
         </div>

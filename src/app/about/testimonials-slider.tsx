@@ -19,7 +19,7 @@ const testimonials: Testimonial[] = [
     company: "Zensar Technologies",
     quote:
       "We found the workshop very effective because it not only highlighted the common causes & symptoms of stress but also gave us profound insights into practical techniques for managing stress with inner clarity.",
-    avatar: "/assets/about/client-pramela",
+    avatar: "179TG2paG6nQwCaDyPXndU4dDycCFGh-z",
   },
   {
     name: "M. Krishna",
@@ -27,7 +27,7 @@ const testimonials: Testimonial[] = [
     company: "Concentric Pumps India",
     quote:
       "The presentation was deeply scientific and demonstrated how Vedic knowledge is immensely relevant in modern times more than ever before. I strongly recommend that corporate leaders take full advantage of these seminars.",
-    avatar: "/assets/about/client-krishna",
+    avatar: "1RmqNj7b_0meaXjTnSqydGovH7-1kuNW4",
   },
   {
     name: "Ajay Chandak",
@@ -35,7 +35,7 @@ const testimonials: Testimonial[] = [
     company: "Tech Mahindra",
     quote:
       "I have been greatly benefited and I feel more empowered to deal with crisis situations in a stress-free, resilient manner.",
-    avatar: "/assets/about/client-chandak",
+    avatar: "1CliJk38D1_s_1uxMihvT9Yc3srLdwFni",
   },
   {
     name: "Kiran Shekarappa",
@@ -43,7 +43,7 @@ const testimonials: Testimonial[] = [
     company: "John Deere (Competency & Labs)",
     quote:
       "I found the seminars by Leaders VOICE to be very intriguing and practical. It’s fascinating how profound ancient knowledge is directly applicable for a working professional. The mantra meditation practice has significantly improved my focus.",
-    avatar: "/assets/about/client-kiran",
+    avatar: "1DNJX72F4YXENN1Sv7bDpmRwKUbBh5COD",
   },
   {
     name: "Aishwarya Upadhyay",
@@ -51,7 +51,7 @@ const testimonials: Testimonial[] = [
     company: "Infosys",
     quote:
       "Leaders VOICE sessions have helped me see reversals of life in a much broader, positive perspective. My outlook on my personal life and work life has tremendously improved due to the videos and books of Radheshyam Das.",
-    avatar: "/assets/about/client-aishwarya",
+    avatar: "1fkHvtEzfx3GoHCONpcP40fc5Ogd-rehl",
   },
 ];
 
@@ -81,18 +81,14 @@ export const TestimonialsSlider = () => {
           <div className="flex flex-col items-center text-center">
             {/* Avatar */}
             <div className="about-testimonial-avatar">
-              <picture>
-                <source srcSet={`${t.avatar}.avif`} type="image/avif" />
-                <source srcSet={`${t.avatar}.webp`} type="image/webp" />
-                <img
-                  src={`${t.avatar}.jpg`}
-                  alt={t.name}
-                  width={128}
-                  height={128}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </picture>
+              <img
+                src={`https://lh3.googleusercontent.com/d/${t.avatar}`}
+                alt={t.name}
+                width={128}
+                height={128}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
 
             {/* Quote */}

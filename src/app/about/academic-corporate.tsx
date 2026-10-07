@@ -12,24 +12,14 @@ export const AcademicCorporate = () => {
         <div className="about-section-container">
           <div className="about-collage-grid">
             <div className="about-collage-card-main reveal-3d">
-              <picture>
-                <source
-                  srcSet="/assets/about/university-session.avif"
-                  type="image/avif"
-                />
-                <source
-                  srcSet="/assets/about/university-session.webp"
-                  type="image/webp"
-                />
-                <img
-                  src="/assets/about/university-session.jpg"
-                  alt="Academic Lectures at Universities"
-                  width={800}
-                  height={500}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </picture>
+              <img
+                src="https://lh3.googleusercontent.com/d/10AOjH1NOwY0oWFkkS5fZclmRlviAM7SF"
+                alt="Academic Lectures at Universities"
+                width={800}
+                height={500}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
 
             <div className="flex flex-col reveal-right">
@@ -49,18 +39,19 @@ export const AcademicCorporate = () => {
                 across the globe.
               </p>
               <div className="about-academic-logos reveal-blur">
-                {["mit", "harvard", "stanford", "cornell"].map((logo) => (
-                  <picture key={logo}>
-                    <source
-                      srcSet={`/assets/about/logo-${logo}.avif`}
-                      type="image/avif"
-                    />
-                    <img
-                      src={`/assets/about/logo-${logo}.webp`}
-                      alt={logo.toUpperCase()}
-                      className="about-academic-logo-img"
-                    />
-                  </picture>
+                {[
+                  { name: "MIT", id: "1dphjJV0ZX4x8oAWBBknq4Ez30B9eUFSN" },
+                  { name: "HARVARD", id: "1quy14LZTA-A00S9lbmpi7eOEy9Cn5Fs9" },
+                  { name: "STANFORD", id: "1s4yTeIC3p6TSs5671kg7DH4d2MKkViXR" },
+                  { name: "CORNELL", id: "1cE5k3rZb5IuDB_VG5PUKOTYBWBMukX3W" },
+                ].map((logo) => (
+                  <img
+                    key={logo.name}
+                    src={`https://lh3.googleusercontent.com/d/${logo.id}`}
+                    alt={logo.name}
+                    className="about-academic-logo-img"
+                    loading="lazy"
+                  />
                 ))}
               </div>
             </div>
@@ -103,24 +94,14 @@ export const AcademicCorporate = () => {
             </div>
 
             <div className="about-collage-card-main reveal-3d">
-              <picture>
-                <source
-                  srcSet="/assets/about/corporate-session.avif"
-                  type="image/avif"
-                />
-                <source
-                  srcSet="/assets/about/corporate-session.webp"
-                  type="image/webp"
-                />
-                <img
-                  src="/assets/about/corporate-session.jpg"
-                  alt="Corporate Training Seminar"
-                  width={800}
-                  height={500}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                />
-              </picture>
+              <img
+                src="https://lh3.googleusercontent.com/d/1TxJjw3uM8TrVckyQqnt_kZ5RBmBNZfZ4"
+                alt="Corporate Training Seminar"
+                width={800}
+                height={500}
+                className="w-full h-full object-cover"
+                loading="lazy"
+              />
             </div>
           </div>
         </div>

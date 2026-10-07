@@ -7,24 +7,14 @@ export const AboutCharcoalBio = () => {
         <div className="about-charcoal-grid">
           {/* Clean Frameless Portrait */}
           <div className="about-charcoal-portrait reveal-3d">
-            <picture>
-              <source
-                srcSet="/assets/about/about-profile.avif"
-                type="image/avif"
-              />
-              <source
-                srcSet="/assets/about/about-profile.webp"
-                type="image/webp"
-              />
-              <img
-                src="/assets/about/about-profile.jpg"
-                alt="Radheshyam Das Portrait"
-                width={720}
-                height={920}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
-            </picture>
+            <img
+              src="https://lh3.googleusercontent.com/d/1hrv0uQwTgPt69BMTessBqQIM3l-EaPdR"
+              alt="Radheshyam Das Portrait"
+              width={720}
+              height={920}
+              className="w-full h-full object-cover"
+              loading="lazy"
+            />
           </div>
 
           {/* Biography Content */}

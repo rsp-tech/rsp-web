@@ -300,7 +300,8 @@
   min-height: 88vh;
   background:
     linear-gradient(rgba(30, 32, 30, 0.72), rgba(30, 32, 30, 0.65)),
-    url("/assets/about/hero-portrait.webp") no-repeat center center / cover;
+    url("https://lh3.googleusercontent.com/d/1O80a5yBfDyVcIcvN3xg4wQ5kC03quRt2")
+    no-repeat center center / cover;
   display: flex;
   align-items: center;
   padding: 130px 0 130px;
