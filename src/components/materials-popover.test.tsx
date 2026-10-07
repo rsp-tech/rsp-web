@@ -29,6 +29,11 @@ vi.mock("sonner", () => ({
     error: vi.fn(),
   },
 }));
+vi.mock("@/hooks/use-categories", () => ({
+  useCategories: () => ({
+    data: [{ id: 1, name: "Gita", url_path: "gita" }],
+  }),
+}));
 
 describe.concurrent("src/components/materials-popover.tsx suite", () => {
   it.concurrent("renders MaterialsPopover component with list of material badges", async () => {

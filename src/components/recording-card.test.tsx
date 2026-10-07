@@ -29,6 +29,11 @@ vi.mock("sonner", () => ({
     error: vi.fn(),
   },
 }));
+vi.mock("@/hooks/use-categories", () => ({
+  useCategories: () => ({
+    data: [{ id: 1, name: "Gita", url_path: "gita" }],
+  }),
+}));
 
 vi.mock("@/hooks/use-audio", () => ({
   useAudioPlayback: () => ({

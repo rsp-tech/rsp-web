@@ -92,6 +92,8 @@ export const MaterialsPopover = ({
                 key={mat.id}
                 mat={mat}
                 isHighlighted={isHighlighted}
+                rec={rec}
+                showCopyLink={true}
               />
             );
           })}

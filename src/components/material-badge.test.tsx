@@ -17,6 +17,17 @@ vi.mock("@/lib/supabase-browser", () => ({
   }),
 }));
 vi.mock("@/lib/idb", () => ({ getDB: () => Promise.resolve(null) }));
+vi.mock("@/hooks/use-categories", () => ({
+  useCategories: () => ({
+    data: [{ id: 1, name: "Gita", url_path: "gita" }],
+  }),
+}));
+vi.mock("sonner", () => ({
+  toast: {
+    success: vi.fn(),
+    error: vi.fn(),
+  },
+}));
 
 describe.concurrent("src/components/material-badge.tsx suite", () => {
   it.concurrent("renders MaterialBadge component with download and preview actions", async () => {

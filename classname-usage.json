@@ -1,15 +1,15 @@
 {
   "totalClasses": 365,
-  "timestamp": "2026-10-06T06:05:43.721Z",
+  "timestamp": "2026-10-07T05:58:44.944Z",
   "baselineCSSBytes": 67086,
   "baselineBrotliBytes": 9845,
   "newlyAddedClasses": [],
   "nextGeneratedCss": [
     {
-      "file": "fc94c1a3a321b2b8.css",
-      "rawBytes": 70762,
-      "brotliBytes": 10437,
-      "gZipBytes": 12208
+      "file": "55016d91db2ee1d1.css",
+      "rawBytes": 70713,
+      "brotliBytes": 10436,
+      "gZipBytes": 12204
     },
     {
       "file": "b937c0a36a6b17c3.css",
@@ -446,7 +446,7 @@
     },
     {
       "className": "border-border",
-      "frequency": 89,
+      "frequency": 90,
       "length": 13,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0,
@@ -542,7 +542,7 @@
     },
     {
       "className": "cursor-pointer",
-      "frequency": 123,
+      "frequency": 124,
       "length": 14,
       "uncompressedBytes": 31,
       "brotliBytesUpperLimit": 31,
@@ -1102,7 +1102,7 @@
     },
     {
       "className": "font-bold",
-      "frequency": 126,
+      "frequency": 127,
       "length": 9,
       "uncompressedBytes": 88,
       "brotliBytesUpperLimit": 57,
@@ -1366,7 +1366,7 @@
     },
     {
       "className": "h-3",
-      "frequency": 78,
+      "frequency": 80,
       "length": 3,
       "uncompressedBytes": 37,
       "brotliBytesUpperLimit": 41,
@@ -1374,7 +1374,7 @@
     },
     {
       "className": "h-4",
-      "frequency": 142,
+      "frequency": 144,
       "length": 3,
       "uncompressedBytes": 37,
       "brotliBytesUpperLimit": 41,
@@ -1390,7 +1390,7 @@
     },
     {
       "className": "h-6",
-      "frequency": 19,
+      "frequency": 20,
       "length": 3,
       "uncompressedBytes": 37,
       "brotliBytesUpperLimit": 41,
@@ -1422,7 +1422,7 @@
     },
     {
       "className": "hidden",
-      "frequency": 20,
+      "frequency": 21,
       "length": 6,
       "uncompressedBytes": 21,
       "brotliBytesUpperLimit": 18,
@@ -1430,7 +1430,7 @@
     },
     {
       "className": "hover:bg-accent",
-      "frequency": 12,
+      "frequency": 13,
       "length": 15,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0,
@@ -1846,7 +1846,7 @@
     },
     {
       "className": "md:flex",
-      "frequency": 13,
+      "frequency": 14,
       "length": 7,
       "uncompressedBytes": 0,
       "brotliBytesUpperLimit": 0,
@@ -2166,7 +2166,7 @@
     },
     {
       "className": "p-0",
-      "frequency": 33,
+      "frequency": 34,
       "length": 3,
       "uncompressedBytes": 15,
       "brotliBytesUpperLimit": 19,
@@ -2606,7 +2606,7 @@
     },
     {
       "className": "shrink-0",
-      "frequency": 107,
+      "frequency": 108,
       "length": 8,
       "uncompressedBytes": 24,
       "brotliBytesUpperLimit": 28,
@@ -2830,7 +2830,7 @@
     },
     {
       "className": "text-muted-foreground",
-      "frequency": 219,
+      "frequency": 220,
       "length": 21,
       "uncompressedBytes": 53,
       "brotliBytesUpperLimit": 47,
@@ -2862,7 +2862,7 @@
     },
     {
       "className": "text-success",
-      "frequency": 6,
+      "frequency": 8,
       "length": 12,
       "uncompressedBytes": 35,
       "brotliBytesUpperLimit": 34,
@@ -2894,7 +2894,7 @@
     },
     {
       "className": "text-xs",
-      "frequency": 195,
+      "frequency": 196,
       "length": 7,
       "uncompressedBytes": 92,
       "brotliBytesUpperLimit": 57,
@@ -3014,7 +3014,7 @@
     },
     {
       "className": "w-3",
-      "frequency": 75,
+      "frequency": 77,
       "length": 3,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40,
@@ -3022,7 +3022,7 @@
     },
     {
       "className": "w-4",
-      "frequency": 138,
+      "frequency": 140,
       "length": 3,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40,
@@ -3038,7 +3038,7 @@
     },
     {
       "className": "w-6",
-      "frequency": 7,
+      "frequency": 8,
       "length": 3,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40,

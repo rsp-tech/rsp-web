@@ -6,6 +6,7 @@ import {
   ChevronDown,
   FileDown,
   FolderDown,
+  Link2,
   Loader2,
   Music,
   Pause,
@@ -17,11 +18,12 @@ import { toast } from "sonner";
 import { STREAM_LIMIT_BYTES } from "@/constants";
 import { useAudioPlayback } from "@/hooks/use-audio";
 import { useBatchDownloader } from "@/hooks/use-batch-downloader";
+import { useCategories } from "@/hooks/use-categories";
 import { useVideo } from "@/hooks/use-video";
 import { audioEngine } from "@/lib/audio-engine";
 import { sanitizeFileName } from "@/lib/material-utils";
 import { getAssetProxyUrl, getAssetUrl } from "@/lib/storage";
-import { cn, parseSize } from "@/lib/utils";
+import { categoryPath, cn, parseSize } from "@/lib/utils";
 import type { EnrichedRecording } from "@/types";
 import { RecordingMeta } from "./recording-meta";
 import { Button } from "./ui/button";
@@ -45,6 +47,8 @@ export const RecordingCard = ({ rec, q, m, onKeyDown }: RecordingCardProps) => {
   const { isPlaying, currentAudioId } = useAudioPlayback();
   const [isCached, setIsCached] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { data: categories } = useCategories();
+  const [isCopied, setIsCopied] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isBatchProcessing, setIsBatchProcessing] = useState(false);
   const { startZipDownload } = useBatchDownloader();
@@ -201,6 +205,35 @@ export const RecordingCard = ({ rec, q, m, onKeyDown }: RecordingCardProps) => {
       return;
     }
     handleDownload();
+  };
+
+  const handleCopyLink = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (typeof window === "undefined") return;
+    const cat = categories?.find((c) => c?.id === rec.category_id);
+    const path = cat?.url_path
+      ? categoryPath(cat.url_path)
+      : window.location.pathname;
+    const url = `${window.location.origin}${path}?q=${rec.id}`;
+
+    try {
+      if (navigator?.clipboard?.writeText) {
+        await navigator.clipboard.writeText(url);
+      } else {
+        const textarea = document.createElement("textarea");
+        textarea.value = url;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand("copy");
+        document.body.removeChild(textarea);
+      }
+      setIsCopied(true);
+      toast.success("Recording link copied to clipboard");
+      setTimeout(() => setIsCopied(false), 2000);
+    } catch (err) {
+      console.error("Failed to copy recording link", err);
+      toast.error("Failed to copy link");
+    }
   };
 
   const hasMaterials = Boolean(rec.materials && rec.materials.length > 0);
@@ -367,6 +400,24 @@ export const RecordingCard = ({ rec, q, m, onKeyDown }: RecordingCardProps) => {
             <span className="hidden md:flex">YouTube</span>
           </Button>
         )}
+
+        <Button
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={handleCopyLink}
+          className="font-bold text-xs cursor-pointer"
+          title={isCopied ? "Link copied!" : "Copy link to recording"}
+        >
+          {isCopied ? (
+            <Check className="w-4 h-4 text-success" />
+          ) : (
+            <Link2 className="w-4 h-4" />
+          )}
+          <span className="hidden md:flex">
+            {isCopied ? "Copied" : "Share"}
+          </span>
+        </Button>
       </div>
     </div>
   );
