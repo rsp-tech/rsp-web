@@ -226,3 +226,43 @@ export const formatCompactDate = (dateStr?: string | null): string => {
     day: "numeric",
   });
 };
+
+export const copyToClipboard = async (text: string): Promise<boolean> => {
+  if (typeof window === "undefined") return false;
+  try {
+    if (navigator?.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+      return true;
+    }
+    const textarea = document.createElement("textarea");
+    textarea.value = text;
+    document.body.appendChild(textarea);
+    textarea.select();
+    const successful = document.execCommand("copy");
+    document.body.removeChild(textarea);
+    return successful;
+  } catch (err) {
+    console.error("Failed to copy to clipboard", err);
+    return false;
+  }
+};
+
+export const buildRecordingPermalink = ({
+  categoryUrlPath,
+  recId,
+  matId,
+}: {
+  categoryUrlPath?: string | null;
+  recId: number;
+  matId?: number | null;
+}): string => {
+  if (typeof window === "undefined") return "";
+  const path = categoryUrlPath
+    ? categoryPath(categoryUrlPath)
+    : window.location.pathname;
+  const params = new URLSearchParams({ q: String(recId) });
+  if (matId != null) {
+    params.set("m", String(matId));
+  }
+  return `${window.location.origin}${path}?${params.toString()}`;
+};

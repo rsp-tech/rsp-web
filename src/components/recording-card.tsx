@@ -23,7 +23,12 @@ import { useVideo } from "@/hooks/use-video";
 import { audioEngine } from "@/lib/audio-engine";
 import { sanitizeFileName } from "@/lib/material-utils";
 import { getAssetProxyUrl, getAssetUrl } from "@/lib/storage";
-import { categoryPath, cn, parseSize } from "@/lib/utils";
+import {
+  buildRecordingPermalink,
+  copyToClipboard,
+  cn,
+  parseSize,
+} from "@/lib/utils";
 import type { EnrichedRecording } from "@/types";
 import { RecordingMeta } from "./recording-meta";
 import { Button } from "./ui/button";
@@ -209,29 +214,18 @@ export const RecordingCard = ({ rec, q, m, onKeyDown }: RecordingCardProps) => {
 
   const handleCopyLink = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (typeof window === "undefined") return;
     const cat = categories?.find((c) => c?.id === rec.category_id);
-    const path = cat?.url_path
-      ? categoryPath(cat.url_path)
-      : window.location.pathname;
-    const url = `${window.location.origin}${path}?q=${rec.id}`;
+    const url = buildRecordingPermalink({
+      categoryUrlPath: cat?.url_path,
+      recId: rec.id,
+    });
 
-    try {
-      if (navigator?.clipboard?.writeText) {
-        await navigator.clipboard.writeText(url);
-      } else {
-        const textarea = document.createElement("textarea");
-        textarea.value = url;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand("copy");
-        document.body.removeChild(textarea);
-      }
+    const success = await copyToClipboard(url);
+    if (success) {
       setIsCopied(true);
       toast.success("Recording link copied to clipboard");
       setTimeout(() => setIsCopied(false), 2000);
-    } catch (err) {
-      console.error("Failed to copy recording link", err);
+    } else {
       toast.error("Failed to copy link");
     }
   };
