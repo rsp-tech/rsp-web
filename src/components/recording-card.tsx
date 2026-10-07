@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  AlertTriangle,
   Archive,
   Check,
   ChevronDown,
@@ -25,8 +26,8 @@ import { sanitizeFileName } from "@/lib/material-utils";
 import { getAssetProxyUrl, getAssetUrl } from "@/lib/storage";
 import {
   buildRecordingPermalink,
-  copyToClipboard,
   cn,
+  copyToClipboard,
   parseSize,
 } from "@/lib/utils";
 import type { EnrichedRecording } from "@/types";
@@ -38,6 +39,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import { Tooltip, TooltipContent, TooltipTrigger } from "./ui/tooltip";
 
 interface RecordingCardProps {
   rec: EnrichedRecording;
@@ -47,6 +49,19 @@ interface RecordingCardProps {
 }
 
 const CACHE_NAME = "rsp-audio-cache";
+
+const LargeFileWarning = ({ message }: { message: string }) => (
+  <Tooltip>
+    <TooltipTrigger asChild>
+      <span className="inline-flex items-center text-warning shrink-0">
+        <AlertTriangle className="w-3 h-3" />
+      </span>
+    </TooltipTrigger>
+    <TooltipContent side="left" className="max-w-xs text-xs">
+      {message}
+    </TooltipContent>
+  </Tooltip>
+);
 
 export const RecordingCard = ({ rec, q, m, onKeyDown }: RecordingCardProps) => {
   const { isPlaying, currentAudioId } = useAudioPlayback();
@@ -76,6 +91,10 @@ export const RecordingCard = ({ rec, q, m, onKeyDown }: RecordingCardProps) => {
   const isActiveTrack =
     rec.audio_id !== undefined && currentAudioId === rec.audio_id;
   const isOverStreamLimit = parseSize(rec.size) > STREAM_LIMIT_BYTES;
+  const hasLargeMaterials = Boolean(
+    rec.materials?.some((mat) => parseSize(mat.size) > STREAM_LIMIT_BYTES),
+  );
+  const hasAnyLargeFiles = isOverStreamLimit || hasLargeMaterials;
 
   const handlePlayClick = async () => {
     if (!rec.audio_id || isLoading) return;
@@ -340,28 +359,45 @@ export const RecordingCard = ({ rec, q, m, onKeyDown }: RecordingCardProps) => {
                 <DropdownMenuContent
                   align="end"
                   side="bottom"
-                  style={{ width: "15rem" }}
+                  style={{ width: "16rem" }}
                 >
                   <DropdownMenuItem
                     onClick={handleDownload}
-                    className="cursor-pointer gap-2 text-xs font-medium"
+                    className="cursor-pointer gap-2 text-xs font-medium justify-between"
                   >
-                    <Music className="w-4 h-4 text-muted-foreground" />
-                    <span>Audio Only (.mp3)</span>
+                    <div className="flex items-center gap-2">
+                      <Music className="w-4 h-4 text-muted-foreground" />
+                      <span>Audio Only (.mp3)</span>
+                    </div>
+                    {isOverStreamLimit && (
+                      <LargeFileWarning message="Audio exceeds 100 MB, so it will not be included in ZIP downloads and will open in a separate tab." />
+                    )}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={handleDownloadMaterials}
-                    className="cursor-pointer gap-2 text-xs font-medium"
+                    className="cursor-pointer gap-2 text-xs font-medium justify-between"
                   >
-                    <FolderDown className="w-4 h-4 text-muted-foreground" />
-                    <span>Materials Only ({rec.materials?.length}) (.zip)</span>
+                    <div className="flex items-center gap-2">
+                      <FolderDown className="w-4 h-4 text-muted-foreground" />
+                      <span>
+                        Materials Only ({rec.materials?.length}) (.zip)
+                      </span>
+                    </div>
+                    {hasLargeMaterials && (
+                      <LargeFileWarning message="Contains file(s) exceeding 100 MB, which will not be included in the ZIP archive and will open in a separate tab." />
+                    )}
                   </DropdownMenuItem>
                   <DropdownMenuItem
                     onClick={handleDownloadAll}
-                    className="cursor-pointer gap-2 text-xs font-medium"
+                    className="cursor-pointer gap-2 text-xs font-medium justify-between"
                   >
-                    <Archive className="w-4 h-4 text-muted-foreground" />
-                    <span>Complete Bundle (Audio + Materials)</span>
+                    <div className="flex items-center gap-2">
+                      <Archive className="w-4 h-4 text-muted-foreground" />
+                      <span>Complete Bundle (Audio + Materials)</span>
+                    </div>
+                    {hasAnyLargeFiles && (
+                      <LargeFileWarning message="Contains file(s) exceeding 100 MB, which will not be included in the ZIP archive and will open in a separate tab." />
+                    )}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>

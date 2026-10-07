@@ -45,7 +45,7 @@ border-success/20,3,17,0,0
 border-t,18,8,71,65
 border-transparent,3,18,39,31
 border-warning/20,3,17,0,0
-cursor-pointer,124,14,31,31
+cursor-pointer,126,14,31,31
 dark,1,4,900,249
 data-[range-end=true]:bg-primary,1,32,0,0
 data-[range-end=true]:text-primary-foreground,1,45,0,0
@@ -96,7 +96,7 @@ ease-in-out,4,11,88,62
 fade-in,2,7,30,34
 field-sizing-content,1,20,43,33
 fixed,12,5,22,21
-flex,450,4,19,23
+flex,454,4,19,23
 flex-1,36,6,15,19
 flex-col,217,8,32,33
 flex-row,4,8,29,33
@@ -122,8 +122,8 @@ font-semibold,77,13,100,60
 font-serif,9,10,42,46
 from-primary/20,4,15,0,0
 gap-1,80,5,26,30
-gap-1.5,88,7,0,0
-gap-2,123,5,36,40
+gap-1.5,89,7,0,0
+gap-2,126,5,36,40
 gap-2.5,13,7,0,0
 gap-3,52,5,36,40
 gap-4,45,5,36,40
@@ -148,7 +148,7 @@ grow,2,4,18,22
 h-10,3,4,39,43
 h-16,5,4,39,43
 h-2,6,3,37,41
-h-3,80,3,37,41
+h-3,83,3,37,41
 h-4,144,3,37,41
 h-5,26,3,37,41
 h-6,20,3,37,41
@@ -174,13 +174,13 @@ hover:text-primary/80,1,21,0,0
 hover:transition-all,5,20,0,0
 hover:underline,1,15,0,0
 icon,1,4,0,0
-inline-flex,18,11,33,31
+inline-flex,21,11,33,31
 inset-0,20,7,17,21
 isolate,2,7,27,31
 italic,12,6,26,30
-items-center,214,12,33,30
+items-center,221,12,33,30
 items-start,23,11,36,32
-justify-between,47,15,47,35
+justify-between,50,15,47,35
 justify-center,39,14,39,31
 justify-end,9,11,38,36
 justify-start,7,13,42,35
@@ -203,7 +203,7 @@ max-w-7xl,3,9,42,41
 max-w-lg,5,8,40,44
 max-w-md,8,8,40,37
 max-w-sm,6,8,40,44
-max-w-xs,15,8,40,44
+max-w-xs,18,8,40,44
 mb-2,2,4,45,49
 mb-4,4,4,45,49
 mb-6,2,4,45,49
@@ -272,7 +272,7 @@ pt-0,1,4,20,24
 pt-1,5,4,33,32
 pt-2,18,4,43,47
 pt-4,4,4,43,47
-px-1,9,4,36,38
+px-1,10,4,36,38
 px-1.5,5,6,0,0
 px-2,37,4,46,50
 px-2.5,8,6,0,0
@@ -303,7 +303,7 @@ self-start,2,10,34,34
 self-stretch,2,12,33,33
 shadow-md,27,9,254,106
 shadow-primary/10,1,17,0,0
-shrink-0,108,8,24,28
+shrink-0,111,8,24,28
 size-3.5,8,8,0,0
 size-4,15,6,71,62
 sm:flex,5,7,0,0
@@ -336,10 +336,10 @@ text-primary,95,12,35,35
 text-primary-foreground,4,23,57,50
 text-sm,53,7,92,56
 text-success,8,12,35,34
-text-warning,10,12,35,35
+text-warning,13,12,35,35
 text-white,7,10,37,41
 text-xl,13,7,92,57
-text-xs,196,7,92,57
+text-xs,199,7,92,57
 text-xxs,77,8,65,55
 to-transparent,4,14,234,83
 toaster,1,7,0,0
@@ -354,7 +354,7 @@ via-primary/5,4,13,0,0
 w-10,4,4,38,42
 w-16,7,4,38,42
 w-2,4,3,36,40
-w-3,77,3,36,40
+w-3,80,3,36,40
 w-4,140,3,36,40
 w-5,26,3,36,40
 w-6,8,3,36,40

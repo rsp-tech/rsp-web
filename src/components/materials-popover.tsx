@@ -1,11 +1,18 @@
 "use client";
 
-import { Download, Loader2 } from "lucide-react";
+import { AlertTriangle, Download, Loader2 } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import { STREAM_LIMIT_BYTES } from "@/constants";
 import { useBatchDownloader } from "@/hooks/use-batch-downloader";
 import { sanitizeFileName } from "@/lib/material-utils";
+import { parseSize } from "@/lib/utils";
 import type { EnrichedRecording, Material } from "@/types";
 import { MaterialBadge } from "./material-badge";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
@@ -25,6 +32,9 @@ export const MaterialsPopover = ({
 }: MaterialsPopoverProps) => {
   const [isDownloading, setIsDownloading] = useState(false);
   const { startZipDownload } = useBatchDownloader();
+  const hasOverLimitMaterials = materials.some(
+    (mat) => parseSize(mat.size) > STREAM_LIMIT_BYTES,
+  );
 
   const handleDownloadAll = async (e: React.MouseEvent) => {
     e.preventDefault();
@@ -59,8 +69,23 @@ export const MaterialsPopover = ({
         style={{ width: "20rem", maxWidth: "calc(100vw - 2rem)" }}
       >
         <div className="flex items-center justify-between pb-1 border-b border-border">
-          <div className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
-            All Materials ({materials.length})
+          <div className="flex items-center gap-1.5">
+            <span className="text-xs font-bold uppercase tracking-wider text-muted-foreground">
+              All Materials ({materials.length})
+            </span>
+            {hasOverLimitMaterials && (
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <span className="inline-flex items-center text-warning shrink-0 cursor-pointer">
+                    <AlertTriangle className="w-3 h-3" />
+                  </span>
+                </TooltipTrigger>
+                <TooltipContent side="top" className="max-w-xs text-xs">
+                  Some materials exceed 100 MB, so they will not be included in
+                  the ZIP archive and will open in a separate tab.
+                </TooltipContent>
+              </Tooltip>
+            )}
           </div>
           {rec && (
             <Button

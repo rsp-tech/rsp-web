@@ -1,6 +1,13 @@
 "use client";
 
-import { Check, ExternalLink, Eye, FileDown, Link2 } from "lucide-react";
+import {
+  AlertTriangle,
+  Check,
+  ExternalLink,
+  Eye,
+  FileDown,
+  Link2,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
@@ -9,14 +16,16 @@ import {
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { STREAM_LIMIT_BYTES } from "@/constants";
 import { useCategories } from "@/hooks/use-categories";
 import { useMaterialPreview } from "@/hooks/use-material-preview";
 import { getMaterialIcon, isMaterialLink } from "@/lib/material-utils";
 import { getAssetUrl } from "@/lib/storage";
 import {
   buildRecordingPermalink,
-  copyToClipboard,
   cn,
+  copyToClipboard,
+  parseSize,
 } from "@/lib/utils";
 import type { EnrichedRecording, Material } from "@/types";
 
@@ -38,6 +47,7 @@ export const MaterialBadge = ({
   const { data: categories } = useCategories();
   const [isCopied, setIsCopied] = useState(false);
   const isLink = isMaterialLink(uri);
+  const isOverLimit = parseSize(mat.size) > STREAM_LIMIT_BYTES;
 
   const handlePreviewClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -105,6 +115,23 @@ export const MaterialBadge = ({
         </TooltipTrigger>
         <TooltipContent side="top">Preview &ldquo;{name}&rdquo;</TooltipContent>
       </Tooltip>
+
+      {isOverLimit && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <span
+              className="inline-flex items-center px-1 text-warning shrink-0 cursor-pointer"
+              style={{ borderLeft: "1px solid var(--border)" }}
+            >
+              <AlertTriangle className="w-3 h-3" />
+            </span>
+          </TooltipTrigger>
+          <TooltipContent side="top" className="max-w-xs text-xs">
+            File exceeds 100 MB, so it will not be included in ZIP downloads and
+            will open in a separate tab for direct download.
+          </TooltipContent>
+        </Tooltip>
+      )}
 
       <Tooltip>
         <TooltipTrigger asChild>
