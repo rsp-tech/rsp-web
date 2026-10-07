@@ -8,6 +8,16 @@ export const AboutHero = () => {
       <div className="about-section-container">
         <div className="about-hero-grid">
           <div className="flex flex-col">
+            {/* Mobile Portrait */}
+            <div className="about-hero-mobile-avatar reveal-blur">
+              <img
+                src="https://lh3.googleusercontent.com/d/1O80a5yBfDyVcIcvN3xg4wQ5kC03quRt2"
+                alt="Radheshyam Das"
+                width={200}
+                height={200}
+              />
+            </div>
+
             <p className="about-hero-tagline reveal-blur">
               Inspiring People. Strengthening Teams. Elevating Performance.
             </p>
@@ -26,7 +36,7 @@ export const AboutHero = () => {
               help individuals and organizations lead with clarity, resilience,
               and purpose.
             </p>
-            <div className="flex flex-wrap gap-4 pt-2 reveal-3d">
+            <div className="about-hero-btn-group reveal-3d">
               <Button asChild size="lg" className="about-btn about-btn-primary">
                 <a href="#workshops">Explore Workshops</a>
               </Button>

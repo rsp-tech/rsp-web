@@ -1,6 +1,7 @@
 - [x] Add all materials per audio
+- [x] refine about page ux on mobile
 - [ ] Clean up download all UX --- it should not create confusion
-- [ ] Move all images to drive
+- [x] Move all images to drive
 
 - [x] Checkbox to disable fuzzy search
 - [x] TipTap for queries page with mentions

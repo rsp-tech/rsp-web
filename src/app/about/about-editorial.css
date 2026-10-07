@@ -370,6 +370,18 @@
   line-height: 1.85;
 }
 
+.about-hero-mobile-avatar {
+  display: none;
+}
+
+.about-hero-btn-group,
+.about-charcoal-btn-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding-top: 8px;
+}
+
 /* Buttons */
 .about-btn {
   display: inline-flex;
@@ -1183,4 +1195,419 @@
   font-size: 0.875rem;
   color: var(--text-slate);
   line-height: 1.7;
+}
+
+/* ==========================================================================
+   Responsive Enhancements (Tablet & Mobile)
+   ========================================================================== */
+
+@media (max-width: 992px) {
+  .about-hero-grid,
+  .about-charcoal-grid,
+  .about-collage-grid,
+  .about-why-grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .about-collage-card-main {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .about-section-container {
+    width: 92%;
+  }
+
+  .about-section-pad {
+    padding: 50px 0;
+  }
+
+  .about-sec-title-wrap {
+    margin-bottom: 30px;
+  }
+
+  .about-sec-sub {
+    font-size: 0.7rem;
+    letter-spacing: 2.5px;
+    margin-bottom: 10px;
+  }
+
+  .about-sec-title {
+    font-size: 1.95rem;
+    line-height: 1.2;
+  }
+
+  .about-sec-desc {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-top: 10px;
+  }
+
+  .about-editorial-p {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  /* 1. Hero Mobile */
+  .about-hero-wrap {
+    min-height: auto;
+    padding: 95px 0 45px;
+    clip-path: none;
+    background:
+      linear-gradient(rgba(30, 32, 30, 0.9), rgba(30, 32, 30, 0.92)),
+      url("https://lh3.googleusercontent.com/d/1O80a5yBfDyVcIcvN3xg4wQ5kC03quRt2")
+      no-repeat center top / cover;
+  }
+
+  .about-hero-grid {
+    grid-template-columns: 1fr;
+    text-align: center;
+    gap: 16px;
+  }
+
+  .about-hero-mobile-avatar {
+    display: block;
+    margin: 0 auto 16px auto;
+    width: 140px;
+    height: 140px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 2.5px solid var(--accent-gold);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    flex-shrink: 0;
+  }
+
+  .about-hero-mobile-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: 78% center;
+  }
+
+  .about-hero-tagline {
+    font-size: 0.68rem;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+  }
+
+  .about-hero-h1 {
+    font-size: 2.1rem;
+    line-height: 1.18;
+    margin-bottom: 12px;
+  }
+
+  .about-hero-highlight {
+    padding: 2px 12px;
+  }
+
+  .about-hero-desc {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    margin: 0 auto 20px auto;
+  }
+
+  .about-hero-btn-group,
+  .about-charcoal-btn-group {
+    justify-content: center;
+    gap: 10px;
+  }
+
+  .about-btn {
+    padding: 10px 20px;
+    font-size: 0.72rem;
+    letter-spacing: 1px;
+    flex: 0 1 auto;
+  }
+
+  /* 2. Marquee */
+  .about-marquee-wrap {
+    padding: 24px 0;
+  }
+
+  .about-logo-marquee-item {
+    min-width: 90px;
+  }
+
+  .about-logo-marquee-img {
+    height: 26px;
+  }
+
+  /* 3. Charcoal Bio */
+  .about-charcoal-sec {
+    padding: 40px 0;
+    margin: 24px 0;
+  }
+
+  .about-charcoal-sec::before {
+    height: 24px;
+    top: -24px;
+  }
+
+  .about-charcoal-sec::after {
+    height: 24px;
+    bottom: -24px;
+  }
+
+  .about-charcoal-grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .about-charcoal-portrait {
+    width: 170px;
+    height: 170px;
+    max-width: 170px;
+    aspect-ratio: 1 / 1;
+    border-radius: 50%;
+    border: 2.5px solid var(--accent-gold);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  }
+
+  .about-charcoal-name {
+    font-size: 2rem;
+    margin-bottom: 6px;
+  }
+
+  .about-charcoal-text {
+    font-size: 0.88rem;
+    line-height: 1.6;
+    margin-bottom: 14px;
+    text-align: left;
+  }
+
+  /* 4. Collages */
+  .about-collage-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .about-collage-card-main {
+    max-width: 100%;
+  }
+
+  .about-collage-card-sub {
+    width: 65%;
+    margin-top: -24%;
+    border-width: 3px;
+  }
+
+  .about-academic-logos {
+    gap: 16px;
+    justify-content: center;
+  }
+
+  .about-academic-logo-img {
+    height: 22px;
+  }
+
+  /* 5. Workshops & Program Formats (Swipe Carousel on Mobile) */
+  .about-filter-row {
+    gap: 8px;
+    margin-bottom: 24px;
+  }
+
+  .about-filter-row button {
+    font-size: 0.68rem;
+    padding: 6px 12px;
+    height: 32px;
+  }
+
+  .about-workshops-grid {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 16px;
+    padding-bottom: 16px;
+    padding-left: 4px;
+    padding-right: 4px;
+  }
+
+  .about-workshops-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .about-workshop-card {
+    flex: 0 0 82%;
+    min-width: 250px;
+    max-width: 320px;
+    scroll-snap-align: center;
+    padding: 24px 20px;
+    margin: 0;
+  }
+
+  .about-workshop-card.about-capstone {
+    flex: 0 0 82%;
+    max-width: 320px;
+    grid-column: auto;
+  }
+
+  .about-workshop-title {
+    font-size: 1.15rem;
+  }
+
+  .about-workshop-desc {
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  .about-formats-heading {
+    margin-top: 44px;
+    margin-bottom: 24px;
+  }
+
+  .about-formats-grid {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 12px;
+    padding-bottom: 16px;
+    padding-left: 4px;
+    padding-right: 4px;
+    grid-template-columns: unset;
+  }
+
+  .about-formats-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .about-format-card {
+    flex: 0 0 160px;
+    scroll-snap-align: center;
+    padding: 22px 14px;
+  }
+
+  /* 6. Books Showcase (Swipe Carousel on Mobile) */
+  .about-books-sec {
+    padding: 50px 0;
+    margin: 20px 0;
+    clip-path: polygon(0 2%, 100% 0, 100% 100%, 0 98%);
+  }
+
+  .about-books-grid {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 16px;
+    padding-bottom: 16px;
+    padding-left: 4px;
+    padding-right: 4px;
+    grid-template-columns: unset;
+  }
+
+  .about-books-grid::-webkit-scrollbar {
+    display: none;
+  }
+
+  .about-book-card {
+    flex: 0 0 82%;
+    max-width: 300px;
+    scroll-snap-align: center;
+    padding: 24px 20px;
+  }
+
+  .about-book-img-wrap {
+    max-width: 150px;
+    margin-bottom: 16px;
+  }
+
+  .about-book-title {
+    font-size: 1.25rem;
+    margin-bottom: 8px;
+  }
+
+  .about-book-desc {
+    font-size: 0.82rem;
+    line-height: 1.5;
+    margin-bottom: 16px;
+  }
+
+  /* 7. Why Organizations Invite Him */
+  .about-why-grid {
+    grid-template-columns: 1fr;
+    gap: 28px;
+  }
+
+  .about-quote-box {
+    padding: 24px 18px;
+    border-radius: 0 12px 12px 0;
+  }
+
+  .about-invite-heading {
+    font-size: 1rem;
+  }
+
+  .about-invite-desc {
+    font-size: 0.82rem;
+    line-height: 1.5;
+  }
+
+  /* 8. Testimonials */
+  .about-testimonial-wrap {
+    padding: 0 32px;
+  }
+
+  .about-testimonial-avatar {
+    width: 80px;
+    height: 80px;
+    margin-bottom: 16px;
+  }
+
+  .about-testimonial-quote {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 16px;
+  }
+
+  .about-testimonial-nav-btn {
+    width: 36px;
+    height: 36px;
+  }
+
+  /* 9. Gallery & Consultation */
+  .about-gallery-card {
+    width: 200px;
+  }
+
+  .about-contact-form-card {
+    padding: 20px 14px;
+  }
+
+  .about-form-input,
+  .about-form-select,
+  .about-form-textarea {
+    padding: 8px 12px;
+    font-size: 0.82rem;
+  }
+}
+
+/* === Small Mobile (max-width: 480px) === */
+@media (max-width: 480px) {
+  .about-hero-h1 {
+    font-size: 1.85rem;
+  }
+
+  .about-sec-title {
+    font-size: 1.75rem;
+  }
+
+  .about-testimonial-wrap {
+    padding: 0 20px;
+  }
+
+  .about-gallery-card {
+    width: 160px;
+  }
 }

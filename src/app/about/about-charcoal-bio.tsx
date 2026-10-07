@@ -44,7 +44,7 @@ export const AboutCharcoalBio = () => {
               leadership.
             </p>
 
-            <div className="flex flex-wrap gap-4 pt-2">
+            <div className="about-charcoal-btn-group">
               <Button asChild size="lg" className="about-btn about-btn-primary">
                 <a href="#initiatives">Key Initiatives</a>
               </Button>

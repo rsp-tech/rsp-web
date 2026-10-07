@@ -96,11 +96,11 @@ ease-in-out,4,11,88,62
 fade-in,2,7,30,34
 field-sizing-content,1,20,43,33
 fixed,12,5,22,21
-flex,454,4,19,23
+flex,452,4,19,23
 flex-1,36,6,15,19
 flex-col,217,8,32,33
 flex-row,4,8,29,33
-flex-wrap,20,9,26,30
+flex-wrap,18,9,26,30
 focus-visible:after:border-ring,1,31,0,0
 focus-visible:border-primary,1,28,0,0
 focus-visible:border-ring,5,25,0,0
@@ -126,7 +126,7 @@ gap-1.5,89,7,0,0
 gap-2,126,5,36,40
 gap-2.5,13,7,0,0
 gap-3,52,5,36,40
-gap-4,45,5,36,40
+gap-4,43,5,36,40
 gap-6,16,5,36,40
 gap-8,9,5,36,40
 ghost,1,5,0,0
@@ -270,7 +270,7 @@ pr-10,4,5,47,51
 pr-4,1,4,45,49
 pt-0,1,4,20,24
 pt-1,5,4,33,32
-pt-2,18,4,43,47
+pt-2,16,4,43,47
 pt-4,4,4,43,47
 px-1,10,4,36,38
 px-1.5,5,6,0,0

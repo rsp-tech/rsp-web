@@ -85,7 +85,7 @@ const jsonLd = {
   },
 };
 
-export default function AboutPage() {
+const AboutPage = () => {
   return (
     <div className="about-page-root">
       <script
@@ -151,4 +151,6 @@ export default function AboutPage() {
       />
     </div>
   );
-}
+};
+
+export default AboutPage;

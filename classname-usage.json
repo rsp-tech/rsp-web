@@ -1,6 +1,6 @@
 {
   "totalClasses": 365,
-  "timestamp": "2026-10-07T06:21:51.210Z",
+  "timestamp": "2026-10-07T15:57:19.574Z",
   "baselineCSSBytes": 67086,
   "baselineBrotliBytes": 9845,
   "newlyAddedClasses": [],
@@ -12,10 +12,10 @@
       "gZipBytes": 12204
     },
     {
-      "file": "b937c0a36a6b17c3.css",
-      "rawBytes": 18035,
-      "brotliBytes": 3760,
-      "gZipBytes": 4336
+      "file": "cb0ec87078fcef75.css",
+      "rawBytes": 23232,
+      "brotliBytes": 4537,
+      "gZipBytes": 5214
     }
   ],
   "primitiveUsage": {
@@ -953,7 +953,7 @@
     },
     {
       "className": "flex",
-      "frequency": 454,
+      "frequency": 452,
       "length": 4,
       "uncompressedBytes": 19,
       "brotliBytesUpperLimit": 23,
@@ -985,7 +985,7 @@
     },
     {
       "className": "flex-wrap",
-      "frequency": 20,
+      "frequency": 18,
       "length": 9,
       "uncompressedBytes": 26,
       "brotliBytesUpperLimit": 30,
@@ -1193,7 +1193,7 @@
     },
     {
       "className": "gap-4",
-      "frequency": 45,
+      "frequency": 43,
       "length": 5,
       "uncompressedBytes": 36,
       "brotliBytesUpperLimit": 40,
@@ -2345,7 +2345,7 @@
     },
     {
       "className": "pt-2",
-      "frequency": 18,
+      "frequency": 16,
       "length": 4,
       "uncompressedBytes": 43,
       "brotliBytesUpperLimit": 47,
