@@ -206,6 +206,11 @@ export const sendAxiomLog = (
     return Promise.resolve();
   }
 
+  // Skip during build phase to avoid sending build telemetry and accessing time during static prerender
+  if (process.env["NEXT_PHASE"] === "phase-production-build") {
+    return Promise.resolve();
+  }
+
   const token = process.env["AXIOM_TOKEN"];
   if (!token) {
     return Promise.resolve();
@@ -221,39 +226,45 @@ export const sendAxiomLog = (
       ? (sanitizedAttributes["event"] as string)
       : `app.${level}`;
 
-  const eventPayload = {
-    _time: new Date().toISOString(),
-    level,
-    event: eventName,
-    message,
-    environment: process.env.NODE_ENV || "production",
-    ...sanitizedAttributes,
-    service: "rsp-web",
-  };
+  const send = async (): Promise<void> => {
+    const eventPayload = {
+      _time: new Date().toISOString(),
+      level,
+      event: eventName,
+      message,
+      environment: process.env.NODE_ENV || "production",
+      ...sanitizedAttributes,
+      service: "rsp-web",
+    };
 
-  const ingestPromise = fetch(url, {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify([eventPayload]),
-    cache: "no-store",
-  })
-    .then((res) => {
+    try {
+      const res = await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify([eventPayload]),
+        cache: "no-store",
+      });
+
       if (!res.ok && process.env.NODE_ENV === "development") {
         console.error(`[Axiom Logger] Ingest response status: ${res.status}`);
       }
-    })
-    .catch((err) => {
+    } catch (err) {
       if (process.env.NODE_ENV === "development") {
         console.error("[Axiom Logger] Ingest failed:", err);
       }
-    });
+    }
+  };
 
-  scheduleTask(ingestPromise);
+  // In test environment, execute directly so callers can await the promise
+  if (process.env["VITEST"] !== undefined) {
+    return send();
+  }
 
-  return ingestPromise;
+  scheduleTask(send);
+  return Promise.resolve();
 };
 
 export const logApiRequest = (
