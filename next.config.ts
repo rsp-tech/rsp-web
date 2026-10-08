@@ -23,6 +23,7 @@ const nextConfig: NextConfig = {
   reactCompiler: true,
   reactStrictMode: true,
   cacheComponents: true,
+  partialPrefetching: true,
   cacheLife: {
     days: {
       stale: 86400,
