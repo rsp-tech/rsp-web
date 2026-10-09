@@ -62,7 +62,7 @@ const STATIC_FILE_EXTENSIONS =
 
 export const isValidCategoryPath = (value: string) =>
   /^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*$/.test(value) &&
-  !value.startsWith("_next") &&
+  !/^[-_.](next|well-known)/.test(value) &&
   !STATIC_FILE_EXTENSIONS.test(value);
 
 const safeDecodeUri = (str: string): string => {
