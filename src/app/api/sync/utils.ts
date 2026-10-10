@@ -115,7 +115,7 @@ const getCachedBackupAssetData = async (
   targetResource: string,
 ): Promise<CachedAsset | null> => {
   const cached = assetMemoryCache.get(targetResource);
-  if (cached && Date.now() < cached.expiresAt) {
+  if (cached && performance.now() < cached.expiresAt) {
     return cached;
   }
 
@@ -123,7 +123,7 @@ const getCachedBackupAssetData = async (
   if (live) {
     assetMemoryCache.set(targetResource, {
       ...live,
-      expiresAt: Date.now() + ASSET_CACHE_TTL_MS,
+      expiresAt: performance.now() + ASSET_CACHE_TTL_MS,
     });
   }
   return live;

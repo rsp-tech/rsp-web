@@ -1,7 +1,6 @@
 "use client";
 
 import { LogIn } from "lucide-react";
-import dynamic from "next/dynamic";
 import { useState } from "react";
 import { CurrentUserAvatar } from "@/components/current-user-avatar";
 import { Button } from "@/components/ui/button";
@@ -9,16 +8,9 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { AuthModal } from "./auth-modal";
 import { useSession } from "./providers";
 import { DropdownMenu, DropdownMenuTrigger } from "./ui/dropdown-menu";
+import { UserNavDropdownContent } from "./user-nav-dropdown-content";
 
-const UserNavDropdownContent = dynamic(
-  () =>
-    import("./user-nav-dropdown-content").then(
-      (mod) => mod.UserNavDropdownContent,
-    ),
-  { ssr: false },
-);
-
-export function UserNav() {
+export const UserNav = () => {
   const { session, isLoading } = useSession();
   const [authOpen, setAuthOpen] = useState(false);
 
@@ -53,4 +45,4 @@ export function UserNav() {
       <UserNavDropdownContent {...{ session }} />
     </DropdownMenu>
   );
-}
+};

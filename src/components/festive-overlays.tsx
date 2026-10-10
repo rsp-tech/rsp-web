@@ -1,32 +1,10 @@
 "use client";
 
-import dynamic from "next/dynamic";
 import { FloatingGreetingPill } from "@/components/floating-greeting-pill";
+import { CelestialDustOverlay } from "@/components/overlays/celestial-dust-overlay";
+import { DeepotsavaOverlay } from "@/components/overlays/deepotsava-overlay";
+import { PushpaVrishtiOverlay } from "@/components/overlays/pushpa-vrishti-overlay";
 import { useHomepage } from "@/hooks/use-homepage";
-
-const PushpaVrishtiOverlay = dynamic(
-  () =>
-    import("@/components/overlays/pushpa-vrishti-overlay").then(
-      (mod) => mod.PushpaVrishtiOverlay,
-    ),
-  { ssr: false },
-);
-
-const DeepotsavaOverlay = dynamic(
-  () =>
-    import("@/components/overlays/deepotsava-overlay").then(
-      (mod) => mod.DeepotsavaOverlay,
-    ),
-  { ssr: false },
-);
-
-const CelestialDustOverlay = dynamic(
-  () =>
-    import("@/components/overlays/celestial-dust-overlay").then(
-      (mod) => mod.CelestialDustOverlay,
-    ),
-  { ssr: false },
-);
 
 export const FestiveOverlays = () => {
   const { data: homepageData } = useHomepage();

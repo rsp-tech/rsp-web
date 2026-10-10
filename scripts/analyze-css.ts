@@ -393,7 +393,7 @@ const main = async (): Promise<void> => {
     }
 
     // --- Next.js Build Artifact Analysis Additions ---
-    const nextCssDir = path.join(process.cwd(), ".next", "static", "css");
+    const nextStaticDir = path.join(process.cwd(), ".next", "static");
     const nextCssFilesData: Array<{
       file: string;
       rawBytes: number;
@@ -402,11 +402,24 @@ const main = async (): Promise<void> => {
     }> = [];
 
     try {
-      const nextFiles = await fs.readdir(nextCssDir);
-      const cssChunks = nextFiles.filter((f) => f.endsWith(".css"));
+      const findCssFiles = async (dir: string): Promise<string[]> => {
+        const entries = await fs.readdir(dir, { withFileTypes: true });
+        const files: string[] = [];
+        for (const entry of entries) {
+          const full = path.join(dir, entry.name);
+          if (entry.isDirectory()) {
+            files.push(...(await findCssFiles(full)));
+          } else if (entry.isFile() && entry.name.endsWith(".css")) {
+            files.push(full);
+          }
+        }
+        return files;
+      };
 
-      for (const file of cssChunks) {
-        const fullPath = path.join(nextCssDir, file);
+      const cssFiles = await findCssFiles(nextStaticDir);
+
+      for (const fullPath of cssFiles) {
+        const file = path.basename(fullPath);
         const buf = await fs.readFile(fullPath);
         nextCssFilesData.push({
           file,
@@ -419,7 +432,7 @@ const main = async (): Promise<void> => {
       nextCssFilesData.sort((a, b) => b.rawBytes - a.rawBytes);
     } catch {
       console.warn(
-        "⚠️ Warning: Could not locate '.next/static/css'. Run 'next build' first.",
+        "⚠️ Warning: Could not locate CSS files in '.next/static'. Run 'next build' first.",
       );
     }
     // ------------------------------------------------
