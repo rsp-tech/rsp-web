@@ -12,6 +12,7 @@ const withSerwist = withSerwistInit({
   swSrc: "src/app/sw.ts",
   swDest: "public/sw.js",
   exclude: [/\.map$/, /^manifest.*\.js$/, /\.rsc$/],
+  maximumFileSizeToCacheInBytes: 5 * 1024 * 1024,
   additionalPrecacheEntries: [
     { url: "/", revision },
     { url: "/settings", revision },
@@ -127,6 +128,44 @@ const nextConfig: NextConfig = {
         ],
       },
     ];
+  },
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      config.optimization = config.optimization || {};
+      config.optimization.splitChunks = {
+        chunks: "all",
+        maxInitialRequests: 8,
+        maxAsyncRequests: 8,
+        minSize: 25000,
+        cacheGroups: {
+          default: false,
+          vendors: false,
+          framework: {
+            name: "framework",
+            chunks: "all",
+            test: /[\\/]node_modules[\\/](react|react-dom|scheduler)[\\/]/,
+            priority: 40,
+            enforce: true,
+          },
+          lib: {
+            test: /[\\/]node_modules[\\/]/,
+            name: "vendor",
+            priority: 30,
+            minChunks: 1,
+            reuseExistingChunk: true,
+          },
+          commons: {
+            name: "commons",
+            chunks: "all",
+            test: /[\\/]src[\\/](components|hooks|lib)[\\/]/,
+            minChunks: 1,
+            priority: 20,
+            reuseExistingChunk: true,
+          },
+        },
+      };
+    }
+    return config;
   },
 };
 

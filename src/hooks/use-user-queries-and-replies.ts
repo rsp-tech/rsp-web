@@ -1,6 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import { type QueryClient, useQuery } from "@tanstack/react-query";
 import { STORE } from "@/constants";
 import { getDB } from "@/lib/idb";
 import { sortByDate } from "@/lib/utils";
@@ -51,7 +51,7 @@ export const useUserQueriesAndReplies = (userId: string | undefined) =>
   });
 
 export const saveUserQueryToIdb = async (
-  queryClient: import("@tanstack/react-query").QueryClient,
+  queryClient: QueryClient,
   userId?: string,
   data?: unknown,
 ) => {
