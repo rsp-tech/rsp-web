@@ -1,18 +1,12 @@
 "use client";
 
 import { Menu } from "lucide-react";
-import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetTrigger } from "@/components/ui/sheet";
+import { MobileDrawerContent } from "./mobile-drawer-content";
 
-const MobileDrawerContent = dynamic(
-  () =>
-    import("./mobile-drawer-content").then((mod) => mod.MobileDrawerContent),
-  { ssr: false },
-);
-
-export function MobileDrawer() {
+export const MobileDrawer = () => {
   const [open, setOpen] = useState(false);
 
   return (
@@ -30,4 +24,4 @@ export function MobileDrawer() {
       <MobileDrawerContent {...{ setOpen }} />
     </Sheet>
   );
-}
+};
