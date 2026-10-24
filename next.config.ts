@@ -45,6 +45,23 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
 
+  async rewrites() {
+    return [
+      {
+        source: "/health",
+        destination: "/api/health",
+      },
+      {
+        source: "/healthz",
+        destination: "/api/health",
+      },
+      {
+        source: "/live",
+        destination: "/api/health",
+      },
+    ];
+  },
+
   async headers() {
     return [
       {
