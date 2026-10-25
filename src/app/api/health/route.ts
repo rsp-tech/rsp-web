@@ -1,8 +1,5 @@
 import { NextResponse } from "next/server";
 
-export const dynamic = "force-static";
-export const revalidate = 86400; // Cache for 24 hours
-
 export const GET = () => {
   return NextResponse.json(
     {
