@@ -39,8 +39,8 @@ export const syncRoleData = async (
   const { serverMeta } = await fetchSyncMeta(origin);
   const isStale = await isDatabaseStale(db, serverMeta);
 
-  // Phase 2: Role Base Seed (if role changed or DB is stale)
-  if (!storedRole || storedRole !== roleId || isStale) {
+  // Phase 2: Role Base Seed (if role changed or DB is stale or role was cleared)
+  if (!storedRole || storedRole !== roleId || isStale || clearedRole) {
     try {
       progressCallback?.("उत्कर्षयति… · Optimizing…");
       const loaded = await loadStaticZipSeedsForRole(
