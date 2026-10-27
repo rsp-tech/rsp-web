@@ -5,6 +5,7 @@ export const REVALIDATE_30_DAYS = 2592000; // 30 days
 // Cache tags & keys (unified for cache storage slots and on-demand revalidation)
 export const CACHE_TAG = {
   SYNC_META: "sync-meta",
+  URL_PATHS: "url-paths",
   BACKUP_RESOURCES: "backup-resources",
   FEATURE_FLAGS: "feature-flags",
 } as const;
