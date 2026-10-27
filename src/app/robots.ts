@@ -1,5 +1,18 @@
 import type { MetadataRoute } from "next";
 
+const DISALLOWED_PATHS = [
+  "/api/",
+  "/health",
+  "/healthz",
+  "/profile",
+  "/settings",
+  "/wp-admin",
+  "/wp-login",
+  "/wp-content",
+  "/ipfs",
+  "/*.php$",
+];
+
 const robots = (): MetadataRoute.Robots => {
   return {
     rules: [
@@ -36,12 +49,12 @@ const robots = (): MetadataRoute.Robots => {
           "Google-Extended",
         ],
         allow: "/",
-        disallow: ["/api/", "/health", "/healthz", "/profile", "/settings"],
+        disallow: DISALLOWED_PATHS,
       },
       {
         userAgent: "*",
         allow: "/",
-        disallow: ["/api/", "/health", "/healthz", "/profile", "/settings"],
+        disallow: DISALLOWED_PATHS,
       },
     ],
     sitemap: "https://radheshyamdas.com/sitemap.xml",

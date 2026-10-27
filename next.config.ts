@@ -89,6 +89,26 @@ const nextConfig: NextConfig = {
         source: "/live",
         destination: "/api/health",
       },
+      {
+        source: "/android-icon-192x192.png",
+        destination: "/icon-192x192.webp",
+      },
+      {
+        source: "/android-icon-:size*.png",
+        destination: "/icon-192x192.webp",
+      },
+      {
+        source: "/favicon-:size*.png",
+        destination: "/favicon.ico",
+      },
+      {
+        source: "/apple-icon-:size*.png",
+        destination: "/apple-touch-icon.png",
+      },
+      {
+        source: "/apple-icon.png",
+        destination: "/apple-touch-icon.png",
+      },
     ];
   },
 
