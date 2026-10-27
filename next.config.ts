@@ -94,15 +94,15 @@ const nextConfig: NextConfig = {
         destination: "/icon-192x192.webp",
       },
       {
-        source: "/android-icon-:size*.png",
+        source: "/android-icon-:size(.*).png",
         destination: "/icon-192x192.webp",
       },
       {
-        source: "/favicon-:size*.png",
+        source: "/favicon-:size(.*).png",
         destination: "/favicon.ico",
       },
       {
-        source: "/apple-icon-:size*.png",
+        source: "/apple-icon-:size(.*).png",
         destination: "/apple-touch-icon.png",
       },
       {
