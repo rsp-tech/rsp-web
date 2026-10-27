@@ -1,4 +1,5 @@
 ---
+
 name: dry-refactoring
 description: Guided workflow to eliminate copy-paste duplication detected by jscpd. Refactor clones using extract function, module, constant, or base class strategies.
 ---
