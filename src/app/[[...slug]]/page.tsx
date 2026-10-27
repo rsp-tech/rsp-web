@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
+import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { getCachedUrlPaths } from "@/app/api/sync/delta-service";
 import { ASSET_BASE_URL } from "@/constants";
@@ -331,6 +332,17 @@ const CategoryPage = async ({ params }: PageProps) => {
   );
 
   if (!data && status === 404) {
+    const reqHeaders = await headers();
+    const forwardedFor = reqHeaders.get("x-forwarded-for");
+    const ip =
+      forwardedFor?.split(",")[0]?.trim() ||
+      reqHeaders.get("x-real-ip") ||
+      "unknown";
+    const userAgent = reqHeaders.get("user-agent") ?? undefined;
+    const referer = reqHeaders.get("referer") ?? undefined;
+
+    console.log({ip, referer, userAgent})
+
     axiomLogger.warn(`Category page not found: /${requestedPath}`, {
       event: "page.not_found",
       route: "/[[...slug]]",
@@ -338,6 +350,9 @@ const CategoryPage = async ({ params }: PageProps) => {
       url_path: requestedPath,
       status: 404,
       duration_ms: durationMs,
+      ip,
+      user_agent: userAgent,
+      referer,
     });
     return notFound();
   }
