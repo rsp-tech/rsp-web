@@ -45,6 +45,36 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
 
+  async redirects() {
+    return [
+      {
+        source: "/sitemap-index.xml",
+        destination: "/sitemap.xml",
+        permanent: true,
+      },
+      {
+        source: "/sitemap_index.xml",
+        destination: "/sitemap.xml",
+        permanent: true,
+      },
+      {
+        source: "/sitemap-index/xml",
+        destination: "/sitemap.xml",
+        permanent: true,
+      },
+      {
+        source: "/library/sitemap-index/xml",
+        destination: "/sitemap.xml",
+        permanent: true,
+      },
+      {
+        source: "/search",
+        destination: "/library",
+        permanent: false,
+      },
+    ];
+  },
+
   async rewrites() {
     return [
       {

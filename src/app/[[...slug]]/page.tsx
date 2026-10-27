@@ -11,6 +11,7 @@ import { getCategoryImageUrl } from "@/lib/storage";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import {
   categoryPath,
+  hasStaticFileExtension,
   isValidCategoryPath,
   pathToUrlPath,
   slugToLabel,
@@ -116,6 +117,13 @@ export const generateMetadata = async ({
   const { slug } = await params;
   if (!slug?.length) return homePageMetadata;
 
+  if (hasStaticFileExtension(slug)) {
+    return {
+      title: "Page Not Found",
+      robots: { index: false, follow: false, nocache: true },
+    };
+  }
+
   if (slug.length === 1 && slug[0] === "library") {
     return {
       title: "Spiritual Library | Radheshyam Das Discourses",
@@ -168,6 +176,10 @@ export const generateMetadata = async ({
 
 const generateJsonLdData = async (slug?: string[]) => {
   if (process.env.NODE_ENV === "development") return { structuredData: [] };
+
+  if (slug?.length && hasStaticFileExtension(slug)) {
+    return { data: null, structuredData: [], status: 404 };
+  }
 
   // If old direct category path, redirect to /library/...
 

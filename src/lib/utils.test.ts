@@ -235,5 +235,25 @@ describe.concurrent("utils.ts suite", () => {
     // Rejects internal or invalid paths
     expect(isValidCategoryPath("_next/static")).toBe(false);
     expect(isValidCategoryPath("invalid/path/with/slashes")).toBe(false);
+    // Rejects exploit patterns
+    expect(
+      isValidCategoryPath(
+        "htthttp-.196-188-187-159-9080ps-.www-bing-com.search",
+      ),
+    ).toBe(false);
+    expect(
+      isValidCategoryPath(
+        "www-gov-cn-govweb-zhengce-202610-content-7083845-htm",
+      ),
+    ).toBe(false);
+  });
+
+  it.concurrent("hasStaticFileExtension detects files with static extensions in segments", async () => {
+    const { hasStaticFileExtension } = await import("./utils");
+    expect(hasStaticFileExtension(["meta.json"])).toBe(true);
+    expect(hasStaticFileExtension(["favicon.ico"])).toBe(true);
+    expect(hasStaticFileExtension(["library", "sitemap.xml"])).toBe(true);
+    expect(hasStaticFileExtension(["spiritual-discourses", "bg"])).toBe(false);
+    expect(hasStaticFileExtension([])).toBe(false);
   });
 });
