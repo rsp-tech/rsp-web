@@ -37,7 +37,7 @@ export const SearchBarDropdownContent = ({
   setTolerance,
   exactMatch,
   setExactMatch,
-  searchFields = ["name", "speaker_names", "event_name", "venue_name"],
+  searchFields = ["name"],
   toggleSearchField,
   handleSelectCategory,
   handleSelectRecording,

@@ -321,7 +321,7 @@ export const computeUserSyncDelta = async (
 export const getCachedUrlPaths = async (): Promise<string[]> => {
   "use cache: remote";
   cacheLife("days");
-  cacheTag(CACHE_TAG.SYNC_META);
+  cacheTag(CACHE_TAG.URL_PATHS);
 
   console.log("[CACHE MISS] getCachedPublicUrlPaths computing valid paths...");
 

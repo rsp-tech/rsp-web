@@ -51,6 +51,9 @@ export const performRoleCleanup = async (
 
   if (!hasStoredRole) {
     await db.put(STORE.ROLE_META, roleId, META_KEY.CLEANUP_ROLE);
+    if (!roleId) {
+      await db.delete(STORE.ROLE_META, META_KEY.SYNC_ROLE);
+    }
     return { clearedRole: false };
   }
 
@@ -59,6 +62,7 @@ export const performRoleCleanup = async (
       await cleanupTable(db, t, roleId);
     }
     await db.clear(STORE.ROLE_SYNC_META);
+    await db.delete(STORE.ROLE_META, META_KEY.SYNC_ROLE);
 
     await db.put(STORE.ROLE_META, roleId, META_KEY.CLEANUP_ROLE);
     return { clearedRole: true };

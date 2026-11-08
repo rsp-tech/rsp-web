@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { cacheLife, cacheTag } from "next/cache";
+import { headers } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { getCachedUrlPaths } from "@/app/api/sync/delta-service";
 import { ASSET_BASE_URL } from "@/constants";
@@ -10,6 +11,7 @@ import { getCategoryImageUrl } from "@/lib/storage";
 import { getSupabaseServerClient } from "@/lib/supabase-server";
 import {
   categoryPath,
+  hasStaticFileExtension,
   isValidCategoryPath,
   pathToUrlPath,
   slugToLabel,
@@ -115,6 +117,13 @@ export const generateMetadata = async ({
   const { slug } = await params;
   if (!slug?.length) return homePageMetadata;
 
+  if (hasStaticFileExtension(slug)) {
+    return {
+      title: "Page Not Found",
+      robots: { index: false, follow: false, nocache: true },
+    };
+  }
+
   if (slug.length === 1 && slug[0] === "library") {
     return {
       title: "Spiritual Library | Radheshyam Das Discourses",
@@ -167,6 +176,10 @@ export const generateMetadata = async ({
 
 const generateJsonLdData = async (slug?: string[]) => {
   if (process.env.NODE_ENV === "development") return { structuredData: [] };
+
+  if (slug?.length && hasStaticFileExtension(slug)) {
+    return { data: null, structuredData: [], status: 404 };
+  }
 
   // If old direct category path, redirect to /library/...
 
@@ -331,6 +344,17 @@ const CategoryPage = async ({ params }: PageProps) => {
   );
 
   if (!data && status === 404) {
+    const reqHeaders = await headers();
+    const forwardedFor = reqHeaders.get("x-forwarded-for");
+    const ip =
+      forwardedFor?.split(",")[0]?.trim() ||
+      reqHeaders.get("x-real-ip") ||
+      "unknown";
+    const userAgent = reqHeaders.get("user-agent") ?? undefined;
+    const referer = reqHeaders.get("referer") ?? undefined;
+
+    console.log({ip, referer, userAgent})
+
     axiomLogger.warn(`Category page not found: /${requestedPath}`, {
       event: "page.not_found",
       route: "/[[...slug]]",
@@ -338,6 +362,9 @@ const CategoryPage = async ({ params }: PageProps) => {
       url_path: requestedPath,
       status: 404,
       duration_ms: durationMs,
+      ip,
+      user_agent: userAgent,
+      referer,
     });
     return notFound();
   }

@@ -45,6 +45,73 @@ const nextConfig: NextConfig = {
     unoptimized: true,
   },
 
+  async redirects() {
+    return [
+      {
+        source: "/sitemap-index.xml",
+        destination: "/sitemap.xml",
+        permanent: true,
+      },
+      {
+        source: "/sitemap_index.xml",
+        destination: "/sitemap.xml",
+        permanent: true,
+      },
+      {
+        source: "/sitemap-index/xml",
+        destination: "/sitemap.xml",
+        permanent: true,
+      },
+      {
+        source: "/library/sitemap-index/xml",
+        destination: "/sitemap.xml",
+        permanent: true,
+      },
+      {
+        source: "/search",
+        destination: "/library",
+        permanent: false,
+      },
+    ];
+  },
+
+  async rewrites() {
+    return [
+      {
+        source: "/health",
+        destination: "/api/health",
+      },
+      {
+        source: "/healthz",
+        destination: "/api/health",
+      },
+      {
+        source: "/live",
+        destination: "/api/health",
+      },
+      {
+        source: "/android-icon-192x192.png",
+        destination: "/icon-192x192.webp",
+      },
+      {
+        source: "/android-icon-:size(.*).png",
+        destination: "/icon-192x192.webp",
+      },
+      {
+        source: "/favicon-:size(.*).png",
+        destination: "/favicon.ico",
+      },
+      {
+        source: "/apple-icon-:size(.*).png",
+        destination: "/apple-touch-icon.png",
+      },
+      {
+        source: "/apple-icon.png",
+        destination: "/apple-touch-icon.png",
+      },
+    ];
+  },
+
   async headers() {
     return [
       {

@@ -60,10 +60,21 @@ export const sortByDate =
 const STATIC_FILE_EXTENSIONS =
   /\.(png|jpg|jpeg|webp|avif|gif|svg|ico|txt|xml|json|map|css|js|webmanifest|woff|woff2|ttf|eot)$/i;
 
+const EXPLOIT_PATTERNS =
+  /(?:^|\.)(?:https?|ftp)|(?:https?|ftp)[-:]|(?:\d{1,3}-\d{1,3}-\d{1,3}-\d{1,3})|^(?:www[-.]|\d{1,3}\.)/i;
+
+export const hasStaticFileExtension = (path: string | string[]): boolean => {
+  const segments = Array.isArray(path)
+    ? path
+    : path.split("/").filter(Boolean);
+  return segments.some((segment) => STATIC_FILE_EXTENSIONS.test(segment));
+};
+
 export const isValidCategoryPath = (value: string) =>
   /^[A-Za-z0-9_-]+(?:\.[A-Za-z0-9_-]+)*$/.test(value) &&
   !/^[-_.](next|well-known)/.test(value) &&
-  !STATIC_FILE_EXTENSIONS.test(value);
+  !STATIC_FILE_EXTENSIONS.test(value) &&
+  !EXPLOIT_PATTERNS.test(value);
 
 const safeDecodeUri = (str: string): string => {
   try {

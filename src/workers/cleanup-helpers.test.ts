@@ -16,10 +16,28 @@ describe.concurrent("workers/cleanup-helpers suite", () => {
   it.concurrent("performRoleCleanup clears role data on role mismatch", async () => {
     const mockDb = createMockDb({
       [`${STORE.ROLE_META}:${META_KEY.CLEANUP_ROLE}`]: 1,
+      [`${STORE.ROLE_META}:${META_KEY.SYNC_ROLE}`]: 1,
     });
 
     const { performRoleCleanup } = await import("./cleanup-helpers");
     const res = await performRoleCleanup(mockDb as any, 2);
     expect(res.clearedRole).toBe(true);
+    expect(
+      await mockDb.get(STORE.ROLE_META, META_KEY.SYNC_ROLE),
+    ).toBeUndefined();
+  });
+
+  it.concurrent("performRoleCleanup clears sync_role on logout (undefined role)", async () => {
+    const mockDb = createMockDb({
+      [`${STORE.ROLE_META}:${META_KEY.CLEANUP_ROLE}`]: 1,
+      [`${STORE.ROLE_META}:${META_KEY.SYNC_ROLE}`]: 1,
+    });
+
+    const { performRoleCleanup } = await import("./cleanup-helpers");
+    const res = await performRoleCleanup(mockDb as any, undefined);
+    expect(res.clearedRole).toBe(true);
+    expect(
+      await mockDb.get(STORE.ROLE_META, META_KEY.SYNC_ROLE),
+    ).toBeUndefined();
   });
 });
